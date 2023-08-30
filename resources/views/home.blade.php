@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <div class="card" style="height: 600px">
+        <div class="card" style="min-height: 600px">
             <div class="card-header">
                 <div class="row">
                     <div class="col">

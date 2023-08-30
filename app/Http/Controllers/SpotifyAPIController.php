@@ -111,7 +111,7 @@ class SpotifyAPIController extends Controller {
             }
 
             //filter duplicate songs, like if a song is on an album and single.
-            $songs = $songs->groupBy('name');
+            $songs = $songs->groupBy('name')->map->first();
 
         } catch (\Exception $error) {
             logger($error);

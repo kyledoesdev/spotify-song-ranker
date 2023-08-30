@@ -32,7 +32,7 @@
     <hr />
 
     <div class="row mt-4">
-        <div class="col-auto" v-for="artist in artists" :key="artist.id">
+        <div :class="artistClass" v-for="artist in artists" :key="artist.id">
             <artist-result :id="artist.id" :name="artist.name" :images="artist.images"></artist-result>
         </div>
     </div>
@@ -75,7 +75,22 @@
             reset() {
                 this.searchTerm = "";
                 this.artists = [];
+
+                this.emitter.emit('clear-songs')
             }
+        },
+
+        computed: {
+            artistClass() {
+                console.log(this.artists.length)
+                return this.artists.length > 1 ? 'col-auto' : 'col';
+            }
+        },
+
+        created() {
+            this.emitter.on('artist-selected', (data) => {
+                this.artists = data;
+            });
         }
     }
 </script>
