@@ -3,16 +3,18 @@ import { createApp } from 'vue';
 import mitt from 'mitt';
 
 import Login from './components/Login.vue';
-import SpotifySearch from './components/Spotify/Search.vue';
-import ArtistResult from './components/Spotify/Artist.vue';
-import SongResult from './components/Spotify/Song.vue';
+import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
+import RankingSetup from './components/RankSetup/RankingSetup.vue';
+import SongListItem from './components/RankSetup/SongListItem.vue';
+import RankMaker from './components/RankMaker.vue';
 
 const app = createApp({
     components: {
         Login,
         SpotifySearch,
-        ArtistResult,
-        SongResult
+        RankingSetup,
+        SongListItem,
+        RankMaker
     }
 });
 

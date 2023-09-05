@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RankingController;
 use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
 use Illuminate\Support\Facades\Route;
@@ -14,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', function() {
-    return view('login');
-})->name('login');
+Route::get('/', function() { return view('login'); })->name('login');
 
 Auth::Routes();
 
@@ -28,4 +27,8 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/spotify/search', [SpotifyAPIController::class, 'search'])->name('spotify.search_api');
     Route::get('/spotify/artist_songs', [SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
+
+    Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
+    Route::post('/rank/create', [RankingController::class, 'create'])->name('rank.create');
+    Route::post('/rank/store', [RankingController::class, 'store'])->name('rank.store');
 });

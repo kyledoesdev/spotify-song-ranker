@@ -5,53 +5,39 @@
         </div>
         <div class="col-auto">
             <div class="input-group">
-                <input 
-                    class="form-control"
-                    type="text"
-                    placeholder="Enter an artists' name."
-                    v-model="searchTerm"
-                />
-                <button 
-                    type="button"
-                    class="btn btn-primary"
-                    @click="search"
-                >
+                <input class="form-control" type="text" placeholder="Enter an artists' name." v-model="searchTerm"/>
+                <button type="button" class="btn btn-primary" @click="search" :disabled="!this.canSearch">
                     Search
                 </button>
-                <button 
-                    type="button"
-                    class="btn btn-secondary"
-                    @click="reset"
-                >
+                <button type="button" class="btn btn-secondary" @click="reset">
                     <i class="fa-solid fa-rotate-left"></i>
                 </button>
             </div>
         </div>
     </div>
-
     <hr />
-
     <div class="row mt-4">
         <div :class="artistClass" v-for="artist in artists" :key="artist.id">
-            <artist-result :id="artist.id" :name="artist.name" :images="artist.images"></artist-result>
+            <ranking-setup :id="artist.id" :name="artist.name" :cover="artist.cover"></ranking-setup>
         </div>
     </div>
 </template>
 
 <script>
-    import ArtistResult from './Artist.vue';
+    import RankingSetup from './RankingSetup.vue';
 
     export default {
         name: "Spotify Artist Searcher",
 
         components: {
-            ArtistResult
+            RankingSetup
         },
 
         data() {
             return {
                 searchTerm: "",
-                artists: []
+                artists: [],
+                canSearch: true
             }
         },
 
@@ -73,16 +59,15 @@
             },
 
             reset() {
+                this.canSearch = true;
                 this.searchTerm = "";
                 this.artists = [];
-
                 this.emitter.emit('clear-songs')
             }
         },
 
         computed: {
             artistClass() {
-                console.log(this.artists.length)
                 return this.artists.length > 1 ? 'col-auto' : 'col';
             }
         },
@@ -90,6 +75,7 @@
         created() {
             this.emitter.on('artist-selected', (data) => {
                 this.artists = data;
+                this.canSearch = false;
             });
         }
     }

@@ -33,7 +33,7 @@ class SpotifyAPIController extends Controller {
                 $artists->push([
                     'id' => $artist->id,
                     'name' => $artist->name,
-                    'images' => $artist->images
+                    'cover' => $artist->images[0]->url ?? null
                 ]);
             });
         } catch (\Exception $error) {
@@ -101,7 +101,7 @@ class SpotifyAPIController extends Controller {
                             $songs->push([
                                 'id' => $song->id,
                                 'name' => $song->name,
-                                'images' => $album->images
+                                'cover' => $album->images[0]->url
                             ]);
                         });
                     });
