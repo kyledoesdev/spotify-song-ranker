@@ -5,7 +5,7 @@
                 <img :src="this.cover"  width="48" height="48" :alt="this.name" />
                 <span class="mx-2">{{ this.name }}</span>
             </div>
-            <div class="col d-flex justify-content-end m-1">
+            <div class="col d-flex justify-content-end m-1" v-if="this.candelete">
                 <button type="button" class="btn btn-sm btn-danger pb-0 pt-0" @click="removeSong()">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>
@@ -18,7 +18,7 @@
     export default {
         name: 'Song List Item',
 
-        props: ['id', 'name', 'cover'],
+        props: ['id', 'name', 'cover', 'candelete'],
 
         methods: {
             removeSong() {

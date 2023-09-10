@@ -37,7 +37,7 @@
                 <div class="card">
                     <div class="card-body card-scroller">
                         <div class="col-auto" v-for="song in this.artistSongs" :key="song.id" >
-                            <song-list-item :id="song.id" :name="song.name" :cover="song.cover"></song-list-item>
+                            <song-list-item :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></song-list-item>
                         </div>
                     </div>
                 </div>

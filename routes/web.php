@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', function() { return view('login'); })->name('login');
+Route::get('/', function() { return auth()->check() ? view('home') : view('login'); })->name('login');
 
 Auth::Routes();
 
@@ -30,5 +30,5 @@ Route::middleware(['auth'])->group(function() {
 
     Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
     Route::post('/rank/create', [RankingController::class, 'create'])->name('rank.create');
-    Route::post('/rank/store', [RankingController::class, 'store'])->name('rank.store');
+    Route::post('/rank/update', [RankingController::class, 'update'])->name('rank.update');
 });

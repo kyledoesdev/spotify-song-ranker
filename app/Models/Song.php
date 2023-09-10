@@ -14,4 +14,10 @@ class Song extends Model {
         'cover'
     ];
 
+    public static function boot() {
+        parent::boot();
+
+        static::addGlobalScope('default_order', fn ($query) => $query->orderBy('rank', 'ASC'));
+    }
+
 }

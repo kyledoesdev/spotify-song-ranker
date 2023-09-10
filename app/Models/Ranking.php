@@ -13,7 +13,12 @@ class Ranking extends Model {
     protected $fillable = [
         'user_id',
         'artist_id',
-        'name'
+        'name',
+        'is_ranked'
+    ];
+
+    public $casts = [
+        'is_ranked' => 'boolean'
     ];
 
     public static function boot() {
