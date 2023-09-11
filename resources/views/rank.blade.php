@@ -3,9 +3,10 @@
 @section('content')
     <div class="container-xl">
         <rank-maker 
-            :rankingid="{{ $rankingId }}"
+            :rankingid="{{ $ranking->id }}"
             :ranksongs="{{ $songs }}"
-            :isranked="{{ $isRanked }}"
+            :isranked="{{ $ranking->is_ranked }}"
+            rankname="{{ $ranking->name }}"
         >
         </rank-maker>
     </div>

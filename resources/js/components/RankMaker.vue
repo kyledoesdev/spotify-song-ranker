@@ -10,7 +10,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    Ranking Name
+                    <h5 class="mt-2">{{ this.rankname }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row d-flex justify-content-center">
@@ -64,7 +64,7 @@
         <div v-else>
             <div class="card">
                 <div class="card-header">
-                    Ranking Name
+                    <h5 class="mt-2">{{ this.rankname }}</h5>
                 </div>
                 <div class="card-body card-scroller">
                     <ol>
@@ -84,16 +84,21 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
     <div v-else>
-        <h2>Ranking Results</h2>
-        <ol>
-            <li v-for="song in rankedSongs" :key="song.id">
-                {{ song.title }}
-            </li>
-        </ol>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mt-2">{{ this.rankname }}</h5>
+            </div>
+            <div class="card-body card-scroller">
+                <ol>
+                    <li v-for="song in rankedSongs" :key="song.id">
+                        <song-list-item :id="song.id" :name="song.title" :cover="song.cover" :candelete="false"></song-list-item>
+                    </li>
+                </ol>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -102,7 +107,7 @@
     export default {
         name: 'Rank Maker',
 
-        props: ['rankingid', 'ranksongs', 'isranked'],
+        props: ['rankingid', 'rankname', 'ranksongs', 'isranked'],
 
         components: {
             SongListItem
@@ -112,36 +117,51 @@
             return {
                 songs: this.ranksongs,
                 rankedSongs: this.isranked ? this.ranksongs : [],      // To store the ranked order of songs
-                comparedSongs: new Set(), // To keep track of compared songs
-                rankedSet: new Set(),    // To keep track of ranked songs
+                eloRatings: {},       // Elo ratings for songs
                 pairQueue: [],        // Queue of pairs for comparison
             };
         },
 
         methods: {
             chooseSong(selectedIndex) {
-                const chosenSong = this.currentPair[selectedIndex];
-
                 // Check if the chosen song is already ranked
-                if (!this.rankedSet.has(chosenSong.id)) {
-                    // Update the rankedSongs array with the chosen song
-                    this.rankedSongs.push(chosenSong);
+                const winner = this.currentPair[selectedIndex];
+                const loser = this.currentPair[1 - selectedIndex];
 
-                    // Mark the selected song as compared and ranked
-                    this.comparedSongs.add(chosenSong.id);
-                    this.rankedSet.add(chosenSong.id);
-                }
+                // Update Elo ratings based on the outcome
+                this.updateEloRatings(winner.id, loser.id);
 
                 this.pairQueue.shift();
                 
                 if (this.pairQueue.length === 0) {
                     // Include unselected songs in the ranked list
-                    this.songs.forEach((song) => {
-                        if (!this.rankedSet.has(song.id) && !this.comparedSongs.has(song.id)) {
-                            this.rankedSongs.push(song);
-                        }
-                    });
+                    for (const songId in this.eloRatings) {
+                        const song = this.songs.find(obj => obj.id == songId);
+
+                        this.rankedSongs.push({
+                            'id': songId,
+                            'spotify_song_id': song.spotify_song_id,
+                            'title': song.title,
+                            'cover': song.cover,
+                            'rank': this.eloRatings[songId].rank
+                        });
+                    }
+                    
+                    this.rankedSongs.sort((a, b) => b.rank - a.rank);
                 }
+            },
+
+            updateEloRatings(winnerId, loserId) {
+                const k = 32;
+                const winnerRating = this.eloRatings[winnerId].rank;
+                const loserRating = this.eloRatings[loserId].rank;
+
+                const expectedOutcome = 1 / (1 + Math.pow(10, (loserRating - winnerRating) / 400));
+                const actualOutcome = 1; // Winner won
+                const ratingChange = k * (actualOutcome - expectedOutcome);
+
+                this.eloRatings[winnerId].rank += ratingChange;
+                this.eloRatings[loserId].rank -= ratingChange;
             },
 
             save() {
@@ -176,6 +196,10 @@
         },
 
         created() {
+            this.songs.forEach((song) => {
+                this.eloRatings[song.id] = { rank: 1000 }; // Initial rating (adjust as needed)
+            });
+
             for (let i = 0; i < this.songs.length; i++) {
                 for (let j = i + 1; j < this.songs.length; j++) {
                     this.pairQueue.push([this.songs[i], this.songs[j]]);
@@ -183,7 +207,7 @@
             }
 
             //shuffle
-            //this.pairQueue.sort(() => Math.random() - 0.5);
+            this.pairQueue.sort(() => Math.random() - 0.5);
         },
 
         mounted() {

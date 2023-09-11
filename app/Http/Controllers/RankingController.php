@@ -11,19 +11,13 @@ use Illuminate\View\View;
 class RankingController extends Controller {
 
     public function show($id) : View {
-        $ranking = Ranking::query()
-            ->with('songs', 
-                fn($query) => $query->newQuery()
-                    ->select('id', 'ranking_id', 'spotify_song_id', 'title', 'cover')
-            )
-            ->findOrFail($id);
+        $ranking = Ranking::findOrFail($id);
 
         abort_if($ranking->user_id != auth()->id(), 403);
 
         return view('rank', [
             'songs' => $ranking->songs,
-            'isRanked' => $ranking->is_ranked,
-            'rankingId' => $ranking->id
+            'ranking' => $ranking,
         ]);
     }
     
@@ -47,10 +41,13 @@ class RankingController extends Controller {
                 'spotify_song_id' => $songs[$i]['spotify_song_id'],
                 'title' => $songs[$i]['title'],
                 'cover' => $songs[$i]['cover'],
-                'rank' => $i + 1
+                'rank' => $i + 1,
+                'created_at' => now(),
+                'updated_at' => now()
             ]);
         }
         
+        Ranking::find($request->rankingId)->update(['is_ranked' => true]);
         Song::where('ranking_id', $request->rankingId)->forceDelete();
         Song::insert($data);
 
