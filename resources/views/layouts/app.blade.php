@@ -25,9 +25,11 @@
 </head>
 <body>
     <div id="app">
-        <main class="py-4">
-            @yield('content')
-        </main>
+        <div class="container-fluid">
+            <main class="m-4">
+                @yield('content')
+            </main>
+        </div>
     </div>
 </body>
 </html>

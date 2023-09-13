@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container-xl">
+    <div class="container">
         <rank-maker 
             :rankingid="{{ $ranking->id }}"
             :ranksongs="{{ $songs }}"

@@ -7,6 +7,7 @@ use App\Models\Model;
 use App\Models\Song;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ranking extends Model {
 
@@ -27,6 +28,10 @@ class Ranking extends Model {
 
     public function user() : BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function artist() : HasOne {
+        return $this->hasOne(Artist::class, 'id', 'artist_id');
     }
 
     public function songs() : HasMany {

@@ -14,6 +14,11 @@
                 </button>
             </div>
         </div>
+        <div class="col d-flex justify-content-end" v-if="openSongList">
+            <button type="button" class="btn btn-sm border border-dark m-1" @click="showSongList()">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
     </div>
     <hr />
     <div class="row mt-4">
@@ -37,7 +42,8 @@
             return {
                 searchTerm: "",
                 artists: [],
-                canSearch: true
+                canSearch: true,
+                openSongList: false
             }
         },
 
@@ -58,6 +64,11 @@
                 });
             },
 
+            showSongList() {
+                this.openSongList = false;
+                this.emitter.emit('show-song-list');
+            },
+
             reset() {
                 this.canSearch = true;
                 this.searchTerm = "";
@@ -76,6 +87,14 @@
             this.emitter.on('artist-selected', (data) => {
                 this.artists = data;
                 this.canSearch = false;
+            });
+
+            this.emitter.on('song-list-hidden', (data) => {
+                this.openSongList = true;
+            });
+
+            this.emitter.on('show-song-list', (data) => {
+                this.openSongList = false;
             });
         }
     }
