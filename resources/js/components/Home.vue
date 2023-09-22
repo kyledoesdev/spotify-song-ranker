@@ -3,26 +3,18 @@
         <div :class="colBox">
             <div class="card" style="min-height: 600px">
                 <div class="card-body">
-                    <spotify-search />
+                    <spotifysearch />
                 </div>
             </div>
         </div>
-        <home-song-list :lists="this.lists"></home-song-list>
+        <homerankingslist :lists="this.lists"></homerankingslist>
     </div>
 </template>
 <script>
-    import HomeSongList from './Lists/HomeSongList.vue';
-    import SpotifySearch from './RankSetup/SpotifySearch.vue';
-
     export default {
         name: 'Home',
 
         props: ['lists'],
-
-        components: {
-            SpotifySearch,
-            HomeSongList
-        },
 
         data() {
             return {

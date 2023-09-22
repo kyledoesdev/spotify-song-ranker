@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Models\Artist;
 use App\Models\Model;
 use App\Models\Song;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\Builder;
 
 class Ranking extends Model {
 
@@ -36,6 +38,10 @@ class Ranking extends Model {
 
     public function songs() : HasMany {
         return $this->hasMany(Song::class);
+    }
+
+    public function getUpdatedAtAttribute() {
+        return Carbon::parse($this->attributes['updated_at'])->diffForHumans();
     }
 
     /**
@@ -72,4 +78,22 @@ class Ranking extends Model {
         return $ranking;
     }
 
+    public static function complete($songs, $id) : void {
+        $data = [];
+        for ($i = 0; $i < count($songs) ; $i++) { 
+            array_push($data, [
+                'ranking_id' => $id,
+                'spotify_song_id' => $songs[$i]['spotify_song_id'],
+                'title' => $songs[$i]['title'],
+                'cover' => $songs[$i]['cover'],
+                'rank' => $i + 1,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        self::find($id)->update(['is_ranked' => true]);
+        Song::where('ranking_id', $id)->forceDelete();
+        Song::insert($data);
+    }
 }

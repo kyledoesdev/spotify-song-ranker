@@ -37,7 +37,7 @@
                 <div class="card">
                     <div class="card-body card-scroller">
                         <div class="col-auto" v-for="song in this.artistSongs" :key="song.id" >
-                            <song-list-item :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></song-list-item>
+                            <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></songlistitem>
                         </div>
                     </div>
                 </div>
@@ -77,14 +77,8 @@
 </template>
 
 <script>
-    import SongListItem from './SongListItem.vue';
-
     export default {
         name: 'Song Ranking Setup',
-
-        components: {
-            SongListItem
-        },
             
         props: ['id', 'name', 'cover'],
 

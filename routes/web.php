@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/spotify/search', [App\Http\Controllers\SpotifyAPIController::class, 'search'])->name('spotify.search_api');
     Route::get('/spotify/artist_songs', [App\Http\Controllers\SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
 
+    Route::get('/ranks', [App\Http\Controllers\RankingController::class, 'index'])->name('rank.index');
     Route::get('/rank/{id}', [App\Http\Controllers\RankingController::class, 'show'])->name('rank.show');
     Route::post('/rank/create', [App\Http\Controllers\RankingController::class, 'create'])->name('rank.create');
     Route::post('/rank/update', [App\Http\Controllers\RankingController::class, 'update'])->name('rank.update');

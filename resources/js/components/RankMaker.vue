@@ -69,7 +69,7 @@
                 <div class="card-body card-scroller">
                     <ol>
                         <li v-for="song in rankedSongs" :key="song.id">
-                            <song-list-item :id="song.id" :name="song.title" :cover="song.cover" :candelete="false"></song-list-item>
+                            <songlistitem :id="song.id" :name="song.title" :cover="song.cover" :candelete="false"></songlistitem>
                         </li>
                     </ol>
                 </div>
@@ -94,7 +94,7 @@
             <div class="card-body card-scroller">
                 <ol>
                     <li v-for="song in rankedSongs" :key="song.id">
-                        <song-list-item :id="song.id" :name="song.title" :cover="song.cover" :candelete="false"></song-list-item>
+                        <songlistitem :id="song.id" :name="song.title" :cover="song.cover" :candelete="false"></songlistitem>
                     </li>
                 </ol>
             </div>
@@ -102,16 +102,10 @@
     </div>
 </template>
 <script>
-    import SongListItem from './RankSetup/SongListItem.vue';
-
     export default {
         name: 'Rank Maker',
 
         props: ['rankingid', 'rankname', 'ranksongs', 'isranked'],
-
-        components: {
-            SongListItem
-        },
 
         data() {
             return {

@@ -23,20 +23,14 @@
     <hr />
     <div class="row mt-4">
         <div :class="artistClass" v-for="artist in artists" :key="artist.id">
-            <ranking-setup :id="artist.id" :name="artist.name" :cover="artist.cover"></ranking-setup>
+            <rankingsetup :id="artist.id" :name="artist.name" :cover="artist.cover"></rankingsetup>
         </div>
     </div>
 </template>
 
 <script>
-    import RankingSetup from './RankingSetup.vue';
-
     export default {
         name: "Spotify Artist Searcher",
-
-        components: {
-            RankingSetup
-        },
 
         data() {
             return {

@@ -12,6 +12,8 @@ class HomeController extends Controller {
                 ->where('user_id', auth()->id())
                 ->with('artist', 'songs')
                 ->withCount('songs')
+                ->latest()
+                ->limit(10)
                 ->get()
         ]);
     }

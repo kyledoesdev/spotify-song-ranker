@@ -2,26 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateRankingRequest;
+use App\Http\Requests\UpdateRankingRequest;
 use App\Models\Ranking;
-use App\Models\Song;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class RankingController extends Controller {
 
+    public function index() : View {
+        return view('rank.index', [
+            'rankings' => Ranking::query()
+                ->where('user_id', auth()->id())
+                ->with(['songs', 'artist'])
+                ->withCount('songs')
+                ->latest()
+                ->get()
+        ]);
+    }
+
     public function show($id) : View {
         $ranking = Ranking::findOrFail($id);
 
-        abort_if($ranking->user_id != auth()->id(), 403);
+        //if ranking is not complete && the ranking doesn't belong to auth user abort
+        if (!$ranking->is_ranked && $ranking->user_id != auth()->id()) {
+            abort(403, "This ranking is not complete. You do not have permission to view it.");
+        }
 
-        return view('rank', [
+        return view('rank.show', [
             'songs' => $ranking->songs,
             'ranking' => $ranking,
         ]);
     }
     
-    public function create(Request $request) : JsonResponse {
+    public function create(CreateRankingRequest $request) : JsonResponse {
         $ranking = Ranking::start($request);
         
         return response()->json([
@@ -31,25 +46,8 @@ class RankingController extends Controller {
         ], 200);
     }
 
-    public function update(Request $request) : JsonResponse {
-        $songs = collect($request->songs);
-
-        $data = [];
-        for ($i = 0; $i < count($songs) ; $i++) { 
-            array_push($data, [
-                'ranking_id' => $request->rankingId,
-                'spotify_song_id' => $songs[$i]['spotify_song_id'],
-                'title' => $songs[$i]['title'],
-                'cover' => $songs[$i]['cover'],
-                'rank' => $i + 1,
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        }
-        
-        Ranking::find($request->rankingId)->update(['is_ranked' => true]);
-        Song::where('ranking_id', $request->rankingId)->forceDelete();
-        Song::insert($data);
+    public function update(UpdateRankingRequest $request) : JsonResponse {
+        Ranking::complete(collect($request->songs), $request->rankingId);
 
         return response()->json([
             'redirect' => route('home')

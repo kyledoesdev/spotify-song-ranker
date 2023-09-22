@@ -10,7 +10,7 @@
                 <div class="col d-flex justify-content-end mt-2">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button class="btn btn-secondary" type="submit" title="Logout ?">
+                        <button class="btn btn-secondary border border-1 border-dark" type="submit" title="Logout ?">
                             <i class="fa-solid fa-person-running"></i>
                         </button>
                     </form>

@@ -2,12 +2,12 @@
 
 @section('content')
     <div class="container">
-        <rank-maker 
+        <rankmaker 
             :rankingid="{{ $ranking->id }}"
             :ranksongs="{{ $songs }}"
             :isranked="{{ $ranking->is_ranked }}"
             rankname="{{ $ranking->name }}"
         >
-        </rank-maker>
+        </rankmaker>
     </div>
 @endsection
