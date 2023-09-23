@@ -10,13 +10,22 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mt-2">{{ this.rankname }}</h5>
+                    <div class="row d-flex">
+                        <div class="col justify-content-start">
+                            <h1 class="mt-2">{{ this.rankname }}</h1>
+                        </div>
+                        <div class="col d-flex justify-content-end m-2">
+                            <button class="btn btn-primary border border-1 border-dark" @click="this.home()">
+                                <i class="fa fa-house"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row d-flex justify-content-center">
                         <div class="col-auto">
                             <!-- <iframe 
-                                :src="songEmbed(this.currentPair[0].spotify_song_id)" 
+                                :src="this.songEmbed(this.currentPair[0].spotify_song_id)" 
                                 width="512" 
                                 height="232" 
                                 frameborder="0" 
@@ -36,7 +45,7 @@
                         </div>
                         <div class="col-auto">
                             <!-- <iframe 
-                                :src="songEmbed(this.currentPair[1].spotify_song_id)" 
+                                :src="this.songEmbed(this.currentPair[1].spotify_song_id)" 
                                 width="512" 
                                 height="232" 
                                 frameborder="0" 
@@ -57,7 +66,14 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <h5 class="text-bold mt-2">{{ pairQueueFullness }}% complete</h5>
+                    <div class="row">
+                        <div class="col d-flex justify-content-start">
+                            <h5 class="text-bold mt-2">{{ pairQueueFullness }}% complete</h5>
+                        </div>
+                        <div class="col d-flex justify-content-end">
+                            <h5 class="text-bold mt-2">{{ this.comparison }}/{{ totalPossiblePairs }}</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -113,6 +129,7 @@
                 rankedSongs: this.isranked ? this.ranksongs : [],      // To store the ranked order of songs
                 eloRatings: {},       // Elo ratings for songs
                 pairQueue: [],        // Queue of pairs for comparison
+                comparison: 0,
             };
         },
 
@@ -124,6 +141,8 @@
 
                 // Update Elo ratings based on the outcome
                 this.updateEloRatings(winner.id, loser.id);
+
+                this.comparison++;
 
                 this.pairQueue.shift();
                 
@@ -159,7 +178,7 @@
             },
 
             save() {
-                axios.post('/rank/update', {
+                axios.post('/rank/finish', {
                     'rankingId': this.rankingid,
                     'songs' : this.rankedSongs  
                 })
@@ -171,19 +190,17 @@
                     }
                 });
             },
-
-            songEmbed(songId) {
-                return "https://open.spotify.com/embed/track/" + songId
-            }
         },
 
         computed: {
             currentPair() {
                 return this.pairQueue[0];
             },
+
             totalPossiblePairs() {
                 return (this.songs.length * (this.songs.length - 1)) / 2;
             },
+
             pairQueueFullness() {
                 return Math.round((((this.totalPossiblePairs - this.pairQueue.length) / this.totalPossiblePairs) * 100), 2);
             },

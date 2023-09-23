@@ -50,5 +50,8 @@
                 </main>
             </div>
         </div>
+        <footer>
+            <input type="hidden" id="authid" value="{{ auth()->id() }}">
+        </footer>
     </body>
 </html>

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateRankingRequest;
+use App\Http\Requests\DeleteRankingRequest;
 use App\Http\Requests\UpdateRankingRequest;
 use App\Models\Ranking;
+use App\Models\Song;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -46,11 +49,26 @@ class RankingController extends Controller {
         ], 200);
     }
 
-    public function update(UpdateRankingRequest $request) : JsonResponse {
+    public function finish(UpdateRankingRequest $request) : JsonResponse {
         Ranking::complete(collect($request->songs), $request->rankingId);
 
         return response()->json([
             'redirect' => route('home')
+        ], 200);
+    }
+
+    public function delete(DeleteRankingRequest $request) : JsonResponse {
+        Ranking::findOrFail($request->rankingId)->delete();
+        Song::where('ranking_id', $request->rankingId)->delete();
+
+        return response()->json([
+            'message' => 'Successfully deleted the Ranking.',
+            'rankings' => Ranking::query()
+                ->where('user_id', auth()->id())
+                ->with(['songs', 'artist'])
+                ->withCount('songs')
+                ->latest()
+                ->get(),
         ], 200);
     }
 

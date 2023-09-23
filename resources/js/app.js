@@ -2,6 +2,8 @@ import './bootstrap';
 import { createApp } from 'vue';
 import mitt from 'mitt';
 
+import Globals from './modules/globals';
+
 import Login from './components/Login.vue';
 import Home from './components/Home.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
@@ -14,6 +16,8 @@ import AllRankingsList from './components/Lists/AllRankingsList.vue';
 const app = createApp({});
 
 app.config.globalProperties.emitter = mitt();
+
+app.mixin(Globals);
 
 app.component('login', Login);
 app.component('home', Home);

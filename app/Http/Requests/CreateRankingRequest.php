@@ -12,7 +12,7 @@ class CreateRankingRequest extends FormRequest {
 
     public function rules(): array {
         return [
-            'artist_id' => 'required|integer',     
+            'artist_id' => 'required|string',     
             'artist_name' => 'required|string',       
             'artist_img' => 'required|string',        
             'name' => 'required|string',
