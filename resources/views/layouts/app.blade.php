@@ -10,9 +10,7 @@
         <title>{{ config('app.name', "Kyle's Song Ranker") }}</title>
 
         <!-- Fonts -->
-        <link rel="dns-prefetch" href="//fonts.bunny.net">
         <script src="https://kit.fontawesome.com/07b7751319.js" crossorigin="anonymous"></script>
-        <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
         <!-- Scripts -->
         @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -21,8 +19,10 @@
             body, html {
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
                 height: 100%;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
             }
 
             .gradient-background {
@@ -39,19 +39,19 @@
                 50% {
                     background-position: 100% 50%;
                 }
-            }
+            },
         </style>
     </head>
     <body class="gradient-background">
-        <div id="app">
+        <div id="app" style="padding-bottom: 10vh">
             <div class="container-fluid">
                 <main class="m-4">
                     @yield('content')
                 </main>
             </div>
         </div>
-        <footer>
-            <input type="hidden" id="authid" value="{{ auth()->id() }}">
+        <footer class="bg-dark text-white" style="margin-top: auto; min-height: 10vh; overflow: hidden;">
+            @include('layouts.partials.footer')
         </footer>
     </body>
 </html>

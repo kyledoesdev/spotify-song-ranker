@@ -7,7 +7,7 @@
             <div class="input-group">
                 <input class="form-control" type="text" placeholder="Enter an artists' name." v-model="searchTerm"/>
                 <button type="button" class="btn btn-primary" @click="search" :disabled="!this.canSearch">
-                    Search
+                    <i class="fa fa-magnifying-glass"></i>
                 </button>
                 <button type="button" class="btn btn-secondary" @click="reset">
                     <i class="fa-solid fa-rotate-left"></i>
@@ -51,6 +51,10 @@
                 .then(response => {
                     if (response.data && response.data.artists) {
                         this.artists = response.data.artists
+
+                        if (this.artists.length == 0) {
+                            alert('Could not find artists for search term: ' + this.searchTerm);
+                        }
                     }
                 })
                 .catch(error => {

@@ -7,9 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SpotifyAPIController extends Controller {
-    protected $client;
-
-    public function __construct() {
+    public function __construct(protected Client $client) {
         $this->client = new Client();
     }
     
@@ -30,13 +28,15 @@ class SpotifyAPIController extends Controller {
             $artists = collect();
     
             $data->each(function($artist) use ($artists) {
-                $artists->push([
-                    'id' => $artist->id,
-                    'name' => $artist->name,
-                    'cover' => $artist->images[0]->url ?? null
-                ]);
+                if ($artist->images && $artist->images[0] && $artist->images[0]->url) {
+                    $artists->push([
+                        'id' => $artist->id,
+                        'name' => $artist->name,
+                        'cover' => $artist->images[0]->url
+                    ]);
+                }
             });
-        } catch (\Exception $error) {
+        } catch (\Exception) {
             return response()->json([
                 'message' => "Please log out and log back in, your spotify authentication token has expired.",
             ], 500);
@@ -113,8 +113,7 @@ class SpotifyAPIController extends Controller {
             //filter duplicate songs, like if a song is on an album and single.
             $songs = $songs->groupBy('name')->map->first();
 
-        } catch (\Exception $error) {
-            logger($error);
+        } catch (\Exception) {
             return response()->json([
                 'message' => "Please log out and log back in, your spotify authentication token has expired.",
             ], 500);

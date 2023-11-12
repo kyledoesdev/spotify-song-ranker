@@ -7,6 +7,7 @@
             :ranksongs="{{ $songs }}"
             :isranked="{{ $ranking->is_ranked }}"
             rankname="{{ $ranking->name }}"
+            creator="{{ $creator }}"
         >
         </rankmaker>
     </div>

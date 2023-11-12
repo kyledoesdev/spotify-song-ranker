@@ -4,7 +4,7 @@ import mitt from 'mitt';
 
 import Globals from './modules/globals';
 
-import Login from './components/Login.vue';
+import Welcome from './components/Welcome.vue';
 import Home from './components/Home.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
 import RankingSetup from './components/RankSetup/RankingSetup.vue';
@@ -19,7 +19,7 @@ app.config.globalProperties.emitter = mitt();
 
 app.mixin(Globals);
 
-app.component('login', Login);
+app.component('welcome', Welcome);
 app.component('home', Home);
 app.component('spotifysearch', SpotifySearch);
 app.component('rankingsetup', RankingSetup);

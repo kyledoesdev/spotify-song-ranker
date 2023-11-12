@@ -8,8 +8,6 @@ use App\Http\Requests\UpdateRankingRequest;
 use App\Models\Ranking;
 use App\Models\Song;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class RankingController extends Controller {
@@ -21,12 +19,15 @@ class RankingController extends Controller {
                 ->with(['songs', 'artist'])
                 ->withCount('songs')
                 ->latest()
+                ->limit(10)
                 ->get()
         ]);
     }
 
     public function show($id) : View {
-        $ranking = Ranking::findOrFail($id);
+        $ranking = Ranking::query()
+            ->with('user')
+            ->findOrFail($id);
 
         //if ranking is not complete && the ranking doesn't belong to auth user abort
         if (!$ranking->is_ranked && $ranking->user_id != auth()->id()) {
@@ -36,6 +37,7 @@ class RankingController extends Controller {
         return view('rank.show', [
             'songs' => $ranking->songs,
             'ranking' => $ranking,
+            'creator' => $ranking->user->name
         ]);
     }
     
