@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Query\Builder;
 
 class Ranking extends Model {
-
     protected $fillable = [
         'user_id',
         'artist_id',
@@ -23,10 +22,6 @@ class Ranking extends Model {
     public $casts = [
         'is_ranked' => 'boolean'
     ];
-
-    public static function boot() {
-        parent::boot();
-    }
 
     public function user() : BelongsTo {
         return $this->belongsTo(User::class);
@@ -95,5 +90,23 @@ class Ranking extends Model {
         self::find($id)->update(['is_ranked' => true]);
         Song::where('ranking_id', $id)->forceDelete();
         Song::insert($data);
+    }
+
+    public function updateSongs($songs, $rankingId) : bool {
+        $data = [];
+        foreach ($songs as $song) { 
+            array_push($data, [
+                'ranking_id' => $rankingId,
+                'spotify_song_id' => $song['spotify_song_id'],
+                'title' => $song['title'],
+                'cover' => $song['cover'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        Song::insert($data);
+
+        return true;
     }
 }

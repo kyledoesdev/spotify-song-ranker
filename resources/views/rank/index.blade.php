@@ -2,8 +2,6 @@
 
 @section('content')
     <div class="container">
-        <allrankingslist 
-            :rankings="{{ $rankings }}" 
-        />
+        <allrankingslist />
     </div>
 @endsection

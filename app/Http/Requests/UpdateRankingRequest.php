@@ -8,13 +8,13 @@ use Illuminate\Foundation\Http\FormRequest;
 class UpdateRankingRequest extends FormRequest {
 
     public function authorize(): bool {
-        return Ranking::firstOrFail(request()->rankingId)->user_id === auth()->id();
+        return auth()->check() && Ranking::findOrFail(request()->id)->user_id === auth()->id();
     }
 
     public function rules(): array {
         return [
-            'rankingId' => 'required',
-            'songs' => 'required'
+            'songs' => 'required',
+            'name' => 'required'
         ];
     }
 }

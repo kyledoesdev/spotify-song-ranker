@@ -3,6 +3,7 @@ import { createApp } from 'vue';
 import mitt from 'mitt';
 
 import Globals from './modules/globals';
+import Alerts from './modules/alerts';
 
 import Welcome from './components/Welcome.vue';
 import Home from './components/Home.vue';
@@ -12,12 +13,14 @@ import SongListItem from './components/RankSetup/SongListItem.vue';
 import RankMaker from './components/RankMaker.vue';
 import HomeRankingsList from './components/Lists/HomeRankingsList.vue';
 import AllRankingsList from './components/Lists/AllRankingsList.vue';
+import EditRanking from './components/RankSetup/EditRanking.vue';
 
 const app = createApp({});
 
 app.config.globalProperties.emitter = mitt();
 
 app.mixin(Globals);
+app.mixin(Alerts);
 
 app.component('welcome', Welcome);
 app.component('home', Home);
@@ -27,6 +30,7 @@ app.component('songlistitem', SongListItem);
 app.component('rankmaker', RankMaker);
 app.component('homerankingslist', HomeRankingsList);
 app.component('allrankingslist', AllRankingsList);
+app.component('editranking', EditRanking);
 
 
 app.mount('#app');

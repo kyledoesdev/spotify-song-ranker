@@ -79,7 +79,7 @@
                             <h5 class="text-bold mt-2">{{ pairQueueFullness }}% complete</h5>
                         </div>
                         <div class="col d-flex justify-content-center">
-                            <span class="mt-2">Get Cozy, this may take you a while.</span>
+                            <span class="mt-2">Get Cozy, this may take you a while. <i class="fa-solid fa-mug-saucer"></i></span>
                         </div>
                         <div class="col d-flex justify-content-end">
                             <span class="m-2" title="The page loads faster with this toggled off.">

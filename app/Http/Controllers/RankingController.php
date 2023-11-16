@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateRankingRequest;
 use App\Http\Requests\DeleteRankingRequest;
+use App\Http\Requests\FinishRankingRequest;
 use App\Http\Requests\UpdateRankingRequest;
 use App\Models\Ranking;
 use App\Models\Song;
@@ -13,15 +14,7 @@ use Illuminate\View\View;
 class RankingController extends Controller {
 
     public function index() : View {
-        return view('rank.index', [
-            'rankings' => Ranking::query()
-                ->where('user_id', auth()->id())
-                ->with(['songs', 'artist'])
-                ->withCount('songs')
-                ->latest()
-                ->limit(10)
-                ->get()
-        ]);
+        return view('rank.index');
     }
 
     public function show($id) : View {
@@ -41,17 +34,34 @@ class RankingController extends Controller {
         ]);
     }
     
-    public function create(CreateRankingRequest $request) : JsonResponse {
-        $ranking = Ranking::start($request);
-        
+    public function create(CreateRankingRequest $request) : JsonResponse {        
         return response()->json([
             'redirect' => route('rank.show', [
-                'id' => $ranking->id
+                'id' => Ranking::start($request)->id
             ])
         ], 200);
     }
 
-    public function finish(UpdateRankingRequest $request) : JsonResponse {
+    public function edit($id) : View {
+        return view('rank.edit', [
+            'ranking' => Ranking::query()
+                ->with('songs')
+                ->findOrFail($id)
+        ]);
+    }
+
+    public function update(UpdateRankingRequest $request, $id) : JsonResponse {
+        $ranking = Ranking::findOrFail($id);
+        $ranking->update(['name' => $request->name]);
+        $ranking->songs()->forceDelete();
+        $ranking->updateSongs($request->songs, $ranking->id);
+
+        return response()->json([
+            'redirect' => route('rank.index'),
+        ], 200);
+    }
+
+    public function finish(FinishRankingRequest $request) : JsonResponse {
         Ranking::complete(collect($request->songs), $request->rankingId);
 
         return response()->json([
@@ -61,16 +71,28 @@ class RankingController extends Controller {
 
     public function delete(DeleteRankingRequest $request) : JsonResponse {
         Ranking::findOrFail($request->rankingId)->delete();
-        Song::where('ranking_id', $request->rankingId)->delete();
+        Song::where('ranking_id', $request->rankingId)->forceDelete();
 
         return response()->json([
-            'message' => 'Successfully deleted the Ranking.',
+            'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
                 ->with(['songs', 'artist'])
                 ->withCount('songs')
                 ->latest()
-                ->get(),
+                ->paginate(5),
+        ], 200);
+    }
+
+    public function pages() : JsonResponse {
+        return response()->json([
+            'rankings' => Ranking::query()
+                ->where('user_id', auth()->id())
+                ->with('artist')
+                ->with('songs')
+                ->withCount('songs')
+                ->latest()
+                ->paginate(5)
         ], 200);
     }
 

@@ -54,8 +54,8 @@
 </script>
 <style>
     .login-card {
-      background: url('/public/cover.png') center/cover no-repeat; /* Replace 'your-image.jpg' with your actual image */
-      min-height: 40vh;
+        background: url('/public/cover.png') center/cover no-repeat;
+        min-height: 40vh;
     }
 
     .login-btn {
