@@ -12,8 +12,8 @@
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <table class="table table-responsive table-striped" style="overflow-x: auto;">
+        <div class="card-body" v-auto-animate>
+            <table class="table table-responsive table-striped" style="overflow-x: auto;" v-auto-animate>
                 <thead>
                     <tr>
                         <th></th>
@@ -25,7 +25,7 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody v-auto-animate>
                     <tr v-for="ranking in ranks.data" :key="ranking.id">
                         <td class="col-auto">
                             <img :src="ranking.artist.artist_img" :alt="ranking.artist.artist_name" style="max-width: 75px; max-height: 75px;">
