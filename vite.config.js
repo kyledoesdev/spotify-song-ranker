@@ -18,11 +18,16 @@ export default defineConfig({
                     includeAbsolute: false,
                 },
             },
+            sourcemap: 'inline',
         }),
     ],
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',
         },
+    },
+    build: {
+        // Enable source maps for production build
+        //sourcemap: true,
     },
 });

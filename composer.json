@@ -12,6 +12,7 @@
         "laravel/socialite": "^5.8",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
+        "laravel/vapor-core": "^2.33",
         "socialiteproviders/spotify": "^4.1"
     },
     "require-dev": {

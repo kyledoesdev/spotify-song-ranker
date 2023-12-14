@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!this.isranked"> <!-- If not ranked -->
+    <div v-if="this.isranked == 'no'"> <!-- If not ranked -->
         <div class="pl-4 pr-4" v-if="currentPair">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-8 alert alert-info text-center">
@@ -164,7 +164,7 @@
         data() {
             return {
                 songs: this.ranksongs,
-                rankedSongs: this.isranked ? this.ranksongs : [],      // To store the ranked order of songs
+                rankedSongs: this.isranked == 'yes' ? this.ranksongs : [],      // To store the ranked order of songs
                 eloRatings: {},       // Elo ratings for songs
                 pairQueue: [],        // Queue of pairs for comparison
                 comparison: 0,
