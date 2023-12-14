@@ -7,7 +7,9 @@
                 </div>
             </div>
         </div>
-        <homerankingslist :lists="this.lists"></homerankingslist>
+        <div class="col-lg-2">
+            <homerankingslist :lists="this.lists"></homerankingslist>
+        </div>
     </div>
 </template>
 <script>

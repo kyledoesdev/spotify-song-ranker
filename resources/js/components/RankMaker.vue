@@ -29,7 +29,7 @@
                     </div>
                     <hr />
                     <div class="row d-flex justify-content-center">
-                        <div class="col-auto">
+                        <div class="col-auto" v-auto-animate>
                             <iframe 
                                 :src="this.songEmbed(this.currentPair[0].spotify_song_id)" 
                                 width="512" 
@@ -41,7 +41,14 @@
                                 v-if="this.spotifyWidgetsEnabled"
                             >
                             </iframe>
-                            <img class="mb-2" :src="currentPair[0].cover" width="512" height="512" alt="" v-else />
+                            <img 
+                                class="mb-2" 
+                                :src="currentPair[0].cover"
+                                width="512" 
+                                height="512" 
+                                alt="" 
+                                v-else 
+                            />
                             <div class="row d-flex justify-content-center">
                                 <div class="col-auto">
                                     <button class="btn btn-primary" type="button" @click="chooseSong(0)">
@@ -62,7 +69,14 @@
                                 v-if="this.spotifyWidgetsEnabled"
                             >
                             </iframe>
-                            <img class="mb-2" :src="currentPair[1].cover" width="512" height="512" alt="" v-else />
+                            <img 
+                                class="mb-2" 
+                                :src="currentPair[1].cover" 
+                                width="512" 
+                                height="512" 
+                                alt="" 
+                                v-else 
+                            />
                             <div class="row d-flex justify-content-center">
                                 <div class="col-auto">
                                     <button class="btn btn-secondary" type="button" @click="chooseSong(1)">
