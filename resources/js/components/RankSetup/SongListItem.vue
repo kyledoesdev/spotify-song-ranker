@@ -1,7 +1,7 @@
 <template>
     <div class="m-2">
         <div class="row d-flex">
-            <div class="col-auto">
+            <div class="col-auto" v-auto-animate>
                 <img :src="this.cover"  width="48" height="48" :alt="this.name" />
                 <span class="mx-2">{{ this.name }}</span>
             </div>

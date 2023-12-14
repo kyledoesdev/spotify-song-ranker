@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.artistSelected">
+    <div v-if="this.artistSelected" v-auto-animate>
         <div class="row">
             <div class="col m-2">
                 <div class="card">
@@ -35,8 +35,8 @@
             </div>
             <div class="col m-2">
                 <div class="card">
-                    <div class="card-body card-scroller">
-                        <div class="col-auto" v-for="song in this.artistSongs" :key="song.id" >
+                    <div class="card-body card-scroller" v-auto-animate>
+                        <div class="col-auto" v-for="song in this.artistSongs" :key="song.id">
                             <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></songlistitem>
                         </div>
                     </div>

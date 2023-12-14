@@ -21,7 +21,7 @@
         </div>
     </div>
     <hr />
-    <div class="row mt-4">
+    <div class="row mt-4" v-auto-animate>
         <div :class="artistClass" v-for="artist in artists" :key="artist.id">
             <rankingsetup :id="artist.id" :name="artist.name" :cover="artist.cover"></rankingsetup>
         </div>

@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="card-body" style="max-height: 600px;">
-                <div class="row">
+                <div class="row" v-auto-animate>
                     <div class="col-md-6">
                         <label for="ranking_name">Change ranking name:</label>
                         <input class="form-control mb-2" type="text" name="ranking_name" id="" v-model="rankingName" />

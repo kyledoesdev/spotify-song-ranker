@@ -1,6 +1,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import mitt from 'mitt';
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 
 import Globals from './modules/globals';
 import Alerts from './modules/alerts';
@@ -21,6 +22,8 @@ app.config.globalProperties.emitter = mitt();
 
 app.mixin(Globals);
 app.mixin(Alerts);
+
+app.use(autoAnimatePlugin);
 
 app.component('welcome', Welcome);
 app.component('home', Home);
