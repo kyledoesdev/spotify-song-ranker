@@ -1,7 +1,7 @@
 <template>
     <div class="row" v-auto-animate>
         <div class="col-auto">
-            <h5 class="mt-2">Search Spotify for an artist to rank.</h5>
+            <h5 class="mt-2">Search for an artist to rank to get started.</h5>
         </div>
         <div class="col-auto">
             <div class="input-group">

@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('login');
-
-Auth::Routes();
-
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome');
 Route::get('/login/spotify', [App\Http\Controllers\SpotifyAuthController::class, 'login'])->name('spotify.login');
 Route::get('/login/spotify/callback', [App\Http\Controllers\SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
+Route::get('/logout', function() {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

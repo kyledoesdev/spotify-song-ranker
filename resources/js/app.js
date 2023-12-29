@@ -3,9 +3,11 @@ import { createApp } from 'vue';
 import mitt from 'mitt';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 
+/* Modules */
 import Globals from './modules/globals';
 import Alerts from './modules/alerts';
 
+/* Components */
 import Welcome from './components/Welcome.vue';
 import Home from './components/Home.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
@@ -20,6 +22,7 @@ const app = createApp({});
 
 app.config.globalProperties.emitter = mitt();
 
+//mixin modules
 app.mixin(Globals);
 app.mixin(Alerts);
 
