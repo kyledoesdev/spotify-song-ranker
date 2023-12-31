@@ -20,6 +20,12 @@ Route::get('/logout', function() {
     return redirect('/');
 })->name('logout');
 
+Route::get('/bugsnag_test', function() {
+    if (auth()->user() && auth()->user()->id == 1) {
+        throw new \Exception;
+    }
+});
+
 Route::middleware(['auth'])->group(function() {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
