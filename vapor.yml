@@ -2,7 +2,7 @@ id: 55482
 name: kyles-spotify-song-ranker
 environments:
     production:
-        domain: discog-rank.com
+        domain: song-rank.com
         database: kyle-song-ranking-database
         memory: 1024
         cli-memory: 512
