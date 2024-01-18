@@ -1,6 +1,16 @@
 import Swal from 'sweetalert2';
 
 export default {
+    data() {
+        return {
+            styles: {
+                'confirm-btn': 'btn btn-sm btn-success m-2 p-2',
+                'cancel-btn': 'btn btn-sm btn-danger m-2 p-2',
+                'redirect-btn': 'btn btn-sm btn-success',
+            }
+        };
+    },
+
     methods: {
         flash(title, text, icon = 'success') {
             return this.swal().fire({
@@ -10,11 +20,11 @@ export default {
             });
         },
 
-        flashWithRedirect(title, icon = 'success', redirectLink, buttonText = 'View here!', buttonClass = 'btn btn-success') {
+        flashWithRedirect(title, icon = 'success', redirectLink, buttonText = 'View here!') {
             return this.swal().fire({
                 title: title, 
                 icon: icon,
-                html: '<a class="'+buttonClass+'" href="'+redirectLink+'">'+buttonText+'</a>',
+                html: '<a class="' + this.styles['redirect-btn'] + '" href="' + redirectLink + '">' + buttonText + '</a>',
                 showConfirmButton: false
             });
         },
@@ -44,11 +54,19 @@ export default {
         swal() {
             return Swal.mixin({
                 customClass: {
-                    confirmButton: 'btn btn-success p-2 m-2',
-                    cancelButton: 'btn btn-danger p-2 m-2',
+                    confirmButton: this.styles['confirm-btn'],
+                    cancelButton: this.styles['cancel-btn'],
                 },
                 buttonsStyling: false
             });
-        }
+        },
+
+        overrideFlashStyles(newstyles) {
+            for (const style in newstyles) {
+                this.styles[style] = newstyles[style];
+            }
+
+            return this;
+        },
     },
 }

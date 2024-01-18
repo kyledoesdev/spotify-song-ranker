@@ -25,16 +25,6 @@
                         <input class="form-control mb-2" type="text" name="ranking_name" id="" v-model="rankingName" />
                     </div>
                     <hr/>
-                    <h5>Remove Songs from the Ranking</h5>
-                    <div class="row" v-for="song in songs" :key="song.id">
-                        <songlistitem 
-                            class="col-sm-6 m-1"
-                            :id="song.id"
-                            :name="song.title"
-                            :cover="song.cover"
-                            :candelete="true"
-                        />
-                    </div>
                 </div>
             </div>
         </div>

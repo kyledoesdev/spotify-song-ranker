@@ -58,20 +58,28 @@
                         <td>
                             <div class="row">
                                 <div class="col mt-2">
-                                    <button class="btn btn-sm btn-dark border border-2 border-dark m-1 text-white" @click="show(ranking.id)">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-                                    <a 
-                                        class="btn btn-sm btn-secondary border border-2 border-dark m-1 text-white" 
-                                        v-if="!ranking.is_ranked" 
-                                        :href="getEditURI(ranking.id)"
-                                    >
-                                        <i class="fa-regular fa-pen-to-square"></i>
-                                    </a>
-
-                                    <button class="btn btn-sm btn-danger border border-2 border-dark m-1"  @click="destroy(ranking.id)">
-                                        <i class="fa fa-trash-can"></i>
-                                    </button>
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="#" @click="show(ranking.id)">
+                                                    View
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" :href="getEditURI(ranking.id)">
+                                                    Edit
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="#" @click="destroy(ranking.id)">
+                                                    Delete
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -96,14 +104,8 @@
     </div>
 </template>
 <script>
-    import EditRanking from '../RankSetup/EditRanking.vue';
-
     export default {
         name: 'All Rankings',
-
-        components: {
-            EditRanking,
-        },
 
         data() {
             return {

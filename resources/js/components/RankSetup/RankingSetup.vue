@@ -134,25 +134,38 @@
                 this.artistSongs = filtered;
             },
 
-            beginRanking() {
-                axios.post('/rank/create', {
-                    'artist_id': this.id,
-                    'artist_name' : this.name,
-                    'artist_img': this.cover,
-                    'name': this.rankingName,
-                    'songs': this.artistSongs
+            async beginRanking() {
+                let confirmed = await this.overrideFlashStyles({
+                    'confirm-btn': 'btn btn-sm btn-secondary p-2 m-2',
                 })
-                .then(response => {
-                    const data = response.data;
+                .check(
+                    "Are you ready?",
+                    "Are you ready to begin ranking? After starting the ranking process, you will not be able to remove or edit the songs in the ranking. You will only be able to update the title.",
+                    "info",
+                    "Let's Go!",
+                    "Cancel"
+                );
 
-                    if (data && data.redirect) {
-                        window.location.href = response.data.redirect;
-                    }
-                    
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+                if (confirmed) {
+                    axios.post('/rank/create', {
+                        'artist_id': this.id,
+                        'artist_name' : this.name,
+                        'artist_img': this.cover,
+                        'name': this.rankingName,
+                        'songs': this.artistSongs
+                    })
+                    .then(response => {
+                        const data = response.data;
+
+                        if (data && data.redirect) {
+                            window.location.href = response.data.redirect;
+                        }
+                        
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
             }
         },
 

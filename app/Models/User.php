@@ -16,6 +16,7 @@ class User extends Authenticatable {
         'spotify_id',
         'name',
         'email',
+        'avatar',
         'external_token',
         'external_refresh_token'
     ];

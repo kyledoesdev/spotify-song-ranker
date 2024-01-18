@@ -22,6 +22,7 @@ class SpotifyAuthController extends Controller {
         ], [
             'name' => $user->name,
             'email' => $user->email,
+            'avatar' => $user->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$user->name}",
             'external_token' => $user->token,
             'external_refresh_token' => $user->refreshToken
         ]);

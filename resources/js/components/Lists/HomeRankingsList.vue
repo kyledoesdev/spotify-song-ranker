@@ -3,7 +3,7 @@
         <div class="card-body mb-2" style="min-height: 100%; overflow-y: auto;">
             <div class="row">
                 <div class="col">
-                    <h5 class="mt-2">Your Lists</h5>
+                    <h5 class="mt-2">Your recent lists.</h5>
                 </div>
             </div>
             <hr />
