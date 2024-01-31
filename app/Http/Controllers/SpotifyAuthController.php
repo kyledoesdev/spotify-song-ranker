@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class SpotifyAuthController extends Controller {
     public function login() {
+        Log::warning("Someone is trying to log in to Song Rank!");
+
         return Socialite::driver('spotify')
             ->scopes(['user-read-email'])
             ->redirect();
