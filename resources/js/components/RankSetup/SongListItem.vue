@@ -2,10 +2,10 @@
     <div class="m-2">
         <div class="row d-flex">
             <div class="col-auto" v-auto-animate>
-                <img :src="this.cover"  width="48" height="48" :alt="this.name" />
-                <span class="mx-2">{{ this.name }}</span>
+                <img :src="cover"  width="48" height="48" :alt="name" />
+                <span class="mx-2">{{ name }}</span>
             </div>
-            <div class="col d-flex justify-content-end m-1" v-if="this.candelete">
+            <div class="col d-flex justify-content-end m-1" v-if="candelete">
                 <button type="button" class="btn btn-sm btn-danger pb-0 pt-0" @click="removeSong()">
                     <i class="fa-solid fa-trash-can"></i>
                 </button>

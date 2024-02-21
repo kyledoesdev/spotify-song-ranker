@@ -28,12 +28,14 @@ https://www.kyleevangelisto.com
         <div id="app" style="padding-bottom: 10vh">
             <div class="container-fluid">
                 <main class="m-4">
+                    @include('layouts.partials.messages')
                     @yield('content')
                 </main>
             </div>
         </div>
         <footer class="bg-dark text-white" style="margin-top: auto; min-height: 10vh; overflow: hidden;">
             @include('layouts.partials.footer')
+            @stack('scripts')
         </footer>
     </body>
 </html>

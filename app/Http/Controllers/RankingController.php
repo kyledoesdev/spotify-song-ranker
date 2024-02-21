@@ -64,6 +64,8 @@ class RankingController extends Controller {
     public function finish(FinishRankingRequest $request) : JsonResponse {
         Ranking::complete(collect($request->songs), $request->rankingId);
 
+        session()->flash('success', "Ranking was succesfully saved!");
+
         return response()->json([
             'redirect' => route('home')
         ], 200);
