@@ -36,7 +36,7 @@
         },
 
         methods: {
-            search() {
+            search() {                
                 axios.get('/spotify/search', {
                     params: {
                         'artist': this.searchTerm
@@ -47,12 +47,12 @@
                         this.artists = response.data.artists
 
                         if (this.artists.length == 0) {
-                            alert('Could not find artists for search term: ' + this.searchTerm);
+                            this.flash("No Artists' found.", 'Could not find artists for search term: ' + this.searchTerm, 'error');
                         }
                     }
                 })
                 .catch(error => {
-                   alert(error.response.data.message);
+                    this.flash("Error", error.response.data.message, 'error');
                 });
             },
 

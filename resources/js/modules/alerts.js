@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 export default {
     data() {
         return {
-            styles: {
+            flash_styles: {
                 'confirm-btn': 'btn btn-sm btn-success m-2 p-2',
                 'cancel-btn': 'btn btn-sm btn-danger m-2 p-2',
                 'redirect-btn': 'btn btn-sm btn-success',
@@ -24,7 +24,7 @@ export default {
             return this.swal().fire({
                 title: title, 
                 icon: icon,
-                html: '<a class="' + this.styles['redirect-btn'] + '" href="' + redirectLink + '">' + buttonText + '</a>',
+                html: '<a class="' + this.flash_styles['redirect-btn'] + '" href="' + redirectLink + '">' + buttonText + '</a>',
                 showConfirmButton: false
             });
         },
@@ -54,8 +54,8 @@ export default {
         swal() {
             return Swal.mixin({
                 customClass: {
-                    confirmButton: this.styles['confirm-btn'],
-                    cancelButton: this.styles['cancel-btn'],
+                    confirmButton: this.flash_styles['confirm-btn'],
+                    cancelButton: this.flash_styles['cancel-btn'],
                 },
                 buttonsStyling: false
             });
@@ -63,10 +63,14 @@ export default {
 
         overrideFlashStyles(newstyles) {
             for (const style in newstyles) {
-                this.styles[style] = newstyles[style];
+                this.flash_styles[style] = newstyles[style];
             }
 
             return this;
         },
+
+        buildFlash() {
+            return this;
+        }
     },
 }

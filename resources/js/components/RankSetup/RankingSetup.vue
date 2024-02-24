@@ -56,20 +56,27 @@
         </div>
     </div>
     <div v-else>
-        <div class="m-2">
+        <div class="m-2 p-2">
             <div class="row">
-                <div class="col">
+                <div class="col-auto">
                     <img :src="cover" 
                         :width="this.artistImageWidth" 
                         :height="this.artistImageHeight" 
                         @click="loadSongs"
                         :alt="this.name"
                     >
-                </div>
-            </div>
-            <div class="row">
-                <div class="col d-flex">
                     <h5 class="mt-1">{{ this.name }}</h5>
+                    <a 
+                        :href="artistLink" 
+                        target="_blank"
+                        style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px;"
+                    >
+                        <p style="display: inline; color: #06D6A0;">
+                            Listen on <img src="/spotify-logo.png" style="display: inline;">
+                        </p>
+                        <div style="display: inline-block; width: 5px;"></div>
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -135,16 +142,17 @@
             },
 
             async beginRanking() {
-                let confirmed = await this.overrideFlashStyles({
-                    'confirm-btn': 'btn btn-sm btn-secondary p-2 m-2',
-                })
-                .check(
-                    "Are you ready?",
-                    "Are you ready to begin ranking? After starting the ranking process, you will not be able to remove or edit the songs in the ranking. You will only be able to update the title.",
-                    "info",
-                    "Let's Go!",
-                    "Cancel"
-                );
+                let confirmed = await this.buildFlash()
+                    .overrideFlashStyles({
+                        'confirm-btn': 'btn btn-sm btn-secondary p-2 m-2',
+                    })
+                    .check(
+                        "Are you ready?",
+                        "Are you ready to begin ranking? After starting the ranking process, you will not be able to remove or edit the songs in the ranking. You will only be able to update the title.",
+                        "info",
+                        "Let's Go!",
+                        "Cancel"
+                    );
 
                 if (confirmed) {
                     axios.post('/rank/create', {
@@ -173,6 +181,10 @@
             cover() {
                 return this.cover ? this.cover : "";
             },
+
+            artistLink() {
+                return "https://open.spotify.com/artist/" + this.id;
+            }
         },
 
         created() {

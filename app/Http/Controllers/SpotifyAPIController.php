@@ -123,5 +123,4 @@ class SpotifyAPIController extends Controller {
             'songs' => $songs
         ], 200);
     }
-
 }

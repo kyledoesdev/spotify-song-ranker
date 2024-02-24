@@ -19,7 +19,7 @@
                             <h1 class="mt-2">{{ $ranking->name }}</h1>
                         </div>
                         <div class="col d-flex justify-content-end m-2">
-                            <a href="{{ route('home') }}" class="btn btn-primary border border-1 border-dark">
+                            <a href="{{ route('home') }}" class="btn btn-primary border border-1 border-dark mt-1">
                                 <i class="fa fa-house"></i>
                             </a>
                         </div>
@@ -76,7 +76,7 @@
 
 @push('scripts')
     <script defer>
-        let songs = {!! $songs !!};
+        let songs = {!! $songs->shuffle() !!};
         let sortedList = null;
 
         function compareSongs(song1, song2) {
@@ -85,49 +85,15 @@
                 let song2Box = document.getElementById('song_2_box');
                 
                 if (song1Box !== null && song2Box !== null) {
-                    song1Box.innerHTML = `
-                        <iframe
-                            src="https://open.spotify.com/embed/track/${song1.spotify_song_id}"
-                            width="512" 
-                            height="232" 
-                            frameborder="0" 
-                            allowtransparency="true" 
-                            allow="encrypted-media"
-                            loading="lazy"
-                        >
-                        </iframe>
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-auto">
-                                <button class="btn btn-primary border border-dark border-1" onclick="resolveComparison(${song1.id})">`+ song1.title +`</button>
-                            </div>
-                        </div>
-                    `;
-
-                    song2Box.innerHTML = `
-                        <iframe
-                            src="https://open.spotify.com/embed/track/${song2.spotify_song_id}"
-                            width="512" 
-                            height="232" 
-                            frameborder="0" 
-                            allowtransparency="true" 
-                            allow="encrypted-media"
-                            loading="lazy"
-                        >
-                        </iframe>
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-auto">
-                                <button class="btn btn-secondary border border-dark border-1" onclick="resolveComparison(${song2.id})">`+ song2.title +`</button>
-                            </div>
-                        </div>
-                    `;
+                    song1Box.innerHTML = buildChoice(song1);
+                    song2Box.innerHTML = buildChoice(song2);
                 }
 
-                // This function will be called when the user makes a selection
                 window.resolveComparison = (selectedId) => {
                     song1Box.innerHTML = '';
                     song2Box.innerHTML = '';
                     const selectedSong = selectedId === song1.id ? song1 : song2;
-                    resolve(selectedSong); // Resolve the promise with the selected song
+                    resolve(selectedSong);
                 };
             });
         }
@@ -216,7 +182,57 @@
             });
         }
 
+        function buildChoice(song) {
+            return `
+                <iframe
+                    src="https://open.spotify.com/embed/track/${song.spotify_song_id}"
+                    width="512" 
+                    height="232" 
+                    frameborder="0" 
+                    allowtransparency="true" 
+                    allow="encrypted-media"
+                >
+                </iframe>
+                <br>
+                <a 
+                    href="https://open.spotify.com/track/${song.spotify_song_id}"
+                    target="_blank"
+                    style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px;"
+                >
+                    <p style="display: inline; color: #06D6A0;">
+                        Listen on <img src="/spotify-logo.png" style="display: inline;">
+                    </p>
+                    <div style="display: inline-block; width: 5px;"></div>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <br>
+                <hr>
+                <div class="row d-flex justify-content-center pt-2">
+                    <div class="col-auto">
+                        <button 
+                            class="btn btn-primary border border-dark border-1" 
+                            onclick="resolveComparison(${song.id})"
+                        >
+                            ${song.title}
+                        </button>
+                    </div>
+                </div>
+            `
+        }
+
         // Call this function when you want to start the sorting process
         startSortingProcess();
+
+        window.addEventListener("beforeunload", function(event) {
+            // Cancel the event
+            event.preventDefault();
+            // Chrome requires returnValue to be set
+            event.returnValue = "";
+
+            // Prompt the user
+            var confirmationMessage = "Are you sure you want to leave? Your changes may not be saved.";
+            (event || window.event).returnValue = confirmationMessage; //Gecko + IE
+            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        });
     </script>
 @endpush
