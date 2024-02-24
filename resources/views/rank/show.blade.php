@@ -76,6 +76,7 @@
 
 @push('scripts')
     <script defer>
+        let logo = "{!! asset('spotify-logo.png') !!}";
         let songs = {!! $songs->shuffle() !!};
         let sortedList = null;
 
@@ -200,7 +201,7 @@
                     style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px;"
                 >
                     <p style="display: inline; color: #06D6A0;">
-                        Listen on <img src="/public/spotify-logo.png" style="display: inline;">
+                        Listen on <img src="${logo}" style="display: inline;">
                     </p>
                     <div style="display: inline-block; width: 5px;"></div>
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>

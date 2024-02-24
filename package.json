@@ -19,6 +19,7 @@
         "@formkit/auto-animate": "^0.8.1",
         "@vitejs/plugin-vue": "^4.3.3",
         "bootstrap": "^5.3.1",
+        "laravel-vapor": "^0.7.0",
         "mitt": "^3.0.1",
         "sweetalert2": "^11.6.13",
         "vue": "^3.2.36",
