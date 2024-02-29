@@ -13,10 +13,10 @@
             </div>
         </div>
         <div class="card-body" v-auto-animate>
-            <table class="table table-responsive table-striped" style="overflow-x: auto;" v-auto-animate>
+            <table class="table table-responsive table-striped" v-auto-animate>
                 <thead>
                     <tr>
-                        <th></th>
+                        <!-- <th></th> -->
                         <th>Artist</th>
                         <th>Ranking Name</th>
                         <th>Song Count</th>
@@ -27,9 +27,9 @@
                 </thead>
                 <tbody v-auto-animate>
                     <tr v-for="ranking in ranks.data" :key="ranking.id">
-                        <td class="col-auto">
+                        <!-- <td class="col-auto">
                             <img :src="ranking.artist.artist_img" :alt="ranking.artist.artist_name" style="max-width: 75px; max-height: 75px;">
-                        </td>
+                        </td> -->
                         <td>{{ ranking.artist.artist_name }}</td>
                         <td>{{ ranking.name }}</td>
                         <td>{{ ranking.songs_count }}</td>
@@ -52,7 +52,7 @@
                             </div>
                         </td>
                         <td>
-                            <span v-if="ranking.is_ranked">{{ ranking.updated_at }}</span>
+                            <span v-if="ranking.is_ranked">{{ ranking.completed_at }}</span>
                             <span v-else>In Progress</span>
                         </td>
                         <td>
@@ -92,10 +92,18 @@
                 <div class="col d-flex justify-content-end">
                     <ul class="pagination">
                         <li v-if="ranks.prev_page_url">
-                            <a class="btn btn-sm btn-primary border border-1 border-dark" @click.prevent="pageRankings(ranks.prev_page_url)" href="#">&larr; Previous Page</a>
+                            <a class="btn btn-sm btn-primary border border-1 border-dark" 
+                                @click.prevent="pageRankings(ranks.prev_page_url)" href="#"
+                            >
+                                &larr; Previous Page
+                            </a>
                         </li>
                         <li v-if="ranks.next_page_url">
-                            <a class="btn btn-sm btn-primary border border-1 border-dark" @click.prevent="pageRankings(ranks.next_page_url)" href="#">Next Page &rarr;</a>
+                            <a class="btn btn-sm btn-primary border border-1 border-dark" 
+                                @click.prevent="pageRankings(ranks.next_page_url)" href="#"
+                            >
+                                Next Page &rarr;
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -118,29 +126,43 @@
                 window.location.href = '/rank/' + rankingId;
             },
 
-            destroy(rankingId) {
-                axios.post('/rank/delete', {
-                    'rankingId': rankingId
-                })
-                .then(response => {
-                    const data = response.data;
+            async destroy(rankingId) {
+                let confirmed = await this.buildFlash()
+                    .overrideFlashStyles({
+                        'confirm-btn': 'btn btn-sm btn-danger m-2 p-2'
+                    })
+                    .check(
+                        "Delete Ranking?",
+                        "Are you sure you want to delete this ranking?",
+                        "info",
+                        "Delete"
+                    );
 
-                    if (data && data.message && data.rankings) {
-                        this.flash('Ranking Deleted', data.message);
-                        this.ranks = response.data.rankings;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+                if (confirmed) {
+                    axios.post('/rank/delete', {
+                        'rankingId': rankingId
+                    })
+                    .then(response => {
+                        const data = response.data;
+
+                        if (data && data.message && data.rankings) {
+                            this.buildFlash()
+                                .overrideFlashStyles({
+                                    'confirm-btn': 'btn btn-sm btn-success m-2 p-2'
+                                })
+                                .flash('Ranking Deleted', data.message);
+                            
+                            this.ranks = response.data.rankings;
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                }
             },
 
             topSong(ranking) {
-                for (const song in ranking.songs) {
-                    if (ranking.songs[song].rank == 1) {
-                        return ranking.songs[song].spotify_song_id;
-                    }
-                }
+                return Object.values(ranking.songs).find(song => song.rank === 1)?.spotify_song_id;
             },
 
             pageRankings(uri) {

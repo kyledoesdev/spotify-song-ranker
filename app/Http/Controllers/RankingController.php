@@ -24,7 +24,7 @@ class RankingController extends Controller {
 
         //if ranking is not complete && the ranking doesn't belong to auth user abort
         if (!$ranking->is_ranked && $ranking->user_id != auth()->id()) {
-            abort(403, "This ranking is not complete. You do not have permission to view it.");
+            abort(403, "This ranking is not complete. You can not view it.");
         }
 
         return view('rank.show', [
@@ -51,10 +51,9 @@ class RankingController extends Controller {
     }
 
     public function update(UpdateRankingRequest $request, $id) : JsonResponse {
-        $ranking = Ranking::findOrFail($id);
-        $ranking->update(['name' => $request->name]);
-        $ranking->songs()->forceDelete();
-        $ranking->updateSongs($request->songs, $ranking->id);
+        Ranking::findOrFail($id)->update(['name' => $request->name]);
+
+        session()->flash('success', "Ranking was succesfully updated!");
 
         return response()->json([
             'redirect' => route('rank.index'),

@@ -1,6 +1,6 @@
 <template>
-    <div class="m-2">
-        <div class="row d-flex">
+    <div class="m-2" v-auto-animate>
+        <div class="row d-flex" v-auto-animate>
             <div class="col-auto" v-auto-animate>
                 <img :src="cover"  width="72" height="72" :alt="name" />
             </div>

@@ -12,7 +12,6 @@ class UpdateRankingRequest extends FormRequest {
 
     public function rules(): array {
         return [
-            'songs' => 'required',
             'name' => 'required'
         ];
     }

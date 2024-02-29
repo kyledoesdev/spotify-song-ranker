@@ -36,7 +36,7 @@
                     @endif
                     <div class="row d-flex justify-content-center" id="song-container">
                         @if ($ranking->is_ranked)
-                            <div class="m-2">
+                            <div class="m-2" style="max-height: 600px; overfloy-y: auto;">
                                 <ol>
                                     @foreach ($songs as $song)
                                         <li>

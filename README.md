@@ -13,7 +13,6 @@
 
 ### TODO
 - Make the website spotify friendly (so they approve it)
-- confirm delete when deleting ranking
 - fix styling on home icon
 - add toggle switch to toggle between widget and album art when ranking
 - loader for when loading a lot of songs

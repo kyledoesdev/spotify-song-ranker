@@ -15,7 +15,8 @@ class Ranking extends Model {
         'user_id',
         'artist_id',
         'name',
-        'is_ranked'
+        'is_ranked',
+        'completed_at',
     ];
 
     public $casts = [
@@ -34,8 +35,8 @@ class Ranking extends Model {
         return $this->hasMany(Song::class);
     }
 
-    public function getUpdatedAtAttribute() {
-        return Carbon::parse($this->attributes['updated_at'])->diffForHumans();
+    public function getCompletedAtAttribute() {
+        return Carbon::parse($this->attributes['completed_at'])->diffForHumans();
     }
 
     /**
@@ -86,26 +87,8 @@ class Ranking extends Model {
             ]);
         }
 
-        self::find($id)->update(['is_ranked' => true]);
+        self::find($id)->update(['is_ranked' => true, 'completed_at' => now()]);
         Song::where('ranking_id', $id)->forceDelete();
         Song::insert($data);
-    }
-
-    public function updateSongs($songs, $rankingId) : bool {
-        $data = [];
-        foreach ($songs as $song) { 
-            array_push($data, [
-                'ranking_id' => $rankingId,
-                'spotify_song_id' => $song['spotify_song_id'],
-                'title' => $song['title'],
-                'cover' => $song['cover'],
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        }
-
-        Song::insert($data);
-
-        return true;
     }
 }

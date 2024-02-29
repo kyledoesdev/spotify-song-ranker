@@ -57,9 +57,9 @@
             </div>
             <div class="col-lg-8">
                 <h2>Tracks</h2>
-                <div class="card">
-                    <div class="card-body card-scroller">
-                        <div class="col-auto" v-for="song in this.artistSongs" :key="song.id">
+                <div class="card" v-auto-animate>
+                    <div class="card-body card-scroller" v-auto-animate>
+                        <div class="col-auto" v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
                             <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></songlistitem>
                         </div>
                     </div>
@@ -153,9 +153,6 @@
 
             async beginRanking() {
                 let confirmed = await this.buildFlash()
-                    .overrideFlashStyles({
-                        'confirm-btn': 'btn btn-sm btn-secondary p-2 m-2',
-                    })
                     .check(
                         "Are you ready?",
                         "Are you ready to begin ranking? After starting the ranking process, you will not be able to remove or edit the songs in the ranking. You will only be able to update the title.",

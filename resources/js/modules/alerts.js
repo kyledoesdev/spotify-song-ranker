@@ -1,13 +1,15 @@
 import Swal from 'sweetalert2';
 
+const default_flash_styles = {
+    'confirm-btn': 'btn btn-sm btn-primary m-2 p-2',
+    'cancel-btn': 'btn btn-sm btn-secondary m-2 p-2',
+    'redirect-btn': 'btn btn-sm btn-dark',
+};
+
 export default {
     data() {
         return {
-            flash_styles: {
-                'confirm-btn': 'btn btn-sm btn-success m-2 p-2',
-                'cancel-btn': 'btn btn-sm btn-danger m-2 p-2',
-                'redirect-btn': 'btn btn-sm btn-success',
-            }
+            flash_styles: default_flash_styles,
         };
     },
 
@@ -41,14 +43,6 @@ export default {
             }).then((result) => {
                 return result.isConfirmed;
             });
-        },
-
-        flashDefaultSuccess() {
-            this.flash("Success", "Saved Successfully!");
-        },
-
-        flashDefaultError() {
-            this.flash("Error", "Sorry, we messed something up. Try again later!", "error");
         },
 
         swal() {

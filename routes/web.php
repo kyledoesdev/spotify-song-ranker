@@ -26,6 +26,10 @@ Route::get('/bugsnag_test', function() {
     }
 });
 
+Route::get('/login', function() {
+    return redirect(route('welcome'))->withErrors('Something went wrong trying with our integration with Spotify. Please try again later.');
+})->name('login');
+
 Route::middleware(['auth'])->group(function() {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
