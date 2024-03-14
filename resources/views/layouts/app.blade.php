@@ -1,8 +1,7 @@
 <!--
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(c){{ now()->format('Y') }} Kyle Evangelisto. All rights reserved.
-https://www.kyleevangelisto.com
+(c){{ now()->format('Y') }} Kyle E. All rights reserved.
 
 (c){{ now()->format('Y') }} Kyle's Song Ranker. All rights reserved.
 
