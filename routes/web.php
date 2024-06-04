@@ -15,22 +15,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome');
 Route::get('/login/spotify', [App\Http\Controllers\SpotifyAuthController::class, 'login'])->name('spotify.login');
 Route::get('/login/spotify/callback', [App\Http\Controllers\SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
-Route::get('/logout', function() {
+Route::get('/logout', function () {
     Auth::logout();
+
     return redirect('/');
 })->name('logout');
 
-Route::get('/bugsnag_test', function() {
+Route::get('/bugsnag_test', function () {
     if (auth()->user() && auth()->user()->id == 1) {
         throw new \Exception;
     }
 });
 
-Route::get('/login', function() {
+Route::get('/login', function () {
     return redirect(route('welcome'))->withErrors('Something went wrong trying with our integration with Spotify. Please try again later.');
 })->name('login');
 
-Route::middleware(['auth'])->group(function() {
+Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::get('/spotify/search', [App\Http\Controllers\SpotifyAPIController::class, 'search'])->name('spotify.search_api');

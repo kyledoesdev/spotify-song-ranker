@@ -10,7 +10,8 @@ class SpotifyAPITest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
     }
 
@@ -19,7 +20,7 @@ class SpotifyAPITest extends TestCase
      */
     public function test_example(): void
     {
-        var_dump(env("APP_ENV"));
+        var_dump(env('APP_ENV'));
 
         $response = $this->get('/');
 
