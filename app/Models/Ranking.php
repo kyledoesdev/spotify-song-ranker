@@ -17,9 +17,12 @@ class Ranking extends Model
         'completed_at',
     ];
 
-    public $casts = [
-        'is_ranked' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'is_ranked' => 'boolean',
+        ];
+    }
 
     public function user(): BelongsTo
     {
