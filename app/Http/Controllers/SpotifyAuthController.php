@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
-class SpotifyAuthController extends Controller {
-    public function login() {
+class SpotifyAuthController extends Controller 
+{
+    public function login() 
+    {
         return Socialite::driver('spotify')
             ->scopes(['user-read-email'])
             ->redirect();

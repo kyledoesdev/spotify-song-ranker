@@ -1,7 +1,7 @@
 <!--
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(c){{ now()->format('Y') }} Kyle E. All rights reserved.
+(c){{ now()->format('Y') }} Kyle Online. All rights reserved.
 
 (c){{ now()->format('Y') }} Kyle's Song Ranker. All rights reserved.
 
