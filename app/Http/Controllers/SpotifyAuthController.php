@@ -9,8 +9,6 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SpotifyAuthController extends Controller {
     public function login() {
-        Log::warning("Someone is trying to log in to Song Rank!");
-
         return Socialite::driver('spotify')
             ->scopes(['user-read-email'])
             ->redirect();
@@ -28,6 +26,8 @@ class SpotifyAuthController extends Controller {
             'external_token' => $user->token,
             'external_refresh_token' => $user->refreshToken
         ]);
+
+        Log::warning($user->email . ' just logged in!!');
 
         Auth::login($user);
 
