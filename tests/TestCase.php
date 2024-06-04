@@ -9,13 +9,13 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         DB::beginTransaction();
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         DB::rollBack();
         parent::tearDown();
