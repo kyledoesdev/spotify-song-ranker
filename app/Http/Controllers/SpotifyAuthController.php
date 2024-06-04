@@ -14,17 +14,18 @@ class SpotifyAuthController extends Controller {
             ->redirect();
     }
 
-    public function processLogin() {
+    public function processLogin()
+    {
         $user = Socialite::driver('spotify')->user();
 
         $user = User::updateOrCreate([
-            'spotify_id' => $user->id
+            'spotify_id' => $user->id,
         ], [
             'name' => $user->name,
             'email' => $user->email,
             'avatar' => $user->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$user->name}",
             'external_token' => $user->token,
-            'external_refresh_token' => $user->refreshToken
+            'external_refresh_token' => $user->refreshToken,
         ]);
 
         Log::warning($user->email . ' just logged in!!');

@@ -11,66 +11,73 @@ use App\Models\Song;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
-class RankingController extends Controller {
-
-    public function index() : View {
+class RankingController extends Controller
+{
+    public function index(): View
+    {
         return view('rank.index');
     }
 
-    public function show($id) : View {
+    public function show($id): View
+    {
         $ranking = Ranking::query()
             ->with('user')
             ->findOrFail($id);
 
         //if ranking is not complete && the ranking doesn't belong to auth user abort
-        if (!$ranking->is_ranked && $ranking->user_id != auth()->id()) {
-            abort(403, "This ranking is not complete. You can not view it.");
+        if (! $ranking->is_ranked && $ranking->user_id != auth()->id()) {
+            abort(403, 'This ranking is not complete. You can not view it.');
         }
 
         return view('rank.show', [
             'songs' => $ranking->songs,
             'ranking' => $ranking,
-            'creator' => $ranking->user->name
+            'creator' => $ranking->user->name,
         ]);
     }
-    
-    public function create(CreateRankingRequest $request) : JsonResponse {        
+
+    public function create(CreateRankingRequest $request): JsonResponse
+    {
         return response()->json([
             'redirect' => route('rank.show', [
-                'id' => Ranking::start($request)->id
-            ])
+                'id' => Ranking::start($request)->id,
+            ]),
         ], 200);
     }
 
-    public function edit($id) : View {
+    public function edit($id): View
+    {
         return view('rank.edit', [
             'ranking' => Ranking::query()
                 ->with('songs')
-                ->findOrFail($id)
+                ->findOrFail($id),
         ]);
     }
 
-    public function update(UpdateRankingRequest $request, $id) : JsonResponse {
+    public function update(UpdateRankingRequest $request, $id): JsonResponse
+    {
         Ranking::findOrFail($id)->update(['name' => $request->name]);
 
-        session()->flash('success', "Ranking was succesfully updated!");
+        session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
             'redirect' => route('rank.index'),
         ], 200);
     }
 
-    public function finish(FinishRankingRequest $request) : JsonResponse {
+    public function finish(FinishRankingRequest $request): JsonResponse
+    {
         Ranking::complete(collect($request->songs), $request->rankingId);
 
-        session()->flash('success', "Ranking was succesfully saved!");
+        session()->flash('success', 'Ranking was succesfully saved!');
 
         return response()->json([
-            'redirect' => route('home')
+            'redirect' => route('home'),
         ], 200);
     }
 
-    public function delete(DeleteRankingRequest $request) : JsonResponse {
+    public function delete(DeleteRankingRequest $request): JsonResponse
+    {
         Ranking::findOrFail($request->rankingId)->delete();
         Song::where('ranking_id', $request->rankingId)->forceDelete();
 
@@ -85,7 +92,8 @@ class RankingController extends Controller {
         ], 200);
     }
 
-    public function pages() : JsonResponse {
+    public function pages(): JsonResponse
+    {
         return response()->json([
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
@@ -93,8 +101,7 @@ class RankingController extends Controller {
                 ->with('songs')
                 ->withCount('songs')
                 ->latest()
-                ->paginate(5)
+                ->paginate(5),
         ], 200);
     }
-
 }
