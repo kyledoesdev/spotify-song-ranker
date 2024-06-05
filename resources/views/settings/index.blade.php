@@ -3,17 +3,16 @@
 @section('content')
     <div class="card" style="min-height: 600px">
         <div class="card-header">
-            <div class="row">
-                <div class="col">
-                    <h2 class="mt-2">Welcome, {{ auth()->user()->name }}</h2>
-                </div>
-                <div class="col d-flex justify-content-end mt-2">
-                    
-                </div>
-            </div>
+            @include('layouts.nav')
         </div>
         <div class="card-body">
-            doot doot
+            <settings />
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+
+    </script>
+@endpush

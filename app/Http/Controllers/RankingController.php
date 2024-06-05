@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RankingsExport;
 use App\Http\Requests\CreateRankingRequest;
 use App\Http\Requests\DeleteRankingRequest;
 use App\Http\Requests\FinishRankingRequest;
@@ -15,6 +16,8 @@ class RankingController extends Controller
 {
     public function index(): View
     {
+        dd(new RankingsExport);
+
         return view('rank.index');
     }
 
@@ -79,7 +82,7 @@ class RankingController extends Controller
     public function delete(DeleteRankingRequest $request): JsonResponse
     {
         Ranking::findOrFail($request->rankingId)->delete();
-        Song::where('ranking_id', $request->rankingId)->forceDelete();
+        Song::where('ranking_id', $request->rankingId)->delete();
 
         return response()->json([
             'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
@@ -102,6 +105,14 @@ class RankingController extends Controller
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),
+        ], 200);
+    }
+
+    public function export(): JsonResponse
+    {
+        return response()->json([
+            'success' => true,
+            'message' => "Your download has started and will be emailed to you when completed!"
         ], 200);
     }
 }
