@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\RankingsExport;
 use App\Http\Requests\CreateRankingRequest;
 use App\Http\Requests\DeleteRankingRequest;
 use App\Http\Requests\FinishRankingRequest;
@@ -14,10 +13,8 @@ use Illuminate\View\View;
 
 class RankingController extends Controller
 {
-    public function index(): View
+    public function index() : View
     {
-        dd(new RankingsExport);
-
         return view('rank.index');
     }
 
