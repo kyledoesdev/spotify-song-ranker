@@ -6,6 +6,7 @@ use App\Http\Requests\CreateRankingRequest;
 use App\Http\Requests\DeleteRankingRequest;
 use App\Http\Requests\FinishRankingRequest;
 use App\Http\Requests\UpdateRankingRequest;
+use App\Jobs\DownloadDataJob;
 use App\Models\Ranking;
 use App\Models\Song;
 use Illuminate\Http\JsonResponse;
@@ -107,6 +108,14 @@ class RankingController extends Controller
 
     public function export(): JsonResponse
     {
+        $rankings = Ranking::query()
+            ->where('user_id', auth()->id())
+            ->where('is_ranked', true)
+            ->with('songs', 'artist')
+            ->get();
+
+        DownloadDataJob::dispatch($rankings, auth()->user());
+
         return response()->json([
             'success' => true,
             'message' => "Your download has started and will be emailed to you when completed!"
