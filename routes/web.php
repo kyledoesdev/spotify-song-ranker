@@ -1,10 +1,9 @@
 <?php
 
+use App\Http\Controllers\RankingController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RankingController;
-use App\Http\Controllers\DownloadController;
-use App\Http\Controllers\SettingsController;
 
 Route::view('/', 'welcome')->name('welcome');
 Route::get('/login/spotify', [App\Http\Controllers\SpotifyAuthController::class, 'login'])->name('spotify.login');
@@ -23,7 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/spotify/artist_songs', [App\Http\Controllers\SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
 
     /* Ranking CRUD routes */
-    Route::get('/ranks', [RankingController::class, 'index'])->name('rank.index');
+    Route::view('/ranks', 'rank.index')->name('rank.index');
     Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
     Route::post('/rank/create', [RankingController::class, 'create'])->name('rank.create');
     Route::get('/rank/{id}/edit', [RankingController::class, 'edit'])->name('rank.edit');

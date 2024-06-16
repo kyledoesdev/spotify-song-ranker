@@ -14,15 +14,11 @@ use Illuminate\View\View;
 
 class RankingController extends Controller
 {
-    public function index() : View
-    {
-        return view('rank.index');
-    }
-
+    //TODO change from pk -> slug
     public function show($id): View
     {
         $ranking = Ranking::query()
-            ->with('user')
+            ->with('user', 'songs')
             ->findOrFail($id);
 
         //if ranking is not complete && the ranking doesn't belong to auth user abort

@@ -14,6 +14,13 @@
                 alt="User Actions"
             />
             <ul class="dropdown-menu">
+                @if (Route::currentRouteName() !== 'home')
+                    <li>
+                        <a class="dropdown-item" href="{{ route('home') }}">
+                            Home
+                        </a>
+                    </li>
+                @endif
                 <li>
                     <a class="dropdown-item" href="{{ route('settings.index') }}">
                         Settings

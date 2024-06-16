@@ -7,13 +7,11 @@
 - This application isn't limited to an artists' entire discography either, you can rank indivdual albums, a set
     of albums, just singles, etc. You can filter down your favorite artists' songs to just the ones you want to rank.
 - After you've finished a ranking, feel free to share your finalized list with friends, download the list & more.
-- This application is still under review by Spotify's API team to allow for any spotify user to login and begin ranking without being added to an "approved user list".
-    If you don't want to wait and want to start ranking your favorite artists' songs right now, feel free to contact me to be added to the "approved user list". My
-    discord is @spacelampsix (same with twitter).
 
 ### TODO
-- Make the website spotify friendly (so they approve it)
-- fix styling on home icon
-- add toggle switch to toggle between widget and album art when ranking
-- loader for when loading a lot of songs
-- better filtering on large song lists.
+- Fix Token issue for when token expires.
+- Delete account option
+- explore features
+- monitize it somehow
+- loader for when artist has a lot of songs
+- footer
