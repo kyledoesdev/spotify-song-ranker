@@ -1,8 +1,9 @@
 <template>
     <div class="row mb-2">
-        <div class="form-group">
-            <label class="mx-2">Download you data?</label>
-            <button class="btn btn-sm btn-success" @click="download">Go</button>
+        <div class="col m-2">
+            <div class="form-group">
+                <button class="btn btn-success" @click="download">Export your data</button>
+            </div>
         </div>
     </div>
 </template>
