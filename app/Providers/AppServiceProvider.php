@@ -5,8 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use SocialiteProviders\Spotify\Provider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Spotify\Provider;
 
 class AppServiceProvider extends ServiceProvider
 {

@@ -95,7 +95,7 @@ class Ranking extends Model
         }
 
         self::find($id)->update(['is_ranked' => true, 'completed_at' => now()]);
-        Song::where('ranking_id', $id)->forceDelete();
+        Song::where('ranking_id', $id)->delete();
         Song::insert($data);
     }
 }

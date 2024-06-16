@@ -14,6 +14,7 @@ import Alerts from './modules/alerts';
 /* Components */
 import Welcome from './components/Welcome.vue';
 import Home from './components/Home.vue';
+import Settings from './components/Settings.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
 import RankingSetup from './components/RankSetup/RankingSetup.vue';
 import SongListItem from './components/RankSetup/SongListItem.vue';
@@ -36,6 +37,7 @@ app.use(autoAnimatePlugin);
 
 app.component('welcome', Welcome);
 app.component('home', Home);
+app.component('settings', Settings);
 app.component('spotifysearch', SpotifySearch);
 app.component('rankingsetup', RankingSetup);
 app.component('songlistitem', SongListItem);

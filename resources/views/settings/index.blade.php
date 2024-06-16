@@ -6,7 +6,13 @@
             @include('layouts.nav')
         </div>
         <div class="card-body">
-            <home :lists="{{ $lists }}"></home>
+            <settings />
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+
+    </script>
+@endpush

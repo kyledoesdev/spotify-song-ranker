@@ -22,11 +22,6 @@
                         <p>
                             After you've finished a ranking, feel free to share your finalized list with friends, download the list & more.
                         </p>
-                        <p class="text-bold">
-                            This application is still under review by Spotify's API team to allow for any spotify user to login and begin ranking without being added to an "approved user list".
-                            If you don't want to wait and want to start ranking your favorite artists' songs right now, feel free to contact me to be added to the "approved user list". My
-                            discord is @spacelampsix (same with twitter).
-                        </p>
                         <hr />
                         <p>
                             <small class="text-muted"><i>For best experience, use this website on your computer.</i></small>

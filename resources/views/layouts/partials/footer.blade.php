@@ -10,11 +10,11 @@
         </div>
     </div>
     <div class="col-2 d-flex justify-content-end mx-4 mt-3">
-        {{-- <h1 style="cursor: pointer;">
+        <h1 style="cursor: pointer;">
             <a style="text-decoration: none;" href="https://ko-fi.com/spacelampsix" target="_blank">
                 <i class="fa-regular fa-credit-card fa-beat-fade fa-lg"></i>
             </a>
-        </h1> --}}
+        </h1>
     </div>
 </div>
 

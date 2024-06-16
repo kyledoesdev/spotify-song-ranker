@@ -6,6 +6,7 @@ use App\Http\Requests\CreateRankingRequest;
 use App\Http\Requests\DeleteRankingRequest;
 use App\Http\Requests\FinishRankingRequest;
 use App\Http\Requests\UpdateRankingRequest;
+use App\Jobs\DownloadDataJob;
 use App\Models\Ranking;
 use App\Models\Song;
 use Illuminate\Http\JsonResponse;
@@ -13,15 +14,11 @@ use Illuminate\View\View;
 
 class RankingController extends Controller
 {
-    public function index(): View
-    {
-        return view('rank.index');
-    }
-
+    //TODO change from pk -> slug
     public function show($id): View
     {
         $ranking = Ranking::query()
-            ->with('user')
+            ->with('user', 'songs')
             ->findOrFail($id);
 
         //if ranking is not complete && the ranking doesn't belong to auth user abort
@@ -79,7 +76,7 @@ class RankingController extends Controller
     public function delete(DeleteRankingRequest $request): JsonResponse
     {
         Ranking::findOrFail($request->rankingId)->delete();
-        Song::where('ranking_id', $request->rankingId)->forceDelete();
+        Song::where('ranking_id', $request->rankingId)->delete();
 
         return response()->json([
             'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
@@ -102,6 +99,22 @@ class RankingController extends Controller
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),
+        ], 200);
+    }
+
+    public function export(): JsonResponse
+    {
+        $rankings = Ranking::query()
+            ->where('user_id', auth()->id())
+            ->where('is_ranked', true)
+            ->with('songs', 'artist')
+            ->get();
+
+        DownloadDataJob::dispatch($rankings, auth()->user());
+
+        return response()->json([
+            'success' => true,
+            'message' => "Your download has started and will be emailed to you when completed!"
         ], 200);
     }
 }
