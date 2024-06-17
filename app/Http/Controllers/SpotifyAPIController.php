@@ -2,19 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SpotifyAPIController extends Controller
 {
+    private string $errorMsg;
+
     public function __construct(protected Client $client)
     {
         $this->client = new Client();
+        $this->errorMsg = "Something went wrong authenticating with Spotify's servers. Please log out and log back in.";
     }
 
     public function search(Request $request): JsonResponse
     {
+        $this->refreshToken();
+
         try {
             $response = $this->client->request(
                 'GET',
@@ -39,9 +45,9 @@ class SpotifyAPIController extends Controller
                     ]);
                 }
             });
-        } catch (\Exception) {
+        } catch (Exception) {
             return response()->json([
-                'message' => 'Please log out and log back in, your spotify authentication token has expired.',
+                'message' => $this->errorMsg,
             ], 500);
         }
 
@@ -52,6 +58,8 @@ class SpotifyAPIController extends Controller
 
     public function artistSongs(Request $request): JsonResponse
     {
+        $this->refreshToken();
+
         try {
             //first get the total number of artist albums
             $response = $this->client->request(
@@ -117,14 +125,42 @@ class SpotifyAPIController extends Controller
             //filter duplicate songs, like if a song is on an album and single.
             $songs = $songs->groupBy('name')->map->first();
 
-        } catch (\Exception) {
+        } catch (Exception) {
             return response()->json([
-                'message' => 'Please log out and log back in, your spotify authentication token has expired.',
+                'message' => $this->errorMsg,
             ], 500);
         }
 
         return response()->json([
             'songs' => $songs,
         ], 200);
+    }
+
+    private function refreshToken()
+    {
+        try {
+            $response = $this->client->request(
+                'POST',
+                "https://accounts.spotify.com/api/token", [
+                    'form_params' => [
+                        'grant_type' => 'refresh_token',
+                        'refresh_token' => auth()->user()->external_refresh_token,
+                        'client_id' => env('SPOTIFY_CLIENT_ID'),
+                        'client_secret' => env('SPOTIFY_CLIENT_SECRET'),
+                    ],
+                ]
+            );
+
+            $data = json_decode((string) $response->getBody(), true);
+
+            auth()->user()->update([
+                'external_token' => $data['access_token'],
+            ]);
+
+        } catch(Exception) {
+            return response()->json([
+                'message' => $this->errorMsg,
+            ], 500);
+        }
     }
 }
