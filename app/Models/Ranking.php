@@ -58,14 +58,14 @@ class Ranking extends Model
 
         $ranking = self::create([
             'user_id' => auth()->id(),
-            'artist_id' => $artist->id,
+            'artist_id' => $artist->getKey(),
             'name' => $request->name,
         ]);
 
         $songs = [];
         foreach ($request->songs as $song) {
             array_push($songs, [
-                'ranking_id' => $ranking->id,
+                'ranking_id' => $ranking->getKey(),
                 'spotify_song_id' => $song['id'],
                 'title' => $song['name'],
                 'cover' => $song['cover'],
@@ -89,13 +89,11 @@ class Ranking extends Model
                 'title' => $songs[$i]['title'],
                 'cover' => $songs[$i]['cover'],
                 'rank' => $i + 1,
-                'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
 
         self::find($id)->update(['is_ranked' => true, 'completed_at' => now()]);
-        Song::where('ranking_id', $id)->delete();
-        Song::insert($data);
+        Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
     }
 }
