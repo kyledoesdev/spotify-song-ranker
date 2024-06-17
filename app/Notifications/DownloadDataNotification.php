@@ -25,7 +25,7 @@ class DownloadDataNotification extends Notification
     {
         return (new MailMessage)
             ->markdown('emails.downloaded-data', ['notifiable' => $notifiable])
-            ->from('no-reply@kyles-song-ranker.com')
+            ->from('no-reply@song-rank.com')
             ->subject("Kyle's Song Ranker - Data Download Complete")
             ->attach(Excel::download(new RankingsExport($this->rankings), 'rankings.xlsx')->getFile(), ['as' => 'rankings.xlsx']);
     }
