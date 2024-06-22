@@ -32,7 +32,7 @@
                 </main>
             </div>
         </div>
-        <footer class="bg-dark text-white" style="margin-top: auto; min-height: 10vh; overflow: hidden;">
+        <footer class="bg-dark text-light">
             @include('layouts.partials.footer')
             @stack('scripts')
         </footer>

@@ -9,9 +9,7 @@
 - After you've finished a ranking, feel free to share your finalized list with friends, download the list & more.
 
 ### TODO
-- Fix Token issue for when token expires.
 - Delete account option
 - explore features
 - monitize it somehow
 - loader for when artist has a lot of songs
-- footer
