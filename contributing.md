@@ -3,7 +3,6 @@
 Thank you for considering contributing to our song-rank.com! We welcome all kinds of contributions, including bug fixes, feature requests, and documentation improvements. Please follow the guidelines below to get started.
 
 ## Table of Contents
-- [Code of Conduct](#code-of-conduct)
 - [How to Contribute](#how-to-contribute)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
