@@ -23,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
 
     /* Ranking CRUD routes */
     Route::view('/ranks', 'rank.index')->name('rank.index');
-    Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
     Route::post('/rank/create', [RankingController::class, 'create'])->name('rank.create');
     Route::get('/rank/{id}/edit', [RankingController::class, 'edit'])->name('rank.edit');
     Route::post('/rank/{id}/update', [RankingController::class, 'update'])->name('rank.update');
@@ -36,3 +35,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::post('/settings/delete', [SettingsController::class, 'destroy'])->name('settings.delete');
 });
+
+//no auth required to view completed ranking.
+Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
