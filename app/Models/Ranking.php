@@ -59,7 +59,7 @@ class Ranking extends Model
         $ranking = self::create([
             'user_id' => auth()->id(),
             'artist_id' => $artist->getKey(),
-            'name' => $request->name,
+            'name' => $request->name ?? $artist->artist_name . ' List - ' . now()->format('Y'),
         ]);
 
         $songs = [];

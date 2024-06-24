@@ -55,7 +55,7 @@ class RankingController extends Controller
     {
         Ranking::findOrFail($id)->update(['name' => $request->name]);
 
-        session()->flash('success', 'Ranking was succesfully updated!');
+        session()->flash('success', 'Ranking name was succesfully updated!');
 
         return response()->json([
             'redirect' => route('rank.index'),

@@ -40,11 +40,11 @@
                 <div class="card mt-2">
                     <div class="card-body">
                         <div class="row">
-                            <h5 class="mx-1 mb-2">Enter Ranking Name</h5>
+                            <h5 class="mx-1 mb-2">Custom Ranking Name?</h5>
                         </div>
                         <div class="row">
                             <div class="col d-flex justify-content-start">
-                                <input type="text" class="form-control" :placeholder="this.name + ' list'" v-model="rankingName" />
+                                <input type="text" class="form-control" :placeholder="this.name + ' list'" v-model="rankingName" maxlength="30" />
                             </div>
                             <div class="col d-flex justify-content-end">
                                 <button type="button" class="btn btn-primary" @click="beginRanking" :disabled="this.canBeginRanking">
