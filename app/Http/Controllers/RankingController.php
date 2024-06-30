@@ -94,8 +94,7 @@ class RankingController extends Controller
         return response()->json([
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
-                ->with('artist')
-                ->with('songs')
+                ->with(['artist', 'songs'])
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),

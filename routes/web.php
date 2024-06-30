@@ -1,25 +1,26 @@
 <?php
 
+use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\SettingsController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SpotifyAPIController;
+use App\Http\Controllers\SpotifyAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('welcome');
-Route::get('/login/spotify', [App\Http\Controllers\SpotifyAuthController::class, 'login'])->name('spotify.login');
-Route::get('/login/spotify/callback', [App\Http\Controllers\SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
-Route::get('/logout', function () {
-    Auth::logout();
+Route::view('/about', 'about')->name('about');
 
-    return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
-})->name('logout');
+Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');
+Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
+Route::get('/logout', [SpotifyAuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     /* Spotify API routes */
-    Route::get('/spotify/search', [App\Http\Controllers\SpotifyAPIController::class, 'search'])->name('spotify.search_api');
-    Route::get('/spotify/artist_songs', [App\Http\Controllers\SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
+    Route::get('/spotify/search', [SpotifyAPIController::class, 'search'])->name('spotify.search_api');
+    Route::get('/spotify/artist_songs', [SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
 
     /* Ranking CRUD routes */
     Route::view('/ranks', 'rank.index')->name('rank.index');
@@ -36,5 +37,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/delete', [SettingsController::class, 'destroy'])->name('settings.delete');
 });
 
-//no auth required to view completed ranking.
+Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');

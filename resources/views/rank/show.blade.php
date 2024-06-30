@@ -51,12 +51,8 @@
                                 </ol>
                             </div>
                         @else
-                            <div class="col-auto" id="song_1_box">
-                                
-                            </div>
-                            <div class="col-auto" id="song_2_box">
-                                
-                            </div>
+                            <div class="col-auto" id="song_1_box"></div>
+                            <div class="col-auto" id="song_2_box"></div>
                         @endif
                     </div>
                 </div>
@@ -72,6 +68,8 @@
             </div>
         </div>
     </div>
+
+    <input type="hidden" id="is_sorted" value="{{ $ranking->is_ranked }}" />
 @endsection
 
 @push('scripts')
@@ -224,16 +222,20 @@
         // Call this function when you want to start the sorting process
         startSortingProcess();
 
-        window.addEventListener("beforeunload", function(event) {
-            // Cancel the event
-            event.preventDefault();
-            // Chrome requires returnValue to be set
-            event.returnValue = "";
+        let isSorted = document.getElementById('is_sorted').value;
 
-            // Prompt the user
-            var confirmationMessage = "Are you sure you want to leave? Your changes may not be saved.";
-            (event || window.event).returnValue = confirmationMessage; //Gecko + IE
-            return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
-        });
+        if (isSorted == false || isSorted == 0) {
+            window.addEventListener("beforeunload", function(event) {
+                // Cancel the event
+                event.preventDefault();
+                // Chrome requires returnValue to be set
+                event.returnValue = "";
+
+                // Prompt the user
+                var confirmationMessage = "Are you sure you want to leave? Your changes may not be saved.";
+                (event || window.event).returnValue = confirmationMessage; //Gecko + IE
+                return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+            });
+        }
     </script>
 @endpush

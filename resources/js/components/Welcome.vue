@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <hr />
-                <div class="welcome-card card mb-4">
+                <!-- <div class="welcome-card card mb-4">
                     <div class="card-body">
                         <p>
                             Welcome to Kyle's Spotify Discography Ranker. This application will allow you to log in with your
@@ -27,16 +27,23 @@
                             <small class="text-muted"><i>For best experience, use this website on your computer.</i></small>
                         </p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="card login-card border border-3 border-dark">
             <div class="card-body login-card-body">
-                <div class="d-flex align-items-center justify-content-center" style="height: 350px;">
-                    <a class="btn btn-lg border border-dark border-1 text-white login-btn gradient-background" :href="buttonhref">
-                        <span v-if="this.authid">View Dashboard</span>
-                        <span v-else>Login & Start</span>
-                    </a>
+                <div class="row" style="height: 60vh;">
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <a class="btn btn-lg border border-dark border-2 text-white explore-btn gradient-background" href="/explore">
+                            <span class="k-line">Explore Rankings</span>
+                        </a>
+                    </div>
+                    <div class="col d-flex justify-content-center align-items-center">
+                        <a class="btn btn-lg border border-dark border-2 text-white login-btn gradient-background" :href="buttonhref">
+                            <span v-if="this.authid" class="k-line">View Dashboard</span>
+                            <span v-else class="k-line">Login & Start</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,7 +66,11 @@
     }
 
     .login-btn {
-        padding: 30px;
+        padding: 2vh;
+    }
+
+    .explore-btn {
+        padding: 2vh;
     }
 
     p {

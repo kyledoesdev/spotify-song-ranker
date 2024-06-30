@@ -36,4 +36,11 @@ class SpotifyAuthController extends Controller
 
         return redirect(route('home'));
     }
+
+    public function logout()
+    {
+        Auth::logout();
+
+        return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
+    }
 }

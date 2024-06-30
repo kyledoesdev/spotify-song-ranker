@@ -14,8 +14,11 @@ class Ranking extends Model
         'artist_id',
         'name',
         'is_ranked',
+        'is_public',
         'completed_at',
     ];
+
+    protected $appends = ['show_route'];
 
     protected function casts(): array
     {
@@ -42,6 +45,11 @@ class Ranking extends Model
     public function getCompletedAtAttribute()
     {
         return Carbon::parse($this->attributes['completed_at'])->diffForHumans();
+    }
+
+    public function getShowRouteAttribute()
+    {
+        return route('rank.show', ['id' => $this->getKey()]);
     }
 
     /**

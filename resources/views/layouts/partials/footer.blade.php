@@ -50,12 +50,12 @@
       </div>
     </div>
 </section>
-<div class="text-center bg-dark p-4">
+{{-- <div class="text-center bg-dark p-4">
     <h6 class="text-uppercase fw-bold mb-2">
         <i class="fas fa-music me-3"></i>Song Rank - by Kyle <br>
     </h6>
     {{ now()->format('Y') }}
-</div>
+</div> --}}
  
 
 <input type="hidden" id="authid" value="{{ auth()->id() }}">
