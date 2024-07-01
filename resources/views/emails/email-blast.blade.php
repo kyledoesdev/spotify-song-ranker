@@ -31,6 +31,8 @@
 <ul>
     <li>Fixed "creating a new rank" & not being redirected bug.</li>
     <li>Fixed spotify token issue. (Logging out & back in).</li>
+    <li>If you do not have any rankings, the UI is reflective of that rather than showing an empty table/list.</li>
+    <li>Some other obsecure technical things.</li>
 </ul>
 
 <p>
