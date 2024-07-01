@@ -9,6 +9,5 @@
 - After you've finished a ranking, feel free to share your finalized list with friends, download the list & more.
 
 ### TODO
-- Delete account option
 - monitize it somehow
 - loader for when artist has a lot of songs
