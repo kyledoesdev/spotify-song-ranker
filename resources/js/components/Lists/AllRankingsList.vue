@@ -12,80 +12,87 @@
                 </div>
             </div>
         </div>
-        <div class="card-body" v-auto-animate>
-            <table class="table table-responsive table-striped" v-auto-animate>
-                <thead>
-                    <tr>
-                        <!-- <th></th> -->
-                        <th>Artist</th>
-                        <th>Ranking Name</th>
-                        <th>Song Count</th>
-                        <th>Top Song</th>
-                        <th>Completed</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody v-auto-animate>
-                    <tr v-for="ranking in ranks.data" :key="ranking.id">
-                        <!-- <td class="col-auto">
-                            <img :src="ranking.artist.artist_img" :alt="ranking.artist.artist_name" style="max-width: 75px; max-height: 75px;">
-                        </td> -->
-                        <td>{{ ranking.artist.artist_name }}</td>
-                        <td>{{ ranking.name }}</td>
-                        <td>{{ ranking.songs_count }}</td>
-                        <td>
-                            <div v-if="ranking.is_ranked">
-                                <iframe 
-                                    :src="this.songEmbed(topSong(ranking))" 
-                                    width="300" 
-                                    height="128" 
-                                    frameborder="0" 
-                                    allowtransparency="true" 
-                                    allow="encrypted-media"
-                                    loading="lazy"
-                                    style="max-height: 80px;"
-                                >
-                                </iframe>
-                            </div>
-                            <div v-else>
-                                <span>N/A</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span v-if="ranking.is_ranked">{{ ranking.completed_at }}</span>
-                            <span v-else>In Progress</span>
-                        </td>
-                        <td>
-                            <div class="row">
-                                <div class="col mt-2">
-                                    <div class="btn-group">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a class="dropdown-item" href="#" @click="show(ranking.id)">
-                                                    View
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" :href="getEditURI(ranking.id)">
-                                                    Edit
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="#" @click="destroy(ranking.id)">
-                                                    Delete
-                                                </a>
-                                            </li>
-                                        </ul>
+        <div class="card-body" style="min-height: 600px;" v-auto-animate>
+            <div v-if="ranks.total > 0">
+                <table class="table table-responsive table-striped" v-auto-animate>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <!--<th>Artist</th>-->
+                            <th>Ranking Name</th>
+                            <th>Song Count</th>
+                            <th>Top Song</th>
+                            <th>In Explore Feed?</th>
+                            <th>Completed</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody v-auto-animate>
+                        <tr v-for="ranking in ranks.data" :key="ranking.id">
+                            <td class="col-auto">
+                                <img :src="ranking.artist.artist_img" :alt="ranking.artist.artist_name" style="max-width: 75px; max-height: 75px;">
+                            </td>
+                            <!-- <td>{{ ranking.artist.artist_name }}</td> -->
+                            <td>{{ ranking.name }}</td>
+                            <td>{{ ranking.songs_count }}</td>
+                            <td>
+                                <div v-if="ranking.is_ranked">
+                                    <iframe 
+                                        :src="this.songEmbed(topSong(ranking))" 
+                                        width="300" 
+                                        height="128" 
+                                        frameborder="0" 
+                                        allowtransparency="true" 
+                                        allow="encrypted-media"
+                                        loading="lazy"
+                                        style="max-height: 80px;"
+                                    >
+                                    </iframe>
+                                </div>
+                                <div v-else>
+                                    <span>N/A (In Progress)</span>
+                                </div>
+                            </td>
+                            <td>{{ this.visibility(ranking) }}</td>
+                            <td>
+                                <span v-if="ranking.is_ranked">{{ ranking.completed_at }}</span>
+                                <span v-else>In Progress</span>
+                            </td>
+                            <td>
+                                <div class="row">
+                                    <div class="col mt-2">
+                                        <div class="btn-group">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="#" @click="show(ranking.id)">
+                                                        View
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" :href="getEditURI(ranking.id)">
+                                                        Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="#" @click="destroy(ranking.id)">
+                                                        Delete
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row d-flex jusitfy-content-center" v-else>
+                <span>You do not have any rankings. Go make one!</span>
+            </div>
         </div>
         <div class="card-footer">
             <div class="row">
@@ -177,6 +184,10 @@
 
             getEditURI(rankingid) {
                 return '/rank/' + rankingid + '/edit';
+            },
+
+            visibility(ranking) {
+                return ranking.is_public == 0 ? 'No' : 'Yes';
             }
         },
 

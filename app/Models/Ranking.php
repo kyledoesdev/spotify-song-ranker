@@ -14,8 +14,11 @@ class Ranking extends Model
         'artist_id',
         'name',
         'is_ranked',
+        'is_public',
         'completed_at',
     ];
+
+    protected $appends = ['show_route'];
 
     protected function casts(): array
     {
@@ -44,6 +47,11 @@ class Ranking extends Model
         return Carbon::parse($this->attributes['completed_at'])->diffForHumans();
     }
 
+    public function getShowRouteAttribute()
+    {
+        return route('rank.show', ['id' => $this->getKey()]);
+    }
+
     /**
      * Start a new ranking.
      */
@@ -60,6 +68,7 @@ class Ranking extends Model
             'user_id' => auth()->id(),
             'artist_id' => $artist->getKey(),
             'name' => $request->name ?? $artist->artist_name . ' List - ' . now()->format('Y'),
+            'is_public' => $request->is_public ?? false
         ]);
 
         $songs = [];

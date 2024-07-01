@@ -17,8 +17,9 @@ class CreateRankingRequest extends FormRequest
             'artist_id' => 'required|string',
             'artist_name' => 'required|string',
             'artist_img' => 'required|string',
-            //'name' => 'required|string',
+            'name' => 'nullable|string|max:30|min:1',
             'songs' => 'required',
+            'is_public' => 'required|boolean',
         ];
     }
 }

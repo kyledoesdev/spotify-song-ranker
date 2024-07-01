@@ -15,7 +15,8 @@ class UpdateRankingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
+            'name' => 'required|string|max:30|min:1',
+            'is_public' => 'required|boolean'
         ];
     }
 }

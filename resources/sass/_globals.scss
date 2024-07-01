@@ -13,6 +13,13 @@ body, html {
     animation: gradientAnimation 20s linear infinite;
 }
 
+/* kyle underline - a kyle project staple */
+.k-line {
+    padding-bottom: 4px; 
+    border-bottom: 1px solid;
+    border-color: $dark;
+}
+
 /* Create a keyframe animation for the background */
 @keyframes gradientAnimation {
     0%, 100% {

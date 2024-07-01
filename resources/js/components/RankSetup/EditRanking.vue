@@ -18,13 +18,21 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body" style="max-height: 600px;">
+            <div class="card-body" style="min-height: 600px;">
                 <div class="row" v-auto-animate>
                     <div class="col-md-6">
-                        <label for="ranking_name">Change ranking name:</label>
-                        <input class="form-control mb-2" type="text" name="ranking_name" id="" v-model="rankingName" />
+                        <h5 for="ranking_name">Change ranking name:</h5>
+                        <input class="form-control mb-2" type="text" name="ranking_name" v-model="rankingName" />
                     </div>
-                    <hr/>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-auto">
+                        <h5 class="mx-1 mb-2">Show In Explore Feed?</h5>
+                        <select class="form-select" v-model="is_public" required>
+                            <option :value="true" selected>Yes</option>
+                            <option :value="false">No</option>
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,20 +48,21 @@
         data() {
             return {
                 rankingName: this.ranking.name,
-                songs: this.ranking.songs
+                is_public: this.ranking.is_public != 0
             }
         },
 
         methods: {
             update() {
                 axios.post('/rank/' + this.ranking.id + '/update', {
-                    'songs': this.songs,
                     'name' : this.rankingName,
+                    'is_public': this.is_public
                 })
                 .then(response => {
                     window.location.href = response.data.redirect;
                 })
                 .catch(error => {
+                    this.flash("Something went wrong.", "We could not update your ranking at this time. Please try again later.", 'error');
                     console.error(error);
                 })
             }

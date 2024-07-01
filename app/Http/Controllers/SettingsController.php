@@ -2,12 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Http\Requests\UserDeletionRequest;
+use App\Jobs\DeleteUserJob;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;;
 
 class SettingsController extends Controller
 {
-    public function index(): View {
-        return view('settings.index');
+    public function destroy(UserDeletionRequest $request): JsonResponse 
+    {
+        $user = auth()->user();
+
+        /* Let me know someone is deleting their account */
+        Log::warning("{$user->email} is deleting their account... ID SANITY CHECK: {$request->user_id} === {$user->getKey()}");
+
+        /* Log them out. */
+        Auth::logout();
+
+        /* Queue deletion. */
+        DeleteUserJob::dispatch($user);
+
+        /* Flash the user their account is being deleted. */
+        session()->flash('success', "We're sorry to see you go {$user->name}. Be Well.");
+
+        return response()->json([
+            'success' => true,
+            'redirect' => route('welcome')
+        ], 200);
     }
 }
