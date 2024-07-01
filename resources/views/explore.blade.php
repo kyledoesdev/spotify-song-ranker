@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card" style="min-height: 600px">
+    <div class="card">
         <div class="card-header">
             @include('layouts.nav', ['title' => $title])
         </div>
