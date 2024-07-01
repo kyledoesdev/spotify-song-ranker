@@ -20,7 +20,10 @@ class SpotifyAuthController extends Controller
     {
         $user = Socialite::driver('spotify')->user();
 
-        $deletedUser = User::withTrashed()->where('spotify_id', $user->id)->first();
+        $deletedUser = User::withTrashed()
+            ->where('spotify_id', $user->id)
+            ->whereNotNull('deleted_at')
+            ->first();
 
         if (!is_null($deletedUser)) {
             Log::warning($user->email . ' is back from the dead!!!!');
@@ -37,7 +40,7 @@ class SpotifyAuthController extends Controller
             'external_token' => $user->token,
             'external_refresh_token' => $user->refreshToken,
             'timezone' => get_timezone(),
-            'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '',
+            'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
         ]);
