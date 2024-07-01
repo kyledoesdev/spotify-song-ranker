@@ -10,6 +10,5 @@
 
 ### TODO
 - Delete account option
-- explore features
 - monitize it somehow
 - loader for when artist has a lot of songs

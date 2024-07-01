@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <editranking 
-        :ranking="{{ $ranking }}"
-    />
+    <div class="container">
+        <editranking  :ranking="{{ $ranking }}" />
+    </div>
 @endsection

@@ -19,6 +19,11 @@
                             <h1 class="mt-2">{{ $ranking->name }}</h1>
                         </div>
                         <div class="col d-flex justify-content-end m-2">
+                            @if (prev_route() == 'explore')
+                                <a href="{{ route('explore') }}" class="btn btn-primary border border-1 border-dark mt-1 mx-2">
+                                    Go Back
+                                </a>
+                            @endif
                             <a href="{{ route('home') }}" class="btn btn-primary border border-1 border-dark mt-1">
                                 <i class="fa fa-house"></i>
                             </a>

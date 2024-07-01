@@ -33,8 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ranks/export', [RankingController::class, 'export'])->name('rankings.export');
 
     /* Settings */
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-    Route::post('/settings/delete', [SettingsController::class, 'destroy'])->name('settings.delete');
+    Route::view('/settings', 'settings.index')->name('settings.index');
+    Route::post('/settings/destroy', [SettingsController::class, 'destroy'])->name('settings.destroy');
 });
 
 Route::get('/explore', [ExploreController::class, 'index'])->name('explore');

@@ -1,13 +1,24 @@
 <div class="row">
     <div class="col">
         @if (isset($title))
-            <h2 class="mt-4">{{ $title }}</h2>
+            <h2 class="mt-3">{{ $title }}</h2>
         @else
             <h2 class="mt-4">Welcome, {{ auth()->user()->name }}</h2>
         @endif
     </div>
     @if (auth()->check())
         <div class="col d-flex justify-content-end mt-2">
+            @if (get_route() !== 'home')
+                <a class="btn mt-3 mx-2" href="{{ route('home') }}">
+                    Home
+                </a>
+            @endif
+            @if (get_route() != 'explore')
+                <a class="btn mt-3 mx-2" href="{{ route('explore') }}">
+                    Explore
+                </a>
+            @endif
+
             <div class="dropdown-center">
                 <img
                     height="64"
@@ -19,20 +30,11 @@
                     alt="User Actions"
                 />
                 <ul class="dropdown-menu">
-                    @if (Route::currentRouteName() !== 'home')
-                        <li>
-                            <a class="dropdown-item" href="{{ route('home') }}">
-                                Home
-                            </a>
-                        </li>
-                    @endif
-                    @if (Route::currentRouteName() !== 'explore')
-                        <li>
-                            <a class="dropdown-item" href="{{ route('explore') }}">
-                                Explore
-                            </a>
-                        </li>
-                    @endif
+                    <li>
+                        <a class="dropdown-item" href="{{ route('rank.index') }}">
+                            My Rankings
+                        </a>
+                    </li>
                     <li>
                         <a class="dropdown-item" href="{{ route('settings.index') }}">
                             Settings

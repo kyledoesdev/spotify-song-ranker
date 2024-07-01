@@ -7,20 +7,25 @@
                 </div>
             </div>
             <hr />
-            <div v-for="list in lists" :key="list.id">
-                <div class="row">
-                    <a :href="getListRoute(list.id)">
-                        <h4 class="mb-0 mt-1">{{ list.name }}</h4>
-                    </a>
-                    <small class="text-muted mb-1">{{ list.artist.artist_name }} - {{ list.songs_count }} songs.</small>
+            <div v-if="lists.length">
+                <div v-for="list in lists" :key="list.id">
+                    <div class="row">
+                        <a :href="getListRoute(list.id)">
+                            <h4 class="mb-0 mt-1">{{ list.name }}</h4>
+                        </a>
+                        <small class="text-muted mb-1">{{ list.artist.artist_name }} - {{ list.songs_count }} songs.</small>
+                    </div>
+                </div>
+                <hr class="mt-2">
+                <div class="row d-flex justify-content-center">
+                    <div class="col-auto">
+                        <h5 class="mt-1 mb-1" style="cursor: pointer;" @click="viewAll()">View All</h5>
+                        <hr class="m-0" />
+                    </div>
                 </div>
             </div>
-            <hr class="mt-2">
-            <div class="row d-flex justify-content-center">
-                <div class="col-auto">
-                    <h5 class="mt-1 mb-1" style="cursor: pointer;" @click="viewAll()">View All</h5>
-                    <hr class="m-0" />
-                </div>
+            <div class="row d-flex jusitfy-content-center" v-else>
+                <span>You do not have any rankings. Go make one!</span>
             </div>
         </div>
     </div>

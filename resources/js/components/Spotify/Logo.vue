@@ -1,7 +1,7 @@
 <!-- Fuck you spotify for making me have to abstract your annoying ahh logo into a damn component -->
 <template>
     <a 
-        :href="artistLink" 
+        :href="link"
         target="_blank"
         style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px;"
     >
@@ -19,7 +19,7 @@
         props: ['artistLink'],
 
         computed: {
-            artistLink() {
+            link() {
                 return "https://open.spotify.com/artist/" + this.artistLink;
             }
         }

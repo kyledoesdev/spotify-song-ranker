@@ -53,9 +53,9 @@ class RankingController extends Controller
 
     public function update(UpdateRankingRequest $request, $id): JsonResponse
     {
-        Ranking::findOrFail($id)->update(['name' => $request->name]);
+        Ranking::findOrFail($id)->update($request->validated());
 
-        session()->flash('success', 'Ranking name was succesfully updated!');
+        session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
             'redirect' => route('rank.index'),
@@ -82,7 +82,7 @@ class RankingController extends Controller
             'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
-                ->with(['songs', 'artist'])
+                ->with('songs', 'artist')
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),
@@ -94,7 +94,7 @@ class RankingController extends Controller
         return response()->json([
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
-                ->with(['artist', 'songs'])
+                ->with('artist', 'songs')
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),
@@ -105,7 +105,6 @@ class RankingController extends Controller
     {
         $rankings = Ranking::query()
             ->where('user_id', auth()->id())
-            ->where('is_ranked', true)
             ->with('songs', 'artist')
             ->get();
 

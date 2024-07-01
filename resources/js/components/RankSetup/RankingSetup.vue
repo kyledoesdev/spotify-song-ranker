@@ -6,7 +6,7 @@
                 <div class="card">
                     <div class="card-body">
                         <img 
-                            :src="cover" 
+                            :src="albumArt" 
                             :width="this.artistImageWidth" 
                             :height="this.artistImageHeight" 
                             @click="loadSongs()" 
@@ -16,29 +16,41 @@
                         <spotify-logo :artistLink="this.id" />
                     </div>
                 </div>
-                <div class="card mt-2">
+                <div class="card mt-3">
                     <div class="card-body">
                         <h5>Filters</h5>
                         <button type="button" class="btn btn-primary m-1" @click="filterSongs('remix')">
                             <small>Remove Remixes</small>
                         </button>
                         <button type="button" class="btn btn-secondary m-1" @click="filterSongs('live from')">
-                            <small>Remove "Live From Spotify"</small>
+                            <small>Remove "Live From" Tracks</small>
+                        </button>
+                        <button type="button" class="btn btn-warning m-1" @click="filterSongs('insturmental')">
+                            <small>Remove "Insturmental" Tracks</small>
                         </button>
                     </div>
                 </div>
-                <div class="card mt-2">
+                <div class="card mt-3">
                     <div class="card-body">
                         <div class="row">
-                            <h5 class="mx-1 mb-2">Custom Ranking Name?</h5>
-                        </div>
-                        <div class="row">
-                            <div class="col d-flex justify-content-start">
+                            <div class="col-auto">
+                                <h5 class="mx-1 mb-2">Custom Ranking Name?</h5>
                                 <input type="text" class="form-control" :placeholder="this.name + ' list'" v-model="rankingName" maxlength="30" />
                             </div>
-                            <div class="col d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary" @click="beginRanking" :disabled="this.canBeginRanking">
-                                    Begin Ranking
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-auto">
+                                <h5 class="mx-1 mb-2">Show In Explore Feed?</h5>
+                                <select class="form-select" v-model="is_public" required>
+                                    <option :value="true" selected>Yes</option>
+                                    <option :value="false">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-auto">
+                                <button type="button" class="btn btn-lg border border-1 border-dark gradient-background p-3" @click="beginRanking">
+                                    <h5 class="text-uppercase k-line mt-1">Begin Ranking</h5>
                                 </button>
                             </div>
                         </div>
@@ -84,6 +96,7 @@
         data() {
             return {
                 rankingName: "",
+                is_public: true,
                 artistSelected: false,
                 artistImageHeight: 200,
                 artistImageWidth: 200,
@@ -134,8 +147,8 @@
             async beginRanking() {
                 let confirmed = await this.buildFlash()
                     .check(
-                        "Are you ready?",
-                        "Are you ready to begin ranking? After starting the ranking process, you will not be able to remove or edit the songs in the ranking. You will only be able to update the title.",
+                        "Being Ranking?",
+                        "Are you ready to begin ranking your selected songs? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking. You will only be able to update the title & visiblity of your ranking.",
                         "info",
                         "Let's Go!",
                         "Cancel"
@@ -147,7 +160,8 @@
                         'artist_name' : this.name,
                         'artist_img': this.cover,
                         'name': this.rankingName,
-                        'songs': this.artistSongs
+                        'songs': this.artistSongs,
+                        'is_public': this.is_public
                     })
                     .then(response => {
                         const data = response.data;
@@ -165,7 +179,7 @@
         },
 
         computed: {
-            cover() {
+            albumArt() {
                 return this.cover ? this.cover : "";
             },
         },
@@ -196,7 +210,7 @@
     }
 
     .card-scroller {
-        max-height: 500px; 
+        max-height: 70vh; 
         overflow-y: auto;
     }
 </style>

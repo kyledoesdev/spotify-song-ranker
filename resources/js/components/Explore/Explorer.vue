@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex flex-column justify-content-between full-height">
+    <div class="d-flex flex-column justify-content-between full-height" v-if="ranks.total > 0">
         <div class="row mt-1" v-auto-animate>
             <div class="col-auto" v-for="ranking in ranks.data" :key="ranking.id">
                 <exploreitem :ranking="ranking" />
@@ -25,6 +25,9 @@
                 </ul>
             </div>
         </div>
+    </div>
+    <div class="row d-flex jusitfy-content-center" v-else>
+        <span>There are no lists to explore... Well that's embarassing.</span>
     </div>
 </template>
 <script>

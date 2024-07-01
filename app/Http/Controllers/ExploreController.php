@@ -21,7 +21,7 @@ class ExploreController extends Controller
             'rankings' => Ranking::query()
                 ->where('is_ranked', true)
                 ->where('is_public', true)
-                ->with(['user', 'artist'])
+                ->with('user', 'artist')
                 ->with('songs', fn($q) => $q->where('rank', 1))
                 ->withCount('songs')
                 ->latest()

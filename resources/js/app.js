@@ -13,6 +13,7 @@ import Alerts from './modules/alerts';
 
 /* Components */
 import Welcome from './components/Welcome.vue';
+import About from './components/About.vue';
 import Home from './components/Home.vue';
 import Settings from './components/Settings.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
@@ -45,6 +46,7 @@ app.mixin({
 app.use(autoAnimatePlugin);
 
 app.component('welcome', Welcome);
+app.component('about', About);
 app.component('home', Home);
 app.component('settings', Settings);
 app.component('spotifysearch', SpotifySearch);
@@ -59,7 +61,7 @@ app.component('exploreitem', ExploreItem);
 app.component('explore-artist-name', ArtistName);
 app.component('explore-top-song', TopSong);
 app.component('explore-song-count', SongCount);
-app.component('xplore-ranking-creator', Creator);
+app.component('explore-ranking-creator', Creator);
 app.component('explore-ranking-completed-at', CompletedAt);
 
 app.mount('#app');

@@ -3,10 +3,10 @@
 @section('content')
     <div class="card" style="min-height: 600px">
         <div class="card-header">
-            @include('layouts.nav', ['title' => $title])
+            @include('layouts.nav', ['title' => 'About Song Rank'])
         </div>
         <div class="card-body">
-            <explorer />
+            <about />
         </div>
     </div>
 @endsection

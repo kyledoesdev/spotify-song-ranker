@@ -68,6 +68,7 @@ class Ranking extends Model
             'user_id' => auth()->id(),
             'artist_id' => $artist->getKey(),
             'name' => $request->name ?? $artist->artist_name . ' List - ' . now()->format('Y'),
+            'is_public' => $request->is_public ?? false
         ]);
 
         $songs = [];
