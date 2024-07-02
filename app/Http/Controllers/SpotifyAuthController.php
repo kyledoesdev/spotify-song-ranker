@@ -20,6 +20,8 @@ class SpotifyAuthController extends Controller
     {
         $user = Socialite::driver('spotify')->user();
 
+        Log::warning("{$user->email} has logged in.");
+
         $deletedUser = User::withTrashed()
             ->where('spotify_id', $user->id)
             ->whereNotNull('deleted_at')
