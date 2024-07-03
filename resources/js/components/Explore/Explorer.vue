@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header">
             <div class="row m-2">
-                <div class="col-sm-3">
+                <div class="col-auto">
                     <div class="input-group">
                         <input class="form-control" type="text" v-model="searchQuery" placeholder="Search..." />
                         <button type="button" class="btn btn-primary" @click="pageRankings()">
@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <div class="d-flex flex-column justify-content-between full-height" v-if="ranks.total > 0">
-                <div class="row mt-1" v-auto-animate>
+                <div class="row d-flex justify-content-center mt-1" v-auto-animate>
                     <div class="col-auto" v-for="ranking in ranks.data" :key="ranking.id">
                         <exploreitem :ranking="ranking" />
                     </div>

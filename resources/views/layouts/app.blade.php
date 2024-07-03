@@ -25,7 +25,7 @@
     </head>
     <body class="gradient-background">
         <div id="app" style="padding-bottom: 10vh">
-            <div class="container-fluid">
+            <div class="{{ isset($small) && $small === true ? 'container' : 'container-fluid' }}">
                 <main class="m-4">
                     @include('layouts.partials.messages')
                     @yield('content')

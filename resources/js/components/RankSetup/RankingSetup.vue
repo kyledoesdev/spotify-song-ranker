@@ -25,8 +25,8 @@
                         <button type="button" class="btn btn-secondary m-1" @click="filterSongs('live from')">
                             <small>Remove "Live From" Tracks</small>
                         </button>
-                        <button type="button" class="btn btn-warning m-1" @click="filterSongs('insturmental')">
-                            <small>Remove "Insturmental" Tracks</small>
+                        <button type="button" class="btn btn-warning m-1" @click="filterSongs('instrumental')">
+                            <small>Remove "Instrumental" Tracks</small>
                         </button>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="col-auto">
                                 <h5 class="mx-1 mb-2">Custom Ranking Name?</h5>
-                                <input type="text" class="form-control" :placeholder="this.name + ' list'" v-model="rankingName" maxlength="30" />
+                                <input type="text" class="form-control" :placeholder="this.name + ' List'" v-model="rankingName" maxlength="30" />
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -172,6 +172,12 @@
                         
                     })
                     .catch(error => {
+                        if (error.response && error.response.data && error.response.data.message) {
+                            this.flash("Something went wrong.", `There was an error making your ranking record. Error message: ${error.response.data.message}`, 'error');
+                        } else {
+                            this.flash("Something went wrong.", `Please try again later. Something went wrong creating your ranking record.`, 'error');
+                        }
+                        
                         console.error(error);
                     });
                 }

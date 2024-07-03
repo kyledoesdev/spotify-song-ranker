@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Ranking extends Model
 {
@@ -67,7 +68,7 @@ class Ranking extends Model
         $ranking = self::create([
             'user_id' => auth()->id(),
             'artist_id' => $artist->getKey(),
-            'name' => $request->name ?? $artist->artist_name . ' List - ' . now()->format('Y'),
+            'name' => Str::limit($request->name ?? $artist->artist_name . ' List' , 30),
             'is_public' => $request->is_public ?? false
         ]);
 

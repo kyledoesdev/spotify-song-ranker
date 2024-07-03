@@ -1,7 +1,7 @@
 <template>
     <div class="m-2 p-2">
         <div class="row">
-            <div class="col-auto" style="min-width: 27vw;">
+            <div class="col-auto" style="min-width: 40vw;">
                 <a :href="ranking.show_route">
                     <div class="card">
                         <div class="card-body">
@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="col mt-1">
                                     <div class="row">
-                                        <h2 :title="ranking.name">{{ truncate(ranking.name, 20) }}</h2>
+                                        <h4 :title="ranking.name">{{ truncate(ranking.name, 30) }}</h4>
                                     </div>
                                     <explore-artist-name :ranking="ranking" />
                                     <explore-top-song :ranking="ranking" />
