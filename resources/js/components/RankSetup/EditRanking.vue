@@ -22,7 +22,7 @@
                 <div class="row" v-auto-animate>
                     <div class="col-md-6">
                         <h5 for="ranking_name">Change ranking name:</h5>
-                        <input class="form-control mb-2" type="text" name="ranking_name" v-model="rankingName" />
+                        <input class="form-control mb-2" type="text" name="ranking_name" v-model="rankingName" maxlength="30" />
                     </div>
                 </div>
                 <div class="row mt-3">
