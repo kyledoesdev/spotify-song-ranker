@@ -25,8 +25,11 @@ class ExploreController extends Controller
                 ->where('is_public', true)
                 ->when($search != null, function($query) use ($search) {
                     $query->newQuery()
-                        ->whereHas('artist', fn($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
-                        ->orWhere('name', 'LIKE', "%{$search}%");
+                        ->where(function($query2) use ($search) {
+                            $query2->newQuery()
+                                ->whereHas('artist', fn($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
+                                ->orWhere('name', 'LIKE', "%{$search}%");
+                        });
                 })
                 ->with('user', 'artist')
                 ->with('songs', fn($q) => $q->where('rank', 1))
