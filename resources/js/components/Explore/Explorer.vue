@@ -72,7 +72,14 @@
                         }
                     })
                     .then(response => {
-                        this.ranks = response.data.rankings;
+                        const data = response.data;
+
+                        if (data && data.rankings && data.rankings.data.length > 0) {
+                            this.ranks = response.data.rankings;
+                        } else {
+                            this.flash("No Rankings found", "No rankings found for search term: " + this.searchQuery, 'error');
+                            this.reset();
+                        }
                     })
                     .catch(error => {
                         console.log(error);
