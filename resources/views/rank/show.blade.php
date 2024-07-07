@@ -1,3 +1,5 @@
+@php $title = $ranking->is_ranked ? $ranking->name : title(); @endphp
+
 @extends('layouts.app')
 
 @section('content')

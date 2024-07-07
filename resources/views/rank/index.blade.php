@@ -1,7 +1,7 @@
+@php $small = true; @endphp
+
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <allrankingslist />
-    </div>
+    <allrankingslist />
 @endsection

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -105,5 +106,24 @@ class Ranking extends Model
 
         self::find($id)->update(['is_ranked' => true, 'completed_at' => now()]);
         Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
+    }
+
+    public function scopeForExplorePage(Builder $query, ?string $search)
+    {
+        $query->newQuery()
+            ->where('is_ranked', true)
+            ->where('is_public', true)
+            ->when($search != null, function($query) use ($search) {
+                $query->newQuery()
+                    ->where(function($query2) use ($search) {
+                        $query2->newQuery()
+                            ->whereHas('artist', fn($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
+                            ->orWhere('name', 'LIKE', "%{$search}%");
+                    });
+            })
+            ->with('user', 'artist')
+            ->with('songs', fn($q) => $q->where('rank', 1))
+            ->withCount('songs')
+            ->latest();
     }
 }
