@@ -37,6 +37,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/destroy', [SettingsController::class, 'destroy'])->name('settings.destroy');
 });
 
-Route::get('/explore', [ExploreController::class, 'index'])->name('explore');
+Route::view('/explore', 'explore')->name('explore');
 Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
