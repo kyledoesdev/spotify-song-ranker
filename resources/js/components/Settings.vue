@@ -1,16 +1,56 @@
 <template>
-    <div class="row mb-2">
-        <div class="col m-2">
-            <div class="form-group">
-                <button class="btn btn-success mx-2" @click="download">Export your data</button>
-                <button class="btn btn-danger mx-2" @click="destroy">Delete your account</button>
+    <div class="row m-2">
+        <div class="col">
+            <div class="row d-flex justify-content-between">
+                <div class="col-auto">
+                    <h2 class="k-line">Email Preferences</h2>
+                </div>
+                <div class="col-auto"></div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row d-flex justify-content-between">
+                <div class="col-auto">
+                    <h2 class="k-line">Other Settings</h2>
+                </div>
+                <div class="col-auto"></div>
             </div>
         </div>
     </div>
+
+    <div class="row m-2">
+        <div class="col">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Ranking Reminder Emails</label>
+                        <select class="form-control mt-1" v-model="has_reminder_emails" @change="update('recieve_reminder_emails', this.has_reminder_emails)">
+                            <option :value="true" :selected="has_reminder_emails">Yes</option>
+                            <option :value="false" :selected="!has_reminder_emails">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <button class="btn btn-success m-1" @click="download">Export your data</button>
+            <button class="btn btn-danger m-1" @click="destroy">Delete your account</button>
+        </div>
+    </div>
 </template>
+
+
 <script>
     export default {
         name: 'Settings',
+
+        props: ['preferences'],
+
+        data() {
+            return {
+                has_reminder_emails: this.preferences.recieve_reminder_emails
+            }
+        },
 
         methods: {
             async download() {
@@ -79,6 +119,25 @@
                                 );
                         });
                 }
+            },
+
+            update(name, value) {
+                axios.post('/settings/update', {
+                    user_id: this.authid,
+                    setting_name: name,
+                    setting_value: value
+                })
+                .then(response => {
+                    const data = response.data;
+
+                    if (data && data.success) {
+                        this.flash("Preference Updated", "Succesfully updated");
+                    }
+                })
+                .catch(error => {
+                    this.flash("Something went wrong.", `We could not update this setting at this time. ${error.response.data.message}`, 'error');
+                    console.error(error);
+                });
             }
         }
     }
