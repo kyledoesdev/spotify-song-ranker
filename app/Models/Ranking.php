@@ -108,6 +108,8 @@ class Ranking extends Model
         Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
     }
 
+    /* scopes */
+
     public function scopeForExplorePage(Builder $query, ?string $search)
     {
         $query->newQuery()
@@ -125,5 +127,14 @@ class Ranking extends Model
             ->with('songs', fn($q) => $q->where('rank', 1))
             ->withCount('songs')
             ->latest();
+    }
+
+    public function scopeForReminders(Builder $query)
+    {
+        $query->newQuery()
+            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked')
+            ->where('is_ranked', false)
+            ->with('artist:id,artist_name')
+            ->withCount('songs');
     }
 }
