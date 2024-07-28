@@ -27,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->throttleApi();
     })
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->call(new RankingReminderCommand)
+        $schedule->call(RankingReminderCommand::class)
             ->timezone('America/New_York')
             ->weeklyOn(1, '12:00')
             ->emailOutputOnFailure(env("FAILURE_EMAIL"));
