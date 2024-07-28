@@ -1,9 +1,11 @@
 <?php
 
+use App\Console\Commands\RankingReminderCommand;
 use App\Providers\AppServiceProvider;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Schedule;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withProviders([
@@ -23,6 +25,12 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
         $middleware->throttleApi();
+    })
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->call(new RankingReminderCommand)
+            ->timezone('America/New_York')
+            ->weeklyOn(1, '12:00')
+            ->emailOutputOnFailure(env("FAILURE_EMAIL"));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

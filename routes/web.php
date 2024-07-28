@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
 
     /* Settings */
     Route::view('/settings', 'settings.index')->name('settings.index');
+    Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
     Route::post('/settings/destroy', [SettingsController::class, 'destroy'])->name('settings.destroy');
 });
 

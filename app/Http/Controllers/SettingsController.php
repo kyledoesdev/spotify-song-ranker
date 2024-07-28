@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateSettingRequest;
 use App\Http\Requests\UserDeletionRequest;
 use App\Jobs\DeleteUserJob;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +30,16 @@ class SettingsController extends Controller
         return response()->json([
             'success' => true,
             'redirect' => route('welcome')
+        ], 200);
+    }
+
+    public function update(UpdateSettingRequest $request): JsonResponse
+    {
+        auth()->user()->preferences()->update([$request->setting_name => $request->setting_value]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully updated setting: {$request->setting_type}."
         ], 200);
     }
 }

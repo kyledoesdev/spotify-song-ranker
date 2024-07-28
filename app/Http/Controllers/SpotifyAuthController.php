@@ -47,6 +47,10 @@ class SpotifyAuthController extends Controller
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
         ]);
 
+        if ($user->wasRecentlyCreated) {
+            $user->preferences()->create(['recieve_reminder_emails' => true]);
+        }
+
         Log::warning($user->email . ' just logged in!!');
 
         Auth::login($user);

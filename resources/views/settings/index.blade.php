@@ -6,13 +6,7 @@
             @include('layouts.nav')
         </div>
         <div class="card-body">
-            <settings />
+            <settings :preferences="{{ auth()->user()->preferences }}" />
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script>
-
-    </script>
-@endpush
