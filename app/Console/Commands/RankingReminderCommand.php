@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Ranking;
 use App\Models\User;
 use App\Notifications\RankingReminderNotification;
 use Illuminate\Console\Command;
