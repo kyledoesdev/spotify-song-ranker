@@ -14,8 +14,8 @@ class SendEmailBlast extends Command
 
     public function handle()
     {
-        foreach(User::all() as $user) {
-            if ($user->email && $user->email != "") {
+        foreach(User::with('preferences')->get() as $user) {
+            if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
                 $this->info("Notifying: {$user->email}.");
                 Notification::send($user, new EmailBlastNotification);
             }
