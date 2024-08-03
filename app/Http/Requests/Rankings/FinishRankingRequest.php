@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Rankings;
 
 use App\Models\Ranking;
 use Illuminate\Foundation\Http\FormRequest;

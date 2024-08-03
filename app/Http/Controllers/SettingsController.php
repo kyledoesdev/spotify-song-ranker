@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateSettingRequest;
-use App\Http\Requests\UserDeletionRequest;
+use App\Http\Requests\Settings\UpdateSettingRequest;
+use App\Http\Requests\Settings\UserDeletionRequest;
 use App\Jobs\DeleteUserJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
