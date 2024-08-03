@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateRankingRequest;
-use App\Http\Requests\DeleteRankingRequest;
-use App\Http\Requests\FinishRankingRequest;
-use App\Http\Requests\UpdateRankingRequest;
+use App\Http\Requests\Rankings\CreateRankingRequest;
+use App\Http\Requests\Rankings\DeleteRankingRequest;
+use App\Http\Requests\Rankings\FinishRankingRequest;
+use App\Http\Requests\Rankings\UpdateRankingRequest;
 use App\Jobs\DownloadDataJob;
 use App\Models\Ranking;
 use App\Models\Song;
