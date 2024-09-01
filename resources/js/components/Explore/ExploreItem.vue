@@ -6,17 +6,18 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-auto">
+                                <div class="col-auto mt-3">
                                     <img 
-                                        :src="ranking.artist.artist_img" 
-                                        width="135" 
-                                        height="135" 
+                                        :src="ranking.artist.artist_img"
+                                        class="mb-2"
+                                        width="90" 
+                                        height="90" 
                                         :alt="ranking.user.name"
                                     >
                                     <br>
                                     <spotify-logo :artistLink="ranking.artist.artist_id" />
                                 </div>
-                                <div class="col mt-1">
+                                <div class="col mt-3">
                                     <div class="row">
                                         <h4 :title="ranking.name">{{ truncate(ranking.name, 30) }}</h4>
                                     </div>

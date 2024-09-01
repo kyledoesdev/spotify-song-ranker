@@ -4,7 +4,7 @@
             <div class="col-md-12 m-auto">
                 <div class="row">
                     <div class="col d-flex justify-content-center">
-                        <h1 class="display-3 mt-4">Spotify Discography Ranker</h1>
+                        <h5 class="display-3 mt-4">Spotify Discography Ranker</h5>
                     </div>
                 </div>
                 <hr />

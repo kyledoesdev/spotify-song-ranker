@@ -1,28 +1,29 @@
 <div class="row">
     <div class="col">
         @if (isset($title))
-            <h2 class="mt-3">{{ $title }}</h2>
+            <h5 class="mt-3">{{ $title }}</h5>
         @else
-            <h2 class="mt-4">Welcome, {{ auth()->user()->name }}</h2>
+            <span style="font-size: 0.75rem;">Welcome back 👋</span>
+            <h5>{{ auth()->user()->name }}</h5>
         @endif
     </div>
     @if (auth()->check())
         <div class="col d-flex justify-content-end mt-2">
             @if (get_route() !== 'home')
-                <a class="btn mt-3 mx-2" href="{{ route('home') }}">
+                <a class="btn" href="{{ route('home') }}">
                     Home
                 </a>
             @endif
             @if (get_route() != 'explore')
-                <a class="btn mt-3 mx-2" href="{{ route('explore') }}">
+                <a class="btn" href="{{ route('explore') }}">
                     Explore
                 </a>
             @endif
 
             <div class="dropdown-center">
                 <img
-                    height="64"
-                    width="64"
+                    height="32"
+                    width="32"
                     class="rounded-pill border border-3 border-dark dropdown-toggle mb-2" 
                     type="button" data-bs-toggle="dropdown" 
                     aria-expanded="false" 
