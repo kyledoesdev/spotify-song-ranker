@@ -3,7 +3,7 @@
         <div class="card-header">
             <div class="row d-flex">
                 <div class="col justify-content-start">
-                    <h1 class="mt-2">All Rankings</h1>
+                    <h5 class="mt-3">All Rankings</h5>
                 </div>
                 <div class="col d-flex justify-content-end m-2">
                     <button class="btn btn-primary border border-1 border-dark" @click="this.home()">
@@ -19,8 +19,8 @@
                         <tr>
                             <th></th>
                             <!--<th>Artist</th>-->
-                            <th>Ranking Name</th>
-                            <th>Song Count</th>
+                            <th>Name</th>
+                            <th>Songs</th>
                             <th>Top Song</th>
                             <th>In Explore Feed?</th>
                             <th>Completed</th>
@@ -30,8 +30,14 @@
                     <tbody v-auto-animate>
                         <tr v-for="ranking in ranks.data" :key="ranking.id">
                             <td class="col-auto">
-                                <img :src="ranking.artist.artist_img" :alt="ranking.artist.artist_name" style="max-width: 75px; max-height: 75px;">
-                            </td>
+                                <img 
+                                    :src="ranking.artist.artist_img"
+                                    :alt="ranking.artist.artist_name"
+                                    :title="ranking.artist.artist_name"
+                                    width="88"
+                                    height="88"
+                                />
+                            </td>   
                             <!-- <td>{{ ranking.artist.artist_name }}</td> -->
                             <td>{{ ranking.name }}</td>
                             <td>{{ ranking.songs_count }}</td>

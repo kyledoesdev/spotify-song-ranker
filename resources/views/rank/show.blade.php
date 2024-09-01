@@ -18,7 +18,7 @@
                 <div class="card-header">
                     <div class="row d-flex">
                         <div class="col justify-content-start">
-                            <h1 class="mt-2">{{ $ranking->name }}</h1>
+                            <h5 class="mt-2">{{ $ranking->name }}</h5>
                         </div>
                         <div class="col d-flex justify-content-end m-2">
                             @if (prev_route() == 'explore')

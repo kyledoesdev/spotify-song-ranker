@@ -2,7 +2,7 @@
     <div v-if="this.artistSelected" v-auto-animate>
         <div class="row">
             <div class="col-lg-4">
-                <h2>Artist</h2>
+                <h5>Artist</h5>
                 <div class="card">
                     <div class="card-body">
                         <img 
@@ -12,7 +12,7 @@
                             @click="loadSongs()" 
                             :alt="this.name"
                         />
-                        <h1 class="mt-2 mx-2">{{ this.name }}</h1>
+                        <h5 class="mt-2 mx-2">{{ this.name }}</h5>
                         <spotify-logo :artistLink="this.id" />
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="col-lg-8">
-                <h2>Tracks</h2>
+                <h5>Tracks</h5>
                 <div class="card" v-auto-animate>
                     <div class="card-body card-scroller" v-auto-animate>
                         <div class="col-auto" v-for="song in this.artistSongs" :key="song.id" v-auto-animate>

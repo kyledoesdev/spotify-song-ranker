@@ -3,7 +3,7 @@
         <div class="col">
             <div class="row d-flex justify-content-between">
                 <div class="col-auto">
-                    <h2 class="k-line">Email Preferences</h2>
+                    <h5 class="k-line">Email Preferences</h5>
                 </div>
                 <div class="col-auto"></div>
             </div>
@@ -11,7 +11,7 @@
         <div class="col">
             <div class="row d-flex justify-content-between">
                 <div class="col-auto">
-                    <h2 class="k-line">Other Settings</h2>
+                    <h5 class="k-line">Other Settings</h5>
                 </div>
                 <div class="col-auto"></div>
             </div>

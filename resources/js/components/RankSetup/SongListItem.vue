@@ -5,7 +5,7 @@
                 <img :src="cover"  width="72" height="72" :alt="name" />
             </div>
             <div class="col-auto">
-                <h5 class="truncate mx-2 mt-2 mb-2">{{ name }}</h5>
+                <h5 class="truncate mx-2 mt-2 mb-2" :title="name">{{ name }}</h5>
                 <a 
                     :href="trackLink" 
                     target="_blank"
@@ -58,6 +58,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 500px; /* Adjust according to your requirement */
+        max-width: 24vw;
     }
 </style>
