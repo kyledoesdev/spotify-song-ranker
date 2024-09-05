@@ -8,26 +8,6 @@
                     </div>
                 </div>
                 <hr />
-                <!-- <div class="welcome-card card mb-4">
-                    <div class="card-body">
-                        <p>
-                            Welcome to Kyle's Spotify Discography Ranker. This application will allow you to log in with your
-                            spotify account and rank your favorite artists' entire discography. This is not a bracket style ranking system.
-                            We use a merge-sort type algorithm to rank every possible combination of tracks as efficently as possible.
-                        </p>
-                        <p>
-                            This application isn't limited to an artists' entire discography either, you can rank indivdual albums, a set
-                            of albums, just singles, etc. You can filter down your favorite artists' songs to just the ones you want to rank.
-                        </p>
-                        <p>
-                            After you've finished a ranking, feel free to share your finalized list with friends, download the list & more.
-                        </p>
-                        <hr />
-                        <p>
-                            <small class="text-muted"><i>For best experience, use this website on your computer.</i></small>
-                        </p>
-                    </div>
-                </div> -->
             </div>
         </div>
         <div class="card login-card border border-3 border-dark">
@@ -47,6 +27,26 @@
                 </div>
             </div>
         </div>
+        <div class="mt-4">
+            <h5>webring:</h5>
+            <hr class="mt-0" />
+            <div class="row d-flex">
+                <div class="col-auto">
+                    <a href="https://insect.christmas" target="_blank">
+                        <img class="mx-1" :src="asset('insect.gif')" />
+                    </a>
+                </div>
+
+                <div class="col-auto">
+                    <a href="https://kyleevangelisto.com" target="_blank">
+                        <div class="portfolio-webring">
+                            <span class="text-white" style="font-size: 12px;">my portfolio</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
     </section>
 </template>
 
@@ -85,6 +85,29 @@
 
         p {
             font-size: 1vh;
+        }
+    }
+
+    .portfolio-webring {
+        background: linear-gradient(45deg, #00E5FF 25%, #1200FF);
+        background-size: 400% 400%;
+        animation: webring 5s linear infinite;
+        min-width: 88px; 
+        max-width: 88px; 
+        min-height: 31px; 
+        max-height: 31px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+    }
+    
+    @keyframes webring {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
         }
     }
 </style>
