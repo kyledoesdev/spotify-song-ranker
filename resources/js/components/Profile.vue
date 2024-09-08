@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-zinc-100 rounded-lg mt-8" v-auto-animate>
-        <h5 class="text-xl md:text-4xl mt-4 md:mt-8 p-4">{{ this.display_name }} Rankings</h5>
+    <div class="bg-zinc-100 border border-zinc-800 rounded-lg mt-8" v-auto-animate>
+        <h5 class="text-xl md:text-4xl p-4">{{ this.display_name }} Rankings</h5>
         <div v-if="ranks.total > 0" class="bg-white overflow-x-auto" v-auto-animate>
             <div class="flex flex-col items-center m-2 p-2" v-if="ranks.total > 0" v-auto-animate>
                 <div class="border border-zinc-800 rounded-lg mb-2" v-for="ranking in ranks.data" :key="ranking.id" v-auto-animate>
@@ -78,7 +78,8 @@
             async destroy(rankingId) {
                 let confirmed = await this.buildFlash()
                     .overrideFlashStyles({
-                        'confirm-btn': 'btn-danger m-2 p-2'
+                        'confirm-btn': 'btn-danger m-2 p-2',
+                        'cancel-btn': 'btn-secondary m-2 p-2'
                     })
                     .check(
                         "Delete Ranking?",
@@ -95,8 +96,8 @@
                         const data = response.data;
 
                         if (data && data.message && data.rankings) {
-                            this.flash('Ranking Deleted', data.message);
-                            this.ranks = response.data.rankings;
+                            this.flash('Ranking Deleted', data.message, 'success');
+                            this.ranks = data.rankings;
                         }
                     })
                     .catch(error => {

@@ -1,33 +1,20 @@
-@php $title = $ranking->is_ranked ? $ranking->name : title(); @endphp
+@php $title = $ranking->is_ranked ? $ranking->name : 'Ranking - ' . $ranking->artist->artist_name; @endphp
 
 @extends('layouts.app')
 
 @section('content')
-    <div class="pl-4 pr-4 bg-white rounded-lg">
-        <div class="grid {{ !$ranking->is_ranked ? 'grid-cols-3' : 'grid-cols-2' }} justify-center bg-white p-4 rounded-lg">
-            <div>
-                <h5 class="md:text-2xl">{{ $ranking->name }}</h5>
-            </div>
-            @if (!$ranking->is_ranked)
-                <div class="text-center w-full k-line">
+    @include('layouts.nav')
+
+    <div class="pl-4 pr-4 bg-white border border-zinc-800 rounded-lg mt-4">
+        @if (!$ranking->is_ranked)
+            <div class="flex justify-center bg-white p-4">
+                <div class="text-center w-full">
                     <i class="fa-solid fa-skull-crossbones"></i>&nbsp;
-                    <span>If you leave this page, you will lose your progress!</span>&nbsp;
+                    <span class="k-line">If you leave this page, you will lose your progress!</span>&nbsp;
                     <i class="fa-solid fa-skull-crossbones"></i>
                 </div>
-            @endif
-            <div class="text-end">
-                @if (prev_route() == 'explore')
-                    <a href="{{ route('explore') }}" class="btn-primary m-2 p-2">
-                        Go Back
-                    </a>
-                @endif
-                <a href="{{ route('home') }}" class="btn-primary m-2 p-2">
-                    <i class="fa fa-house"></i>
-                </a>
             </div>
-        </div>
 
-        @if (!$ranking->is_ranked)
             <div class="flex justify-center md:mb-8">
                 <span>Directions: click on the song title button for the song you like more.</span>
             </div>
@@ -37,17 +24,22 @@
         
         <div class="grid grid-cols-1 md:flex justify-center">
             @if ($ranking->is_ranked)
-                <div class="w-full m-2" style="max-height: 600px; overflow-y: auto;">
-                    <ol>
+                <div class="md:w-full m-2" style="max-height: 600px; overflow-y: auto;">
+                    <ol> {{-- did not include list-decimal class here because looks better wit $loop counter --}}
                         @foreach ($songs as $song)
-                            <li>
-                                <songlistitem 
-                                    id="{{ $song->getKey() }}" 
-                                    name="{{ $song->title }}" 
-                                    cover="{{ $song->cover }}" 
-                                    :candelete="false"
-                                ></songlistitem>
-                            </li>
+                            <div class="flex">
+                                <div class="p-4 mt-4">{{ $loop->index + 1 }}.</div>
+                                <div>
+                                    <li>
+                                        <songlistitem 
+                                            id="{{ $song->getKey() }}" 
+                                            name="{{ $song->title }}" 
+                                            cover="{{ $song->cover }}" 
+                                            :candelete="false"
+                                        ></songlistitem>
+                                    </li>
+                                </div>
+                            </div>
                         @endforeach
                     </ol>
                 </div>
@@ -136,7 +128,10 @@
             sortedSongs.forEach(song => {
                 output += `
                     <li>
-                        <span class="p-2">${song.title}</span>
+                        <div class="flex p-2">
+                            <div><img src="${song.cover}" width="48" height="48" alt="${song.title}"/></div>
+                            <div class="mt-4"><span class="p-2">${song.title}</span></div>    
+                        </div>
                     </li>
                 `;
             });

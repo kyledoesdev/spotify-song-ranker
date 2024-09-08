@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 mt-4 bg-white p-4 rounded-lg">
+    <div class="grid grid-cols-1 md:grid-cols-2 mt-4 bg-white border border-zinc-800 p-4 rounded-lg">
         <div>
             <h5 class="md:text-3xl">Email Preferences</h5>
             <label>Ranking Reminder Emails</label>

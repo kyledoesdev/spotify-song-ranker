@@ -17,14 +17,17 @@
             </div>
         </div>
     </div>
-    <hr />
+
+    <div v-if="spacer">
+        <hr />
+    </div>
 </template>
 
 <script>
     export default {
         name: 'Song List Item',
 
-        props: ['id', 'name', 'cover', 'candelete'],
+        props: ['id', 'name', 'cover', 'candelete', 'spacer'],
 
         methods: {
             removeSong() {

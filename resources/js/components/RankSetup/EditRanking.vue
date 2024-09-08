@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white rounded-lg mt-4" style="min-height: 600px;;">
+    <div class="bg-white border border-zinc-800 rounded-lg mt-4" style="min-height: 600px;;">
         <div class="flex justify-between k-line">
             <div>
                 <h5 class="md:text-4xl px-2 pt-2">Edit your ranking</h5>

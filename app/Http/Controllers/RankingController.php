@@ -83,7 +83,8 @@ class RankingController extends Controller
             'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
-                ->with('songs', 'artist')
+                ->with('user', 'artist')
+                ->with('songs', fn($q) => $q->where('rank', 1))
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),

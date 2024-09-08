@@ -1,7 +1,7 @@
-<div class="flex justify-between bg-white rounded-lg p-4">
+<div class="flex justify-between border border-zinc-800  bg-white rounded-lg p-4">
     <div>
         @if (isset($title))
-            <h5 class="md:text-2xl">{{ $title }}</h5>
+            <h5 class="md:text-2xl mt-2">{{ $title }}</h5>
         @else
             <span style="text-xs">Welcome back 👋</span>
             <h5 class="text-xl md:text-2xl">{{ auth()->user()->name }}</h5>

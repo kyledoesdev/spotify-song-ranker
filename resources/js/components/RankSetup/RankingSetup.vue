@@ -12,7 +12,8 @@
                             :src="albumArt" 
                             @click="loadSongs()" 
                             :alt="this.name"
-                            style="max-height: 20rem; max-height: 20rem;"
+                            width="272"
+                            height="272"
                         />
                         <div class="flex">
                             <div>
@@ -29,21 +30,21 @@
                         <h5 class="md:text-2xl">Filters</h5>
                         <button 
                             type="button" 
-                            class="btn-primary" 
+                            class="btn-primary p-1 m-2" 
                             @click="filterSongs('remix')"
                         >
                             Remove Remixes
                         </button>
                         <button 
                             type="button" 
-                            class="btn-secondary" 
+                            class="btn-secondary p-1 m-2" 
                             @click="filterSongs('live from')"
                         >
                             Remove "Live From" Tracks
                         </button>
                         <button 
                             type="button" 
-                            class="btn-helper" 
+                            class="btn-helper p-1 m-2" 
                             @click="filterSongs('instrumental')"
                         >
                             Remove "Instrumental" Tracks
@@ -71,7 +72,7 @@
 
                     <button 
                         type="button" 
-                        class="btn-animated"
+                        class="btn-animated p-2 m-2"
                         @click="beginRanking"
                     >
                         <h5 class="text-lg md:text-2xl uppercase">Begin Ranking</h5>
@@ -82,7 +83,7 @@
                 <h5 class="md:text-4xl mb-2">Tracks</h5>
                 <div class="card-scroller" v-auto-animate>
                     <div v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
-                        <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></songlistitem>
+                        <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true" :spacer="true"></songlistitem>
                     </div>
                 </div>
             </div>
@@ -95,6 +96,8 @@
                 :src="cover" 
                 @click="loadSongs"
                 :alt="this.name"
+                width="272"
+                height="272"
             >
             <h5 class="mt-1">{{ this.name }}</h5>
             <spotify-logo :artistLink="this.id" />
