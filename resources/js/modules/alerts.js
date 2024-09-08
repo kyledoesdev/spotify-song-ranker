@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 
 const default_flash_styles = {
-    'confirm-btn': 'btn btn-sm btn-primary m-2 p-2',
-    'cancel-btn': 'btn btn-sm btn-secondary m-2 p-2',
-    'redirect-btn': 'btn btn-sm btn-dark',
+    'confirm-btn': 'btn-primary m-2 p-2',
+    'cancel-btn': 'btn-secondary m-2 p-2',
+    'redirect-btn': 'btn-primary m-2 p-2',
 };
 
 export default {

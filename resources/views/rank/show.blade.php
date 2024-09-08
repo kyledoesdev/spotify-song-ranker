@@ -1,79 +1,61 @@
-@php $title = $ranking->is_ranked ? $ranking->name : title(); @endphp
+@php $title = $ranking->is_ranked ? $ranking->name : 'Ranking - ' . $ranking->artist->artist_name; @endphp
 
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="pl-4 pr-4">
-            @if (!$ranking->is_ranked)
-                <div class="row d-flex justify-content-center">
-                    <div class="col-md-8 alert alert-info text-center">
-                        <i class="fa-solid fa-skull-crossbones"></i>&nbsp;
-                        <span>If you refresh or leave this page, you will lose your ranking progress!</span>&nbsp;
-                        <i class="fa-solid fa-skull-crossbones"></i>
-                    </div>
+    @include('layouts.nav')
+
+    <div class="pl-4 pr-4 bg-white border border-zinc-800 rounded-lg mt-4">
+        @if (!$ranking->is_ranked)
+            <div class="flex justify-center bg-white p-4">
+                <div class="text-center w-full">
+                    <i class="fa-solid fa-skull-crossbones"></i>&nbsp;
+                    <span class="k-line">If you leave this page, you will lose your progress!</span>&nbsp;
+                    <i class="fa-solid fa-skull-crossbones"></i>
                 </div>
-            @endif
-            <div class="card">
-                <div class="card-header">
-                    <div class="row d-flex">
-                        <div class="col justify-content-start">
-                            <h5 class="mt-2">{{ $ranking->name }}</h5>
-                        </div>
-                        <div class="col d-flex justify-content-end m-2">
-                            @if (prev_route() == 'explore')
-                                <a href="{{ route('explore') }}" class="btn btn-primary border border-1 border-dark mt-1 mx-2">
-                                    Go Back
-                                </a>
-                            @endif
-                            <a href="{{ route('home') }}" class="btn btn-primary border border-1 border-dark mt-1">
-                                <i class="fa fa-house"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @if (!$ranking->is_ranked)
-                        <div class="row">
-                            <div class="col d-flex justify-content-center" style="max-height: 596px; overflow-y: auto;">
-                                <span>Directions: click on the song title button for the song you like more.</span>
-                            </div>
-                        </div>
-                        <hr />
-                    @endif
-                    <div class="row d-flex justify-content-center" id="song-container">
-                        @if ($ranking->is_ranked)
-                            <div class="m-2" style="max-height: 600px; overfloy-y: auto;">
-                                <ol>
-                                    @foreach ($songs as $song)
-                                        <li>
-                                            <songlistitem 
-                                                id="{{ $song->getKey() }}" 
-                                                name="{{ $song->title }}" 
-                                                cover="{{ $song->cover }}" 
-                                                :candelete="false"
-                                            ></songlistitem>
-                                        </li>
-                                    @endforeach
-                                </ol>
-                            </div>
-                        @else
-                            <div class="col-auto" id="song_1_box"></div>
-                            <div class="col-auto" id="song_2_box"></div>
-                        @endif
-                    </div>
-                </div>
-                @if (!$ranking->is_ranked)
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col d-flex justify-content-center">
-                                <span class="mt-2">Get Cozy, this may take you a while. <i class="fa-solid fa-mug-saucer"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                @endif
             </div>
+
+            <div class="flex justify-center md:mb-8">
+                <span>Directions: click on the song title button for the song you like more.</span>
+            </div>
+
+            <div class="p-4" id="song-container"></div>
+        @endif
+        
+        <div class="grid grid-cols-1 md:flex justify-center">
+            @if ($ranking->is_ranked)
+                <div class="md:w-full m-2" style="max-height: 600px; overflow-y: auto;">
+                    <ol> {{-- did not include list-decimal class here because looks better wit $loop counter --}}
+                        @foreach ($songs as $song)
+                            <div class="flex">
+                                <div class="p-4 mt-4">{{ $loop->index + 1 }}.</div>
+                                <div>
+                                    <li>
+                                        <songlistitem 
+                                            id="{{ $song->getKey() }}" 
+                                            name="{{ $song->title }}" 
+                                            cover="{{ $song->cover }}" 
+                                            :candelete="false"
+                                        ></songlistitem>
+                                    </li>
+                                </div>
+                            </div>
+                        @endforeach
+                    </ol>
+                </div>
+            @else
+                <div class="m-2 p-2" id="song_1_box"></div>
+                <div class="m-2 p-2" id="song_2_box"></div>
+            @endif
         </div>
+
+        <hr />
+        
+        @if (!$ranking->is_ranked)
+            <div class="flex justify-center">
+                <span class="mt-2 mb-2">Get Cozy, this may take you a while. <i class="fa-solid fa-mug-saucer"></i></span>
+            </div>
+        @endif
     </div>
 
     <input type="hidden" id="is_sorted" value="{{ $ranking->is_ranked }}" />
@@ -141,18 +123,14 @@
         function displaySortedSongs(sortedSongs) {
             const songContainer = document.getElementById('song-container');
 
-            let output = "<div class='m-2'><ol>";
+            let output = "<div class='m-2'><ol class='list-decimal'>";
 
             sortedSongs.forEach(song => {
                 output += `
                     <li>
-                        <div class="m-2">
-                            <div class="row d-flex">
-                                <div class="col-auto">
-                                    <img src="${song.cover}" width="48" height="48" alt="${song.title}"/>
-                                    <span class="mx-2">${song.title}</span>
-                                </div>
-                            </div>
+                        <div class="flex p-2">
+                            <div><img src="${song.cover}" width="48" height="48" alt="${song.title}"/></div>
+                            <div class="mt-4"><span class="p-2">${song.title}</span></div>    
                         </div>
                     </li>
                 `;
@@ -160,7 +138,13 @@
 
             output += `
                 </ol>
-                <button type="button" class="btn btn-lg btn-primary" onclick="save()">Save</button>
+                <button 
+                    type="button" 
+                    class="border border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 mt-4 p-2"
+                    onclick="save()"
+                >
+                    <span class="uppercase">Save</span>
+                </button>
                 </div>
             `
 
@@ -191,6 +175,7 @@
         function buildChoice(song) {
             return `
                 <iframe
+                    class="mb-2"
                     src="https://open.spotify.com/embed/track/${song.spotify_song_id}"
                     width="512" 
                     height="232" 
@@ -199,24 +184,24 @@
                     allow="encrypted-media"
                 >
                 </iframe>
-                <br>
                 <a 
+                    class="mb-2"
                     href="https://open.spotify.com/track/${song.spotify_song_id}"
                     target="_blank"
-                    style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px;"
+                    style="border-bottom: 2px solid #06D6A0; padding-bottom: 2px; margin-botton:2px;"
                 >
                     <p style="display: inline; color: #06D6A0;">
-                        Listen on <img src="${logo}" style="display: inline;">
+                        <img src="${logo}" style="display: inline;">
                     </p>
                     <div style="display: inline-block; width: 5px;"></div>
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
                 <br>
                 <hr>
-                <div class="row d-flex justify-content-center pt-2">
+                <div class="flex justify-center mt-2">
                     <div class="col-auto">
                         <button 
-                            class="btn btn-primary border border-dark border-1" 
+                            class="border border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 m-2 p-2" 
                             onclick="resolveComparison(${song.id})"
                         >
                             ${song.title}

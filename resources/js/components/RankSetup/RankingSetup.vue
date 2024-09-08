@@ -1,69 +1,89 @@
 <template>
     <div v-if="this.artistSelected" v-auto-animate>
-        <div class="row">
-            <div class="col-lg-4">
-                <h5>Artist</h5>
-                <div class="card">
-                    <div class="card-body">
+        <div class="grid grid-cols-1 md:grid-cols-2 m-2 p-2">
+            <div>
+                <div class="grid">
+                    <h5 class="md:text-4xl mb-2">
+                        Artist:
+                    </h5>
+                    <div class="mb-4">
                         <img 
+                            class="border rounded-lg border-zinc-800"
                             :src="albumArt" 
-                            :width="this.artistImageWidth" 
-                            :height="this.artistImageHeight" 
                             @click="loadSongs()" 
                             :alt="this.name"
+                            width="272"
+                            height="272"
                         />
-                        <h5 class="mt-2 mx-2">{{ this.name }}</h5>
-                        <spotify-logo :artistLink="this.id" />
+                        <div class="flex">
+                            <div>
+                                <h5 class="md:text-2xl mt-2 mb-2">{{ this.name }}</h5>
+                            </div>
+                            <div class="mt-2 mx-2">
+                                <spotify-logo :artistLink="this.id" />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <h5>Filters</h5>
-                        <button type="button" class="btn btn-primary m-1" @click="filterSongs('remix')">
-                            <small>Remove Remixes</small>
+                <div class="md:w-1/2">
+                    <div class="grid grid-cols-1 mt-3 mb-2">
+                        <h5 class="md:text-2xl">Filters</h5>
+                        <button 
+                            type="button" 
+                            class="btn-primary p-1 m-2" 
+                            @click="filterSongs('remix')"
+                        >
+                            Remove Remixes
                         </button>
-                        <button type="button" class="btn btn-secondary m-1" @click="filterSongs('live from')">
-                            <small>Remove "Live From" Tracks</small>
+                        <button 
+                            type="button" 
+                            class="btn-secondary p-1 m-2" 
+                            @click="filterSongs('live from')"
+                        >
+                            Remove "Live From" Tracks
                         </button>
-                        <button type="button" class="btn btn-warning m-1" @click="filterSongs('instrumental')">
-                            <small>Remove "Instrumental" Tracks</small>
+                        <button 
+                            type="button" 
+                            class="btn-helper p-1 m-2" 
+                            @click="filterSongs('instrumental')"
+                        >
+                            Remove "Instrumental" Tracks
                         </button>
                     </div>
-                </div>
-                <div class="card mt-3">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-auto">
-                                <h5 class="mx-1 mb-2">Custom Ranking Name?</h5>
-                                <input type="text" class="form-control" :placeholder="this.name + ' List'" v-model="rankingName" maxlength="30" />
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-auto">
-                                <h5 class="mx-1 mb-2">Show In Explore Feed?</h5>
-                                <select class="form-select" v-model="is_public" required>
-                                    <option :value="true" selected>Yes</option>
-                                    <option :value="false">No</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-lg border border-1 border-dark gradient-background p-3" @click="beginRanking">
-                                    <h5 class="text-uppercase k-line mt-1">Begin Ranking</h5>
-                                </button>
-                            </div>
-                        </div>
+
+                    <div class="grid grid-cols-1">
+                        <h5 class="md:tex-2xl mx-1 mb-2">Custom Ranking Name?</h5>
+                        <input 
+                            type="text" 
+                            class="mx-1 border border-zinc-800 rounded p-2 mb-4"
+                            :placeholder="this.name + ' List'"
+                            v-model="rankingName"
+                            maxlength="30"
+                        />
                     </div>
+
+                    <div class="grid grid-cols-1 gap-0 mb-2">
+                        <h5 class="mb-2 mx-1">Show In Explore Feed?</h5>
+                        <select class="border border-zinc-800 rounded mx-1 bg-white p-1" v-model="is_public" required>
+                            <option :value="true" selected>Yes</option>
+                            <option :value="false">No</option>
+                        </select>
+                    </div>
+
+                    <button 
+                        type="button" 
+                        class="btn-animated p-2 m-2"
+                        @click="beginRanking"
+                    >
+                        <h5 class="text-lg md:text-2xl uppercase">Begin Ranking</h5>
+                    </button>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <h5>Tracks</h5>
-                <div class="card" v-auto-animate>
-                    <div class="card-body card-scroller" v-auto-animate>
-                        <div class="col-auto" v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
-                            <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true"></songlistitem>
-                        </div>
+            <div class="w-full">
+                <h5 class="md:text-4xl mb-2">Tracks</h5>
+                <div class="card-scroller" v-auto-animate>
+                    <div v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
+                        <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true" :spacer="true"></songlistitem>
                     </div>
                 </div>
             </div>
@@ -71,18 +91,16 @@
     </div>
     <div v-else>
         <div class="m-2 p-2">
-            <div class="row">
-                <div class="col-auto">
-                    <img :src="cover" 
-                        :width="this.artistImageWidth" 
-                        :height="this.artistImageHeight" 
-                        @click="loadSongs"
-                        :alt="this.name"
-                    >
-                    <h5 class="mt-1">{{ this.name }}</h5>
-                    <spotify-logo :artistLink="this.id" />
-                </div>
-            </div>
+            <img 
+                class="border border-zinc-800 m-2"
+                :src="cover" 
+                @click="loadSongs"
+                :alt="this.name"
+                width="272"
+                height="272"
+            >
+            <h5 class="mt-1">{{ this.name }}</h5>
+            <spotify-logo :artistLink="this.id" />
         </div>
     </div>
 </template>
@@ -98,8 +116,6 @@
                 rankingName: "",
                 is_public: true,
                 artistSelected: false,
-                artistImageHeight: 200,
-                artistImageWidth: 200,
                 artistSongs: [],
             }
         },
@@ -216,7 +232,7 @@
     }
 
     .card-scroller {
-        max-height: 70vh; 
+        max-height: 80vh; 
         overflow-y: auto;
     }
 </style>

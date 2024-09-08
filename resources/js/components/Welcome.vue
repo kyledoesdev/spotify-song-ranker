@@ -1,113 +1,61 @@
 <template>
     <section class="mb-4">
-        <div class="row">
-            <div class="col-md-12 m-auto">
-                <div class="row">
-                    <div class="col d-flex justify-content-center">
-                        <h5 class="display-3 mt-4">Spotify Discography Ranker</h5>
-                    </div>
-                </div>
-                <hr />
+        <div>
+            <div class="flex justify-center">
+                <h5 class="text-4xl md:text-6xl lg:text-7xl md:mb-2">Song - Rank</h5>
             </div>
-        </div>
-        <div class="card login-card border border-3 border-dark">
-            <div class="card-body login-card-body">
-                <div class="row" style="height: 60vh;">
-                    <div class="col d-flex justify-content-center align-items-center">
-                        <a class="btn btn-lg border border-dark border-2 text-white explore-btn gradient-background" href="/explore">
-                            <span class="k-line">Explore Rankings</span>
-                        </a>
-                    </div>
-                    <div class="col d-flex justify-content-center align-items-center">
-                        <a class="btn btn-lg border border-dark border-2 text-white login-btn gradient-background" :href="buttonhref">
-                            <span v-if="this.authid" class="k-line">View Dashboard</span>
-                            <span v-else class="k-line">Login & Start</span>
-                        </a>
-                    </div>
-                </div>
+            <div class="flex justify-center">
+                <h5 class="text-xs mt-1 md:text-lg">Spotify Discography Ranking creator.</h5>
             </div>
-        </div>
-        <div class="mt-4">
-            <h5>webring:</h5>
-            <hr class="mt-0" />
-            <div class="row d-flex">
-                <div class="col-auto">
-                    <a href="https://insect.christmas" target="_blank">
-                        <img class="mx-1" :src="asset('insect.gif')" />
+            <div class="flex justify-center mt-1">
+                <span>Made with ❤️ by 
+                    <a class="k-line text-blue-700" href="https://x.com/kyledoesdev">
+                        Kyle
                     </a>
-                </div>
+                </span>
+            </div>
+        </div>
 
-                <div class="col-auto">
-                    <a href="https://kyleevangelisto.com" target="_blank">
-                        <div class="portfolio-webring">
-                            <span class="text-white" style="font-size: 12px;">my portfolio</span>
-                        </div>
-                    </a>
+        <div>
+            <div class="flex justify-center">
+                <div class="mt-4 border border-2 rounded-lg border-zinc-600">
+                    <img :src="asset('cover.png')" alt="">
                 </div>
             </div>
         </div>
-        
+
+        <div class="flex justify-center gap-4 mt-4">
+            <a class="btn-secondary m-2 p-2" href="/explore">
+                <span class="text-lg pb-2">Explore</span>
+            </a>
+            <a class="btn-primary m-2 p-2" :href="buttonhref">
+                <span v-if="this.authid" class="text-lg">View Dashboard</span>
+                <span v-else class="text-lg">Login & Start</span>
+            </a>
+        </div>        
     </section>
 </template>
 
 <script>
     export default {
+        name: "Welcome Page",
+
+        props: ['users', 'rankings'],
+
+        data() {
+            return {
+                user_count: this.users,
+                rankings_count: this.rankings
+            }
+        },
+
         computed: {
             buttonhref() {
                 return this.authid ? '/home' : '/login/spotify';
-            }
+            },
         }
     }
 </script>
 <style>
-    .login-card {
-        background: url('/public/cover.png') center/cover no-repeat;
-        min-height: 40vh;
-    }
 
-    .login-btn {
-        padding: 2vh;
-    }
-
-    .explore-btn {
-        padding: 2vh;
-    }
-
-    p {
-        font-size: 2vh;
-    }
-
-    @media (max-width: 768px) {
-        .welcome-card {
-            overflow-y: scroll; 
-            max-height: 40vh;
-        }
-
-        p {
-            font-size: 1vh;
-        }
-    }
-
-    .portfolio-webring {
-        background: linear-gradient(45deg, #00E5FF 25%, #1200FF);
-        background-size: 400% 400%;
-        animation: webring 5s linear infinite;
-        min-width: 88px; 
-        max-width: 88px; 
-        min-height: 31px; 
-        max-height: 31px; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid black;
-    }
-    
-    @keyframes webring {
-        0%, 100% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-    }
 </style>

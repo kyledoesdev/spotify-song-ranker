@@ -1,39 +1,45 @@
 <template>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col">
-                        Edit your ranking
-                    </div>
-                    <div class="col d-flex justify-content-end">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary border border-1 border-dark" @click="update()">
-                                Save
-                            </button>
-                            <button type="button" class="btn btn-secondary border border-1 border-dark" onclick="history.back()">
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
+    <div class="bg-white border border-zinc-800 rounded-lg mt-4" style="min-height: 600px;;">
+        <div class="flex justify-between k-line">
+            <div>
+                <h5 class="md:text-4xl px-2 pt-2">Edit your ranking</h5>
             </div>
-            <div class="card-body" style="min-height: 600px;">
-                <div class="row" v-auto-animate>
-                    <div class="col-md-6">
-                        <h5 for="ranking_name">Change ranking name:</h5>
-                        <input class="form-control mb-2" type="text" name="ranking_name" v-model="rankingName" maxlength="30" />
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-auto">
-                        <h5 class="mx-1 mb-2">Show In Explore Feed?</h5>
-                        <select class="form-select" v-model="is_public" required>
-                            <option :value="true" selected>Yes</option>
-                            <option :value="false">No</option>
-                        </select>
-                    </div>
-                </div>
+            <div>
+                <button 
+                    type="button" 
+                    class="border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-1 p-2" 
+                    @click="update()"
+                >
+                    Save
+                </button>
+                <button 
+                    type="button" 
+                    class="border border-2 border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400 m-1 p-2"
+                    onclick="history.back()"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4">
+            <div class="mb-4">
+                <h5>Change ranking name:</h5>
+                <input 
+                    class="border border-zinc-800 p-2 bg-zinc-100 rounded-lg"
+                    type="text" 
+                    name="ranking_name" 
+                    v-model="rankingName" 
+                    maxlength="30" 
+                />
+            </div>
+
+            <div>
+                <h5 class="mx-1 mb-2">Show In Explore Feed?</h5>
+                <select class="border border-zinc-800 bg-zinc-100 rounded-lg" v-model="is_public" required>
+                    <option :value="true" selected>Yes</option>
+                    <option :value="false">No</option>
+                </select>
             </div>
         </div>
     </div>

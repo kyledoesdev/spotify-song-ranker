@@ -46,6 +46,10 @@ class Ranking extends Model
 
     public function getCompletedAtAttribute()
     {
+        if ($this->attributes['completed_at'] == null) { 
+            return 'In Progress'; 
+        }
+
         return Carbon::parse($this->attributes['completed_at'])->diffForHumans();
     }
 
@@ -109,7 +113,6 @@ class Ranking extends Model
     }
 
     /* scopes */
-
     public function scopeForExplorePage(Builder $query, ?string $search)
     {
         $query->newQuery()
@@ -123,6 +126,17 @@ class Ranking extends Model
                             ->orWhere('name', 'LIKE', "%{$search}%");
                     });
             })
+            ->with('user', 'artist')
+            ->with('songs', fn($q) => $q->where('rank', 1))
+            ->withCount('songs')
+            ->latest();
+    }
+
+    public function scopeForProfilePage(Builder $query, $user)
+    {
+        $query->newQuery()
+            ->where('user_id', $user ? $user->getKey() : auth()->id())
+            ->when($user && $user->getKey() !== auth()->id(), fn($q) => $q->where('is_ranked', true))
             ->with('user', 'artist')
             ->with('songs', fn($q) => $q->where('rank', 1))
             ->withCount('songs')

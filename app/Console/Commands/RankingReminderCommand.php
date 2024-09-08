@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ScheduledJobIsRunning;
 use App\Models\User;
 use App\Notifications\RankingReminderNotification;
 use Illuminate\Console\Command;
@@ -16,7 +17,7 @@ class RankingReminderCommand extends Command
 
     public function handle()
     {   
-        Log::warning("Reminder emails job now running.");
+        dispatch(new ScheduledJobIsRunning("Ranking Reminder Job"));
 
         User::query()
             ->forRankingReminders()
@@ -24,8 +25,6 @@ class RankingReminderCommand extends Command
             ->each(function($user) {
                 if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
                     Notification::send($user, new RankingReminderNotification($user->rankings));
-                } else {
-                    Log::info("Skipping {$user->name} - they have their reminder email preferences set to false.");
                 }
             });          
     }

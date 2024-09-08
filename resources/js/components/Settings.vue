@@ -1,44 +1,20 @@
 <template>
-    <div class="row m-2">
-        <div class="col">
-            <div class="row d-flex justify-content-between">
-                <div class="col-auto">
-                    <h5 class="k-line">Email Preferences</h5>
-                </div>
-                <div class="col-auto"></div>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 mt-4 bg-white border border-zinc-800 p-4 rounded-lg">
+        <div>
+            <h5 class="md:text-3xl">Email Preferences</h5>
+            <label>Ranking Reminder Emails</label>
+            <select class="border border-zinc-800 rounded p-1 mx-1 mt-1" v-model="has_reminder_emails" @change="update('recieve_reminder_emails', this.has_reminder_emails)">
+                <option :value="true" :selected="has_reminder_emails">Yes</option>
+                <option :value="false" :selected="!has_reminder_emails">No</option>
+            </select>
         </div>
-        <div class="col">
-            <div class="row d-flex justify-content-between">
-                <div class="col-auto">
-                    <h5 class="k-line">Other Settings</h5>
-                </div>
-                <div class="col-auto"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row m-2">
-        <div class="col">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label>Ranking Reminder Emails</label>
-                        <select class="form-control mt-1" v-model="has_reminder_emails" @change="update('recieve_reminder_emails', this.has_reminder_emails)">
-                            <option :value="true" :selected="has_reminder_emails">Yes</option>
-                            <option :value="false" :selected="!has_reminder_emails">No</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <button class="btn btn-success m-1" @click="download">Export your data</button>
-            <button class="btn btn-danger m-1" @click="destroy">Delete your account</button>
+        <div>
+            <h5 class="md:text-3xl">Other Settings</h5>
+            <button class="btn-primary m-2 p-2" @click="download">Export your data</button>
+            <button class="btn-danger m-2 p-2" @click="destroy">Delete your account</button>
         </div>
     </div>
 </template>
-
 
 <script>
     export default {
