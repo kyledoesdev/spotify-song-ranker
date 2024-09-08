@@ -27,6 +27,11 @@
 </p>
 
 <p>
+    The webring has been moved to the about page. If you would like your website to be added
+    to the webring, let me know!
+</p>
+
+<p>
     If you happen to run into any other bugs, be sure to report them 
     <a href="https://github.com/kyledoesdev/spotify-song-ranker/blob/master/contributing.md">here.</a>
 </p>
