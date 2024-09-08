@@ -25,6 +25,6 @@
     </div>
 </footer>
 
-
-
-<input type="hidden" id="authid" value="{{ auth()->id() }}">
+<input type="hidden" id="authid" value="{{ auth()->id() }}" />
+<input type="hidden" id="authname" value="{{ auth()->user()->name }}" />
+<input type="hidden" id="routename" value="{{ get_route() }}" />

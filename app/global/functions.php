@@ -31,3 +31,8 @@ function title(bool $app_name = true): string
     $page_name = Str::title(Str::lower(Str::replace('.', ' ', Str::replace('index', 'home', get_route()))));
     return $app_name ? env("APP_NAME") . ' ' . $page_name : $page_name;
 }
+
+function get_formatted_name(string $name): string
+{
+    return Str::endsWith($name, 's') ? Str::finish(Str::ucfirst($name), "'") : Str::ucfirst($name) . "'s";
+}

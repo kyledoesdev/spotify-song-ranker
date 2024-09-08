@@ -4,7 +4,9 @@
             <i class="fa fa-regular fa-user"></i>
         </div>
         <div class="p-0">
-            {{ ranking.user.name }}
+            <a :href="getProfileURL">
+                {{ ranking.user.name }} <i class="fa fa-arrow-up-right-from-square mx-2 text-blue-500"></i>
+            </a>
         </div>
     </div>
 </template>
@@ -13,5 +15,11 @@
         name: 'Ranking Creator Name',
         
         props: ['ranking'],
+
+        computed: {
+            getProfileURL() {
+                return '/ranks?user=' + this.ranking.user.name;
+            }
+        }
     }
 </script>

@@ -7,8 +7,9 @@ use App\Http\Requests\Rankings\DeleteRankingRequest;
 use App\Http\Requests\Rankings\FinishRankingRequest;
 use App\Http\Requests\Rankings\UpdateRankingRequest;
 use App\Jobs\DownloadDataJob;
-use App\Models\Ranking;
 use App\Models\Song;
+use App\Models\User;
+use App\Models\Ranking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
@@ -58,7 +59,7 @@ class RankingController extends Controller
         session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
-            'redirect' => route('rank.index'),
+            'redirect' => route('rank.index') . '?user=' . auth()->user()->name,
         ], 200);
     }
 
@@ -91,15 +92,21 @@ class RankingController extends Controller
 
     public function pages(): JsonResponse
     {
-        return response()->json([
-            'rankings' => Ranking::query()
-                ->where('user_id', auth()->id())
-                ->with('user', 'artist')
-                ->with('songs', fn($q) => $q->where('rank', 1))
-                ->withCount('songs')
-                ->latest()
-                ->paginate(5),
-        ], 200);
+        $name = request()->user;
+        $user = User::where('name', $name)->first();
+
+        $response = [
+            'success' => true,
+            'name' => get_formatted_name($name),
+            'rankings' => Ranking::query()->forProfilePage($user)->paginate(5)
+        ];
+
+        if (is_null($user)) {
+            $response['success'] = false;
+            $response['message'] = "No ranking results for user: {$name}.";
+        }
+
+        return response()->json($response, 200);
     }
 
     public function export(): JsonResponse

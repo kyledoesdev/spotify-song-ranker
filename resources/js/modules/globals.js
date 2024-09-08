@@ -1,7 +1,9 @@
 export default {
     data() {
         return {
-            'authid': document.getElementById('authid').value
+            'authid': document.getElementById('authid').value,
+            'authname': document.getElementById('authname').value,
+            'routename': document.getElementById('routename').value,
         }
     },
 

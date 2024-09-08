@@ -5,7 +5,7 @@
                 <div>
                     <img 
                         :src="ranking.artist.artist_img"
-                        class="mb-2"
+                        class="rounded-lg border border-zinc-800 mb-2"
                         width="120" 
                         height="120" 
                         :alt="ranking.user.name"
@@ -19,7 +19,9 @@
                     <explore-artist-name :ranking="ranking" />
                     <explore-top-song :ranking="ranking" />
                     <explore-song-count :ranking="ranking" />
-                    <explore-ranking-creator :ranking="ranking" />
+                    <div v-if="this.routename != 'rank.index'">
+                        <explore-ranking-creator :ranking="ranking" />
+                    </div>
                     <explore-ranking-completed-at :ranking="ranking" />
                 </div>
             </div>
