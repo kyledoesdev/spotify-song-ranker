@@ -1,38 +1,29 @@
 <template>
-    <div class="m-2 p-2">
-        <div class="row">
-            <div class="col-auto" style="min-width: 40vw;">
-                <a :href="ranking.show_route">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-auto mt-3">
-                                    <img 
-                                        :src="ranking.artist.artist_img"
-                                        class="mb-2"
-                                        width="90" 
-                                        height="90" 
-                                        :alt="ranking.user.name"
-                                    >
-                                    <br>
-                                    <spotify-logo :artistLink="ranking.artist.artist_id" />
-                                </div>
-                                <div class="col mt-3">
-                                    <div class="row">
-                                        <h4 :title="ranking.name">{{ truncate(ranking.name, 30) }}</h4>
-                                    </div>
-                                    <explore-artist-name :ranking="ranking" />
-                                    <explore-top-song :ranking="ranking" />
-                                    <explore-song-count :ranking="ranking" />
-                                    <explore-ranking-creator :ranking="ranking" />
-                                    <explore-ranking-completed-at :ranking="ranking" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+    <div class="m-2 p-2" style="min-width: 35vw;" v-auto-animate>
+        <a :href="ranking.show_route" v-auto-animate>
+            <div class="flex space-x-6" v-auto-animate>
+                <div>
+                    <img 
+                        :src="ranking.artist.artist_img"
+                        class="mb-2"
+                        width="120" 
+                        height="120" 
+                        :alt="ranking.user.name"
+                    >
+                    <spotify-logo :artistLink="ranking.artist.artist_id" />
+                </div>
+                <div>
+                    <h5 class="md:text-2xl" :title="ranking.name">
+                        {{ truncate(ranking.name, 30) }}
+                    </h5>
+                    <explore-artist-name :ranking="ranking" />
+                    <explore-top-song :ranking="ranking" />
+                    <explore-song-count :ranking="ranking" />
+                    <explore-ranking-creator :ranking="ranking" />
+                    <explore-ranking-completed-at :ranking="ranking" />
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 </template>
 <script>
@@ -40,11 +31,5 @@
         name: 'Explore Item',
 
         props: ['ranking'],
-
-        data() {
-            return {
-                
-            }
-        },
     }
 </script>

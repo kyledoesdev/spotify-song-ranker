@@ -1,36 +1,23 @@
 <template>
-    <div class="m-2" v-auto-animate>
-        <div class="row d-flex" v-auto-animate>
-            <div class="col-auto" v-auto-animate>
+    <div class="m-2 mb-2" v-auto-animate>
+        <div class="flex" v-auto-animate>
+            <div v-auto-animate>
                 <img :src="cover"  width="72" height="72" :alt="name" />
             </div>
-            <div class="col-auto">
-                <h5 class="truncate mx-2 mt-2 mb-2" :title="name">{{ name }}</h5>
-                <a 
-                    :href="trackLink" 
-                    target="_blank"
-                    style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px; max-width: 205px; margin-left: 8px;"
-                >
-                    <p style="display: inline; color: #06D6A0;">
-                        Listen on <img :src="asset('spotify-logo.png')" style="display: inline;">
-                    </p>
-                    <div style="display: inline-block; width: 5px;"></div>
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-            </div>
-            <div class="col d-flex justify-content-end m-1" v-if="candelete">
-                <div class="row">
-                    <div class="col d-flex justify-content-end" style="max-height: 35px;">
-                        <button type="button" class="btn btn-sm btn-danger pb-0 pt-0" @click="removeSong()">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
+            <div class="flex">
+                <div>
+                    <h5 class="truncate mx-2 mt-2 mb-2" :title="name">{{ name }}</h5>
+                    <spotify-logo class="mx-2" />
+                </div>
+                <div v-if="candelete">
+                    <button type="button" class="border border-zinc-800 rounded-lg px-2 pt-1 pb-1 hover:bg-red-500" @click="removeSong()">
+                        <i class="fa-solid text-zinc-800 fa-trash-can"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
-    <hr>
+    <hr />
 </template>
 
 <script>

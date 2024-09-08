@@ -23,18 +23,15 @@
         <script src="https://kit.fontawesome.com/07b7751319.js" crossorigin="anonymous"></script>
 
         <!-- Scripts -->
-        @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="gradient-background">
-        <div id="app" style="padding-bottom: 10vh">
-            <!-- $small var set at blade view sets larage or small container -->
-            <div class="{{ isset($small) && $small === true ? 'container' : 'container-fluid' }}">
-                <main class="m-4">
-                    @include('layouts.partials.messages')
-                    @yield('content')
-                </main>
+    <body class="flex flex-col min-h-screen gradient-background">
+        <main class="flex-1" id="app">
+            <div class="container mx-auto p-4">
+                @include('layouts.partials.messages')
+                @yield('content')
             </div>
-        </div>
+        </main>
         <footer class="bg-dark text-light">
             @include('layouts.partials.footer')
             @stack('scripts')

@@ -1,5 +1,6 @@
 import './bootstrap';
 import { createApp } from 'vue';
+import Alpine from 'alpinejs';
 import mitt from 'mitt';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 
@@ -14,13 +15,11 @@ import Alerts from './modules/alerts';
 /* Components */
 import Welcome from './components/Welcome.vue';
 import About from './components/About.vue';
-import Home from './components/Home.vue';
 import Settings from './components/Settings.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
 import RankingSetup from './components/RankSetup/RankingSetup.vue';
 import SongListItem from './components/RankSetup/SongListItem.vue';
-import HomeRankingsList from './components/Lists/HomeRankingsList.vue';
-import AllRankingsList from './components/Lists/AllRankingsList.vue';
+import Profile from './components/Profile.vue';
 import EditRanking from './components/RankSetup/EditRanking.vue';
 import Logo from './components/Spotify/Logo.vue';
 
@@ -47,13 +46,11 @@ app.use(autoAnimatePlugin);
 
 app.component('welcome', Welcome);
 app.component('about', About);
-app.component('home', Home);
 app.component('settings', Settings);
 app.component('spotifysearch', SpotifySearch);
 app.component('rankingsetup', RankingSetup);
 app.component('songlistitem', SongListItem);
-app.component('homerankingslist', HomeRankingsList);
-app.component('allrankingslist', AllRankingsList);
+app.component('profile', Profile);
 app.component('editranking', EditRanking);
 app.component('spotify-logo', Logo);
 app.component('explorer', Explorer);
@@ -65,3 +62,6 @@ app.component('explore-ranking-creator', Creator);
 app.component('explore-ranking-completed-at', CompletedAt);
 
 app.mount('#app');
+
+window.Alpine = Alpine
+Alpine.start()

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="card" style="min-height: 600px">
-        <div class="card-header">
+    <div>
+        <div class="mb-4">
             @include('layouts.nav')
         </div>
-        <div class="card-body">
-            <home :lists="{{ $lists }}"></home>
+        <div class="bg-white rounded-lg">
+            <spotifysearch></spotifysearch>
         </div>
     </div>
 @endsection

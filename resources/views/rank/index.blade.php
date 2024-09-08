@@ -1,7 +1,9 @@
-@php $small = true; @endphp
-
 @extends('layouts.app')
 
 @section('content')
-    <allrankingslist />
+    @include('layouts.nav')
+
+    <div>
+        <profile />
+    </div>
 @endsection

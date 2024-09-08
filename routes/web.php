@@ -16,7 +16,7 @@ Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLog
 Route::get('/logout', [SpotifyAuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::view('/home', 'home')->name('home');
 
     /* Spotify API routes */
     Route::get('/spotify/search', [SpotifyAPIController::class, 'search'])->name('spotify.search_api');

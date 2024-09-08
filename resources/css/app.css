@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.gradient-background {
+    background: linear-gradient(45deg, rgba(207,120,224,1) 25%, rgba(100,249,179,1));
+    background-size: 400% 400%; /* Adjust for animation speed */
+    animation: gradientAnimation 20s linear infinite;
+}
+
+/* kyle underline - a kyle project staple */
+.k-line {
+    padding-bottom: 4px; 
+    border-bottom: 1px solid;
+    border-color: black;
+}
+
+/* Create a keyframe animation for the background */
+@keyframes gradientAnimation {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+}
