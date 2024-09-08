@@ -10,7 +10,7 @@
                     <spotify-logo class="mx-2" />
                 </div>
                 <div v-if="candelete">
-                    <button type="button" class="border border-zinc-800 rounded-lg px-2 pt-1 pb-1 hover:bg-red-500" @click="removeSong()">
+                    <button type="button" class="btn-danger px-2 py-1 my-1" @click="removeSong()">
                         <i class="fa-solid text-zinc-800 fa-trash-can"></i>
                     </button>
                 </div>

@@ -17,11 +17,11 @@
             @endif
             <div class="text-end">
                 @if (prev_route() == 'explore')
-                    <a href="{{ route('explore') }}" class="border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-2 p-2">
+                    <a href="{{ route('explore') }}" class="btn-primary m-2 p-2">
                         Go Back
                     </a>
                 @endif
-                <a href="{{ route('home') }}" class="border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-2 p-2">
+                <a href="{{ route('home') }}" class="btn-primary m-2 p-2">
                     <i class="fa fa-house"></i>
                 </a>
             </div>

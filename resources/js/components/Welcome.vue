@@ -25,10 +25,10 @@
         </div>
 
         <div class="flex justify-center gap-4 mt-4">
-            <a class="border border-2 border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400 m-2 p-2" href="/explore">
+            <a class="btn-secondary m-2 p-2" href="/explore">
                 <span class="text-lg pb-2">Explore</span>
             </a>
-            <a class="border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-2 p-2" :href="buttonhref">
+            <a class="btn-primary m-2 p-2" :href="buttonhref">
                 <span v-if="this.authid" class="text-lg">View Dashboard</span>
                 <span v-else class="text-lg">Login & Start</span>
             </a>

@@ -82,9 +82,11 @@
 				</div>
 			</div>
         @else
-			<a href="{{ route('welcome') }}" class="border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-2 p-2">
-				<i class="fa fa-house"></i>
-			</a>
+			<div class="mt-1">
+				<a href="{{ route('welcome') }}" class="btn-primary p-2 m-2">
+					<i class="fa fa-house"></i>
+				</a>
+			</div>
         @endauth
     </div>
 </div>

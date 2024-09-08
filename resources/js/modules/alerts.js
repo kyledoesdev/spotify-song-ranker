@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 
 const default_flash_styles = {
-    'confirm-btn': 'border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-2 p-2',
-    'cancel-btn': 'border border-2 border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400 m-2 p-2',
-    'redirect-btn': 'border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-2 p-2',
+    'confirm-btn': 'btn-primary',
+    'cancel-btn': 'btn-secondary',
+    'redirect-btn': 'btn-primary',
 };
 
 export default {

@@ -66,7 +66,7 @@
                 ranks: [],
                 display_name: "",
                 profile_name: "",
-                no_rankings_msg: "You do not have any rankings. Go make one!"
+                no_rankings_msg: "No rankings found. Go make one!"
             }      
         },
 
@@ -78,7 +78,7 @@
             async destroy(rankingId) {
                 let confirmed = await this.buildFlash()
                     .overrideFlashStyles({
-                        'confirm-btn': 'border border-2 border-zinc-800 rounded-lg bg-red-400 hover:bg-red-500 text-zinc-800 m-2 p-2'
+                        'confirm-btn': 'btn-danger m-2 p-2'
                     })
                     .check(
                         "Delete Ranking?",

@@ -29,21 +29,21 @@
                         <h5 class="md:text-2xl">Filters</h5>
                         <button 
                             type="button" 
-                            class="border border-zinc-800 p-2 rounded-lg bg-purple-400 m-1" 
+                            class="btn-primary" 
                             @click="filterSongs('remix')"
                         >
                             Remove Remixes
                         </button>
                         <button 
                             type="button" 
-                            class="border border-zinc-800 p-2 rounded-lg bg-green-300 m-1" 
+                            class="btn-secondary" 
                             @click="filterSongs('live from')"
                         >
                             Remove "Live From" Tracks
                         </button>
                         <button 
                             type="button" 
-                            class="border border-zinc-800 p-2 rounded-lg bg-blue-300 m-1" 
+                            class="btn-helper" 
                             @click="filterSongs('instrumental')"
                         >
                             Remove "Instrumental" Tracks
@@ -71,7 +71,7 @@
 
                     <button 
                         type="button" 
-                        class="border border-zinc-800 rounded-lg gradient-background p-2 mb-4 mx-1 mt-4 w-2/3"
+                        class="btn-animated"
                         @click="beginRanking"
                     >
                         <h5 class="text-lg md:text-2xl uppercase">Begin Ranking</h5>
@@ -95,7 +95,6 @@
                 :src="cover" 
                 @click="loadSongs"
                 :alt="this.name"
-                style="max-height: 20rem; max-height: 20rem;"
             >
             <h5 class="mt-1">{{ this.name }}</h5>
             <spotify-logo :artistLink="this.id" />

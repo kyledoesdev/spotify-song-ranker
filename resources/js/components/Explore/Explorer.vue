@@ -33,13 +33,13 @@
     </div>
 
     <div class="row d-flex jusitfy-content-center" v-else>
-        <span>There are no lists to explore... Well that's embarassing.</span>
+        <span>TLoading Rankings...</span>
     </div>
 
     <ul class="pagination flex justify-end p-4">
         <li v-if="ranks.prev_page_url">
             <a 
-                class="border border-zinc-800 m-1 p-2 rounded bg-purple-400 hover:bg-purple-500 text-white" 
+                class="btn-primary" 
                 @click.prevent="pageRankings(ranks.prev_page_url)"
                 href="#"
             >
@@ -48,7 +48,7 @@
         </li>
         <li v-if="ranks.next_page_url">
             <a 
-                class="border border-zinc-800 m-1 p-2 rounded bg-purple-400 hover:bg-purple-500 text-white" 
+                class="btn-primary" 
                 @click.prevent="pageRankings(ranks.next_page_url)"
                 href="#"
             >
@@ -72,7 +72,8 @@
 
         methods: {
             pageRankings(uri = '/explore/pages') {
-                axios.get(uri, {
+                axios
+                    .get(uri, {
                         params: {
                             search: this.searchQuery
                         }

@@ -15,7 +15,7 @@
             <div class="flex space-x-2">
                 <button 
                     type="button" 
-                    class="bg-purple-400 border border-zinc-800 px-4 py-2 text-white rounded-md" 
+                    class="btn-primary px-4 py-2" 
                     @click="search" 
                     :disabled="!this.canSearch || noSearchTerm"
                 >
@@ -23,7 +23,7 @@
                 </button>
                 <button 
                     type="button" 
-                    class="bg-green-300 border border-zinc-800 px-4 py-2 text-white rounded-md" 
+                    class="btn-secondary px-4 py-2" 
                     @click="reset"
                 >
                     <i class="text-xl text-zinc-800 fa-solid fa-rotate-left"></i>
