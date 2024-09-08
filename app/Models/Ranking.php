@@ -136,7 +136,11 @@ class Ranking extends Model
     {
         $query->newQuery()
             ->where('user_id', $user ? $user->getKey() : auth()->id())
-            ->when($user && $user->getKey() !== auth()->id(), fn($q) => $q->where('is_ranked', true))
+            ->when($user && $user->getKey() !== auth()->id(), 
+                fn($q) => $q->newQuery()
+                    ->where('is_ranked', true)
+                    ->where('is_public', true)
+            )
             ->with('user', 'artist')
             ->with('songs', fn($q) => $q->where('rank', 1))
             ->withCount('songs')

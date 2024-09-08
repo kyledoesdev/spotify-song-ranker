@@ -59,7 +59,7 @@ class RankingController extends Controller
         session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
-            'redirect' => route('rank.index') . '?user=' . auth()->user()->name,
+            'redirect' => route('rank.index') . '?user=' . auth()->user()->spotify_id,
         ], 200);
     }
 
@@ -93,18 +93,18 @@ class RankingController extends Controller
 
     public function pages(): JsonResponse
     {
-        $name = request()->user;
-        $user = User::where('name', $name)->first();
+        $spotify_id = request()->user;
+        $user = User::where('spotify_id', $spotify_id)->first();
 
         $response = [
             'success' => true,
-            'name' => get_formatted_name($name),
-            'rankings' => Ranking::query()->forProfilePage($user)->paginate(5)
+            'rankings' => Ranking::query()->forProfilePage($user)->paginate(5),
+            'name' => $user ? get_formatted_name($user->name) : null,
         ];
 
         if (is_null($user)) {
             $response['success'] = false;
-            $response['message'] = "No ranking results for user: {$name}.";
+            $response['message'] = "No ranking results for user: {$spotify_id}.";
         }
 
         return response()->json($response, 200);
