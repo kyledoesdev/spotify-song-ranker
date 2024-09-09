@@ -11,7 +11,7 @@
                 <button 
                     type="button" 
                     class="bg-purple-400 border border-zinc-800 px-4 py-2 text-white rounded-md" 
-                    @click="search" 
+                    @click="pageRankings()" 
                 >
                     <i class="text-xl text-zinc-800 fa fa-magnifying-glass"></i>
                 </button>
