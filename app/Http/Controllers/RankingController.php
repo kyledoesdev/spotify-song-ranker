@@ -59,7 +59,7 @@ class RankingController extends Controller
         session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
-            'redirect' => route('rank.index') . '?user=' . auth()->user()->spotify_id,
+            'redirect' => route('profile.index') . '?user=' . auth()->user()->spotify_id,
         ], 200);
     }
 

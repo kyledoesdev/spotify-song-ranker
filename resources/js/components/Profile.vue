@@ -6,7 +6,7 @@
                 <div class="border border-zinc-800 rounded-lg mb-2" v-for="ranking in ranks.data" :key="ranking.id" v-auto-animate>
                     <exploreitem class="mb-4" :ranking="ranking" />
 
-                    <div class="text-dark m-4" v-if="ranking.user_id == this.authid">
+                    <div class="text-dark m-4" v-if="this.authid && ranking.user_id == this.authid">
                         <a 
                             class="border border-zinc-800 bg-purple-400 rounded px-2 py-1 mx-2"
                             @click="show(ranking.id)"

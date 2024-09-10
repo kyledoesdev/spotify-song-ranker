@@ -15,10 +15,9 @@ function prev_route(): string
 
 function get_timezone() :string
 {
-    $ip = file_get_contents("http://ipecho.net/plain");
-    $url = 'http://ip-api.com/json/'.$ip;
+    $ip = 'http://ip-api.com/json/'.request()->ip();
 
-    return json_decode(file_get_contents($url), true)['timezone'];
+    return json_decode(file_get_contents($ip), true)['timezone'];
 }
 
 function tz(): string

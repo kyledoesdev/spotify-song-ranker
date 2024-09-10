@@ -19,7 +19,7 @@
                     <explore-artist-name :ranking="ranking" />
                     <explore-top-song :ranking="ranking" />
                     <explore-song-count :ranking="ranking" />
-                    <div v-if="this.routename != 'rank.index'">
+                    <div v-if="this.routename != 'profile.index'">
                         <explore-ranking-creator :ranking="ranking" />
                     </div>
                     <explore-ranking-completed-at :ranking="ranking" />
