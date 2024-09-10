@@ -3,8 +3,12 @@
         @if (isset($title))
             <h5 class="md:text-2xl mt-2">{{ $title }}</h5>
         @else
-            <span style="text-xs">Welcome back 👋</span>
-            <h5 class="text-xl md:text-2xl">{{ auth()->user()->name }}</h5>
+            @auth
+				<span style="text-xs">Welcome back 👋</span>
+				<h5 class="text-xl md:text-2xl">{{ auth()->user()->name }}</h5>
+			@else
+				<span style="text-xs">Welcome to Song - Rank! 👋</span>
+			@endauth
         @endif
     </div>
     <div>
@@ -63,7 +67,7 @@
 							Home
 						</a>
 					@endif
-					<a href="{{ route('rank.index') }}?user={{ auth()->user()->spotify_id }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+					<a href="{{ route('profile.index') }}?user={{ auth()->user()->spotify_id }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
 						Profile
 					</a>
 					@if (get_route() != 'explore')

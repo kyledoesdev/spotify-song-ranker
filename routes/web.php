@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SpotifyAPIController;
@@ -23,13 +22,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/spotify/artist_songs', [SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
 
     /* Ranking CRUD routes */
-    Route::view('/ranks', 'rank.index')->name('rank.index');
     Route::post('/rank/create', [RankingController::class, 'create'])->name('rank.create');
     Route::get('/rank/{id}/edit', [RankingController::class, 'edit'])->name('rank.edit');
     Route::post('/rank/{id}/update', [RankingController::class, 'update'])->name('rank.update');
     Route::post('/rank/delete', [RankingController::class, 'delete'])->name('rank.delete');
     Route::post('/rank/finish', [RankingController::class, 'finish'])->name('rank.finish');
-    Route::get('/ranks/pages', [RankingController::class, 'pages'])->name('rank.pages');
     Route::get('/ranks/export', [RankingController::class, 'export'])->name('rankings.export');
 
     /* Settings */
@@ -38,6 +35,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/destroy', [SettingsController::class, 'destroy'])->name('settings.destroy');
 });
 
+Route::view('/profile', 'profile.index')->name('profile.index');
+Route::get('/ranks/pages', [RankingController::class, 'pages'])->name('rank.pages');
 Route::view('/explore', 'explore')->name('explore');
 Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
