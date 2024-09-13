@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('welcome');
 Route::view('/about', 'about')->name('about');
+Route::view('/explore', 'explore')->name('explore');
+Route::view('/profile', 'profile.index')->name('profile.index');
 
 Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');
 Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
@@ -35,8 +37,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/destroy', [SettingsController::class, 'destroy'])->name('settings.destroy');
 });
 
-Route::view('/profile', 'profile.index')->name('profile.index');
-Route::get('/ranks/pages', [RankingController::class, 'pages'])->name('rank.pages');
-Route::view('/explore', 'explore')->name('explore');
-Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
+Route::get('/ranks/pages', [RankingController::class, 'pages'])->name('rank.pages');
+Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
