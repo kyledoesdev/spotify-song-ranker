@@ -8,30 +8,34 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 
 class RankingFactory extends Factory
 {
-    private bool $isRanked = false;
-    private bool $isPublic = true;
-    private ?string $completedAt = null;
-
     public function definition(): array
     {
         return [
             'user_id' => User::factory(),
             'artist_id' => Artist::factory(),
             'name' => fake()->userName() . ' List',
-            'is_ranked' => $this->isRanked,
-            'is_public' => $this->isPublic,
-            'completed_at' => $this->completedAt,
+            'is_ranked' => false,
+            'is_public' => false,
+            'completed_at' => null,
         ];
     }
 
-    public function setVisibility(bool $visiblity): void
+    public function setVisibility(bool $visibility): self
     {
-        $this->isPublic = $visiblity;
+        return $this->state(function (array $attributes) use ($visibility) {
+            return [
+                'is_public' => $visibility,
+            ];
+        });
     }
 
-    public function setCompleted(bool $completed): void
+    public function setCompleted(bool $completed): self
     {
-        $this->isRanked = $completed;
-        $this->completedAt = $completed ? now() : null;
+        return $this->state(function (array $attributes) use ($completed) {
+            return [
+                'is_ranked' => $completed,
+                'completed_at' => $completed ? now() : null,
+            ];
+        });
     }
 }

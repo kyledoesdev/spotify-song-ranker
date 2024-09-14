@@ -11,7 +11,7 @@ class UserFactory extends Factory
     {
         return [
             'spotify_id' => 'spotify-id-' . str()->random(32),
-            'name' => fake()->name(),
+            'name' => fake()->username(),
             'email' => fake()->unique()->safeEmail(),
             'avatar' => fake()->imageUrl(200, 200, 'avatar', true),
             'timezone' => fake()->timezone(),
