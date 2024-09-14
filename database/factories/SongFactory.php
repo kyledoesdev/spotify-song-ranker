@@ -1,0 +1,20 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Ranking;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class SongFactory extends Factory
+{
+    public function definition(): array
+    {
+        return [
+            'ranking_id' => Ranking::factory(),
+            'spotify_song_id' => str()->random(16),
+            'title' => fake()->sentance(rand(1, 5)),
+            'rank' => null,
+            'cover' => fake()->imageUrl(200, 200, 'song', true),
+        ];
+    }
+}

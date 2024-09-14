@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

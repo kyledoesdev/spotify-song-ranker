@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Artist extends Model
