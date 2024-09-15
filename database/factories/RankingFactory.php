@@ -19,23 +19,4 @@ class RankingFactory extends Factory
             'completed_at' => null,
         ];
     }
-
-    public function setVisibility(bool $visibility): self
-    {
-        return $this->state(function (array $attributes) use ($visibility) {
-            return [
-                'is_public' => $visibility,
-            ];
-        });
-    }
-
-    public function setCompleted(bool $completed): self
-    {
-        return $this->state(function (array $attributes) use ($completed) {
-            return [
-                'is_ranked' => $completed,
-                'completed_at' => $completed ? now() : null,
-            ];
-        });
-    }
 }

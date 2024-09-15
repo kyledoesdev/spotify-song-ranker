@@ -4,14 +4,19 @@ use App\Models\Ranking;
 use App\Models\User;
 
 test('explore page loads', function () {
-    $response = $this->get('/explore');
-    $response->assertOk();
+    $this->get(route('explore'))
+        ->assertOk();
 });
 
 test('can explore public completed rankings on explore page', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(true)->setCompleted(true))
-        ->create();
+    $user = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => true,
+        'is_ranked' => true,
+        'completed_at' => now()
+    ]);
 
     $this->actingAs($user)->get(route('explore'))->assertOk();
 
@@ -21,9 +26,14 @@ test('can explore public completed rankings on explore page', function() {
 });
 
 test('can not explore public uncompleted rankings on explore page', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(true)->setCompleted(false))
-        ->create();
+    $user = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => true,
+        'is_ranked' => false,
+        'completed_at' => null
+    ]);
 
     $this->actingAs($user)->get(route('explore'))->assertOk();
 
@@ -33,9 +43,14 @@ test('can not explore public uncompleted rankings on explore page', function() {
 });
 
 test('can not explore private completed rankings on explore page', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(false)->setCompleted(true))
-        ->create();
+    $user = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => false,
+        'is_ranked' => true,
+        'completed_at' => now()
+    ]);
 
     $this->actingAs($user)->get(route('explore'))->assertOk();
 
@@ -45,9 +60,14 @@ test('can not explore private completed rankings on explore page', function() {
 });
 
 test('can not explore private uncompleted rankings on explore page', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(false)->setCompleted(false))
-        ->create();
+    $user = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => false,
+        'is_ranked' => false,
+        'completed_at' => null
+    ]);
 
     $this->actingAs($user)->get(route('explore'))->assertOk();
 

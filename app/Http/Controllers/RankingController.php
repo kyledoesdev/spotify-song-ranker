@@ -45,10 +45,16 @@ class RankingController extends Controller
 
     public function edit($id): View
     {
+        $ranking = Ranking::query()
+            ->with('songs')
+            ->findOrFail($id);
+
+        if ($ranking->user_id !== auth()->id()) {
+            abort(403, "You are not allowed to edit this ranking.");
+        }
+        
         return view('rank.edit', [
-            'ranking' => Ranking::query()
-                ->with('songs')
-                ->findOrFail($id),
+            'ranking' => $ranking,
         ]);
     }
 

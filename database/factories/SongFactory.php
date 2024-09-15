@@ -12,8 +12,8 @@ class SongFactory extends Factory
         return [
             'ranking_id' => Ranking::factory(),
             'spotify_song_id' => str()->random(16),
-            'title' => fake()->sentance(rand(1, 5)),
-            'rank' => null,
+            'title' => fake()->sentence(rand(1, 5)),
+            'rank' => 0,
             'cover' => fake()->imageUrl(200, 200, 'song', true),
         ];
     }

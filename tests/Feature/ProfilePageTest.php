@@ -25,9 +25,14 @@ test('profile page loaded user details', function() {
 });
 
 test('profile loaded user rankings', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(true)->setCompleted(true))
-        ->create();
+    $user = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => true,
+        'is_ranked' => true,
+        'completed_at' => now()
+    ]);
 
     $this->actingAs($user)
         ->get(route('profile.index') . "?user={$user->spotify_id}")
@@ -40,11 +45,15 @@ test('profile loaded user rankings', function() {
 });
 
 test('profile shows unfinished rankings to profile owner only', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(true)->setCompleted(false))
-        ->create();
-
+    $user = User::factory()->create();
     $otherUser = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => true,
+        'is_ranked' => false,
+        'completed_at' => null
+    ]);
 
     $this->actingAs($user)
         ->get(route('profile.index') . "?user={$user->spotify_id}")
@@ -66,11 +75,15 @@ test('profile shows unfinished rankings to profile owner only', function() {
 });
 
 test('profile shows private rankings to profile owner only', function() {
-    $user = User::factory()
-        ->has(Ranking::factory()->setVisibility(false)->setCompleted(true))
-        ->create();
-
+    $user = User::factory()->create();
     $otherUser = User::factory()->create();
+
+    $ranking = Ranking::factory()->create([
+        'user_id' => $user->getKey(),
+        'is_public' => false,
+        'is_ranked' => true,
+        'completed_at' => now()
+    ]);
 
     $this->actingAs($user)
         ->get(route('profile.index') . "?user={$user->spotify_id}")
