@@ -3,7 +3,7 @@
 use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankingController;
-use App\Http\Controllers\RankingExportController;
+use App\Http\Controllers\RankingDownloadController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SongPlacementController;
 use App\Http\Controllers\SpotifyAPIController;
@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/rank/destroy', [RankingController::class, 'destroy'])->name('rank.destroy');
     
     /* Ranking Export */
-    Route::get('/ranking-export', [RankingExportController::class, 'export'])->name('ranking-explore.index');
+    Route::get('/ranking-download', [RankingDownloadController::class, 'index'])->name('ranking-download.index');
 
     /* Song Placement */
     Route::post('/song-placement/store', [SongPlacementController::class, 'store'])->name('song-placement.store');
