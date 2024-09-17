@@ -4,7 +4,7 @@ use App\Models\Ranking;
 use App\Models\User;
 
 test('explore page loads', function () {
-    $this->get(route('explore'))
+    $this->get(route('explore.index'))
         ->assertOk();
 });
 
@@ -18,7 +18,7 @@ test('can explore public completed rankings on explore page', function() {
         'completed_at' => now()
     ]);
 
-    $this->actingAs($user)->get(route('explore'))->assertOk();
+    $this->actingAs($user)->get(route('explore.index'))->assertOk();
 
     $response = $this->actingAs($user)->get(route('explore.pages'));
     $response->assertOk();
@@ -35,7 +35,7 @@ test('can not explore public uncompleted rankings on explore page', function() {
         'completed_at' => null
     ]);
 
-    $this->actingAs($user)->get(route('explore'))->assertOk();
+    $this->actingAs($user)->get(route('explore.index'))->assertOk();
 
     $response = $this->actingAs($user)->get(route('explore.pages'));
     $response->assertOk();
@@ -52,7 +52,7 @@ test('can not explore private completed rankings on explore page', function() {
         'completed_at' => now()
     ]);
 
-    $this->actingAs($user)->get(route('explore'))->assertOk();
+    $this->actingAs($user)->get(route('explore.index'))->assertOk();
 
     $response = $this->actingAs($user)->get(route('explore.pages'));
     $response->assertOk();
@@ -69,7 +69,7 @@ test('can not explore private uncompleted rankings on explore page', function() 
         'completed_at' => null
     ]);
 
-    $this->actingAs($user)->get(route('explore'))->assertOk();
+    $this->actingAs($user)->get(route('explore.index'))->assertOk();
 
     $response = $this->actingAs($user)->get(route('explore.pages'));
     $response->assertOk();

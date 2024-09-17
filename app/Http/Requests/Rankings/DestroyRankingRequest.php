@@ -5,18 +5,17 @@ namespace App\Http\Requests\Rankings;
 use App\Models\Ranking;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FinishRankingRequest extends FormRequest
+class DestroyRankingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Ranking::findOrFail(request()->rankingId)->user_id === auth()->id();
+        return auth()->check() && Ranking::findOrFail(request()->rankingId)->user_id == auth()->id();
     }
 
     public function rules(): array
     {
         return [
             'rankingId' => 'required',
-            'songs' => 'required',
         ];
     }
 }

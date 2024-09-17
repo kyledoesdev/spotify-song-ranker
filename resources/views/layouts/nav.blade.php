@@ -67,11 +67,11 @@
 							Home
 						</a>
 					@endif
-					<a href="{{ route('profile.index') }}?user={{ auth()->user()->spotify_id }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+					<a href="{{ route('profile.show', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
 						Profile
 					</a>
-					@if (get_route() != 'explore')
-						<a href="{{ route('explore') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+					@if (get_route() != 'explore.index')
+						<a href="{{ route('explore.index') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
 							Explore
 						</a>
 					@endif

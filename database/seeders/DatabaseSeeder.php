@@ -2,21 +2,28 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Ranking;
+use App\Models\Song;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Ranking::factory()
+            ->count(10)
+            ->create([
+                'is_public' => true,
+                'is_ranked' => true,
+                'completed_at' => now(),
+            ])->each(function ($ranking) {
+                Song::factory()->count(10)->create([
+                    'ranking_id' => $ranking->id,
+                ])->each(function ($song, $index) {
+                    $song->update([
+                        'rank' => $index + 1,
+                    ]);
+                });
+            });
     }
 }

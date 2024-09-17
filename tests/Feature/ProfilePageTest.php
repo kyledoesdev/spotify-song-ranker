@@ -7,7 +7,7 @@ test('profile page loads', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
 });
 
@@ -15,11 +15,11 @@ test('profile page loaded user details', function() {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
         
     $this->actingAs($user)
-        ->get(route('rank.pages', ['user' => $user->spotify_id]))
+        ->get(route('rank.pages', ['spotify_id' => $user->spotify_id]))
         ->assertOk()
         ->assertSeeHtml(get_formatted_name($user->name));
 });
@@ -35,11 +35,11 @@ test('profile loaded user rankings', function() {
     ]);
 
     $this->actingAs($user)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
 
     $this->actingAs($user)
-        ->get(route('rank.pages', ['user' => $user->spotify_id]))
+        ->get(route('rank.pages', ['spotify_id' => $user->spotify_id]))
         ->assertOk()
         ->assertSee($user->rankings->first()->name);
 });
@@ -56,20 +56,20 @@ test('profile shows unfinished rankings to profile owner only', function() {
     ]);
 
     $this->actingAs($user)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
 
     $this->actingAs($user)
-        ->get(route('rank.pages', ['user' => $user->spotify_id]))
+        ->get(route('rank.pages', ['spotify_id' => $user->spotify_id]))
         ->assertOk()
         ->assertSee($user->rankings->first()->name);
 
     $this->actingAs($otherUser)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
 
     $this->actingAs($otherUser)
-        ->get(route('rank.pages', ['user' => $user->spotify_id]))
+        ->get(route('rank.pages', ['spotify_id' => $user->spotify_id]))
         ->assertOk()
         ->assertDontSee($user->rankings->first()->name);
 });
@@ -86,20 +86,20 @@ test('profile shows private rankings to profile owner only', function() {
     ]);
 
     $this->actingAs($user)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
 
     $this->actingAs($user)
-        ->get(route('rank.pages', ['user' => $user->spotify_id]))
+        ->get(route('rank.pages', ['spotify_id' => $user->spotify_id]))
         ->assertOk()
         ->assertSee($user->rankings->first()->name);
 
     $this->actingAs($otherUser)
-        ->get(route('profile.index') . "?user={$user->spotify_id}")
+        ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk();
 
     $this->actingAs($otherUser)
-        ->get(route('rank.pages', ['user' => $user->spotify_id]))
+        ->get(route('rank.pages', ['spotify_id' => $user->spotify_id]))
         ->assertOk()
         ->assertDontSee($user->rankings->first()->name);
 });

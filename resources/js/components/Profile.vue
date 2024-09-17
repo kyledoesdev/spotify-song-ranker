@@ -61,11 +61,13 @@
     export default {
         name: 'Profile',
 
+        props: ['user'],
+
         data() {
             return {
                 ranks: [],
                 display_name: "",
-                profile_name: "",
+                profile_name: this.user.name,
                 no_rankings_msg: "No rankings found. Go make one!"
             }      
         },
@@ -89,7 +91,7 @@
                     );
 
                 if (confirmed) {
-                    axios.post('/rank/delete', {
+                    axios.post('/rank/destroy', {
                         'rankingId': rankingId
                     })
                     .then(response => {
@@ -113,7 +115,7 @@
             pageRankings(uri) {
                 axios.get(uri, {
                         params: {
-                            user: this.profile_name
+                            spotify_id: this.user.spotify_id
                         }
                     })
                     .then(response => {
@@ -146,8 +148,6 @@
         },
 
         mounted() {
-            this.profile_name = new URLSearchParams(window.location.search).get('user');
-
             this.pageRankings('/ranks/pages');
         }
     }

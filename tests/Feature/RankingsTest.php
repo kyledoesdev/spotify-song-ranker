@@ -138,7 +138,7 @@ test('ranking owner can delete their ranking', function() {
     expect(10, Song::where('ranking_id', $rankingId)->count());
 
     $this->actingAs($user)
-        ->postJson(route('rank.delete'), ['rankingId' => $rankingId])
+        ->postJson(route('rank.destroy'), ['rankingId' => $rankingId])
         ->assertOk();
 
     expect(now(), Ranking::withTrashed()->findOrFail($rankingId)->deleted_at);
@@ -158,7 +158,7 @@ test('ranking non-owner can not delete someone elses rankings', function() {
     expect(10, Song::where('ranking_id', $rankingId)->count());
 
     $this->actingAs($otherUser)
-        ->postJson(route('rank.delete'), ['rankingId' => $rankingId])
+        ->postJson(route('rank.destroy'), ['rankingId' => $rankingId])
         ->assertForbidden();
 
     expect(null, Ranking::withTrashed()->findOrFail($rankingId)->deleted_at);

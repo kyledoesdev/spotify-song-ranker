@@ -18,7 +18,7 @@
 
         computed: {
             getProfileURL() {
-                return '/profile?user=' + this.ranking.user.spotify_id;
+                return '/profile/' + this.ranking.user.spotify_id;
             }
         }
     }

@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Rankings\CreateRankingRequest;
-use App\Http\Requests\Rankings\DeleteRankingRequest;
+use App\Http\Requests\Rankings\DestroyRankingRequest;
 use App\Http\Requests\Rankings\FinishRankingRequest;
 use App\Http\Requests\Rankings\UpdateRankingRequest;
 use App\Jobs\DownloadDataJob;
+use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
-use App\Models\Ranking;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
 class RankingController extends Controller
 {
-    //TODO change from pk -> slug
     public function show($id): View
     {
         $ranking = Ranking::query()
@@ -60,27 +59,17 @@ class RankingController extends Controller
 
     public function update(UpdateRankingRequest $request, $id): JsonResponse
     {
-        Ranking::findOrFail($id)->update($request->validated());
+        $ranking = Ranking::findOrFail($id);
+        $ranking->update($request->validated());
 
         session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
-            'redirect' => route('profile.index') . '?user=' . auth()->user()->spotify_id,
+            'redirect' => route('profile.show', ['id' => $ranking->getKey()]),
         ], 200);
     }
 
-    public function finish(FinishRankingRequest $request): JsonResponse
-    {
-        Ranking::complete(collect($request->songs), $request->rankingId);
-
-        session()->flash('success', 'Ranking was succesfully saved!');
-
-        return response()->json([
-            'redirect' => route('home'),
-        ], 200);
-    }
-
-    public function delete(DeleteRankingRequest $request): JsonResponse
+    public function destroy(DestroyRankingRequest $request): JsonResponse
     {
         Ranking::findOrFail($request->rankingId)->delete();
         Song::where('ranking_id', $request->rankingId)->delete();
@@ -99,8 +88,7 @@ class RankingController extends Controller
 
     public function pages(): JsonResponse
     {
-        $spotify_id = request()->user;
-        $user = User::where('spotify_id', $spotify_id)->first();
+        $user = User::where('spotify_id', request()->spotify_id)->first();
 
         $response = [
             'success' => true,
@@ -114,20 +102,5 @@ class RankingController extends Controller
         }
 
         return response()->json($response, 200);
-    }
-
-    public function export(): JsonResponse
-    {
-        $rankings = Ranking::query()
-            ->where('user_id', auth()->id())
-            ->with('songs', 'artist')
-            ->get();
-
-        DownloadDataJob::dispatch($rankings, auth()->user());
-
-        return response()->json([
-            'success' => true,
-            'message' => "Your download has started and will be emailed to you when completed!"
-        ], 200);
     }
 }
