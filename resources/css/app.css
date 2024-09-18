@@ -22,6 +22,12 @@ body, html {
     border-color: black;
 }
 
+.k-line-light {
+    padding-bottom: 4px; 
+    border-bottom: 1px solid;
+    border-color: white;
+}
+
 /* Create a keyframe animation for the background */
 @keyframes gradientAnimation {
     0%, 100% {
