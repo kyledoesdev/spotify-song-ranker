@@ -28,6 +28,8 @@ jobs:
       run: |
         mkdir -p database
         touch database/database.sqlite
+    - name: Run Vite Build Scripts
+      run: npm i && npm run build && rm -rf node_modules/*
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
