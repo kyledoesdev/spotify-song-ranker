@@ -3,7 +3,5 @@
 @section('content')
     @include('layouts.nav')
 
-    <div>
-        <profile />
-    </div>
+    <profile :user="{{ $user }}" />
 @endsection
