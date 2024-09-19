@@ -4,7 +4,7 @@ environments:
     production:
         scheduler: true
         domain: song-rank.com
-        database: kyle-song-ranking-database
+        database: song-rank
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.2:al2'
