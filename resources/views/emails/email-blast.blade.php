@@ -7,28 +7,11 @@
 @endif
 
 <p>
-    This email is to notify you that <a href="{{ env("APP_URL") }}">Song Rank</a> is now at version 1.2!
+    This email is to notify you that <a href="{{ env("APP_URL") }}">Song Rank</a> is now at version 1.3!
 </p>
 
 <p>
-    In this new version of song rank, I overhauled the entire UI of the
-    application. Things are going to look familiar and different. I will
-    continue to make changes over the next few days to fine tune the layouts.
-    For anyone interested. We switched the application over from using
-    Twitter Bootstrap to TailwindCSS.
-</p>
-
-<p>
-    I've also added user "profiles". You can now view any users' completed
-    rankings. You can access a profile by clicking on the "creator" on
-    any ranking on the explore page. Profiles do not have follows, likes or
-    comments as of now. Feel free to reach out to me if this is something
-    you would like added, but I don't plan on adding these for now.
-</p>
-
-<p>
-    The webring has been moved to the about page. If you would like your website to be added
-    to the webring, let me know!
+    Hey everyone, we fixed a major bug on song rank that was not allowing you to save your rankings. it should be fixed now. Sorry for the issue!
 </p>
 
 <p>
