@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Song\Placement\StoreSongPlacementRequest;
+use App\Http\Requests\Songs\Placement\SongPlacementStoreRequest;
 use App\Models\Ranking;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class SongPlacementController extends Controller
 {
-    public function store(StoreSongPlacementRequest $request): JsonResponse
+    public function store(SongPlacementStoreRequest $request): JsonResponse
     {
         Ranking::complete(collect($request->songs), $request->rankingId);
 

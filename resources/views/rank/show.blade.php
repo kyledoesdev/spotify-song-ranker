@@ -159,7 +159,7 @@
         }
 
         function save() {
-            axios.post('/rank/finish', {
+            axios.post('/song-placement/store', {
                 'rankingId': {!! $ranking->getKey() !!},
                 'songs' : sortedList 
             })

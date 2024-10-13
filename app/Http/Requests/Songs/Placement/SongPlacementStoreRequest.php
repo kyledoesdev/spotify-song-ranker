@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Song\Placement;
+namespace App\Http\Requests\Songs\Placement;
 
 use App\Models\Ranking;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreSongPlacementRequest extends FormRequest
+class SongPlacementStoreRequest extends FormRequest
 {
     public function authorize(): bool
     {
