@@ -65,7 +65,7 @@ class RankingController extends Controller
         session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
-            'redirect' => route('profile.show', ['id' => $ranking->getKey()]),
+            'redirect' => route('profile.show', ['id' => auth()->user()->spotify_id]),
         ], 200);
     }
 
