@@ -40,7 +40,7 @@
                     );
 
                 if (confirmed) {
-                    axios.get('/ranks/export')
+                    axios.get('/ranking-download')
                         .then(response => {
                             let data = response.data;
 
