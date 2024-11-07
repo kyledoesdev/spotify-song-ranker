@@ -16,7 +16,8 @@ class RankingDownloadController extends Controller
             ->with('songs', 'artist')
             ->get();
 
-        defer(fn() => Notification::send(auth()->user(), new DownloadDataNotification($rankings)));
+        //defer(fn() => );
+        Notification::send(auth()->user(), new DownloadDataNotification($rankings));
 
         return response()->json([
             'success' => true,
