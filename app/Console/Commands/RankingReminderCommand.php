@@ -17,8 +17,6 @@ class RankingReminderCommand extends Command
 
     public function handle()
     {   
-        dispatch(new ScheduledJobIsRunning("Ranking Reminder Job"));
-
         User::query()
             ->forRankingReminders()
             ->get()
