@@ -4,7 +4,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-center lg:text-left">
             <!-- Footer Text -->
             <div class="flex items-center justify-center lg:justify-start">
-                <p class="text-sm text-white mx-1">&copy; {{ now()->format('Y') }} Song-Rank.com by</p>
+                <p class="text-sm text-white mx-1">&copy; {{ now()->format('Y') }} songrank.dev by</p>
                 <a class="k-line-light font-bold text-blue-500" href="https://kyledoes.dev">Kyle</a>
             </div>
 

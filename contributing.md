@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for considering contributing to our song-rank.com! We welcome all kinds of contributions, including bug fixes, feature requests, and documentation improvements. Please follow the guidelines below to get started.
+Thank you for considering contributing to our songrank.dev! We welcome all kinds of contributions, including bug fixes, feature requests, and documentation improvements. Please follow the guidelines below to get started.
 
 ## Table of Contents
 - [How to Contribute](#how-to-contribute)
