@@ -17,7 +17,8 @@
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
-        "socialiteproviders/spotify": "^4.1"
+        "socialiteproviders/spotify": "^4.1",
+        "spatie/laravel-backup": "^9.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.10",
