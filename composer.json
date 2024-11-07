@@ -16,8 +16,6 @@
         "laravel/sanctum": "^4.0",
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.9",
-        "laravel/vapor-cli": "^1.65",
-        "laravel/vapor-core": "^2.36",
         "maatwebsite/excel": "^3.1",
         "socialiteproviders/spotify": "^4.1"
     },

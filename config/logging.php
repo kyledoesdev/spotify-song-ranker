@@ -14,12 +14,6 @@ return [
             'days' => 7,
         ],
 
-        'vapor' => [
-            'driver' => 'stack',
-            // Add bugsnag to the stack:
-            'channels' => ['bugsnag', 'stderr'],
-        ],
-
         'bugsnag' => [
             'driver' => 'bugsnag',
         ],

@@ -4,10 +4,6 @@ import Alpine from 'alpinejs';
 import mitt from 'mitt';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 
-import Vapor from 'laravel-vapor';
-Vapor.withBaseAssetUrl(import.meta.env.VITE_VAPOR_ASSET_URL);
-window.Vapor = Vapor;
-
 /* Modules */
 import Globals from './modules/globals';
 import Alerts from './modules/alerts';
@@ -38,9 +34,6 @@ app.config.globalProperties.emitter = mitt();
 //mixin modules
 app.mixin(Globals);
 app.mixin(Alerts);
-app.mixin({
-	methods: { asset: window.Vapor.asset }
-});
 
 app.use(autoAnimatePlugin);
 
