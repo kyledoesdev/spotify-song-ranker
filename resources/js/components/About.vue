@@ -22,7 +22,7 @@
         <h5>webring:</h5>
         <div class="flex">
             <a href="https://insect.christmas" target="_blank">
-                <img class="mx-1" :src="asset('insect.gif')" />
+                <img class="mx-1" src="/insect.gif" />
             </a>
             <a class="portfolio-webring" href="https://kyleevangelisto.com" target="_blank">
                 <span class="text-white" style="font-size: 12px;">my portfolio</span>

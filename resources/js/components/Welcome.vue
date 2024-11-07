@@ -19,7 +19,7 @@
         <div>
             <div class="flex justify-center">
                 <div class="mt-4 border border-2 rounded-lg border-zinc-600">
-                    <img :src="asset('cover.png')" alt="">
+                    <img src="/cover.png" alt="">
                 </div>
             </div>
         </div>
