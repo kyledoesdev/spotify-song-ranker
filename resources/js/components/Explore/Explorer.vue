@@ -33,13 +33,13 @@
     </div>
 
     <div class="row d-flex jusitfy-content-center" v-else>
-        <span>TLoading Rankings...</span>
+        <span>Loading Rankings...</span>
     </div>
 
     <ul class="pagination flex justify-end p-4">
         <li v-if="ranks.prev_page_url">
             <a 
-                class="btn-primary" 
+                class="btn-primary m-2 p-2" 
                 @click.prevent="pageRankings(ranks.prev_page_url)"
                 href="#"
             >
@@ -48,7 +48,7 @@
         </li>
         <li v-if="ranks.next_page_url">
             <a 
-                class="btn-primary" 
+                class="btn-primary m-2 p-2" 
                 @click.prevent="pageRankings(ranks.next_page_url)"
                 href="#"
             >

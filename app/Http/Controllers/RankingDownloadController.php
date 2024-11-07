@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\DownloadDataJob;
 use App\Models\Ranking;
+use App\Notifications\DownloadDataNotification;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class RankingDownloadController extends Controller
 {
@@ -16,7 +16,7 @@ class RankingDownloadController extends Controller
             ->with('songs', 'artist')
             ->get();
 
-        DownloadDataJob::dispatch($rankings, auth()->user());
+        defer(fn() => Notification::send(auth()->user(), new DownloadDataNotification($rankings)));
 
         return response()->json([
             'success' => true,

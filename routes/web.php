@@ -4,7 +4,7 @@ use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RankingDownloadController;
-use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\SongPlacementController;
 use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
@@ -44,8 +44,8 @@ Route::middleware(['auth'])->group(function () {
 
     /* Settings */
     Route::view('/settings', 'settings.index')->name('settings.index');
-    Route::post('/settings/update', [SettingsController::class, 'update'])->name('settings.update');
-    Route::post('/settings/destroy', [SettingsController::class, 'destroy'])->name('settings.destroy');
+    Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('settings.update');
+    Route::post('/settings/destroy', [UserSettingsController::class, 'destroy'])->name('settings.destroy');
 });
 
 /* Pagination & Search routes */
