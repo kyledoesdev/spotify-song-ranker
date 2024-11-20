@@ -96,8 +96,6 @@
                 :src="cover" 
                 @click="loadSongs"
                 :alt="this.name"
-                width="272"
-                height="272"
             >
             <h5 class="mt-1">{{ this.name }}</h5>
             <spotify-logo :artistLink="this.id" />

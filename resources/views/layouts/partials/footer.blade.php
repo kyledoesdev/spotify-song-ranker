@@ -20,7 +20,7 @@
             <div class="flex items-center text-white justify-center lg:justify-end space-x-4">
                 <a target="_blank" href="https://discord.gg/zXe9kqyFEJ" class="text-gray-400 hover:text-white">Discord</a>
                 <a target="_blank" href="https://github.com/kyledoesdev" class="text-gray-400 hover:text-white">Github</a>
-                <a target="_blank" href="https://x.com/kyledoesdev" class="text-gray-400 hover:text-white">X</a>
+                <a target="_blank" href="https://bsky.app/profile/kyledoesdev.bsky.social" class="text-gray-400 hover:text-white">Bluesky</a>
             </div>
         </div>
     </div>

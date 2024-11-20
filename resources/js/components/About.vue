@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white border border-zinc-800 rounded-lg p-4">
         <p class="p-2">
-            Welcome to Kyle's Spotify Discography Ranker. This application will allow you to log in with your
+            Welcome to songrank.dev. This application will allow you to log in with your
             spotify account and rank your favorite artists' entire discography. This is not a bracket style ranking system.
             I've built a user-driven merge-sort algorithm to rank every possible combination of tracks as efficently as possible.
         </p>
@@ -14,7 +14,7 @@
         </p>
         <hr />
         <p class="p-2 italic text-xs mt-2">
-            For best experience, use this website on your computer.
+            While completly functional on mobile devices, for the best experience, use this website on your computer.
         </p>
     </div>
 
