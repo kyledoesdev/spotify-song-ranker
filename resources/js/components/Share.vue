@@ -11,8 +11,8 @@
                     .then(() => {
                         this.flash('Success', 'Copied to clipboard!');
                     })
-                    .catch(err => {
-                        chis.flash("Something went wrong.", 'Could not copy to your clipbaord, try copy & pasting the URL manually.', 'error');
+                    .catch(error => {
+                        this.flash("Something went wrong.", 'Could not copy to your clipbaord, try copy & pasting the URL manually.', 'error');
                     });
             }
         }
