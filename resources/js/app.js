@@ -18,6 +18,7 @@ import SongListItem from './components/RankSetup/SongListItem.vue';
 import Profile from './components/Profile.vue';
 import EditRanking from './components/RankSetup/EditRanking.vue';
 import Logo from './components/Spotify/Logo.vue';
+import Share from './components/Share.vue';
 
 import Explorer from './components/Explore/Explorer.vue';
 import ExploreItem from './components/Explore/ExploreItem.vue';
@@ -46,6 +47,7 @@ app.component('songlistitem', SongListItem);
 app.component('profile', Profile);
 app.component('editranking', EditRanking);
 app.component('spotify-logo', Logo);
+app.component('share', Share);
 app.component('explorer', Explorer);
 app.component('exploreitem', ExploreItem);
 app.component('explore-artist-name', ArtistName);

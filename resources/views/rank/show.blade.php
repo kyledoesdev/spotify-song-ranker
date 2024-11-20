@@ -6,6 +6,17 @@
     @include('layouts.nav')
 
     <div class="pl-4 pr-4 bg-white border border-zinc-800 rounded-lg mt-4">
+        @if ($ranking->is_ranked)
+            <div class="flex justify-end">
+                <a onclick="history.back()" class="btn-secondary p-2 m-2">
+                    <i class="fa fa-solid fa-arrow-left"></i>
+                </a>
+                <share />
+            </div>
+
+            <hr>
+        @endif
+
         @if (!$ranking->is_ranked)
             <div class="flex justify-center bg-white p-4">
                 <div class="text-center w-full">

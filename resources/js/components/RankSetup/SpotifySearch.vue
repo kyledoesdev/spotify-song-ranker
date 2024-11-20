@@ -1,5 +1,5 @@
 <template>
-    <div class="border border-zinc-800 rounded-lg p-2 mb-2 md:pb-4" v-auto-animate>
+    <div class="p-2 mb-2 md:pb-4" v-auto-animate>
         <div>
             <h5 class="md:text-xl mt-2 mb-4">
                 Search for an artist to rank to get started.

@@ -1,6 +1,6 @@
 <template>
-    <div class="p-2 mb-2 md:pb-4" v-auto-animate>
-        <div class="flex flex-col sm:flex-row items-center w-full space-y-2 sm:space-y-0 sm:space-x-2">
+    <div class="flex justify-center p-2 mb-2 md:pb-4" v-auto-animate>
+        <div class="flex flex-col sm:flex-row items-center w-full md:w-1/2 space-y-2 sm:space-y-0 sm:space-x-2">
             <input 
                 class="w-full sm:flex-1 p-2 border border-zinc-800 rounded-md" 
                 type="text" 

@@ -7,11 +7,12 @@
 @endif
 
 <p>
-    This email is to notify you that <a href="{{ env("APP_URL") }}">Song Rank</a> is now at version 1.3!
+    This email is to notify you that <a href="{{ env("APP_URL") }}">Song Rank</a> is now at version 1.4!
 </p>
 
 <p>
-    Hey everyone, we fixed a major bug on song rank that was not allowing you to save your rankings. it should be fixed now. Sorry for the issue!
+    song-rank.com has now moved to <a href="https://songrank.dev">songrank.dev!</a> You will still be able to access song rank at song-rank.com, but I highly recommend moving over to using the new url. <br>
+    I've added a share button and back button to the rankings page to easily share a ranking with friends & to be able to navigate back to the previous page you were at.
 </p>
 
 <p>

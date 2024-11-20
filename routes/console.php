@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::command('backup:clean')->daily()->at('12:00');
+Schedule::command('backup:clean')->timezone('America/New_York')->daily()->at('12:00');
 Schedule::command('backup:run')
     ->timezone('America/New_York')
     ->daily()
