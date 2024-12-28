@@ -16,7 +16,7 @@ class UserSettingsController extends Controller
         $user = auth()->user();
 
         /* Let me know someone is deleting their account */
-        Log::warning("{$user->email} is deleting their account... ID SANITY CHECK: {$request->user_id} === {$user->getKey()}");
+        Log::channel('discord')->emergency("{$user->email} is deleting their account... ID SANITY CHECK: {$request->user_id} === {$user->getKey()}");
 
         /* Log them out. */
         Auth::logout();
