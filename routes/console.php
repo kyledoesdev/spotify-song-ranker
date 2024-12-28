@@ -9,8 +9,10 @@ Schedule::command('backup:run')
     ->daily()
     ->at('12:05')
     ->onFailure(function () {
-        Log::error("BACK UP FAILED WEE WOO WEE WOO");
+        Log::channel('bugsnag')->error("BACK UP FAILED WEE WOO WEE WOO");
+        Log::channel('discord')->error("BACK UP FAILED WEE WOO WEE WOO");
     })
     ->onSuccess(function () {
-        Log::warning("BACK UP SUCCESS");
+        Log::channel('bugsnag')->warning("BACK UP SUCCESS");
+        Log:channel('discord')->warning("BACK UP SUCCESS");
     });
