@@ -14,5 +14,5 @@ Schedule::command('backup:run')
     })
     ->onSuccess(function () {
         Log::channel('bugsnag')->warning("BACK UP SUCCESS");
-        Log:channel('discord')->warning("BACK UP SUCCESS");
+        Log::channel('discord')->warning("BACK UP SUCCESS");
     });
