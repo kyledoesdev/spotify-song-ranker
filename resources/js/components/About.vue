@@ -24,7 +24,7 @@
             <a href="https://insect.christmas" target="_blank">
                 <img class="mx-1" src="/insect.gif" />
             </a>
-            <a class="portfolio-webring" href="https://kyleevangelisto.com" target="_blank">
+            <a class="portfolio-webring" href="https://kyledoes.dev" target="_blank">
                 <span class="text-white" style="font-size: 12px;">my portfolio</span>
             </a>
         </div>
