@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Ranking extends Model
@@ -111,6 +112,7 @@ class Ranking extends Model
 
         self::find($id)->update(['is_ranked' => true, 'completed_at' => now()]);
         Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
+        Log::channel('discord')->info("{$this->user->name} completed a ranking: {$this->name}.");
     }
 
     /* scopes */
