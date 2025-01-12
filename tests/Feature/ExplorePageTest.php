@@ -4,8 +4,7 @@ use App\Models\Ranking;
 use App\Models\User;
 
 test('explore page loads', function () {
-    $this->get(route('explore.index'))
-        ->assertOk();
+    $this->get(route('explore.index'))->assertOk();
 });
 
 test('can explore public completed rankings on explore page', function() {
@@ -71,7 +70,8 @@ test('can not explore private uncompleted rankings on explore page', function() 
 
     $this->actingAs($user)->get(route('explore.index'))->assertOk();
 
-    $response = $this->actingAs($user)->get(route('explore.pages'));
-    $response->assertOk();
-    $response->assertDontSee($user->rankings->first()->name);
+    $this->actingAs($user)
+        ->get(route('explore.pages'))
+        ->assertOk()
+        ->assertDontSee($user->rankings->first()->name);
 });
