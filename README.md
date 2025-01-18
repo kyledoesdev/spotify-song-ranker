@@ -1,7 +1,6 @@
 # songrank.dev
 
-[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F450a9eee-4bdb-4407-b76c-ae56c34a8155%3Flabel%3D1&style=for-the-badge)](https://forge.laravel.com/servers/857959/sites/2522533)
-
+[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F450a9eee-4bdb-4407-b76c-ae56c34a8155&style=plastic)](https://forge.laravel.com/servers/857959/sites/2522533)
 [![Tests](https://github.com/kyledoesdev/spotify-song-ranker/actions/workflows/tests.yml/badge.svg)](https://github.com/kyledoesdev/spotify-song-ranker/actions/workflows/tests.yml)
 
 ### Log in with your spotify account to rank your favorite artists' albums, singles & more.
