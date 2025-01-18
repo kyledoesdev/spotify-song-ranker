@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\ScheduledJobIsRunning;
 use App\Models\User;
 use App\Notifications\RankingReminderNotification;
 use Illuminate\Console\Command;
@@ -13,17 +12,24 @@ class RankingReminderCommand extends Command
 {
     protected $signature = 'rankings:reminder';
 
-    protected $description = 'Remind users that they have an unfinished ranking.';
+    protected $description = 'Remind users that they have uncompleted ranking(s).';
 
     public function handle()
     {   
-        User::query()
+        $users = User::query()
             ->forRankingReminders()
-            ->get()
-            ->each(function($user) {
-                if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
-                    Notification::send($user, new RankingReminderNotification($user->rankings));
-                }
-            });          
+            ->get();
+
+        Log::channel('discord')->info("Reminding {$users->count()} to complete their rankings.");
+            
+        $users->each(function(User $user) {
+            if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
+                Notification::send($user, new RankingReminderNotification($user->rankings));
+
+                Log::info("Notifying: {$user->email}.");
+
+                sleep(2);
+            }
+        });      
     }
 }

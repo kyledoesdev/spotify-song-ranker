@@ -23,6 +23,6 @@ class RankingReminderNotification extends Notification
         return (new MailMessage)->markdown('emails.ranking_reminder', [
             'notifiable' => $notifiable,
             'rankings' => $this->rankings
-        ])->subject("You have incomplete songrank.dev rankings.");
+        ])->subject("songrank.dev - reminder: you have unfinished rankings");
     }
 }
