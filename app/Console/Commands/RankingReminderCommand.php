@@ -26,7 +26,7 @@ class RankingReminderCommand extends Command
             if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
                 Notification::send($user, new RankingReminderNotification($user->rankings));
 
-                Log::info("Notifying: {$user->email}.");
+                Log::channel('single')->info("Notifying: {$user->email}");
 
                 sleep(2);
             }
