@@ -93,6 +93,8 @@ class Ranking extends Model
 
         Song::insert($songs);
 
+        Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
+
         return $ranking;
     }
 

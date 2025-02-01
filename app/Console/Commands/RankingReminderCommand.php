@@ -25,11 +25,9 @@ class RankingReminderCommand extends Command
         $users->each(function(User $user) {
             if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
                 Notification::send($user, new RankingReminderNotification($user->rankings));
-
-                Log::channel('single')->info("Notifying: {$user->email}");
-
-                //sleep(2);
             }
-        });      
+        });
+        
+        Log::channel('discord')->info("Completed Ranking Reminders.");
     }
 }
