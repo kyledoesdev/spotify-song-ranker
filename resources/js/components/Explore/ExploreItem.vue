@@ -10,7 +10,7 @@
                         height="120" 
                         :alt="ranking.user.name"
                     >
-                    <spotify-logo :artistLink="ranking.artist.artist_id" />
+                    <spotify-logo :artist="ranking.artist.artist_id" />
                 </div>
                 <div>
                     <h5 class="md:text-2xl" :title="ranking.name">

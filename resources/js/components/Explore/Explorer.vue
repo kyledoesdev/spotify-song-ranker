@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center p-2 mb-2 md:pb-4" v-auto-animate>
+    <div class="flex justify-center p-2 m-2 md:pb-4" v-auto-animate>
         <div class="flex flex-col sm:flex-row items-center w-full md:w-1/2 space-y-2 sm:space-y-0 sm:space-x-2">
             <input 
                 class="w-full sm:flex-1 p-2 border border-zinc-800 rounded-md" 
@@ -36,23 +36,39 @@
         <span>Loading Rankings...</span>
     </div>
 
-    <ul class="pagination flex justify-end p-4">
-        <li v-if="ranks.prev_page_url">
+    <!-- Pagiantion -->
+    <ul class="flex justify-center space-x-2 p-4">
+        <!-- Previous Page -->
+        <li v-if="ranks.current_page > 1">
             <a 
-                class="btn-primary m-2 p-2" 
-                @click.prevent="pageRankings(ranks.prev_page_url)"
                 href="#"
+                @click.prevent="pageRankings(ranks.prev_page_url)"
+                class="px-3 py-2 border border-zinc-800 rounded-md hover:bg-gray-100"
             >
-                &larr; Previous Page
+                &larr;
             </a>
         </li>
-        <li v-if="ranks.next_page_url">
+
+        <!-- Page Numbers -->
+        <li v-for="page in getPages()" :key="page">
             <a 
-                class="btn-primary m-2 p-2" 
-                @click.prevent="pageRankings(ranks.next_page_url)"
                 href="#"
+                @click.prevent="pageRankings(`/explore/pages?page=${page}`)"
+                class="px-3 py-2 border border-zinc-800 rounded-md"
+                :class="page === ranks.current_page ? 'bg-purple-400 text-white' : 'hover:bg-gray-100'"
             >
-                Next Page &rarr;
+                {{ page }}
+            </a>
+        </li>
+
+        <!-- Next Page -->
+        <li v-if="ranks.current_page < ranks.last_page">
+            <a 
+                href="#"
+                @click.prevent="pageRankings(ranks.next_page_url)"
+                class="px-3 py-2 border border-zinc-800 rounded-md hover:bg-gray-100"
+            >
+                &rarr;
             </a>
         </li>
     </ul>
@@ -91,6 +107,31 @@
                     .catch(error => {
                         console.log(error);
                     });
+            },
+
+            getPages() {
+                if (!this.ranks.last_page)  {
+                    return [1];
+                }
+        
+                let pages = [];
+                const current = this.ranks.current_page;
+                const last = this.ranks.last_page;
+                
+                // Calculate the range to show up to 10 pages
+                let start = Math.max(1, current - 4);
+                let end = Math.min(start + 9, last);
+                
+                // Adjust start if we're near the end
+                if (end === last) {
+                    start = Math.max(1, end - 9);
+                }
+                
+                for (let i = start; i <= end; i++) {
+                    pages.push(i);
+                }
+                
+                return pages;
             },
 
             reset() {

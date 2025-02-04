@@ -13,7 +13,7 @@ class ExploreController extends Controller
         return response()->json([
             'rankings' => Ranking::query()
                 ->forExplorePage(request()->search)
-                ->paginate(6),
+                ->paginate(5),
         ], 200);
     }
 }

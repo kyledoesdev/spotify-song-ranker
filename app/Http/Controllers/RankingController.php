@@ -75,7 +75,7 @@ class RankingController extends Controller
         Song::where('ranking_id', $request->rankingId)->delete();
 
         return response()->json([
-            'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
+            'message' => 'Your ranking has been deleted.',
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
                 ->with('user', 'artist')

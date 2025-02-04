@@ -43,7 +43,8 @@
                                 <div>
                                     <li>
                                         <songlistitem 
-                                            id="{{ $song->getKey() }}" 
+                                            id="{{ $song->getKey() }}"
+                                            spotifyid="{{ $song->spotify_song_id }}"
                                             name="{{ $song->title }}" 
                                             cover="{{ $song->cover }}" 
                                             :candelete="false"
