@@ -120,15 +120,15 @@ class Ranking extends Model
     }
 
     /* scopes */
-    public function scopeForExplorePage(Builder $query, ?string $search = null)
+    public function scopeForExplorePage(Builder $query, string $search = "", ?string $artist = null)
     {
         $query->newQuery()
             ->where('is_ranked', true)
             ->where('is_public', true)
-            ->when($search != null, function($query) use ($search) {
-                $query->whereHas('artist', function($q) use ($search) {
-                    $q->where('artist_name', 'LIKE', "%{$search}%")->orWhere('id', $search);
-                });
+            ->whereHas('artist', function($query2) use ($search, $artist) {
+                $query2
+                    ->when($search != "", fn($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
+                    ->when($artist != null, fn($q) => $q->where('id', $artist));
             })
             ->with('user', 'artist')
             ->with('songs', fn($q) => $q->where('rank', 1))

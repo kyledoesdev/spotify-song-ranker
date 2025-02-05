@@ -14,7 +14,7 @@ class ExploreController extends Controller
         return response()->json([
             'top_artists' => Artist::getTopArtists(),
             'rankings' => Ranking::query()
-                ->forExplorePage(request()->search)
+                ->forExplorePage(request()->search, request()->artist)
                 ->paginate(5),
         ], 200);
     }
