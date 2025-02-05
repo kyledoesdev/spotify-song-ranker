@@ -13,11 +13,21 @@ class ProfileController extends Controller
     {
         $user = User::where('spotify_id', $id)->first();
 
+        /* no profile found for user */
+        if (is_null($user)) {
+            return view('profile.show', [
+                'user' => null,
+                'name' => get_formatted_name($id),
+                'rankings' => null,
+            ]);
+        }
+
         return view('profile.show', [
             'user' => $user,
+            'name' => get_formatted_name($user->name),
             'rankings' => Ranking::query()
                 ->forProfilePage($user)
-                ->paginate(5)
+                ->get()
         ]);
     }
 }

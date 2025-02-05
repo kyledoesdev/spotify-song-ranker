@@ -47,11 +47,3 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('settings.update');
     Route::post('/settings/destroy', [UserSettingsController::class, 'destroy'])->name('settings.destroy');
 });
-
-/* Pagination & Search routes */
-Route::get('/ranks/pages', [RankingController::class, 'pages'])->name('rank.pages');
-Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
-
-Route::get('/test', function() {
-    App\Models\Artist::getTopArtists()->dd();
-});

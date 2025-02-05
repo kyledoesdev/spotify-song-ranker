@@ -85,22 +85,4 @@ class RankingController extends Controller
                 ->paginate(5),
         ], 200);
     }
-
-    public function pages(): JsonResponse
-    {
-        $user = User::where('spotify_id', request()->spotify_id)->first();
-
-        $response = [
-            'success' => true,
-            'rankings' => Ranking::query()->forProfilePage($user)->paginate(5),
-            'name' => $user ? get_formatted_name($user->name) : null,
-        ];
-
-        if (is_null($user)) {
-            $response['success'] = false;
-            $response['message'] = "No ranking results for user: {$spotify_id}.";
-        }
-
-        return response()->json($response, 200);
-    }
 }
