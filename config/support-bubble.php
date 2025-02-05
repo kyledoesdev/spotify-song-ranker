@@ -17,8 +17,8 @@ return [
      * All chat bubble responses will be sent to this email address.
      */
     'mail_to' => env("HELP_EMAIL"),
-    'mail_from' => null, // by default this is config('mail.from.address')
-    'mailer' => null, // by default this is config('mail.default')
+    'mail_from' => env("MAIL_FROM_ADDRESS"), // by default this is config('mail.from.address')
+    'mailer' => env("MAIL_MAILER"), // by default this is config('mail.default')
 
     /**
      * This queue will be used when sending out mails.
