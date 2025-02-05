@@ -46,4 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/settings', 'settings.index')->name('settings.index');
     Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('settings.update');
     Route::post('/settings/destroy', [UserSettingsController::class, 'destroy'])->name('settings.destroy');
+
+    Route::supportBubble();
 });

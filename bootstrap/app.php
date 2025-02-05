@@ -25,6 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(AppServiceProvider::HOME);
 
         $middleware->throttleApi();
+
+        $middleware->validateCsrfTokens(except: [
+			'support-bubble',
+		]);
     })
     ->withSchedule(function (Schedule $schedule) {
     })

@@ -4,6 +4,8 @@ export default {
     './resources/**/*.blade.php',
     './resources/**/*.js',
     './resources/**/*.vue',
+    './vendor/spatie/laravel-support-bubble/config/**/*.php',
+    './vendor/spatie/laravel-support-bubble/resources/views/**/*.blade.php',
   ],
   theme: {
     extend: {
