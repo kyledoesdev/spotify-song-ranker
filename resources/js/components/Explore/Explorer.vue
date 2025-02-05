@@ -140,6 +140,10 @@
 
         methods: {
             pageRankings(uri = '/explore/pages', artist = null) {
+                if (artist != null) {
+                    this.searchQuery = "";
+                }
+
                 axios.get(uri, {
                     params: {
                         search: this.searchQuery,
