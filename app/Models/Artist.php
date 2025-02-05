@@ -28,6 +28,7 @@ class Artist extends Model
             ')
             ->join('rankings', function($join) {
                 $join->on('rankings.artist_id', '=', 'artists.id')
+                    ->whereNull('rankings.deleted_at')
                     ->where('rankings.is_ranked', true)
                     ->where('rankings.is_public', true);
             })

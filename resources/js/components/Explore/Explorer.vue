@@ -139,12 +139,15 @@
         },
 
         methods: {
-            pageRankings(uri = '/explore/pages', value = null) {
-                let search = value != null ? value : this.searchQuery;
+            pageRankings(uri = '/explore/pages', artist = null) {
+                if (artist != null) {
+                    this.searchQuery = "";
+                }
 
                 axios.get(uri, {
                     params: {
-                        search: search
+                        search: this.searchQuery,
+                        artist: artist
                     }
                 })
                 .then(response => {
