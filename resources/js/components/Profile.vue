@@ -1,9 +1,12 @@
 <template>
-    <div class="bg-zinc-100 border border-zinc-800 rounded-lg mt-8" v-auto-animate>
-        <h5 class="text-xl md:text-4xl p-4">{{ this.display_name }} Rankings</h5>
-        <div v-if="ranks.total > 0" class="bg-white overflow-x-auto" v-auto-animate>
-            <div class="flex flex-col items-center m-2 p-2" v-if="ranks.total > 0" v-auto-animate>
-                <div class="border border-zinc-800 rounded-lg mb-2" v-for="ranking in ranks.data" :key="ranking.id" v-auto-animate>
+    <div class="mt-8" v-auto-animate>
+        <div class="flex justify-center">
+            <h5 class="text-xl md:text-4xl p-4 k-line">{{ this.display_name }} Rankings</h5>
+        </div>
+
+        <div v-if="ranks" class="overflow-x-auto" v-auto-animate>
+            <div class="flex flex-col items-center space-y-8 mt-4" v-if="ranks" v-auto-animate>
+                <div class="border border-zinc-800 bg-white rounded-lg mb-2" v-for="ranking in ranks" :key="ranking.id" v-auto-animate>
                     <exploreitem class="mb-4" :ranking="ranking" />
 
                     <div class="text-dark m-4" v-if="this.authid && ranking.user_id == this.authid">
@@ -29,31 +32,9 @@
             </div>
         </div>
 
-        <div class="px-4" v-else>
+        <div class="flex justify-center space-y-8 space-x-8" v-else>
             <span>{{ this.no_rankings_msg }}</span>
-        </div>
-
-        <div class="mt-4 mx-2" v-auto-animate>
-            <ul class="pagination flex justify-end pb-4" v-auto-animate>
-                <li v-if="ranks.prev_page_url" class="m-1">
-                    <a 
-                        class="border border-zinc-800 p-2 rounded bg-purple-400 hover:bg-purple-500 text-white" 
-                        @click.prevent="pageRankings(ranks.prev_page_url)"
-                        href="#"
-                    >
-                        &larr; Previous Page
-                    </a>
-                </li>
-                <li v-if="ranks.next_page_url" class="m-1">
-                    <a 
-                        class="border border-zinc-800 p-2 rounded bg-purple-400 hover:bg-purple-500 text-white" 
-                        @click.prevent="pageRankings(ranks.next_page_url)"
-                        href="#"
-                    >
-                        Next Page &rarr;
-                    </a>
-                </li>
-            </ul>
+            <span></span>
         </div>
     </div>
 </template>
@@ -61,14 +42,13 @@
     export default {
         name: 'Profile',
 
-        props: ['user'],
+        props: ['user', 'rankings', 'name'],
 
         data() {
             return {
-                ranks: [],
-                display_name: "",
-                profile_name: this.user.name,
-                no_rankings_msg: "No rankings found. Go make one!"
+                ranks: this.rankings,
+                display_name: this.name,
+                no_rankings_msg: "No rankings found."
             }      
         },
 
@@ -112,32 +92,6 @@
                 return Object.values(ranking.songs).find(song => song.rank === 1)?.title;
             },
 
-            pageRankings(uri) {
-                axios.get(uri, {
-                        params: {
-                            spotify_id: this.user.spotify_id
-                        }
-                    })
-                    .then(response => {
-                        const data = response.data;
-
-                        this.display_name = data.name;
-
-                        if (data.success == false) {
-                            this.no_rankings_msg = data.message;
-                            return;
-                        }
-
-                        if (data.success == true && data.rankings) {
-                            this.ranks = data.rankings;
-                        }                    
-                    })
-                    .catch(error => {
-                        this.flash('Error Fetching Rankings', `Could not get rankings for ${this.profile_name} at this time. Please try again later.`, 'error')
-                        console.log(error);
-                    });
-            },
-
             getEditURI(rankingid) {
                 return '/rank/' + rankingid + '/edit';
             },
@@ -146,10 +100,6 @@
                 return ranking.is_public == 0 ? 'No' : 'Yes';
             }
         },
-
-        mounted() {
-            this.pageRankings('/ranks/pages');
-        }
     }
 </script>
 <style scoped>

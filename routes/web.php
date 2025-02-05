@@ -46,8 +46,6 @@ Route::middleware(['auth'])->group(function () {
     Route::view('/settings', 'settings.index')->name('settings.index');
     Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('settings.update');
     Route::post('/settings/destroy', [UserSettingsController::class, 'destroy'])->name('settings.destroy');
-});
 
-/* Pagination & Search routes */
-Route::get('/ranks/pages', [RankingController::class, 'pages'])->name('rank.pages');
-Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
+    Route::supportBubble();
+});

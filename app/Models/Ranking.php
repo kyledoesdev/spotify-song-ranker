@@ -126,10 +126,8 @@ class Ranking extends Model
             ->where('is_ranked', true)
             ->where('is_public', true)
             ->when($search != null, function($query) use ($search) {
-                $query->where(function($query2) use ($search) {
-                    $query2->newQuery()
-                        ->whereHas('artist', fn($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
-                        ->orWhere('name', 'LIKE', "%{$search}%");
+                $query->whereHas('artist', function($q) use ($search) {
+                    $q->where('artist_name', 'LIKE', "%{$search}%")->orWhere('id', $search);
                 });
             })
             ->with('user', 'artist')

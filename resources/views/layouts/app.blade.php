@@ -32,7 +32,11 @@
                 @yield('content')
             </div>
         </main>
+
         <footer class="bg-dark text-light">
+            @auth
+                <x-support-bubble />
+            @endauth
             @include('layouts.partials.footer')
             @stack('scripts')
         </footer>

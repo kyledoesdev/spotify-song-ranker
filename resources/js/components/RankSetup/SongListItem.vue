@@ -7,7 +7,7 @@
             <div class="flex">
                 <div>
                     <h5 class="truncate mx-2 mt-2 mb-2" :title="name">{{ name }}</h5>
-                    <spotify-logo class="mx-2" />
+                    <spotify-logo class="mx-2" :song="spotifyid" />
                 </div>
                 <div v-if="candelete">
                     <button type="button" class="btn-danger px-2 py-1 my-1" @click="removeSong()">
@@ -27,19 +27,13 @@
     export default {
         name: 'Song List Item',
 
-        props: ['id', 'name', 'cover', 'candelete', 'spacer'],
+        props: ['id', 'spotifyid', 'name', 'cover', 'candelete', 'spacer'],
 
         methods: {
             removeSong() {
                 this.emitter.emit('song-removed', this.id);
             }
         },
-
-        computed: {
-            trackLink() {
-                return "https://open.spotify.com/track/" + this.id;
-            }
-        }
     }
 </script>
 <style>

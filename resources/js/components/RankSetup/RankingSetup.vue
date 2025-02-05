@@ -20,7 +20,7 @@
                                 <h5 class="md:text-2xl mt-2 mb-2">{{ this.name }}</h5>
                             </div>
                             <div class="mt-2 mx-2">
-                                <spotify-logo :artistLink="this.id" />
+                                <spotify-logo :artist="this.id" />
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,15 @@
                 <h5 class="md:text-4xl mb-2">Tracks</h5>
                 <div class="card-scroller" v-auto-animate>
                     <div v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
-                        <songlistitem :id="song.id" :name="song.name" :cover="song.cover" :candelete="true" :spacer="true"></songlistitem>
+                        <songlistitem
+                            :id="song.id"
+                            :spotifyId="song.spotify_song_id"
+                            :name="song.name"
+                            :cover="song.cover"
+                            :candelete="true"
+                            :spacer="true"
+                        >
+                        </songlistitem>
                     </div>
                 </div>
             </div>
@@ -98,7 +106,7 @@
                 :alt="this.name"
             >
             <h5 class="mt-1">{{ this.name }}</h5>
-            <spotify-logo :artistLink="this.id" />
+            <spotify-logo :artist="this.id" />
         </div>
     </div>
 </template>

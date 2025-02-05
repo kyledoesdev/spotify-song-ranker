@@ -75,7 +75,7 @@ class RankingController extends Controller
         Song::where('ranking_id', $request->rankingId)->delete();
 
         return response()->json([
-            'message' => 'Your ranking has been tossed into the void, never to return. Or will it?',
+            'message' => 'Your ranking has been deleted.',
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
                 ->with('user', 'artist')
@@ -84,23 +84,5 @@ class RankingController extends Controller
                 ->latest()
                 ->paginate(5),
         ], 200);
-    }
-
-    public function pages(): JsonResponse
-    {
-        $user = User::where('spotify_id', request()->spotify_id)->first();
-
-        $response = [
-            'success' => true,
-            'rankings' => Ranking::query()->forProfilePage($user)->paginate(5),
-            'name' => $user ? get_formatted_name($user->name) : null,
-        ];
-
-        if (is_null($user)) {
-            $response['success'] = false;
-            $response['message'] = "No ranking results for user: {$spotify_id}.";
-        }
-
-        return response()->json($response, 200);
     }
 }

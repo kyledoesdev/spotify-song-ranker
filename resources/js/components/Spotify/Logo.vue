@@ -17,11 +17,17 @@
     export default {
         name: 'Spotify Logo',
 
-        props: ['artistLink'],
+        props: ['artist', 'song'],
 
         computed: {
             link() {
-                return "https://open.spotify.com/artist/" + this.artistLink;
+                if (this.artist) {
+                    return "https://open.spotify.com/artist/" + this.artist;
+                }
+
+                if (this.song) {
+                    return "https://open.spotify.com/track/" + this.song;
+                }
             }
         }
     }
