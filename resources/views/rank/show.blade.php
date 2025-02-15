@@ -23,28 +23,27 @@
 
         @if (!$ranking->is_ranked)
             <div class="flex justify-center bg-white p-4">
-                <div class="text-center w-full">
-                    <i class="fa-solid fa-skull-crossbones"></i>&nbsp;
-                    <span class="k-line">If you leave this page, you will lose your progress!</span>&nbsp;
-                    <i class="fa-solid fa-skull-crossbones"></i>
+                <div class="flex items-center space-x-2 k-line">
+                    <span class="text-xs sm:text-sm md:text-base whitespace-nowrap font-bold">If you leave this page, you will lose your progress!</span>
                 </div>
             </div>
 
-            <div class="flex justify-center md:mb-8">
-                <span>Directions: click on the song title button for the song you like more.</span>
+            <div class="flex justify-center mb-4 md:mb-8 px-4">
+                <span class="text-center">Directions: click on the song title button for the song you like more.</span>
             </div>
 
             <div class="p-4" id="song-container"></div>
         @endif
         
-        <div class="grid grid-cols-1 md:flex justify-center">
+        <!-- Modified grid container with better mobile handling -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-2 md:px-4 overflow-x-hidden">
             @if ($ranking->is_ranked)
                 <div class="md:w-full m-2" style="max-height: 600px; overflow-y: auto;">
                     <ol>
                         @foreach ($songs as $song)
                             <div class="flex">
                                 <div class="p-2 md:p-4 mt-4">{{ $loop->index + 1 }}.</div>
-                                <div class="flex-1"> {{-- Added flex-1 to allow proper text wrapping --}}
+                                <div class="flex-1">
                                     <li>
                                         <songlistitem 
                                             id="{{ $song->getKey() }}"
@@ -60,16 +59,31 @@
                     </ol>
                 </div>
             @else
-                <div class="m-2 p-2" id="song_1_box"></div>
-                <div class="m-2 p-2" id="song_2_box"></div>
+                <div class="w-full overflow-x-hidden" id="song_1_box"></div>
+                <div class="w-full overflow-x-hidden" id="song_2_box"></div>
             @endif
         </div>
 
-        <hr />
+        <hr class="my-4" />
         
         @if (!$ranking->is_ranked)
-            <div class="flex justify-center">
-                <span class="mt-2 mb-2">Get Cozy, this may take you a while. <i class="fa-solid fa-mug-saucer"></i></span>
+            <!-- Improved footer spacing and mobile layout -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 space-y-3 sm:space-y-0">
+                <span class="text-sm sm:text-base flex items-center">
+                    Get Cozy, this may take you a while. Enjoy the process, don't rush.
+                    <i class="fa-solid fa-mug-saucer ml-2"></i>
+                </span>
+                <div class="flex items-center">
+                    <label class="flex items-center cursor-pointer select-none">
+                        <input 
+                            type="checkbox" 
+                            id="showEmbeds"
+                            checked
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                        >
+                        <span class="ml-2 text-sm sm:text-base text-gray-700">Toggle Spotify Players</span>
+                    </label>
+                </div>
             </div>
         @endif
     </div>
@@ -82,6 +96,30 @@
         let logo = "{!! asset('spotify-logo.png') !!}";
         let songs = {!! $songs->shuffle() !!};
         let sortedList = null;
+        let showEmbeds = true;
+        let currentSong1 = null;
+        let currentSong2 = null;
+
+        function initializeToggles() {
+            const embedToggle = document.getElementById('showEmbeds');
+            if (embedToggle) {
+                embedToggle.addEventListener('change', function(e) {
+                    showEmbeds = e.target.checked;
+                    
+                    // Rebuild current comparison if it exists
+                    const song1Box = document.getElementById('song_1_box');
+                    const song2Box = document.getElementById('song_2_box');
+                    
+                    if (currentSong1 && song1Box) {
+                        song1Box.innerHTML = buildChoice(currentSong1);
+                    }
+
+                    if (currentSong2 && song2Box) {
+                        song2Box.innerHTML = buildChoice(currentSong2);
+                    }
+                });
+            }
+        }
 
         function compareSongs(song1, song2) {
             return new Promise((resolve) => {
@@ -89,6 +127,10 @@
                 let song2Box = document.getElementById('song_2_box');
                 
                 if (song1Box !== null && song2Box !== null) {
+                    // Update current songs
+                    currentSong1 = song1;
+                    currentSong2 = song2;
+                    
                     song1Box.innerHTML = buildChoice(song1);
                     song2Box.innerHTML = buildChoice(song2);
                 }
@@ -96,6 +138,8 @@
                 window.resolveComparison = (selectedId) => {
                     song1Box.innerHTML = '';
                     song2Box.innerHTML = '';
+                    currentSong1 = null;
+                    currentSong2 = null;
                     const selectedSong = selectedId === song1.id ? song1 : song2;
                     resolve(selectedSong);
                 };
@@ -168,10 +212,45 @@
             sortedList = sortedSongs;
         }
 
-        // Start the sorting process
-        async function startSortingProcess() {
-            const sortedSongs = await mergeSort(songs);
-            displaySortedSongs(sortedSongs);
+        function buildChoice(song) {
+            const playerHtml = showEmbeds ? `
+                <div class="w-full overflow-hidden">
+                    <iframe
+                        src="https://open.spotify.com/embed/track/${song.spotify_song_id}"
+                        class="w-full max-w-full"
+                        style="min-height: 232px;"
+                        frameborder="0" 
+                        allowtransparency="true" 
+                        allow="encrypted-media"
+                    ></iframe>
+                </div>
+            ` : `
+                <div class="mb-2 flex justify-center bg-gray-100 p-4 rounded-lg">
+                    <div class="text-center">
+                        <img 
+                            src="${song.cover}" 
+                            alt="${song.title}"
+                            class="w-48 h-48 sm:w-64 sm:h-64 object-cover rounded-lg shadow-lg mx-auto"
+                        />
+                        <div class="mt-2 font-medium text-gray-800">${song.title}</div>
+                    </div>
+                </div>
+            `;
+
+            return `
+                <div class="w-full flex flex-col">
+                    ${playerHtml}
+                    <div class="mt-4 flex flex-col items-center">
+                        <hr class="w-full my-3">
+                        <button 
+                            class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors"
+                            onclick="resolveComparison(${song.id})"
+                        >
+                            ${song.title}
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
         function save() {
@@ -188,47 +267,17 @@
             });
         }
 
-        function buildChoice(song) {
-            return `
-                <iframe
-                    class="mb-2"
-                    src="https://open.spotify.com/embed/track/${song.spotify_song_id}"
-                    width="512" 
-                    height="232" 
-                    frameborder="0" 
-                    allowtransparency="true" 
-                    allow="encrypted-media"
-                >
-                </iframe>
-                <a 
-                    class="mb-2"
-                    href="https://open.spotify.com/track/${song.spotify_song_id}"
-                    target="_blank"
-                    style="border-bottom: 2px solid #06D6A0; padding-bottom: 2px; margin-botton:2px;"
-                >
-                    <p style="display: inline; color: #06D6A0;">
-                        <img src="${logo}" style="display: inline;">
-                    </p>
-                    <div style="display: inline-block; width: 5px;"></div>
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-                <br>
-                <hr>
-                <div class="flex justify-center mt-2">
-                    <div class="col-auto">
-                        <button 
-                            class="border border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 m-2 p-2" 
-                            onclick="resolveComparison(${song.id})"
-                        >
-                            ${song.title}
-                        </button>
-                    </div>
-                </div>
-            `
-        }
+        // Start the sorting process and initialize toggles after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeToggles();
+            startSortingProcess();
+        });
 
-        // Call this function when you want to start the sorting process
-        startSortingProcess();
+        // Start the sorting process
+        async function startSortingProcess() {
+            const sortedSongs = await mergeSort(songs);
+            displaySortedSongs(sortedSongs);
+        }
 
         let isSorted = document.getElementById('is_sorted').value;
 
@@ -239,10 +288,9 @@
                 // Chrome requires returnValue to be set
                 event.returnValue = "";
 
-                // Prompt the user
                 var confirmationMessage = "Are you sure you want to leave? Your changes may not be saved.";
-                (event || window.event).returnValue = confirmationMessage; //Gecko + IE
-                return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+                (event || window.event).returnValue = confirmationMessage;
+                return confirmationMessage;
             });
         }
     </script>

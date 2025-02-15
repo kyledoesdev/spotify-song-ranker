@@ -8,12 +8,10 @@
                     </h5>
                     <div class="mb-4">
                         <img 
-                            class="border rounded-lg border-zinc-800"
+                            class="border rounded-lg border-zinc-800 w-48 h-48"
                             :src="albumArt" 
                             @click="loadSongs()" 
                             :alt="this.name"
-                            width="272"
-                            height="272"
                         />
                         <div class="flex">
                             <div>

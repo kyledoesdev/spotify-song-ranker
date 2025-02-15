@@ -47,6 +47,7 @@ class UpdateArtistImages extends Command
                 foreach ($artists as $artist) {
                     Artist::query()
                         ->where('artist_id', $artist['artist_id'])
+                        ->first()
                         ->update(['artist_img' => $artist['artist_img']]);
                 }
             }
