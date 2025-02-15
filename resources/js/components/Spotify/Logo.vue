@@ -1,18 +1,22 @@
-<!-- Fuck you spotify for making me have to abstract your annoying ahh logo into a damn component -->
 <template>
     <a 
         :href="link"
         target="_blank"
-        class="mb-2 mt-2"
-        style="border-bottom: 2px solid #06D6A0; padding-bottom: 5px;"
+        class="inline-flex items-center gap-2"
+        style="border-bottom: 2px solid #06D6A0; padding-bottom: 2px;"
     >
-        <p style="display: inline; color: #06D6A0;">
-            <img src="/spotify-logo.png" style="display: inline;">
+        <p class="inline text-[#06D6A0]">
+            <img 
+                src="/spotify-logo.png" 
+                class="inline w-auto h-3.5 sm:h-4"
+                style="aspect-ratio: 3.15"
+                alt="Spotify"
+            >
         </p>
-        <div style="display: inline-block; width: 5px;"></div>
-        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
     </a>
 </template>
+
 <script>
     export default {
         name: 'Spotify Logo',
@@ -24,7 +28,6 @@
                 if (this.artist) {
                     return "https://open.spotify.com/artist/" + this.artist;
                 }
-
                 if (this.song) {
                     return "https://open.spotify.com/track/" + this.song;
                 }

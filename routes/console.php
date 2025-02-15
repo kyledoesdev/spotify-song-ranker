@@ -12,3 +12,13 @@ Schedule::command('rankings:reminder')
     ->onFailure(function() {
         Log::channel('discord')->info('Something went wrong sending ranking reminder emails.');
     });
+
+Schedule::command('artists:update-images')
+    ->timezone('America/New_York')
+    ->dailyAt('00:00')
+    ->onSuccess(function() {
+        Log::channel('discord')->info('Artist Images Updated.');
+    })
+    ->onFailure(function() {
+        Log::channel('discord')->info('Something went wrong updating artist images.');
+    });

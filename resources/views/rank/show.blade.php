@@ -7,13 +7,17 @@
 
     <div class="pl-4 pr-4 bg-white border border-zinc-800 rounded-lg mt-4">
         @if ($ranking->is_ranked)
-            <div class="flex justify-end">
-                <a onclick="history.back()" class="btn-secondary p-2 m-2">
-                    <i class="fa fa-solid fa-arrow-left"></i>
-                </a>
-                <share />
+            <div class="flex justify-between items-center">
+                <div>
+                    <h5 class="text-base sm:text-lg md:text-xl font-medium">{{ $ranking->name }}</h5>
+                </div>
+                <div class="flex">
+                    <a onclick="history.back()" class="btn-secondary p-1 sm:p-2 m-1 sm:m-2">
+                        <i class="fa fa-solid fa-arrow-left text-sm sm:text-base"></i>
+                    </a>
+                    <share />
+                </div>
             </div>
-
             <hr>
         @endif
 
@@ -36,11 +40,11 @@
         <div class="grid grid-cols-1 md:flex justify-center">
             @if ($ranking->is_ranked)
                 <div class="md:w-full m-2" style="max-height: 600px; overflow-y: auto;">
-                    <ol> {{-- did not include list-decimal class here because looks better wit $loop counter --}}
+                    <ol>
                         @foreach ($songs as $song)
                             <div class="flex">
-                                <div class="p-4 mt-4">{{ $loop->index + 1 }}.</div>
-                                <div>
+                                <div class="p-2 md:p-4 mt-4">{{ $loop->index + 1 }}.</div>
+                                <div class="flex-1"> {{-- Added flex-1 to allow proper text wrapping --}}
                                     <li>
                                         <songlistitem 
                                             id="{{ $song->getKey() }}"

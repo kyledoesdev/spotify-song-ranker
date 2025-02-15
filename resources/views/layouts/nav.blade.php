@@ -1,15 +1,6 @@
 <div class="flex justify-between border border-zinc-800  bg-white rounded-lg p-4">
     <div>
-        @if (isset($title))
-            <h5 class="md:text-2xl mt-2">{{ $title }}</h5>
-        @else
-            @auth
-				<span style="text-xs">Welcome back 👋</span>
-				<h5 class="text-xl md:text-2xl">{{ auth()->user()->name }}</h5>
-			@else
-				<span style="text-xs">Welcome to Song - Rank! 👋</span>
-			@endauth
-        @endif
+        <h5 class="text-xs md:text-base lg:text-lg mt-1">songrank 🎵</h5>
     </div>
     <div>
         @auth
@@ -37,23 +28,21 @@
 					style="z-index: 2;" {{-- go above any other elements --}}
 				>
 				<button
-					x-ref="button"
-					x-on:click="toggle()"
-					:aria-expanded="open"
-					type="button"
-					class="flex items-center gap-2 px-5 py-2.5 rounded-md"
-				>
-					<img
-						height="32"
-						width="32"
-						class="rounded-lg border border-2 border-zinc-700 mr-1" 
-						type="button"
-						aria-expanded="false" 
-						src="{{ auth()->user()->avatar }}" 
-						alt="User Actions"
-					/>
-					{{ auth()->user()->name }}
-				</button>
+                    x-ref="button"
+                    x-on:click="toggle()"
+                    :aria-expanded="open"
+                    type="button"
+                    class="flex items-center px-2 gap-2 rounded-md"
+                >
+                    <img
+                        class="hidden md:block md:w-8 md:h-8 md:rounded-lg md:border-2 md:border-zinc-900" 
+                        src="{{ auth()->user()->avatar }}" 
+                        alt="User Actions"
+                    />
+                    <span class="text-sm sm:text-base md:text-lg">
+                        {{ auth()->user()->name }} <i class="fa fa-solid fa-chevron-down"></i>
+                    </span>
+                </button>
 				<div
 					x-ref="panel"
 					x-show="open"
