@@ -1,11 +1,13 @@
 <template>
     <div class="flex">
         <div class="mr-1">
-            <i class="fa fa-regular fa-user"></i>
+            <i class="fa fa-regular fa-user text-xs md:text-base"></i>
         </div>
         <div class="p-0">
             <a :href="getProfileURL">
-                {{ ranking.user.name }} <i class="fa fa-arrow-up-right-from-square mx-2 text-blue-500"></i>
+                <span class="text-xs md:text-base">{{ ranking.user.name }} 
+                    <i class="fa fa-arrow-up-right-from-square mx-1 text-blue-500 text-xs md:text-base"></i>
+                </span>
             </a>
         </div>
     </div>

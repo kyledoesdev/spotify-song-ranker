@@ -9,7 +9,7 @@
             <input 
                 class="w-full sm:flex-1 p-2 border border-zinc-800 rounded-md" 
                 type="text" 
-                placeholder="Local Natives" 
+                :placeholder="this.artistplaceholder" 
                 v-model="searchTerm"
             />
             <div class="flex space-x-2">
@@ -41,6 +41,8 @@
 <script>
     export default {
         name: "Spotify Artist Searcher",
+
+        props: ['artistplaceholder'],
 
         data() {
             return {

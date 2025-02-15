@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 
 class SpotifyAPIController extends Controller
 {
+    private Client $client;
     private string $errorMsg;
 
-    public function __construct(protected Client $client)
+    public function __construct()
     {
         $this->client = new Client();
         $this->errorMsg = "Something went wrong authenticating with Spotify's servers. Please log out and log back in.";
@@ -136,7 +137,7 @@ class SpotifyAPIController extends Controller
         ], 200);
     }
 
-    private function refreshToken()
+    public function refreshToken()
     {
         try {
             $response = $this->client->request(

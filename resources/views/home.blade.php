@@ -6,7 +6,9 @@
             @include('layouts.nav')
         </div>
         <div class="border border-zinc-800 bg-white rounded-lg">
-            <spotifysearch></spotifysearch>
+            @php $randomArtist = App\Models\Artist::pluck('artist_name')->shuffle()->first(); @endphp
+
+            <spotifysearch :artistplaceholder='"{{ $randomArtist }}"'></spotifysearch>
         </div>
     </div>
 @endsection

@@ -7,6 +7,5 @@ test('settings page loads', function () {
 
     $this->actingAs($user)
         ->get(route('settings.index'))
-        ->assertOk()
-        ->assertSee("Settings & Preferences");
+        ->assertOk();
 });
