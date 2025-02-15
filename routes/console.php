@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Container\Attributes\Log;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('rankings:reminder')
