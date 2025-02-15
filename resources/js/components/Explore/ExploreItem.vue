@@ -14,7 +14,7 @@
                 </div>
                 <div>
                     <h5 class="md:text-2xl" :title="ranking.name">
-                        {{ truncate(ranking.name, 30) }}
+                        <span class="text-xs md:text-base">{{ truncate(ranking.name, 30) }}</span>
                     </h5>
                     <explore-artist-name :ranking="ranking" />
                     <explore-top-song :ranking="ranking" />
