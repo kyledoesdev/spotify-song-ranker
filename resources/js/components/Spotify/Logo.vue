@@ -13,7 +13,7 @@
                 alt="Spotify"
             >
         </p>
-        <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+        <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
     </a>
 </template>
 

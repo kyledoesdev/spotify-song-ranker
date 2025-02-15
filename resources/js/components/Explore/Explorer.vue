@@ -1,8 +1,30 @@
 <template>
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col min-h-screen relative">
+        <!-- Mobile Toggle Button -->
+        <button 
+            class="md:hidden fixed left-0 top-1/2 -translate-y-1/2 bg-white border border-zinc-800 p-2 rounded-r-md z-50"
+            @click="toggleSidebar"
+        >
+            <i class="fa-solid fa-angle-right" :class="{ 'rotate-180': isSidebarOpen }"></i>
+        </button>
+
         <div class="flex flex-1 py-4">
-            <div class="hidden md:block">
-                <div class="w-72 rounded-lg border border-zinc-800 bg-white">
+            <!-- Mobile Sidebar Overlay -->
+            <div 
+                v-if="isSidebarOpen" 
+                class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+                @click="toggleSidebar"
+            ></div>
+
+            <!-- Filters Sidebar -->
+            <div 
+                class="fixed md:static md:block z-50 md:h-auto h-screen top-0"
+                :class="[
+                    isSidebarOpen ? 'left-0' : '-left-72',
+                    'transition-all duration-300 ease-in-out'
+                ]"
+            >
+                <div class="w-72 md:h-auto h-full border-r md:border md:rounded-lg border-zinc-800 bg-white overflow-y-auto">
                     <div class="p-4 border-b border-zinc-800">
                         <h3 class="text-lg text-center k-line font-semibold mb-3">Top Ranked Artists</h3>
                         <ul class="space-y-2">
@@ -80,18 +102,34 @@
         </div>
 
         <!-- Pagination -->
-        <div class="w-full">
-            <ul class="flex justify-center items-center space-x-2 py-3">
+        <div class="w-full overflow-x-auto">
+            <ul class="flex justify-center items-center space-x-2 py-3 min-w-max px-4">
                 <!-- Previous Button -->
                 <li>
                     <a 
                         href="#"
                         @click.prevent="ranks.current_page > 1 && pageRankings(ranks.prev_page_url)"
                         class="px-3 py-2 rounded-md text-zinc-800"
-                        :class="ranks.current_page <= 1 ? 'cursor-not-allowed' : ''"
+                        :class="ranks.current_page <= 1 ? 'cursor-not-allowed opacity-50' : ''"
                     >
                         <i class="fa fa-solid fa-arrow-left-long"></i>
                     </a>
+                </li>
+
+                <!-- First Page -->
+                <li v-if="ranks.current_page > 3">
+                    <a 
+                        href="#"
+                        @click.prevent="pageRankings('/explore/pages?page=1')"
+                        class="px-3 py-2 text-zinc-800"
+                    >
+                        1
+                    </a>
+                </li>
+
+                <!-- Ellipsis -->
+                <li v-if="ranks.current_page > 3">
+                    <span class="px-2">...</span>
                 </li>
 
                 <!-- Page Numbers -->
@@ -108,13 +146,29 @@
                     </li>
                 </template>
 
+                <!-- Ellipsis -->
+                <li v-if="ranks.current_page < ranks.last_page - 2">
+                    <span class="px-2">...</span>
+                </li>
+
+                <!-- Last Page -->
+                <li v-if="ranks.current_page < ranks.last_page - 2">
+                    <a 
+                        href="#"
+                        @click.prevent="pageRankings(`/explore/pages?page=${ranks.last_page}`)"
+                        class="px-3 py-2 text-zinc-800"
+                    >
+                        {{ ranks.last_page }}
+                    </a>
+                </li>
+
                 <!-- Next Button -->
                 <li>
                     <a 
                         href="#"
                         @click.prevent="ranks.current_page < ranks.last_page && pageRankings(ranks.next_page_url)"
                         class="px-3 py-2 rounded-md text-zinc-800"
-                        :class="ranks.current_page >= ranks.last_page ? 'cursor-not-allowed' : ''"
+                        :class="ranks.current_page >= ranks.last_page ? 'cursor-not-allowed opacity-50' : ''"
                     >
                         <i class="fa fa-solid fa-arrow-right-long"></i>
                     </a>
@@ -134,14 +188,21 @@
             return {
                 ranks: [],
                 artists: [],
-                searchQuery: ""
+                searchQuery: "",
+                isSidebarOpen: false
             }
         },
 
         methods: {
+            toggleSidebar() {
+                this.isSidebarOpen = !this.isSidebarOpen;
+            },
+
             pageRankings(uri = '/explore/pages', artist = null) {
                 if (artist != null) {
                     this.searchQuery = "";
+                    // Close sidebar after selection on mobile
+                    this.isSidebarOpen = false;
                 }
 
                 axios.get(uri, {
@@ -168,27 +229,23 @@
 
             reset() {
                 this.searchQuery = "";
+                this.isSidebarOpen = false;
                 this.pageRankings()
             },
 
             getPages() {
                 if (!this.ranks.last_page) return [1];
                 
-                let pages = [];
                 const current = this.ranks.current_page;
                 const last = this.ranks.last_page;
+                const delta = 2; // Show 2 pages before and after current page
                 
-                // Calculate the range to show up to 10 pages
-                let start = Math.max(1, current - 4);
-                let end = Math.min(start + 9, last);
+                let pages = [];
+                const left = Math.max(current - delta, 1);
+                const right = Math.min(current + delta, last);
                 
-                // Adjust start if we're near the end
-                if (end === last) {
-                    start = Math.max(1, end - 9);
-                }
-                
-                // Add the pages
-                for (let i = start; i <= end; i++) {
+                // Generate range of visible page numbers
+                for (let i = left; i <= right; i++) {
                     pages.push(i);
                 }
                 

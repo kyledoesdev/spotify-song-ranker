@@ -1,10 +1,10 @@
 <template>
     <div class="flex">
         <div class="mr-2">
-            <i class="fa fa-solid fa-music"></i>
+            <i class="fa fa-solid fa-music text-xs md:text-base"></i>
         </div>
         <div class="p-0">
-            {{ ranking.artist.artist_name }}
+            <span class="text-xs md:text-base">{{ ranking.artist.artist_name }}</span>
         </div>
     </div>
 </template>
