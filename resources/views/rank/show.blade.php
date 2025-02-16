@@ -35,10 +35,9 @@
             <div class="p-4" id="song-container"></div>
         @endif
         
-        <!-- Modified grid container with better mobile handling -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-2 md:px-4 overflow-x-hidden">
             @if ($ranking->is_ranked)
-                <div class="md:w-full m-2" style="max-height: 600px; overflow-y: auto;">
+                <div class="md:col-span-2 w-full m-2" style="max-height: 600px; overflow-y: auto;">
                     <ol>
                         @foreach ($songs as $song)
                             <div class="flex">
