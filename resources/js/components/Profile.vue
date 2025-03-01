@@ -11,18 +11,18 @@
 
                     <div class="text-dark m-4" v-if="this.authid && ranking.user_id == this.authid">
                         <a 
-                            class="border border-zinc-800 bg-purple-400 rounded px-2 py-1 mx-2"
+                            class="border border-zinc-800 bg-purple-400 rounded-sm px-2 py-1 mx-2"
                             @click="show(ranking.id)"
                         >
                             <i class="fa fa-eye"></i>
                         </a>
                         <a 
-                            class="border border-zinc-800 bg-green-300 rounded px-2 py-1 mx-2"
+                            class="border border-zinc-800 bg-green-300 rounded-sm px-2 py-1 mx-2"
                             :href="getEditURI(ranking.id)"
                         >
                             <i class="fa fa-pencil"></i>
                         </a>
-                        <a class="border border-zinc-800 bg-red-400 rounded px-2 py-1 mx-2"
+                        <a class="border border-zinc-800 bg-red-400 rounded-sm px-2 py-1 mx-2"
                             @click="destroy(ranking.id)"
                         >
                             <i class="fa fa-trash"></i>

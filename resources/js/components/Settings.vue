@@ -3,7 +3,7 @@
         <div>
             <h5 class="md:text-3xl">Email Preferences</h5>
             <label>Ranking Reminder Emails</label>
-            <select class="border border-zinc-800 rounded p-1 mx-1 mt-1" v-model="has_reminder_emails" @change="update('recieve_reminder_emails', this.has_reminder_emails)">
+            <select class="border border-zinc-800 rounded-sm p-1 mx-1 mt-1" v-model="has_reminder_emails" @change="update('recieve_reminder_emails', this.has_reminder_emails)">
                 <option :value="true" :selected="has_reminder_emails">Yes</option>
                 <option :value="false" :selected="!has_reminder_emails">No</option>
             </select>

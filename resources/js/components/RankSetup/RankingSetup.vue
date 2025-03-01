@@ -53,7 +53,7 @@
                         <h5 class="md:tex-2xl mx-1 mb-2">Custom Ranking Name?</h5>
                         <input 
                             type="text" 
-                            class="mx-1 border border-zinc-800 rounded p-2 mb-4"
+                            class="mx-1 border border-zinc-800 rounded-sm p-2 mb-4"
                             :placeholder="this.name + ' List'"
                             v-model="rankingName"
                             maxlength="30"
@@ -62,7 +62,7 @@
 
                     <div class="grid grid-cols-1 gap-0 mb-2">
                         <h5 class="mb-2 mx-1">Show In Explore Feed?</h5>
-                        <select class="border border-zinc-800 rounded mx-1 bg-white p-1" v-model="is_public" required>
+                        <select class="border border-zinc-800 rounded-sm mx-1 bg-white p-1" v-model="is_public" required>
                             <option :value="true" selected>Yes</option>
                             <option :value="false">No</option>
                         </select>

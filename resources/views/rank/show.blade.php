@@ -78,7 +78,7 @@
                             type="checkbox" 
                             id="showEmbeds"
                             checked
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                         >
                         <span class="ml-2 text-sm sm:text-base text-gray-700">Toggle Spotify Players</span>
                     </label>
