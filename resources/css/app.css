@@ -1,61 +1,93 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap')
+layer(base);
+@import 'tailwindcss';
 
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+@source '../../vendor/spatie/laravel-support-bubble/config/**/*.php';
+@source '../../vendor/spatie/laravel-support-bubble/resources/views/**/*.blade.php';
+
+@theme {
+  --font-sans: 'Poppins', sans-serif;
 }
 
-.gradient-background {
-    background: linear-gradient(45deg, rgba(207,120,224,1) 25%, rgba(100,249,179,1));
-    background-size: 400% 400%; /* Adjust for animation speed */
-    animation: gradientAnimation 20s linear infinite;
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
 }
 
-/* kyle underline - a kyle project staple */
-.k-line {
-    padding-bottom: 4px; 
-    border-bottom: 1px solid;
-    border-color: black;
-}
-
-.k-line-light {
-    padding-bottom: 4px; 
-    border-bottom: 1px solid;
-    border-color: white;
-}
-
-/* Create a keyframe animation for the background */
-@keyframes gradientAnimation {
-    0%, 100% {
+@layer utilities {
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+  
+    .gradient-background {
+      background: linear-gradient(
+        45deg,
+        rgba(207, 120, 224, 1) 25%,
+        rgba(100, 249, 179, 1)
+      );
+      background-size: 400% 400%; /* Adjust for animation speed */
+      animation: gradientAnimation 20s linear infinite;
+    }
+  
+    /* kyle underline - a kyle project staple */
+    .k-line {
+      padding-bottom: 4px;
+      border-bottom: 1px solid;
+      border-color: black;
+    }
+  
+    .k-line-light {
+      padding-bottom: 4px;
+      border-bottom: 1px solid;
+      border-color: white;
+    }
+  
+    /* Create a keyframe animation for the background */
+    @keyframes gradientAnimation {
+      0%,
+      100% {
         background-position: 0% 50%;
-    }
-    50% {
+      }
+      50% {
         background-position: 100% 50%;
+      }
     }
+  }
+
+@utility btn-primary {
+  @apply border border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800;
 }
 
-@layer components {
-    .btn-primary {
-        @apply border border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800
-    }
-    
-    .btn-secondary {
-        @apply border border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400
-    }
+@utility btn-secondary {
+  @apply border border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400;
+}
 
-    .btn-helper {
-        @apply border border-zinc-800 rounded-lg bg-blue-300 hover:bg-blue-400
-    }
-    
-    .btn-danger {
-        @apply border border-zinc-800 rounded-lg bg-red-400 hover:bg-red-500 text-zinc-800
-    }
+@utility btn-helper {
+  @apply border border-zinc-800 rounded-lg bg-blue-300 hover:bg-blue-400;
+}
 
-    .btn-animated {
-        @apply border border-zinc-800 rounded-lg gradient-background
-    }
+@utility btn-danger {
+  @apply border border-zinc-800 rounded-lg bg-red-400 hover:bg-red-500 text-zinc-800;
+}
+
+@utility btn-animated {
+    @apply border border-zinc-800 rounded-lg bg-gradient-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s linear infinite;
 }
