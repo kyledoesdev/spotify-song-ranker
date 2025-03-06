@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\User;
 use App\Notifications\EmailBlastNotification;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
 class SendEmailBlast extends Command
@@ -14,11 +15,17 @@ class SendEmailBlast extends Command
 
     public function handle()
     {
-        foreach(User::with('preferences')->get() as $user) {
-            if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
-                $this->info("Notifying: {$user->email}.");
-                Notification::send($user, new EmailBlastNotification);
-            }
+        $users = User::query()
+            ->with('preferences', fn($query) => $query->where('recieve_reminder_emails', true))
+            ->get();
+
+        Log::channel('discord')->info("Blasting {$users->count()} with an update email.");
+
+        foreach ($users as $user) {
+            $this->info("Notifying: {$user->email}.");
+            Notification::send($user, new EmailBlastNotification);
         }
+
+        Log::channel('discord')->info("Blasted {$users->count()} users.");
     }
 }

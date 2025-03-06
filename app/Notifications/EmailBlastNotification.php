@@ -20,7 +20,7 @@ class EmailBlastNotification extends Notification
     {
         return (new MailMessage)->markdown('emails.email-blast', [
             'notifiable' => $notifiable
-        ])->subject("songrank.dev - V 1.4 available now!");
+        ])->subject("songrank.dev - Discovery Survey!");
     }
 
     /**
