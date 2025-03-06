@@ -7,17 +7,13 @@
 @endif
 
 <p>
-    This email is to notify you that <a href="{{ env("APP_URL") }}">Song Rank</a> is now at version 1.4!
+    This is Kyle from {{ config('app.name') }}. We've had a ton of new visitors check out {{ config('app.name') }} over the past few days, and I'd love to know how you heard
+    about the app considering there is no advertising for it! Attached below is a quick 30 second google forum. Filling it out would help me out a lot!
+    You can also access this survey by logging in below.
 </p>
 
 <p>
-    song-rank.com has now moved to <a href="https://songrank.dev">songrank.dev!</a> You will still be able to access song rank at song-rank.com, but I highly recommend moving over to using the new url. <br>
-    I've added a share button and back button to the rankings page to easily share a ranking with friends & to be able to navigate back to the previous page you were at.
-</p>
-
-<p>
-    If you happen to run into any other bugs, be sure to report them 
-    <a href="https://github.com/kyledoesdev/spotify-song-ranker/blob/master/contributing.md">here.</a>
+    <a href="https://forms.gle/SdETGGcuCnVyC4kR9" target="_blank">Fill out the survey here.</a>
 </p>
 
 <p>
@@ -26,7 +22,7 @@
 </p>
 
 @component('mail::button', ['url' => env("APP_URL")])
-    Login to Song Rank
+    Login to {{ config('app.name') }}
 @endcomponent
 
 Thanks for using Song Rank!<br>

@@ -10,5 +10,7 @@
 
             <spotifysearch :artistplaceholder='"{{ $randomArtist }}"'></spotifysearch>
         </div>
+
+        <survey />
     </div>
 @endsection

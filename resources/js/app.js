@@ -27,6 +27,7 @@ import CompletedAt from './components/Explore/Points/CompletedAt.vue';
 import Creator from './components/Explore/Points/Creator.vue';
 import SongCount from './components/Explore/Points/SongCount.vue';
 import TopSong from './components/Explore/Points/TopSong.vue';
+import Survey from './components/Survey.vue';
 
 const app = createApp({});
 
@@ -55,6 +56,7 @@ app.component('explore-top-song', TopSong);
 app.component('explore-song-count', SongCount);
 app.component('explore-ranking-creator', Creator);
 app.component('explore-ranking-completed-at', CompletedAt);
+app.component('survey', Survey);
 
 app.mount('#app');
 
