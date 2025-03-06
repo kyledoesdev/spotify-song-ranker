@@ -19,13 +19,15 @@ class SendEmailBlast extends Command
             ->with('preferences', fn($query) => $query->where('recieve_reminder_emails', true))
             ->get();
 
-        Log::channel('discord')->info("Blasting {$users->count()} with an update email.");
-
         foreach ($users as $user) {
-            $this->info("Notifying: {$user->email}.");
-            Notification::send($user, new EmailBlastNotification);
+            if ($user->preferences->recieve_reminder_emails == true) {
+                Log::info("Notifying: {$user->email}.");
+                Notification::send($user, new EmailBlastNotification);
+            } else {
+                Log::info("SKIPPING: {$user->email}.");
+            }            
         }
 
-        Log::channel('discord')->info("Blasted {$users->count()} users.");
+        Log::channel('discord')->info("Blasted {$user->count()} users.");
     }
 }
