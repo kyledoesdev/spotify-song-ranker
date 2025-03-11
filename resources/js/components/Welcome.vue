@@ -9,7 +9,7 @@
             </div>
             <div class="flex justify-center mt-1">
                 <span>Made with ❤️ by 
-                    <a class="k-line text-blue-700" href="https://x.com/kyledoesdev">
+                    <a class="text-blue-600" href="https://bsky.app/profile/kyledoes.dev">
                         Kyle
                     </a>
                 </span>
@@ -56,6 +56,3 @@
         }
     }
 </script>
-<style>
-
-</style>

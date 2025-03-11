@@ -15,7 +15,7 @@ Schedule::command('rankings:reminder')
 
 Schedule::command('artists:update-images')
     ->timezone('America/New_York')
-    ->dailyAt('00:00')
+    ->weeklyOn(5, '0:00') /* Friday at mightnight */
     ->onSuccess(function() {
         Log::channel('discord')->info('Artist Images Updated.');
     })

@@ -4,8 +4,9 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-center lg:text-left">
             <!-- Footer Text -->
             <div class="flex items-center justify-center lg:justify-start">
-                <p class="text-sm text-white mx-1">&copy; {{ now()->format('Y') }} songrank.dev by</p>
-                <a class="k-line-light font-bold text-blue-500" href="https://kyledoes.dev">Kyle</a>
+                <span class="text-sm text-white mx-1">&copy; {{ now()->format('Y') }} songrank.dev by
+                    <a class="font-bold text-blue-400 mt-1 ml-1" href="https://kyledoes.dev">Kyle</a>
+                </span>
             </div>
 
             <!-- Links -->
