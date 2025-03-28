@@ -12,7 +12,7 @@ class ExploreController extends Controller
     public function pages(): JsonResponse
     {
         return response()->json([
-            'top_artists' => Artist::getTopArtists(),
+            'top_artists' => Artist::query()->topArtists()->limit(10)->get(),
             'rankings' => Ranking::query()
                 ->forExplorePage(request()->search, request()->artist)
                 ->paginate(5),

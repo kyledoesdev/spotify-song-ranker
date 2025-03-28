@@ -9,7 +9,9 @@ import Globals from './modules/globals';
 import Alerts from './modules/alerts';
 
 /* Components */
-import Welcome from './components/Welcome.vue';
+import Welcome from './components/Welcome/Welcome.vue';
+import ArtistSlideShow from './components/Welcome/ArtistSlideShow.vue';
+import Stats from './components/Welcome/Stats.vue';
 import About from './components/About.vue';
 import Settings from './components/Settings.vue';
 import SpotifySearch from './components/RankSetup/SpotifySearch.vue';
@@ -40,6 +42,8 @@ app.mixin(Alerts);
 app.use(autoAnimatePlugin);
 
 app.component('welcome', Welcome);
+app.component('artistslideshow', ArtistSlideShow);
+app.component('welcomestats', Stats);
 app.component('about', About);
 app.component('settings', Settings);
 app.component('spotifysearch', SpotifySearch);
