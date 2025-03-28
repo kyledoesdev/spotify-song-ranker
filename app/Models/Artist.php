@@ -18,13 +18,14 @@ class Artist extends Model
         return $this->belongsTo(Ranking::class);
     }
 
-    public static function getTopArtists()
+    public function scopeTopArtists($query)
     {
-        return self::query()
+        $query
             ->selectRaw('
                 count(rankings.artist_id) as artist_rankings_count,
                 artists.id,
-                artists.artist_name
+                artists.artist_name,
+                artists.artist_img
             ')
             ->join('rankings', function($join) {
                 $join->on('rankings.artist_id', '=', 'artists.id')
@@ -34,8 +35,6 @@ class Artist extends Model
             })
             ->groupBy('rankings.artist_id')
             ->orderBy('artist_rankings_count', 'desc')
-            ->orderBy('artists.artist_name', 'asc')
-            ->limit(10)
-            ->get();
+            ->orderBy('artists.artist_name', 'asc');
     }
 }
