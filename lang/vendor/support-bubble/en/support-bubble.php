@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'intro' => '<p>Do you have a question, suggestion or bug to report?.</p><p>If you would like a ranking un-deleted or a ranking\'s ordering updated, ask here and we can help you!</p>',
+    'intro' => '<p>Do you have a question, suggestion or bug to report?.</p><p>If you would like a ranking un-deleted or a ranking\'s ordering updated, ask here and we can help you!</p><p> Make sure your spotify\'s email address inbox is not full so we can get back to you!</p>',
 
     'success' => 'Thank you for your message. We usually answer within one working day.',
 
