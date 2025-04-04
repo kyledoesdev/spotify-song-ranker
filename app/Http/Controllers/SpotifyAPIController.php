@@ -146,8 +146,8 @@ class SpotifyAPIController extends Controller
                     'form_params' => [
                         'grant_type' => 'refresh_token',
                         'refresh_token' => auth()->user()->external_refresh_token,
-                        'client_id' => env('SPOTIFY_CLIENT_ID'),
-                        'client_secret' => env('SPOTIFY_CLIENT_SECRET'),
+                        'client_id' => config('services.spotify.client_id'),
+                        'client_secret' => config('services.spotify.client_secret'),
                     ],
                 ]
             );

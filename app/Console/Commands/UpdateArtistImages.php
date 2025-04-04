@@ -62,7 +62,7 @@ class UpdateArtistImages extends Command
     private function authenticateForSpotify(): bool
     {
         try {
-            Auth::login(User::where('spotify_id', env("SYSTEM_SPOTIFY_ID"))->firstOrFail());
+            Auth::login(User::where('spotify_id', config('services.spotify.system_id'))->firstOrFail());
             (new SpotifyAPIController)->refreshToken();
             return true;
         } catch(Exception $e) {
