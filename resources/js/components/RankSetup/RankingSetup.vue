@@ -7,10 +7,10 @@
                         Artist:
                     </h5>
                     <div class="mb-4">
-                        <img 
+                        <img
                             class="border rounded-lg border-zinc-800 w-48 h-48"
-                            :src="albumArt" 
-                            @click="loadSongs()" 
+                            :src="albumArt"
+                            @click="loadSongs()"
                             :alt="this.name"
                         />
                         <div class="flex">
@@ -26,23 +26,23 @@
                 <div class="md:w-1/2">
                     <div class="grid grid-cols-1 mt-3 mb-2">
                         <h5 class="md:text-2xl">Filters</h5>
-                        <button 
-                            type="button" 
-                            class="btn-primary p-1 m-2" 
+                        <button
+                            type="button"
+                            class="btn-primary p-1 m-2"
                             @click="filterSongs('remix')"
                         >
                             Remove Remixes
                         </button>
-                        <button 
-                            type="button" 
-                            class="btn-secondary p-1 m-2" 
+                        <button
+                            type="button"
+                            class="btn-secondary p-1 m-2"
                             @click="filterSongs('live from')"
                         >
                             Remove "Live From" Tracks
                         </button>
-                        <button 
-                            type="button" 
-                            class="btn-helper p-1 m-2" 
+                        <button
+                            type="button"
+                            class="btn-helper p-1 m-2"
                             @click="filterSongs('instrumental')"
                         >
                             Remove "Instrumental" Tracks
@@ -51,8 +51,8 @@
 
                     <div class="grid grid-cols-1">
                         <h5 class="md:tex-2xl mx-1 mb-2">Custom Ranking Name?</h5>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             class="mx-1 border border-zinc-800 rounded-sm p-2 mb-4"
                             :placeholder="this.name + ' List'"
                             v-model="rankingName"
@@ -68,8 +68,8 @@
                         </select>
                     </div>
 
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         class="btn-animated p-2 m-2"
                         @click="beginRanking"
                     >
@@ -97,9 +97,9 @@
     </div>
     <div v-else>
         <div class="m-2 p-2">
-            <img 
+            <img
                 class="border border-zinc-800 m-2"
-                :src="cover" 
+                :src="cover"
                 @click="loadSongs"
                 :alt="this.name"
             >
@@ -112,7 +112,7 @@
 <script>
     export default {
         name: 'Song Ranking Setup',
-            
+
         props: ['id', 'name', 'cover'],
 
         data() {
@@ -160,14 +160,14 @@
                         filtered.push(this.artistSongs[song]);
                     }
                 }
-                
+
                 this.artistSongs = filtered;
             },
 
             async beginRanking() {
                 let confirmed = await this.buildFlash()
                     .check(
-                        "Being Ranking?",
+                        "Begin Ranking?",
                         "Are you ready to begin ranking your selected songs? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking. You will only be able to update the title & visiblity of your ranking.",
                         "info",
                         "Let's Go!",
@@ -189,7 +189,7 @@
                         if (data && data.redirect) {
                             window.location.href = response.data.redirect;
                         }
-                        
+
                     })
                     .catch(error => {
                         if (error.response && error.response.data && error.response.data.message) {
@@ -197,7 +197,7 @@
                         } else {
                             this.flash("Something went wrong.", `Please try again later. Something went wrong creating your ranking record.`, 'error');
                         }
-                        
+
                         console.error(error);
                     });
                 }
@@ -223,7 +223,7 @@
                         filtered.push(this.artistSongs[song]);
                     }
                 }
-                
+
                 this.artistSongs = filtered;
             });
         }
@@ -236,7 +236,7 @@
     }
 
     .card-scroller {
-        max-height: 80vh; 
+        max-height: 80vh;
         overflow-y: auto;
     }
 </style>
