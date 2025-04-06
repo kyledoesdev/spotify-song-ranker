@@ -4,11 +4,13 @@ use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RankingDownloadController;
-use App\Http\Controllers\UserSettingsController;
 use App\Http\Controllers\SongPlacementController;
 use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
+use App\Http\Controllers\UserSettingsController;
+use App\Http\Middleware\IsDeveloper;
 use Illuminate\Support\Facades\Route;
+use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::view('/', 'welcome')->name('welcome');
 Route::view('/about', 'about')->name('about');
@@ -48,4 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/destroy', [UserSettingsController::class, 'destroy'])->name('settings.destroy');
 
     Route::supportBubble();
+
+    Route::middleware(IsDeveloper::class)->group(function() {
+        Route::get('health', HealthCheckResultsController::class);
+    });
 });
