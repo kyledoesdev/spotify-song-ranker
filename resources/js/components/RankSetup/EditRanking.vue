@@ -7,14 +7,14 @@
             <div>
                 <button 
                     type="button" 
-                    class="border border-2 border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-1 p-2" 
+                    class="border border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-1 p-2" 
                     @click="update()"
                 >
                     Save
                 </button>
                 <button 
                     type="button" 
-                    class="border border-2 border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400 m-1 p-2"
+                    class="border border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400 m-1 p-2"
                     onclick="history.back()"
                 >
                     Cancel

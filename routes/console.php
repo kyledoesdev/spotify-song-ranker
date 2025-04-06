@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
+use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
 
 Schedule::command('rankings:reminder')
     ->timezone('America/New_York')
@@ -22,3 +23,5 @@ Schedule::command('artists:update-images')
     ->onFailure(function() {
         Log::channel('discord')->info('Something went wrong updating artist images.');
     });
+
+Schedule::command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
