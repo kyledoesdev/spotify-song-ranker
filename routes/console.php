@@ -25,4 +25,8 @@ Schedule::command('artists:update-images')
     });
 
 Schedule::command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
-Schedule::command('model:prune')->daily();
+Schedule::command('model:prune', [
+    '--model' => [
+        \Spatie\Health\Models\HealthCheckResultHistoryItem::class,
+    ],
+])->daily();
