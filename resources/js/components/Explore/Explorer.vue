@@ -189,7 +189,8 @@
                 ranks: [],
                 artists: [],
                 searchQuery: "",
-                isSidebarOpen: false
+                isSidebarOpen: false,
+                currentArtistId: null
             }
         },
 
@@ -199,16 +200,16 @@
             },
 
             pageRankings(uri = '/explore/pages', artist = null) {
-                if (artist != null) {
+                if (artist !== null) {
+                    this.currentArtistId = artist;
                     this.searchQuery = "";
-                    // Close sidebar after selection on mobile
                     this.isSidebarOpen = false;
                 }
 
                 axios.get(uri, {
                     params: {
                         search: this.searchQuery,
-                        artist: artist
+                        artist: this.currentArtistId
                     }
                 })
                 .then(response => {
@@ -230,6 +231,7 @@
             reset() {
                 this.searchQuery = "";
                 this.isSidebarOpen = false;
+                this.currentArtistId = null;
                 this.pageRankings()
             },
 
