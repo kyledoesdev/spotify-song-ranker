@@ -59,7 +59,7 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('timezone')
-                    ->sortable(),
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ip_address')
                     ->sortable()
