@@ -59,17 +59,22 @@ class UserResource extends Resource
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('timezone')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ip_address')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('rankings_count')
+                    ->sortable()
                     ->label('Rankings')
                     ->counts('rankings'),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Signed Up At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Last Logged In At')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -79,11 +84,7 @@ class UserResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 //Tables\Actions\EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+            ->bulkActions([]);
     }
 
     public static function infoList(Infolist $infolist): Infolist
