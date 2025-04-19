@@ -73,18 +73,7 @@ class RankingResource extends Resource
                                             ->boolean(),
                                     ]),
                                 TextEntry::make('completed_at')
-                                    ->label('Completed At')
-                                    ->formatStateUsing(function ($state, $record) {
-                                        $timestamp = $record->getAttributes()['completed_at'];
-
-                                        if (is_null($timestamp)) {
-                                            return 'In Progress';
-                                        }
-
-                                        return Carbon::parse($timestamp)
-                                            ->inUserTimezone()
-                                            ->format('m/d/Y g:i A T');
-                                    }),
+                                    ->label('Completed At'),
                             ])
                     ]),
             ]);
