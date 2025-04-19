@@ -65,7 +65,7 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('rankings_count')
-                    ->sortable(),
+                    ->sortable()
                     ->label('Rankings')
                     ->counts('rankings'),
                 Tables\Columns\TextColumn::make('created_at')
