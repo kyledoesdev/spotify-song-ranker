@@ -16,7 +16,7 @@ class DeleteUserJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private User $user){}
+    public function __construct(private User $user) {}
 
     public function handle(): void
     {
@@ -27,15 +27,17 @@ class DeleteUserJob implements ShouldQueue
             ->get();
 
         /* Send the user their data. */
-        Notification::send($this->user, new DownloadDataNotification($rankings));
+        if (count($rankings)) {
+            Notification::send($this->user, new DownloadDataNotification($rankings));
 
-        /* Delete the user's rankings & their songs in 1 transaction to be safe */
-        DB::transaction(function() use ($rankings) {
-            $rankings->each(function($ranking) {
-                $ranking->songs()->delete();
-                $ranking->delete();
+            /* Delete the user's rankings & their songs in 1 transaction to be safe */
+            DB::transaction(function() use ($rankings) {
+                $rankings->each(function($ranking) {
+                    $ranking->songs()->delete();
+                    $ranking->delete();
+                });
             });
-        });
+        }
 
         $this->user->delete();
     }

@@ -18,7 +18,7 @@ class SpotifyAuthController extends Controller
 
     public function processLogin()
     {
-        $user = Socialite::driver('spotify')->user();
+        $user = Socialite::driver('spotify')->stateless()->user();
 
         $deletedUser = User::withTrashed()
             ->where('spotify_id', $user->id)
@@ -47,9 +47,9 @@ class SpotifyAuthController extends Controller
 
         if ($user->wasRecentlyCreated) {
             $user->preferences()->create(['recieve_reminder_emails' => true]);
-            Log::channel('discord')->warning('New User: ' . $user->name . ' just logged in!!');
+            Log::channel('discord')->warning("New User: $user->name ($user->email) just logged in!!");
         } else {
-            Log::channel('discord')->warning($user->name . ' just logged in!!');
+            Log::channel('discord')->warning("$user->name ($user->email) just logged in!!");
         }
 
         Auth::login($user);
