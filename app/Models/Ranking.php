@@ -218,7 +218,8 @@ class Ranking extends Model
                 ->searchable()
                 ->sortable()
                 ->dateTime()
-                ->toggleable(isToggledHiddenByDefault: false),
+                ->toggleable(isToggledHiddenByDefault: false)
+                ->placeholder('In Progress'),
             TextColumn::make('created_at')
                 ->searchable()
                 ->sortable()
