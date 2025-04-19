@@ -1,6 +1,5 @@
 <?php
 
-use App\Console\Commands\RankingReminderCommand;
 use App\Providers\AppServiceProvider;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
@@ -27,10 +26,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->throttleApi();
 
         $middleware->validateCsrfTokens(except: [
-			'support-bubble',
-		]);
+            'support-bubble',
+        ]);
     })
-    ->withSchedule(function (Schedule $schedule) {
-    })
-    ->withExceptions(function (Exceptions $exceptions) {
-    })->create();
+    ->withSchedule(function (Schedule $schedule) {})
+    ->withExceptions(function (Exceptions $exceptions) {})->create();

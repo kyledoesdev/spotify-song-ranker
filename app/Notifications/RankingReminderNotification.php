@@ -11,7 +11,7 @@ class RankingReminderNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private Collection $rankings){}
+    public function __construct(private Collection $rankings) {}
 
     public function via(object $notifiable): array
     {
@@ -22,7 +22,7 @@ class RankingReminderNotification extends Notification
     {
         return (new MailMessage)->markdown('emails.ranking_reminder', [
             'notifiable' => $notifiable,
-            'rankings' => $this->rankings
-        ])->subject("songrank.dev - reminder: you have unfinished rankings");
+            'rankings' => $this->rankings,
+        ])->subject('songrank.dev - reminder: you have unfinished rankings');
     }
 }

@@ -10,11 +10,12 @@ use Illuminate\Http\Request;
 class SpotifyAPIController extends Controller
 {
     private Client $client;
+
     private string $errorMsg;
 
     public function __construct()
     {
-        $this->client = new Client();
+        $this->client = new Client;
         $this->errorMsg = "Something went wrong authenticating with Spotify's servers. Please log out and log back in.";
     }
 
@@ -62,7 +63,7 @@ class SpotifyAPIController extends Controller
         $this->refreshToken();
 
         try {
-            //first get the total number of artist albums
+            // first get the total number of artist albums
             $response = $this->client->request(
                 'GET',
                 "https://api.spotify.com/v1/artists/{$request->id}/albums?include_groups=album,single&limit=50", [
@@ -94,7 +95,7 @@ class SpotifyAPIController extends Controller
                 foreach ($albumRequests as $albumRequest) {
                     $albumIds = implode(',', $albumRequest);
 
-                    //get tracks from the albums from the album ids
+                    // get tracks from the albums from the album ids
                     $response = $this->client->request(
                         'GET',
                         "https://api.spotify.com/v1/albums?ids={$albumIds}", [
@@ -123,7 +124,7 @@ class SpotifyAPIController extends Controller
                 $offset += 50;
             }
 
-            //filter duplicate songs, like if a song is on an album and single.
+            // filter duplicate songs, like if a song is on an album and single.
             $songs = $songs->groupBy('name')->map->first();
 
         } catch (Exception) {
@@ -142,7 +143,7 @@ class SpotifyAPIController extends Controller
         try {
             $response = $this->client->request(
                 'POST',
-                "https://accounts.spotify.com/api/token", [
+                'https://accounts.spotify.com/api/token', [
                     'form_params' => [
                         'grant_type' => 'refresh_token',
                         'refresh_token' => auth()->user()->external_refresh_token,
@@ -158,7 +159,7 @@ class SpotifyAPIController extends Controller
                 'external_token' => $data['access_token'],
             ]);
 
-        } catch(Exception) {
+        } catch (Exception) {
             return response()->json([
                 'message' => $this->errorMsg,
             ], 500);

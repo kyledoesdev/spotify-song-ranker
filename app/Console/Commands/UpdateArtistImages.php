@@ -25,15 +25,15 @@ class UpdateArtistImages extends Command
             return 1;
         }
 
-        Artist::all()->chunk(50)->each(function($chunk) {
+        Artist::all()->chunk(50)->each(function ($chunk) {
             $ids = $chunk->pluck('artist_id')->implode(',');
 
             $response = (new Client)->request(
-                "GET",
+                'GET',
                 "https://api.spotify.com/v1/artists?ids={$ids}", [
                     'headers' => [
-                        'Authorization' => 'Bearer '. auth()->user()->external_token,
-                    ]
+                        'Authorization' => 'Bearer '.auth()->user()->external_token,
+                    ],
                 ]
             );
 
@@ -42,9 +42,9 @@ class UpdateArtistImages extends Command
             if (count($artists)) {
                 $artists = collect($artists->map(fn ($artist) => [
                     'artist_id' => $artist->id,
-                    'artist_img' => $artist->images[0]->url
+                    'artist_img' => $artist->images[0]->url,
                 ]));
-                
+
                 foreach ($artists as $artist) {
                     Artist::query()
                         ->where('artist_id', $artist['artist_id'])
@@ -64,9 +64,11 @@ class UpdateArtistImages extends Command
         try {
             Auth::login(User::where('spotify_id', config('services.spotify.system_id'))->firstOrFail());
             (new SpotifyAPIController)->refreshToken();
+
             return true;
-        } catch(Exception $e) {
-            Log::error("Could not authenticate with spotify for updating artist images.");
+        } catch (Exception $e) {
+            Log::error('Could not authenticate with spotify for updating artist images.');
+
             return false;
         }
     }

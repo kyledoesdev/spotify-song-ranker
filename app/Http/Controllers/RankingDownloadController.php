@@ -16,12 +16,12 @@ class RankingDownloadController extends Controller
             ->with('songs', 'artist')
             ->get();
 
-        //defer(fn() => );
+        // defer(fn() => );
         Notification::send(auth()->user(), new DownloadDataNotification($rankings));
 
         return response()->json([
             'success' => true,
-            'message' => "Your download has started and will be emailed to you when completed!"
+            'message' => 'Your download has started and will be emailed to you when completed!',
         ], 200);
     }
 }

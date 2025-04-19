@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Rankings\CreateRankingRequest;
 use App\Http\Requests\Rankings\DestroyRankingRequest;
-use App\Http\Requests\Rankings\FinishRankingRequest;
 use App\Http\Requests\Rankings\UpdateRankingRequest;
-use App\Jobs\DownloadDataJob;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
@@ -21,7 +19,7 @@ class RankingController extends Controller
             ->with('user', 'songs')
             ->findOrFail($id);
 
-        //if ranking is not complete && the ranking doesn't belong to auth user abort
+        // if ranking is not complete && the ranking doesn't belong to auth user abort
         if (! $ranking->is_ranked && $ranking->user_id != auth()->id()) {
             abort(403, 'This ranking is not complete. You can not view it.');
         }
@@ -49,9 +47,9 @@ class RankingController extends Controller
             ->findOrFail($id);
 
         if ($ranking->user_id !== auth()->id()) {
-            abort(403, "You are not allowed to edit this ranking.");
+            abort(403, 'You are not allowed to edit this ranking.');
         }
-        
+
         return view('rank.edit', [
             'ranking' => $ranking,
         ]);
@@ -79,7 +77,7 @@ class RankingController extends Controller
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
                 ->with('user', 'artist')
-                ->with('songs', fn($q) => $q->where('rank', 1))
+                ->with('songs', fn ($q) => $q->where('rank', 1))
                 ->withCount('songs')
                 ->latest()
                 ->paginate(5),

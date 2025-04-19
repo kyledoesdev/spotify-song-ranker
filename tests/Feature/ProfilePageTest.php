@@ -11,14 +11,14 @@ test('profile page loads', function () {
         ->assertOk();
 });
 
-test('profile loaded user rankings', function() {
+test('profile loaded user rankings', function () {
     $user = User::factory()->create();
 
     $ranking = Ranking::factory()->create([
         'user_id' => $user->getKey(),
         'is_public' => true,
         'is_ranked' => true,
-        'completed_at' => now()
+        'completed_at' => now(),
     ]);
 
     $this->actingAs($user)
@@ -27,7 +27,7 @@ test('profile loaded user rankings', function() {
         ->assertSee($user->rankings->first()->name);
 });
 
-test('profile shows unfinished rankings to profile owner only', function() {
+test('profile shows unfinished rankings to profile owner only', function () {
     $user = User::factory()->create();
     $otherUser = User::factory()->create();
 
@@ -35,7 +35,7 @@ test('profile shows unfinished rankings to profile owner only', function() {
         'user_id' => $user->getKey(),
         'is_public' => true,
         'is_ranked' => false,
-        'completed_at' => null
+        'completed_at' => null,
     ]);
 
     $this->actingAs($user)
@@ -46,10 +46,10 @@ test('profile shows unfinished rankings to profile owner only', function() {
     $this->actingAs($otherUser)
         ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);        
+        ->assertDontSee($user->rankings->first()->name);
 });
 
-test('profile shows private rankings to profile owner only', function() {
+test('profile shows private rankings to profile owner only', function () {
     $user = User::factory()->create();
     $otherUser = User::factory()->create();
 
@@ -57,7 +57,7 @@ test('profile shows private rankings to profile owner only', function() {
         'user_id' => $user->getKey(),
         'is_public' => false,
         'is_ranked' => true,
-        'completed_at' => now()
+        'completed_at' => now(),
     ]);
 
     $this->actingAs($user)
@@ -68,5 +68,5 @@ test('profile shows private rankings to profile owner only', function() {
     $this->actingAs($otherUser)
         ->get(route('profile.show', ['id' => $user->spotify_id]))
         ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);        
+        ->assertDontSee($user->rankings->first()->name);
 });

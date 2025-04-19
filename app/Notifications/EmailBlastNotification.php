@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -19,8 +18,8 @@ class EmailBlastNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)->markdown('emails.email-blast', [
-            'notifiable' => $notifiable
-        ])->subject("songrank.dev - Discovery Survey!");
+            'notifiable' => $notifiable,
+        ])->subject('songrank.dev - Discovery Survey!');
     }
 
     /**

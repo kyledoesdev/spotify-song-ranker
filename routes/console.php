@@ -7,20 +7,20 @@ use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
 Schedule::command('rankings:reminder')
     ->timezone('America/New_York')
     ->weeklyOn(5, '12:00') /* Friday at noon. */
-    ->onSuccess(function() {
+    ->onSuccess(function () {
         Log::channel('discord')->info('Reminded users to complete rankings successfully.');
     })
-    ->onFailure(function() {
+    ->onFailure(function () {
         Log::channel('discord')->info('Something went wrong sending ranking reminder emails.');
     });
 
 Schedule::command('artists:update-images')
     ->timezone('America/New_York')
     ->weeklyOn(5, '0:00') /* Friday at mightnight */
-    ->onSuccess(function() {
+    ->onSuccess(function () {
         Log::channel('discord')->info('Artist Images Updated.');
     })
-    ->onFailure(function() {
+    ->onFailure(function () {
         Log::channel('discord')->info('Something went wrong updating artist images.');
     });
 

@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -31,9 +30,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -55,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                 ->heartbeatMaxAgeInMinutes(15),
             UsedDiskSpaceCheck::new()
                 ->warnWhenUsedSpaceIsAbovePercentage(90)
-                ->failWhenUsedSpaceIsAbovePercentage(95)
+                ->failWhenUsedSpaceIsAbovePercentage(95),
         ]);
     }
 }

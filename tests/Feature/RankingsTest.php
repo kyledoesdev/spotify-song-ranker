@@ -15,19 +15,19 @@ test('can start ranking with valid request', function () {
             'Ceilings' => [
                 'id' => str()->random(22),
                 'name' => 'Ceilings',
-                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings'
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
             ],
             'Sun Hands' => [
                 'id' => str()->random(22),
                 'name' => 'Sun Hands',
-                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands'
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
             ],
             'Featherweight' => [
                 'id' => str()->random(22),
                 'name' => 'Featherweight',
-                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight'
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
             ],
-        ]
+        ],
     ];
 
     $user = User::factory()->create();
@@ -35,29 +35,29 @@ test('can start ranking with valid request', function () {
     $this->assertDatabaseMissing('artists', [
         'artist_id' => $request['artist_id'],
         'artist_name' => $request['artist_name'],
-        'artist_img' => $request['artist_img']
+        'artist_img' => $request['artist_img'],
     ]);
 
     $this->assertDatabaseMissing('rankings', [
-        'name' => 'Local Natives List'
+        'name' => 'Local Natives List',
     ]);
 
     $response = $this->actingAs($user)
         ->postJson(route('rank.create'), $request)
         ->assertOk();
-        
+
     $this->assertDatabaseHas('artists', [
         'artist_id' => $request['artist_id'],
         'artist_name' => $request['artist_name'],
-        'artist_img' => $request['artist_img']
+        'artist_img' => $request['artist_img'],
     ]);
 
     $this->assertDatabaseHas('rankings', [
-        'name' => 'Local Natives List'
+        'name' => 'Local Natives List',
     ]);
 });
 
-test('ranking owner can view the ranking edit page', function() {
+test('ranking owner can view the ranking edit page', function () {
     $user = User::factory()
         ->has(Ranking::factory()->count(1))
         ->create();
@@ -67,7 +67,7 @@ test('ranking owner can view the ranking edit page', function() {
         ->assertOk();
 });
 
-test('ranking non-owner can not view a ranking edit page that does not belong to them', function() {
+test('ranking non-owner can not view a ranking edit page that does not belong to them', function () {
     $user = User::factory()->create();
     $ranking = Ranking::factory()->create();
 
@@ -76,7 +76,7 @@ test('ranking non-owner can not view a ranking edit page that does not belong to
         ->assertForbidden();
 });
 
-test('ranking owner can update ranking name and visibility', function() {
+test('ranking owner can update ranking name and visibility', function () {
     $user = User::factory()->create();
 
     $ranking = Ranking::factory()
@@ -87,13 +87,13 @@ test('ranking owner can update ranking name and visibility', function() {
         'id' => $ranking->getKey(),
         'user_id' => $user->getKey(),
         'name' => $ranking->name,
-        'is_public' => false
+        'is_public' => false,
     ]);
 
     $this->actingAs($user)
         ->postJson(route('rank.update', ['id' => $ranking->getKey()]), [
             'name' => 'new name',
-            'is_public' => true
+            'is_public' => true,
         ])
         ->assertOk();
 
@@ -101,13 +101,13 @@ test('ranking owner can update ranking name and visibility', function() {
         'id' => $ranking->getKey(),
         'user_id' => $user->getKey(),
         'name' => 'new name',
-        'is_public' => true
+        'is_public' => true,
     ]);
 });
 
-test('ranking non-owner can not update ranking name and visibility', function() {
+test('ranking non-owner can not update ranking name and visibility', function () {
     $user = User::factory()->create();
-    
+
     $ranking = Ranking::factory()
         ->has(Song::factory()->count(5))
         ->create(['is_public' => false]);
@@ -116,18 +116,18 @@ test('ranking non-owner can not update ranking name and visibility', function() 
         'id' => $ranking->getKey(),
         'user_id' => $ranking->user->getKey(),
         'name' => $ranking->name,
-        'is_public' => false
+        'is_public' => false,
     ]);
 
     $this->actingAs($user)
         ->postJson(route('rank.update', ['id' => $ranking->getKey()]), [
             'name' => 'new name',
-            'is_public' => true
+            'is_public' => true,
         ])
         ->assertForbidden();
 });
 
-test('ranking owner can delete their ranking', function() {
+test('ranking owner can delete their ranking', function () {
     $user = User::factory()
         ->has(Ranking::factory()->has(Song::factory()->count(10)))
         ->create();
@@ -145,7 +145,7 @@ test('ranking owner can delete their ranking', function() {
     expect(0, Song::where('ranking_id', $rankingId)->count());
 });
 
-test('ranking non-owner can not delete someone elses rankings', function() {
+test('ranking non-owner can not delete someone elses rankings', function () {
     $user = User::factory()
         ->has(Ranking::factory()->has(Song::factory()->count(10)))
         ->create();

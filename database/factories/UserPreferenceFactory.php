@@ -13,7 +13,7 @@ class UserPreferenceFactory extends Factory
     {
         return [
             'user_id' => User::facotry(),
-            'recieve_reminder_emails' => $this->recieveReminderEmails
+            'recieve_reminder_emails' => $this->recieveReminderEmails,
         ];
     }
 
