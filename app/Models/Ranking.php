@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -48,8 +47,8 @@ class Ranking extends Model
 
     public function getCompletedAtAttribute()
     {
-        if ($this->attributes['completed_at'] == null) { 
-            return 'In Progress'; 
+        if ($this->attributes['completed_at'] == null) {
+            return 'In Progress';
         }
 
         return Carbon::parse($this->attributes['completed_at'])->diffForHumans();
@@ -75,8 +74,8 @@ class Ranking extends Model
         $ranking = self::create([
             'user_id' => auth()->id(),
             'artist_id' => $artist->getKey(),
-            'name' => Str::limit($request->name ?? $artist->artist_name . ' List' , 30),
-            'is_public' => $request->is_public ?? false
+            'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
+            'is_public' => $request->is_public ?? false,
         ]);
 
         $songs = [];
@@ -93,7 +92,7 @@ class Ranking extends Model
 
         Song::insert($songs);
 
-        Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
+        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
 
         return $ranking;
     }
@@ -120,18 +119,18 @@ class Ranking extends Model
     }
 
     /* scopes */
-    public function scopeForExplorePage(Builder $query, ?string $search = "", ?string $artist = null)
+    public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = null)
     {
         $query->newQuery()
             ->where('is_ranked', true)
             ->where('is_public', true)
-            ->whereHas('artist', function($query2) use ($search, $artist) {
+            ->whereHas('artist', function ($query2) use ($search, $artist) {
                 $query2
-                    ->when($search != "", fn($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
-                    ->when($artist != null, fn($q) => $q->where('id', $artist));
+                    ->when($search != '', fn ($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
+                    ->when($artist != null, fn ($q) => $q->where('id', $artist));
             })
             ->with('user', 'artist')
-            ->with('songs', fn($q) => $q->where('rank', 1))
+            ->with('songs', fn ($q) => $q->where('rank', 1))
             ->withCount('songs')
             ->latest();
     }
@@ -140,12 +139,12 @@ class Ranking extends Model
     {
         $query->newQuery()
             ->where('user_id', $user ? $user->getKey() : auth()->id())
-            ->when($user && $user->getKey() !== auth()->id(), function($query2) {
+            ->when($user && $user->getKey() !== auth()->id(), function ($query2) {
                 $query2->where('is_ranked', true)
                     ->where('is_public', true);
             })
             ->with('user', 'artist')
-            ->with('songs', fn($q) => $q->where('rank', 1))
+            ->with('songs', fn ($q) => $q->where('rank', 1))
             ->withCount('songs')
             ->latest();
     }

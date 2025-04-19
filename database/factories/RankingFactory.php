@@ -13,7 +13,7 @@ class RankingFactory extends Factory
         return [
             'user_id' => User::factory(),
             'artist_id' => Artist::factory(),
-            'name' => fake()->userName() . ' List',
+            'name' => fake()->userName().' List',
             'is_ranked' => false,
             'is_public' => false,
             'completed_at' => null,

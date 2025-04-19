@@ -16,7 +16,7 @@ class UpdateRankingRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:30|min:1',
-            'is_public' => 'required|boolean'
+            'is_public' => 'required|boolean',
         ];
     }
 }

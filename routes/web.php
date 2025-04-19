@@ -37,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rank/{id}/edit', [RankingController::class, 'edit'])->name('rank.edit');
     Route::post('/rank/{id}/update', [RankingController::class, 'update'])->name('rank.update');
     Route::post('/rank/destroy', [RankingController::class, 'destroy'])->name('rank.destroy');
-    
+
     /* Ranking Export */
     Route::get('/ranking-download', [RankingDownloadController::class, 'index'])->name('ranking-download.index');
 
@@ -51,7 +51,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::supportBubble();
 
-    Route::middleware(IsDeveloper::class)->group(function() {
+    Route::middleware(IsDeveloper::class)->group(function () {
         Route::get('health', HealthCheckResultsController::class);
     });
 });

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Artist extends Model
@@ -27,7 +26,7 @@ class Artist extends Model
                 artists.artist_name,
                 artists.artist_img
             ')
-            ->join('rankings', function($join) {
+            ->join('rankings', function ($join) {
                 $join->on('rankings.artist_id', '=', 'artists.id')
                     ->whereNull('rankings.deleted_at')
                     ->where('rankings.is_ranked', true)

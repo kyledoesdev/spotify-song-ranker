@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
-
 class Song extends Model
 {
     protected $fillable = [

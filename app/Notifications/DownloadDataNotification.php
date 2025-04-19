@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Exports\RankingsExport;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
@@ -14,7 +13,7 @@ class DownloadDataNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private Collection $rankings){}
+    public function __construct(private Collection $rankings) {}
 
     public function via(object $notifiable): array
     {
@@ -25,7 +24,7 @@ class DownloadDataNotification extends Notification
     {
         return (new MailMessage)
             ->markdown('emails.downloaded-data', ['notifiable' => $notifiable])
-            ->subject("song-rank.dev - Data Download Complete")
+            ->subject('song-rank.dev - Data Download Complete')
             ->attach(Excel::download(new RankingsExport($this->rankings), 'rankings.xlsx')->getFile(), ['as' => 'rankings.xlsx']);
     }
 

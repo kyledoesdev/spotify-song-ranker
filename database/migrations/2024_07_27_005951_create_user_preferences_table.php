@@ -17,7 +17,7 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        User::all()->each(fn($user) => $user->preferences()->create(['recieve_reminder_emails' => true]));
+        User::all()->each(fn ($user) => $user->preferences()->create(['recieve_reminder_emails' => true]));
     }
 
     public function down(): void

@@ -7,11 +7,11 @@ use App\Http\Requests\Settings\UserDeletionRequest;
 use App\Jobs\DeleteUserJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;;
+use Illuminate\Support\Facades\Log;
 
 class UserSettingsController extends Controller
 {
-    public function destroy(UserDeletionRequest $request): JsonResponse 
+    public function destroy(UserDeletionRequest $request): JsonResponse
     {
         $user = auth()->user();
 
@@ -29,7 +29,7 @@ class UserSettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'redirect' => route('welcome')
+            'redirect' => route('welcome'),
         ], 200);
     }
 
@@ -39,7 +39,7 @@ class UserSettingsController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => "Successfully updated setting: {$request->setting_type}."
+            'message' => "Successfully updated setting: {$request->setting_type}.",
         ], 200);
     }
 }

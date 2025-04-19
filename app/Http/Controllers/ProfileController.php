@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Ranking;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -27,7 +26,7 @@ class ProfileController extends Controller
             'name' => get_formatted_name($user->name),
             'rankings' => Ranking::query()
                 ->forProfilePage($user)
-                ->get()
+                ->get(),
         ]);
     }
 }

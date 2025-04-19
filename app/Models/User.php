@@ -36,7 +36,7 @@ class User extends Authenticatable
         'remember_token',
         'external_token',
         'external_refresh_token',
-        'ip_address'
+        'ip_address',
     ];
 
     protected function casts(): array
@@ -62,8 +62,8 @@ class User extends Authenticatable
     {
         $query->newQuery()
             ->select('id', 'name', 'email')
-            ->whereHas('rankings', fn($q) => $q->forReminders())
-            ->with('rankings', fn($q) => $q->forReminders())
+            ->whereHas('rankings', fn ($q) => $q->forReminders())
+            ->with('rankings', fn ($q) => $q->forReminders())
             ->with('preferences');
     }
 }

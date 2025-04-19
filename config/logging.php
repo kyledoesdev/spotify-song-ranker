@@ -2,7 +2,6 @@
 
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 
 return [
@@ -54,7 +53,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => env("APP_ENV") === 'production' ? ['single', 'discord', 'bugsnag'] : ['single'],
+            'channels' => env('APP_ENV') === 'production' ? ['single', 'discord', 'bugsnag'] : ['single'],
             'ignore_exceptions' => false,
         ],
 
@@ -112,9 +111,9 @@ return [
 
         'discord' => [
             'driver' => 'custom',
-            'via'    => MarvinLabs\DiscordLogger\Logger::class,
-            'level'  => 'debug',
-            'url'    => env('DISCORD_WEBHOOK'),
+            'via' => MarvinLabs\DiscordLogger\Logger::class,
+            'level' => 'debug',
+            'url' => env('DISCORD_WEBHOOK'),
             'ignore_exceptions' => env('LOG_DISCORD_IGNORE_EXCEPTIONS', false),
         ],
     ],

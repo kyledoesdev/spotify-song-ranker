@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
-class SpotifyAuthController extends Controller 
+class SpotifyAuthController extends Controller
 {
-    public function login() 
+    public function login()
     {
         return Socialite::driver('spotify')
             ->scopes(['user-read-email'])
@@ -25,8 +25,8 @@ class SpotifyAuthController extends Controller
             ->whereNotNull('deleted_at')
             ->first();
 
-        if (!is_null($deletedUser)) {
-            Log::channel('discord')->warning($user->name . ' is back from the dead!!!!');
+        if (! is_null($deletedUser)) {
+            Log::channel('discord')->warning($user->name.' is back from the dead!!!!');
             $deletedUser->restore();
             session()->flash('success', "Welcome back {$user->name}.. we've been expecting you.. To revive your rankings - create an issue on our github page. (Link in the footer of the site.)");
         }

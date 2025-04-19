@@ -31,8 +31,8 @@ class DeleteUserJob implements ShouldQueue
             Notification::send($this->user, new DownloadDataNotification($rankings));
 
             /* Delete the user's rankings & their songs in 1 transaction to be safe */
-            DB::transaction(function() use ($rankings) {
-                $rankings->each(function($ranking) {
+            DB::transaction(function () use ($rankings) {
+                $rankings->each(function ($ranking) {
                     $ranking->songs()->delete();
                     $ranking->delete();
                 });
