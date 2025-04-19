@@ -83,3 +83,8 @@
         @endauth
     </div>
 </div>
+
+{{-- cdn-ing alpine in here for the nav drop down - filament doesn't like when I include it in app.js .... --}}
+@push('scripts')
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@endpush

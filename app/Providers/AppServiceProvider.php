@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -39,6 +40,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(function (SocialiteWasCalled $event) {
             $event->extendSocialite('spotify', Provider::class);
+        });
+
+        Carbon::macro('inUserTimezone', function() {
+            return $this->tz(auth()->user()?->timezone ?? 'America/New_York');
         });
 
         Health::checks([

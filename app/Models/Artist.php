@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Artist extends Model
@@ -11,6 +12,13 @@ class Artist extends Model
         'artist_name',
         'artist_img',
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('default_order', fn (Builder $query) => $query->orderBy('artist_name', 'asc'));
+    }
 
     public function ranking(): BelongsTo
     {

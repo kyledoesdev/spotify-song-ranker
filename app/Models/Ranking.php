@@ -3,6 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -156,5 +161,73 @@ class Ranking extends Model
             ->where('is_ranked', false)
             ->with('artist')
             ->withCount('songs');
+    }
+
+    /* -- Filament Admin Functions -- */
+
+    public static function getAdminForm(): array
+    {
+        return [
+            TextInput::make('name')
+                ->required()
+                ->maxLength(255),
+            DatePicker::make('completed_at')
+                ->label('Completed At'),
+            Toggle::make('is_ranked')
+                ->label('Is Ranked')
+                ->required(),
+            Toggle::make('is_public')
+                ->label('Is Public')
+                ->required(),
+        ];
+    }
+
+    public static function getAdminTable(int $user_id = null): array
+    {
+        return [
+            TextColumn::make('user.name')
+                ->label('Creator')
+                ->searchable()
+                ->sortable()
+                ->hidden(fn () => ! is_null($user_id)),
+            TextColumn::make('name')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('artist.artist_name')
+                ->label('Artist')
+                ->searchable()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: false),
+            IconColumn::make('is_ranked')
+                ->label('Is Ranked')
+                ->boolean()
+                ->searchable()
+                ->sortable()
+                ->trueIcon('heroicon-o-check-badge')
+                ->falseIcon('heroicon-o-x-mark')
+                ->toggleable(isToggledHiddenByDefault: false),
+            IconColumn::make('is_public')
+                ->label('Is Public')
+                ->boolean()
+                ->searchable()
+                ->sortable()
+                ->trueIcon('heroicon-o-check-badge')
+                ->falseIcon('heroicon-o-x-mark')
+                ->toggleable(isToggledHiddenByDefault: false),
+            TextColumn::make('completed_at')
+                ->searchable()
+                ->sortable()
+                ->dateTime()
+                ->toggleable(isToggledHiddenByDefault: false),
+            TextColumn::make('created_at')
+                ->searchable()
+                ->sortable()
+                ->dateTime()
+                ->toggleable(isToggledHiddenByDefault: true),
+            TextColumn::make('songs_count')
+                ->sortable()
+                ->label('Songs')
+                ->counts('songs'),
+        ];
     }
 }

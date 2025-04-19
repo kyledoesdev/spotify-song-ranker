@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -30,6 +32,7 @@ class User extends Authenticatable
         'external_token',
         'external_refresh_token',
         'is_dev',
+        'password'
     ];
 
     protected $hidden = [
@@ -37,6 +40,7 @@ class User extends Authenticatable
         'external_token',
         'external_refresh_token',
         'ip_address',
+        'password'
     ];
 
     protected function casts(): array
@@ -65,5 +69,10 @@ class User extends Authenticatable
             ->whereHas('rankings', fn ($q) => $q->forReminders())
             ->with('rankings', fn ($q) => $q->forReminders())
             ->with('preferences');
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->is_dev;
     }
 }
