@@ -19,3 +19,6 @@ yarn-error.log
 /.idea
 /.vscode
 .DS_Store
+/public/js/filament
+/public/css/filament
+/public/build/filament

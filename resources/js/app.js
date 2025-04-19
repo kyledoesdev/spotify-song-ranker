@@ -1,7 +1,6 @@
 import './bootstrap';
-import { createApp } from 'vue';
-import Alpine from 'alpinejs';
 import mitt from 'mitt';
+import { createApp } from 'vue';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
 
 /* Modules */
@@ -63,6 +62,3 @@ app.component('explore-ranking-completed-at', CompletedAt);
 app.component('survey', Survey);
 
 app.mount('#app');
-
-window.Alpine = Alpine
-Alpine.start()
