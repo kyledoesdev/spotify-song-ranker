@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -182,7 +182,7 @@ class Ranking extends Model
         ];
     }
 
-    public static function getAdminTable(int $user_id = null): array
+    public static function getAdminTable(?int $user_id = null): array
     {
         return [
             TextColumn::make('user.name')

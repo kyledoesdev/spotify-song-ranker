@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('spotify', Provider::class);
         });
 
-        Carbon::macro('inUserTimezone', function() {
+        Carbon::macro('inUserTimezone', function () {
             return $this->tz(auth()->user()?->timezone ?? 'America/New_York');
         });
 

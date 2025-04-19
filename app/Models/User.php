@@ -32,7 +32,7 @@ class User extends Authenticatable implements FilamentUser
         'external_token',
         'external_refresh_token',
         'is_dev',
-        'password'
+        'password',
     ];
 
     protected $hidden = [
@@ -40,7 +40,7 @@ class User extends Authenticatable implements FilamentUser
         'external_token',
         'external_refresh_token',
         'ip_address',
-        'password'
+        'password',
     ];
 
     protected function casts(): array
