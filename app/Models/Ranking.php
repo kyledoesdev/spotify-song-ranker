@@ -219,7 +219,17 @@ class Ranking extends Model
                 ->sortable()
                 ->dateTime()
                 ->toggleable(isToggledHiddenByDefault: false)
-                ->placeholder('In Progress'),
+                ->formatStateUsing(function ($state, $record) {
+                    $timestamp = $record->getAttributes()['completed_at'];
+
+                    if (is_null($timestamp)) {
+                        return 'In Progress';
+                    }
+
+                    return Carbon::parse($timestamp)
+                        ->inUserTimezone()
+                        ->format('m/d/Y g:i A T');
+                }),
             TextColumn::make('created_at')
                 ->searchable()
                 ->sortable()
