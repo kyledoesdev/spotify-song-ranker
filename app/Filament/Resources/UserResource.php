@@ -62,7 +62,7 @@ class UserResource extends Resource
                     ->sortable(),
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ip_address')
-                    ->sortable(),
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('rankings_count')
                     ->sortable(),
