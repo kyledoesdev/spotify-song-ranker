@@ -7,6 +7,7 @@ class Song extends Model
     protected $fillable = [
         'ranking_id',
         'spotify_song_id',
+        'uuid',
         'title',
         'rank',
         'cover',
@@ -16,6 +17,6 @@ class Song extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('default_order', fn ($query) => $query->orderBy('rank', 'ASC'));
+        static::addGlobalScope('default_order', fn ($query) => $query->orderBy('rank', 'asc'));
     }
 }
