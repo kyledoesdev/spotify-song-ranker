@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Ranking;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class SongFactory extends Factory
 {
@@ -15,6 +16,7 @@ class SongFactory extends Factory
             'title' => fake()->sentence(rand(1, 5)),
             'rank' => 0,
             'cover' => fake()->imageUrl(200, 200, 'song', true),
+            'uuid' => Str::uuid(),
         ];
     }
 }
