@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -69,35 +72,43 @@ class Ranking extends Model
      */
     public static function start($request): self
     {
-        $artist = Artist::updateOrCreate([
-            'artist_id' => $request->artist_id,
-        ], [
-            'artist_name' => $request->artist_name,
-            'artist_img' => $request->artist_img,
-        ]);
-
-        $ranking = self::create([
-            'user_id' => auth()->id(),
-            'artist_id' => $artist->getKey(),
-            'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
-            'is_public' => $request->is_public ?? false,
-        ]);
-
-        $songs = [];
-        foreach ($request->songs as $song) {
-            array_push($songs, [
-                'ranking_id' => $ranking->getKey(),
-                'spotify_song_id' => $song['id'],
-                'title' => $song['name'],
-                'cover' => $song['cover'],
-                'created_at' => now(),
-                'updated_at' => now(),
+        $ranking = DB::transaction(function () use ($request) {
+            /* update or create the artist  */
+            $artist = Artist::updateOrCreate([
+                'artist_id' => $request->artist_id,
+            ], [
+                'artist_name' => $request->artist_name,
+                'artist_img' => $request->artist_img,
             ]);
-        }
 
-        Song::insert($songs);
+            /* create a new ranking  */
+            $ranking = self::create([
+                'user_id' => auth()->id(),
+                'artist_id' => $artist->getKey(),
+                'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
+                'is_public' => $request->is_public ?? false,
+            ]);
 
-        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
+            $songs = [];
+            foreach ($request->songs as $song) {
+                array_push($songs, [
+                    'ranking_id' => $ranking->getKey(),
+                    'spotify_song_id' => $song['id'],
+                    'uuid' => Str::uuid(),
+                    'title' => $song['name'],
+                    'cover' => $song['cover'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            /* batch insert the song records */
+            Song::insert($songs);
+
+            return $ranking;
+        });
+
+        Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
 
         return $ranking;
     }
@@ -109,6 +120,7 @@ class Ranking extends Model
             array_push($data, [
                 'ranking_id' => $id,
                 'spotify_song_id' => $songs[$i]['spotify_song_id'],
+                'uuid' => $songs[$i]['uuid'],
                 'title' => $songs[$i]['title'],
                 'cover' => $songs[$i]['cover'],
                 'rank' => $i + 1,
@@ -118,8 +130,12 @@ class Ranking extends Model
 
         $ranking = self::find($id);
 
-        $ranking->update(['is_ranked' => true, 'completed_at' => now()]);
-        Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
+        DB::transaction(function () use ($ranking, $data) {
+            $ranking->update(['is_ranked' => true, 'completed_at' => now()]);
+            
+            Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
+        });
+
         Log::channel('discord')->info("{$ranking->user->name} completed a ranking: {$ranking->name}.");
     }
 
@@ -140,7 +156,7 @@ class Ranking extends Model
             ->latest();
     }
 
-    public function scopeForProfilePage(Builder $query, $user)
+    public function scopeForProfilePage(Builder $query, User $user)
     {
         $query->newQuery()
             ->where('user_id', $user ? $user->getKey() : auth()->id())

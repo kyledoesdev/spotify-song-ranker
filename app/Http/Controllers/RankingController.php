@@ -33,9 +33,11 @@ class RankingController extends Controller
 
     public function create(CreateRankingRequest $request): JsonResponse
     {
+        $ranking = Ranking::start($request);
+
         return response()->json([
             'redirect' => route('rank.show', [
-                'id' => Ranking::start($request)->id,
+                'id' => $ranking->getKey()
             ]),
         ], 200);
     }
@@ -75,12 +77,8 @@ class RankingController extends Controller
         return response()->json([
             'message' => 'Your ranking has been deleted.',
             'rankings' => Ranking::query()
-                ->where('user_id', auth()->id())
-                ->with('user', 'artist')
-                ->with('songs', fn ($q) => $q->where('rank', 1))
-                ->withCount('songs')
-                ->latest()
-                ->paginate(5),
+                ->forProfilePage(auth()->user())
+                ->get()
         ], 200);
     }
 }
