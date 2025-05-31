@@ -3,7 +3,7 @@
         <div class="mr-2">
             <i class="fa fa-regular fa-clock text-xs md:text-base"></i>
         </div>
-        <div class="p-0">
+        <div class="p-0" :title="ranking.formatted_completed_at">
             <span class="text-xs md:text-base">{{ ranking.completed_at }}</span>
         </div>
     </div>

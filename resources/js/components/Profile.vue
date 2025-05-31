@@ -1,33 +1,32 @@
 <template>
     <div class="mt-8" v-auto-animate>
-        <div class="flex justify-center">
-            <h5 class="text-xl md:text-4xl p-4 k-line">{{ this.display_name }} Rankings</h5>
-        </div>
+        <h5 class="text-xl md:text-4xl px-4">{{ this.display_name }} rankings</h5>
 
-        <div v-if="ranks" class="overflow-x-auto" v-auto-animate>
-            <div class="flex flex-col items-center space-y-8 mt-4" v-if="ranks" v-auto-animate>
-                <div class="border border-zinc-800 bg-white rounded-lg mb-2" v-for="ranking in ranks" :key="ranking.id" v-auto-animate>
-                    <exploreitem class="mb-4" :ranking="ranking" />
+        <div :class="rankingDisplayMode" v-if="this.rankings" v-auto-animate>
+            <div 
+                class="bg-white shadow-md rounded-lg cursor-pointer hover:shadow-lg transition-shadow relative p-2" 
+                v-for="ranking in ranks" 
+                :key="ranking.id" 
+                v-auto-animate
+                @click="show(ranking.id)"
+            >
+                <exploreitem :ranking="ranking" />
 
-                    <div class="text-dark m-4" v-if="this.authid && ranking.user_id == this.authid">
-                        <a 
-                            class="border border-zinc-800 bg-purple-400 rounded-sm px-2 py-1 mx-2"
-                            @click="show(ranking.id)"
-                        >
-                            <i class="fa fa-eye"></i>
-                        </a>
-                        <a 
-                            class="border border-zinc-800 bg-green-300 rounded-sm px-2 py-1 mx-2"
-                            :href="getEditURI(ranking.id)"
-                        >
-                            <i class="fa fa-pencil"></i>
-                        </a>
-                        <a class="border border-zinc-800 bg-red-400 rounded-sm px-2 py-1 mx-2"
-                            @click="destroy(ranking.id)"
-                        >
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </div>
+                <div class="absolute top-2 right-2 flex space-x-1" v-if="this.authid && ranking.user_id == this.authid" @click.stop>
+                    <a 
+                        class="text-gray-500 hover:text-green-600 transition-colors p-1 text-sm"
+                        :href="getEditURI(ranking.id)"
+                        title="Edit"
+                    >
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                    <a 
+                        class="text-gray-500 hover:text-red-600 transition-colors p-1 text-sm"
+                        @click="destroy(ranking.id)"
+                        title="Delete"
+                    >
+                        <i class="fa fa-trash"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -100,6 +99,16 @@
                 return ranking.is_public == 0 ? 'No' : 'Yes';
             }
         },
+
+        computed: {
+            rankingDisplayMode() {
+                if (this.rankings && this.rankings.length > 1) {
+                    return "grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-auto m-2 p-2";
+                }
+
+                return "grid grid-cols-1 gap-4 overflow-x-auto m-2 p-2"
+            }
+        }
     }
 </script>
 <style scoped>

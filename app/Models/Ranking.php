@@ -29,7 +29,10 @@ class Ranking extends Model
         'completed_at',
     ];
 
-    protected $appends = ['show_route'];
+    protected $appends = [
+        'show_route',
+        'formatted_completed_at'
+    ];
 
     protected function casts(): array
     {
@@ -60,6 +63,15 @@ class Ranking extends Model
         }
 
         return Carbon::parse($this->attributes['completed_at'])->diffForHumans();
+    }
+
+    public function getFormattedCompletedAtAttribute()
+    {
+        if ($this->attributes['completed_at'] == null) {
+            return 'In Progress';
+        }
+
+        return Carbon::parse($this->attributes['completed_at'])->inUserTimezone()->format('M d, Y g:i A T');
     }
 
     public function getShowRouteAttribute()

@@ -10,16 +10,7 @@ class ProfileController extends Controller
 {
     public function show(string $id): View
     {
-        $user = User::where('spotify_id', $id)->first();
-
-        /* no profile found for user */
-        if (is_null($user)) {
-            return view('profile.show', [
-                'user' => null,
-                'name' => get_formatted_name($id),
-                'rankings' => null,
-            ]);
-        }
+        $user = User::where('spotify_id', $id)->firstOrFail();
 
         return view('profile.show', [
             'user' => $user,

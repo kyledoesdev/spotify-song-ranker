@@ -4,6 +4,7 @@
         target="_blank"
         class="inline-flex items-center gap-2"
         style="border-bottom: 2px solid #06D6A0; padding-bottom: 2px;"
+        @click.stop
     >
         <p class="inline text-[#06D6A0]">
             <img 

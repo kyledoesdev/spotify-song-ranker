@@ -1,6 +1,6 @@
-<div class="flex justify-between border border-zinc-800  bg-white rounded-lg p-4">
+<div class="flex justify-between shadow-md bg-white rounded-lg p-4">
     <div>
-        <h5 class="text-xs md:text-base lg:text-lg mt-1">songrank 🎵</h5>
+        <h5 class="text-xs md:text-base lg:text-xl">songrank 🎵</h5>
     </div>
     <div>
         @auth
@@ -32,10 +32,10 @@
                     x-on:click="toggle()"
                     :aria-expanded="open"
                     type="button"
-                    class="flex items-center px-2 gap-2 rounded-md"
+                    class="flex items-center px-2 gap-2 rounded-md cursor-pointer"
                 >
                     <img
-                        class="hidden md:block md:w-8 md:h-8 md:rounded-lg md:border-2 md:border-zinc-900" 
+                        class="hidden md:block md:w-8 md:h-8 md:rounded-xl md:border-1 md:border-zinc-900" 
                         src="{{ auth()->user()->avatar }}" 
                         alt="User Actions"
                     />
