@@ -1,17 +1,21 @@
 <template>
-    <div class="grid grid-cols-1 md:grid-cols-2 mt-4 bg-white border border-zinc-800 p-4 rounded-lg">
+    <div class="grid grid-cols-1 md:grid-cols-2 mt-4 bg-white shadow-md p-4 rounded-lg">
         <div>
-            <h5 class="md:text-3xl">Email Preferences</h5>
+            <h5 class="md:text-xl mb-4">Email Preferences</h5>
             <label>Ranking Reminder Emails</label>
-            <select class="border border-zinc-800 rounded-sm p-1 mx-1 mt-1" v-model="has_reminder_emails" @change="update('recieve_reminder_emails', this.has_reminder_emails)">
+            <select
+                class="border bg-zinc-100 rounded-lg p-1 ml-2"
+                v-model="has_reminder_emails"
+                @change="update('recieve_reminder_emails', this.has_reminder_emails)"
+            >
                 <option :value="true" :selected="has_reminder_emails">Yes</option>
                 <option :value="false" :selected="!has_reminder_emails">No</option>
             </select>
         </div>
         <div>
-            <h5 class="md:text-3xl">Other Settings</h5>
-            <button class="btn-primary m-2 p-2" @click="download">Export your data</button>
-            <button class="btn-danger m-2 p-2" @click="destroy">Delete your account</button>
+            <h5 class="md:text-xl">Other Settings</h5>
+            <button class="btn-primary" @click="download">Export your data</button>
+            <button class="btn-danger" @click="destroy">Delete your account</button>
         </div>
     </div>
 </template>

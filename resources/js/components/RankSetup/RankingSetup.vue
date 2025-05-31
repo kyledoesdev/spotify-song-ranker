@@ -3,66 +3,65 @@
         <div class="grid grid-cols-1 md:grid-cols-2 m-2 p-2">
             <div>
                 <div class="grid">
-                    <h5 class="md:text-4xl mb-2">
-                        Artist:
+                    <h5 class="md:text-2xl mb-2">
+                        Artist: {{ this.name }}
                     </h5>
                     <div class="mb-4">
                         <img
-                            class="border rounded-lg border-zinc-800 w-48 h-48"
+                            class="rounded-4xl w-48 h-48"
                             :src="albumArt"
                             @click="loadSongs()"
                             :alt="this.name"
                         />
-                        <div class="flex">
-                            <div>
-                                <h5 class="md:text-2xl mt-2 mb-2">{{ this.name }}</h5>
-                            </div>
-                            <div class="mt-2 mx-2">
+                        <div class="flex flex-col">
+                            <div class="mt-1">
                                 <spotify-logo :artist="this.id" />
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="md:w-1/2">
-                    <div class="grid grid-cols-1 mt-3 mb-2">
-                        <h5 class="md:text-2xl">Filters</h5>
-                        <button
-                            type="button"
-                            class="btn-primary p-1 m-2"
-                            @click="filterSongs('remix')"
-                        >
-                            Remove Remixes
-                        </button>
-                        <button
-                            type="button"
-                            class="btn-secondary p-1 m-2"
-                            @click="filterSongs('live from')"
-                        >
-                            Remove "Live From" Tracks
-                        </button>
-                        <button
-                            type="button"
-                            class="btn-helper p-1 m-2"
-                            @click="filterSongs('instrumental')"
-                        >
-                            Remove "Instrumental" Tracks
-                        </button>
+                    <div class="mt-3 mb-4">
+                        <h5 class="md:text-2xl mb-2">Filters</h5>
+                        <div class="flex flex-wrap gap-2">
+                            <button
+                                type="button"
+                                class="btn-primary px-2 py-1 text-sm"
+                                @click="filterSongs('remix')"
+                            >
+                                Remove Remixes
+                            </button>
+                            <button
+                                type="button"
+                                class="btn-secondary px-2 py-1 text-sm"
+                                @click="filterSongs('live from')"
+                            >
+                                Remove "Live From" Tracks
+                            </button>
+                            <button
+                                type="button"
+                                class="btn-helper px-2 py-1 text-sm"
+                                @click="filterSongs('instrumental')"
+                            >
+                                Remove "Instrumental" Tracks
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-1">
-                        <h5 class="md:tex-2xl mx-1 mb-2">Custom Ranking Name?</h5>
+                    <div class="mb-4">
+                        <label class="block md:text-xl mb-2">Custom Ranking Name?</label>
                         <input
                             type="text"
-                            class="mx-1 border border-zinc-800 rounded-sm p-2 mb-4"
+                            class="w-full bg-zinc-100 rounded-lg p-2"
                             :placeholder="this.name + ' List'"
                             v-model="rankingName"
                             maxlength="30"
                         />
                     </div>
 
-                    <div class="grid grid-cols-1 gap-0 mb-2">
-                        <h5 class="mb-2 mx-1">Show In Explore Feed?</h5>
-                        <select class="border border-zinc-800 rounded-sm mx-1 bg-white p-1" v-model="is_public" required>
+                    <div class="mb-4">
+                        <label class="block mb-2">Show In Explore Feed?</label>
+                        <select class="w-full bg-zinc-100 rounded-lg bg-white p-2" v-model="is_public" required>
                             <option :value="true" selected>Yes</option>
                             <option :value="false">No</option>
                         </select>
@@ -70,10 +69,10 @@
 
                     <button
                         type="button"
-                        class="btn-animated p-2 m-2"
+                        class="btn-animated p-2 w-full"
                         @click="beginRanking"
                     >
-                        <h5 class="text-lg md:text-2xl uppercase">Begin Ranking</h5>
+                        <h5 class="text-lg md:text-2xl uppercase cursor-pointer">Begin Ranking</h5>
                     </button>
                 </div>
             </div>
@@ -98,7 +97,7 @@
     <div v-else>
         <div class="m-2 p-2">
             <img
-                class="border border-zinc-800 m-2"
+                class="shadow-md rounded-4xl m-2"
                 :src="cover"
                 @click="loadSongs"
                 :alt="this.name"

@@ -5,18 +5,24 @@
                 <img 
                     :src="cover" 
                     :alt="name"
-                    class="w-12 h-12 sm:w-[72px] sm:h-[72px]" 
+                    class="w-12 h-12 sm:w-[72px] sm:h-[72px] rounded-xl mr-4" 
                 />
             </div>
             <div class="flex flex-1">
-                <div class="min-w-0 pt-1">
+                <div class="min-w-0 pt-1 flex-1">
                     <h5 class="mx-2 mt-1 mb-0.5 text-xs sm:text-base break-words" :title="name">{{ name }}</h5>
-                    <spotify-logo class="mx-2" :song="spotifyid" />
-                </div>
-                <div v-if="candelete">
-                    <button type="button" class="btn-danger px-2 py-1 my-1" @click="removeSong()">
-                        <i class="fa-solid text-zinc-800 fa-trash-can"></i>
-                    </button>
+                    <div class="flex items-center mx-2">
+                        <spotify-logo :song="spotifyid" />
+                        <button 
+                            v-if="candelete"
+                            type="button" 
+                            class="text-gray-500 hover:text-red-600 transition-colors p-1 text-sm ml-2 cursor-pointer" 
+                            @click="removeSong()"
+                            title="Remove song"
+                        >
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

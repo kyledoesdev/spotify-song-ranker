@@ -1,5 +1,5 @@
 <template>
-    <div class="m-2 p-2" style="min-width: 35vw;" v-auto-animate>
+    <div class="m-2" style="min-width: 35vw;" v-auto-animate>
         <a :href="ranking.show_route" v-auto-animate>
             <div class="flex space-x-6" v-auto-animate>
                 <div>
@@ -13,13 +13,13 @@
                     <spotify-logo :artist="ranking.artist.artist_id" />
                 </div>
                 <div>
-                    <h5 class="md:text-2xl" :title="ranking.name">
-                        <span class="text-xs md:text-base">{{ truncate(ranking.name, 30) }}</span>
+                    <h5 class="mb-1" :title="ranking.name">
+                        <span class="text-base md:text-lg">{{ truncate(ranking.name, 30) }}</span>
                     </h5>
                     <explore-artist-name :ranking="ranking" />
                     <explore-top-song :ranking="ranking" />
                     <explore-song-count :ranking="ranking" />
-                    <div v-if="this.routename != 'profile.index'">
+                    <div v-if="this.routename != 'profile.show'">
                         <explore-ranking-creator :ranking="ranking" />
                     </div>
                     <explore-ranking-completed-at :ranking="ranking" />

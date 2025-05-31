@@ -71,23 +71,23 @@ layer(base);
   }
 
 @utility btn-primary {
-  @apply border border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800;
+  @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
 }
 
 @utility btn-secondary {
-  @apply border border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400;
+  @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer;
 }
 
 @utility btn-helper {
-  @apply border border-zinc-800 rounded-lg bg-blue-300 hover:bg-blue-400;
+  @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer;
 }
 
 @utility btn-danger {
-  @apply border border-zinc-800 rounded-lg bg-red-400 hover:bg-red-500 text-zinc-800;
+  @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
 }
 
 @utility btn-animated {
-    @apply border border-zinc-800 rounded-lg bg-gradient-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
+    @apply rounded-xl shadow-md bg-gradient-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
     background-size: 400% 400%;
     animation: gradientAnimation 20s linear infinite;
 }

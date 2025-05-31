@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white border border-zinc-800 rounded-lg p-4">
+    <div class="bg-white rounded-lg p-2">
         <p class="p-2">
             Welcome to songrank.dev. This application will allow you to log in with your
             spotify account and rank your favorite artists' entire discography. This is not a bracket style ranking system.
@@ -11,10 +11,6 @@
         </p>
         <p class="p-2">
             After you've finished a ranking, feel free to share your finalized list with friends, download the list & more.
-        </p>
-        <hr />
-        <p class="p-2 italic text-xs mt-2">
-            While completly functional on mobile devices, for the best experience, use this website on your computer.
         </p>
     </div>
 

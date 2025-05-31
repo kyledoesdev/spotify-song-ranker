@@ -1,32 +1,32 @@
 <template>
-    <div class="bg-white border border-zinc-800 rounded-lg mt-4" style="min-height: 600px;;">
-        <div class="flex justify-between k-line">
+    <div class="bg-white rounded-lg shadow-md mt-4" style="min-height: 300px;">
+        <div class="flex justify-between mt-2">
             <div>
-                <h5 class="md:text-4xl px-2 pt-2">Edit your ranking</h5>
+                <h5 class="md:text-2xl mt-2 ml-2">Edit your ranking</h5>
             </div>
-            <div>
+            <div class="mr-4">
                 <button 
                     type="button" 
-                    class="border border-zinc-800 rounded-lg bg-purple-400 hover:bg-purple-500 text-zinc-800 m-1 p-2" 
+                    class="btn-primary" 
                     @click="update()"
                 >
-                    Save
+                    <i class="fa fa-solid fa-check"></i>
                 </button>
                 <button 
                     type="button" 
-                    class="border border-zinc-800 rounded-lg bg-green-300 hover:bg-green-400 m-1 p-2"
+                    class="btn-secondary"
                     onclick="history.back()"
                 >
-                    Cancel
+                    <i class="fa fa-solid fa-times"></i>
                 </button>
             </div>
         </div>
 
-        <div class="p-4">
+        <div class="mx-2 pt-4">
             <div class="mb-4">
-                <h5>Change ranking name:</h5>
+                <label>Name:</label>
                 <input 
-                    class="border border-zinc-800 p-2 bg-zinc-100 rounded-lg"
+                    class="border bg-zinc-100 rounded-lg p-1 ml-2"
                     type="text" 
                     name="ranking_name" 
                     v-model="rankingName" 
@@ -34,9 +34,9 @@
                 />
             </div>
 
-            <div>
-                <h5 class="mx-1 mb-2">Show In Explore Feed?</h5>
-                <select class="border border-zinc-800 bg-zinc-100 rounded-lg" v-model="is_public" required>
+            <div class="mb-4">
+                <label class="mx-1 mb-2">Show In Explore Feed?</label>
+                <select class="border bg-zinc-100 rounded-lg p-1 ml-2" v-model="is_public" required>
                     <option :value="true" selected>Yes</option>
                     <option :value="false">No</option>
                 </select>

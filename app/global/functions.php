@@ -38,5 +38,5 @@ function title(bool $app_name = true): string
 
 function get_formatted_name(string $name): string
 {
-    return Str::endsWith($name, 's') ? Str::finish(Str::ucfirst($name), "'") : Str::ucfirst($name)."'s";
+    return Str::endsWith($name, 's') ? Str::finish($name, "'") : $name."'s";
 }

@@ -24,9 +24,12 @@
                     'transition-all duration-300 ease-in-out'
                 ]"
             >
-                <div class="w-72 md:h-auto h-full border-r md:border md:rounded-lg border-zinc-800 bg-white overflow-y-auto">
-                    <div class="p-4 border-b border-zinc-800">
-                        <h3 class="text-lg text-center k-line font-semibold mb-3">Top Ranked Artists</h3>
+                <div class="w-72 md:h-auto h-full md:rounded-lg bg-white overflow-y-auto shadow-md">
+                    <div class="p-4">
+                        <h3 class="text-lg text-center k-line font-semibold mb-3">
+                            Top Ranked Artists
+                        </h3>
+                        
                         <ul class="space-y-2">
                             <li 
                                 v-for="(artist, index) in artists"
@@ -49,7 +52,7 @@
                         <div class="flex flex-col space-y-2">
                             <div>
                                 <input 
-                                    class="w-full p-2 border border-zinc-800 rounded-md" 
+                                    class="w-full p-1 border border-zinc-800 rounded-md" 
                                     type="text" 
                                     placeholder="Search..." 
                                     v-model="searchQuery"
@@ -58,17 +61,17 @@
                             <div class="flex justify-center space-x-2">
                                 <button 
                                     type="button" 
-                                    class="btn-primary px-2 py-1 text-white rounded-md" 
+                                    class="btn-primary px-2" 
                                     @click="pageRankings()" 
                                 >
-                                    <i class="text-xl text-zinc-800 fa fa-magnifying-glass"></i>
+                                    <i class="text-lg text-zinc-800 fa fa-magnifying-glass"></i>
                                 </button>
                                 <button 
                                     type="button" 
-                                    class="btn-secondary px-2 py-1 text-white rounded-md" 
+                                    class="btn-secondary px-2" 
                                     @click="reset"
                                 >
-                                    <i class="text-xl text-zinc-800 fa-solid fa-rotate-left"></i>
+                                    <i class="text-lg text-zinc-800 fa-solid fa-rotate-left"></i>
                                 </button>
                             </div>
                         </div>
@@ -81,7 +84,7 @@
                 <div class="max-w-3xl w-full px-4">
                     <div class="flex flex-col space-y-4" v-if="ranks.total > 0" v-auto-animate>
                         <div 
-                            class="border bg-white border-zinc-800 hover:bg-gray-100 rounded-md cursor-pointer" 
+                            class="bg-white hover:bg-gray-100 rounded-md cursor-pointer shadow-md p-1" 
                             v-for="ranking in ranks.data" 
                             :key="ranking.id" 
                             v-auto-animate
