@@ -53,7 +53,7 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => env('APP_ENV') === 'production' ? ['single', 'discord', 'bugsnag', 'nightwatch'] : ['single'],
+            'channels' => explode(',', env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
 
