@@ -164,10 +164,17 @@
             },
 
             async beginRanking() {
+                let message = "Are you ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.";
+                let extra_warning = "Also, Your ranking has 50 or more songs, it may take > ~30 minutes to complete the ranking. Are you sure you want to continue?";
+
+                if (Object.keys(this.artistSongs).length >= 50) {
+                    message = message += "\n\n" + extra_warning;
+                }
+
                 let confirmed = await this.buildFlash()
                     .check(
                         "Begin Ranking?",
-                        "Are you ready to begin ranking your selected songs? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking. You will only be able to update the title & visiblity of your ranking.",
+                        message,
                         "info",
                         "Let's Go!",
                         "Cancel"

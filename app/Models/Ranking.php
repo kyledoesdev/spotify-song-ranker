@@ -97,7 +97,7 @@ class Ranking extends Model
             $ranking = self::create([
                 'user_id' => auth()->id(),
                 'artist_id' => $artist->getKey(),
-                'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
+                'name' => Str::limit($request->name ?? $artist->artist_name . ' List', 30),
                 'is_public' => $request->is_public ?? false,
             ]);
 
@@ -107,7 +107,7 @@ class Ranking extends Model
                     'ranking_id' => $ranking->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => Str::uuid(),
-                    'title' => $song['name'],
+                    'title' => $song['name'] ?? 'track deleted from spotify servers', //have to include this null check because fucking kanye west songs can have no title. ya know, because kanye west. thanks a lot
                     'cover' => $song['cover'],
                     'created_at' => now(),
                     'updated_at' => now(),

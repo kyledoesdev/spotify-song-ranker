@@ -1,6 +1,8 @@
 <div class="flex justify-between shadow-md bg-white rounded-lg p-4">
     <div>
-        <h5 class="text-xs md:text-base lg:text-xl">songrank 🎵</h5>
+        <a href="{{ auth()->check() ? route('home') : route('welcome') }}">
+            <h5 class="text-xs md:text-base lg:text-xl">songrank 🎵</h5>
+        </a>
     </div>
     <div>
         @auth
