@@ -45,57 +45,59 @@ class SongRankProcess extends Component
 
     protected function startNewSorting()
     {
-        $songs = $this->ranking->songs->shuffle()->values()->map(function (Song $song) {
-            return [
-                'id' => $song->id,
-                'title' => $song->title,
-                'cover' => $song->cover,
-                'spotify_song_id' => $song->spotify_song_id
-            ];
-        })->toArray();
+        // Get just the IDs in random order
+        $songIds = $this->ranking->songs->shuffle()->pluck('id')->toArray();
         
-        // Initialize with a stack-based approach for merge sort
+        // Initialize with just IDs - no full song data
         $state = [
             'stack' => [
                 [
                     'type' => 'sort',
-                    'array' => $songs,
+                    'ids' => $songIds,  // Just IDs, not full objects
                     'start' => 0,
-                    'end' => count($songs) - 1,
+                    'end' => count($songIds) - 1,
                     'depth' => 0
                 ]
             ],
             'current_merge' => null,
-            'completed_segments' => [] // Store completed sorted segments
+            'completed_segments' => [] // Will store arrays of IDs only
         ];
         
         $this->sortingState->update([
             'sorting_state' => $state,
-            'aprox_comparisons' => $this->calculateTotalComparisons(count($songs)),
+            'aprox_comparisons' => $this->calculateTotalComparisons(count($songIds)),
             'completed_comparisons' => 0
         ]);
+    }
+
+    protected function getSongData($songId)
+    {
+        // Just fetch the song data when needed - no caching
+        $song = Song::find($songId);
+        return [
+            'id' => $song->id,
+            'title' => $song->title,
+            'cover' => $song->cover,
+            'spotify_song_id' => $song->spotify_song_id
+        ];
     }
 
     protected function continueSort()
     {
         $this->sortingState->refresh();
-
         $state = $this->sortingState->sorting_state;
         
-        // If we have a current merge in progress, show the comparison
         if ($state['current_merge']) {
             $this->processMerge();
             return;
         }
         
-        // Process the stack
         while (!empty($state['stack'])) {
             $task = array_pop($state['stack']);
             
             if ($task['type'] === 'sort') {
                 $this->handleSortTask($task, $state);
             } elseif ($task['type'] === 'merge') {
-                // Start a new merge
                 $state['current_merge'] = $task;
                 $this->sortingState->update(['sorting_state' => $state]);
                 $this->processMerge();
@@ -103,9 +105,7 @@ class SongRankProcess extends Component
             }
         }
         
-        // If stack is empty and no current merge, we're done
         if (empty($state['stack']) && !$state['current_merge']) {
-            // Find the final sorted array
             $finalKey = $this->findCompletedSegment($state, 0, count($this->ranking->songs) - 1);
             if ($finalKey !== null && isset($state['completed_segments'][$finalKey])) {
                 $this->completeSorting($state['completed_segments'][$finalKey]);
@@ -117,22 +117,20 @@ class SongRankProcess extends Component
     {
         $start = $task['start'];
         $end = $task['end'];
-        $array = $task['array'];
+        $ids = $task['ids'];
         
-        // Base case: single element or empty
         if ($start >= $end) {
             $key = $start . '-' . $end;
-            $state['completed_segments'][$key] = array_slice($array, $start, $end - $start + 1);
+            $state['completed_segments'][$key] = array_slice($ids, $start, $end - $start + 1);
             $this->sortingState->update(['sorting_state' => $state]);
             return;
         }
         
         $mid = intval(($start + $end) / 2);
         
-        // Push merge task (will be processed after both halves are sorted)
         array_push($state['stack'], [
             'type' => 'merge',
-            'array' => $array,
+            'ids' => $ids,
             'start' => $start,
             'mid' => $mid,
             'end' => $end,
@@ -141,19 +139,17 @@ class SongRankProcess extends Component
             'depth' => $task['depth'] + 1
         ]);
         
-        // Push right sort task
         array_push($state['stack'], [
             'type' => 'sort',
-            'array' => $array,
+            'ids' => $ids,
             'start' => $mid + 1,
             'end' => $end,
             'depth' => $task['depth'] + 1
         ]);
         
-        // Push left sort task (will be processed first)
         array_push($state['stack'], [
             'type' => 'sort',
-            'array' => $array,
+            'ids' => $ids,
             'start' => $start,
             'end' => $mid,
             'depth' => $task['depth'] + 1
@@ -165,7 +161,6 @@ class SongRankProcess extends Component
     protected function processMerge()
     {
         $this->sortingState->refresh();
-
         $state = $this->sortingState->sorting_state;
         $merge = $state['current_merge'];
         
@@ -174,31 +169,46 @@ class SongRankProcess extends Component
             return;
         }
         
-        // Initialize merge if needed
-        if (!isset($merge['left']) || !isset($merge['right'])) {
+        if (!isset($merge['left_ids']) || !isset($merge['right_ids'])) {
             $leftKey = $merge['left_key'];
             $rightKey = $merge['right_key'];
             
-            // Get the sorted segments
             $left = $state['completed_segments'][$leftKey] ?? [];
             $right = $state['completed_segments'][$rightKey] ?? [];
             
-            $merge['left'] = array_values($left);
-            $merge['right'] = array_values($right);
-            $merge['result'] = [];
+            $merge['left_ids'] = array_values($left);
+            $merge['right_ids'] = array_values($right);
+            $merge['result_ids'] = [];
             
             $state['current_merge'] = $merge;
             $this->sortingState->update(['sorting_state' => $state]);
             $this->sortingState->refresh();
+            $state = $this->sortingState->sorting_state;
+            $merge = $state['current_merge'];
         }
         
-        // Check if we need to compare
-        if (!empty($merge['left']) && !empty($merge['right'])) {
-            $this->currentSong1 = $merge['left'][0];
-            $this->currentSong2 = $merge['right'][0];
+        if (!empty($merge['left_ids']) && !empty($merge['right_ids'])) {
+            // Fetch both songs in a single query
+            $songIds = [$merge['left_ids'][0], $merge['right_ids'][0]];
+            $songs = Song::whereIn('id', $songIds)
+                ->get()
+                ->keyBy('id');
+            
+            $this->currentSong1 = [
+                'id' => $songs[$merge['left_ids'][0]]->id,
+                'title' => $songs[$merge['left_ids'][0]]->title,
+                'cover' => $songs[$merge['left_ids'][0]]->cover,
+                'spotify_song_id' => $songs[$merge['left_ids'][0]]->spotify_song_id
+            ];
+            
+            $this->currentSong2 = [
+                'id' => $songs[$merge['right_ids'][0]]->id,
+                'title' => $songs[$merge['right_ids'][0]]->title,
+                'cover' => $songs[$merge['right_ids'][0]]->cover,
+                'spotify_song_id' => $songs[$merge['right_ids'][0]]->spotify_song_id
+            ];
         } else {
-            // Merge is complete
-            $result = array_merge($merge['result'], $merge['left'], $merge['right']);
+            $result = array_merge($merge['result_ids'], $merge['left_ids'], $merge['right_ids']);
             $key = $merge['start'] . '-' . $merge['end'];
             $state['completed_segments'][$key] = $result;
             $state['current_merge'] = null;
@@ -235,11 +245,11 @@ class SongRankProcess extends Component
                 return;
             }
 
-            // Process the choice
+            // Work with IDs only
             if ($songId === $song1Id) {
-                $merge['result'][] = array_shift($merge['left']);
+                $merge['result_ids'][] = array_shift($merge['left_ids']);
             } else {
-                $merge['result'][] = array_shift($merge['right']);
+                $merge['result_ids'][] = array_shift($merge['right_ids']);
             }
             
             $state['current_merge'] = $merge;
@@ -273,14 +283,14 @@ class SongRankProcess extends Component
 
     protected function updateProgress()
     {
-        if ($this->sortingState->total_comparisons > 0) {
-            $this->progressPercentage = min(100, intval(($this->sortingState->completed_comparisons / $this->sortingState->total_comparisons) * 100));
+        if ($this->sortingState->aprox_comparisons > 0) {
+            $this->progressPercentage = min(100, intval(($this->sortingState->completed_comparisons / $this->sortingState->aprox_comparisons) * 100));
         }
     }
 
-    protected function completeSorting($finalResult)
+    protected function completeSorting($finalSongIds)
     {
-        DB::transaction(function () use ($finalResult) {
+        DB::transaction(function () use ($finalSongIds) {
             $this->ranking->update([
                 'is_ranked' => true,
                 'completed_at' => now(),
@@ -290,8 +300,9 @@ class SongRankProcess extends Component
                 'sorting_state' => null,
             ]);
 
-            foreach ($finalResult as $index => $song) {
-                Song::where('id', $song['id'])->update([
+            // Update ranks using just the IDs
+            foreach ($finalSongIds as $index => $songId) {
+                Song::where('id', $songId)->update([
                     'rank' => $index + 1,
                     'updated_at' => now()
                 ]);
