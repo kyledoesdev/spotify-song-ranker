@@ -3,37 +3,28 @@
 namespace App\Livewire;
 
 use App\Models\Ranking;
+use App\Models\RankingSortingState;
 use App\Models\Song;
-use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Livewire\Component;
 
 class SongRankProcess extends Component
 {
     public Ranking $ranking;
+    public RankingSortingState $sortingState;
+    
     public $currentSong1;
     public $currentSong2;
     public bool $showEmbeds = true;
     public bool $isComplete = false;
     public bool $isProcessing = false;
     public $progressPercentage = 0;
-    public int $rankingId;
     
     protected $listeners = ['toggleEmbeds'];
 
     public function mount()
     {
-        $this->ranking = Ranking::query()
-            ->with(['user', 'songs', 'artist'])
-            ->findOrFail($this->rankingId);
-        
-        if (! $this->ranking->is_public && $this->ranking->user_id != auth()->id()) {
-            abort(404);
-        }
-                
-        if (! $this->ranking->is_ranked && $this->ranking->user_id != auth()->id()) {
-           abort(403, 'This ranking is not complete. You can not view it.');
-        }
-
         if ($this->ranking->is_ranked) {
             $this->isComplete = true;
             return;
@@ -44,7 +35,7 @@ class SongRankProcess extends Component
 
     public function initializeSorting()
     {
-        if (!$this->ranking->sorting_state) {
+        if (!$this->sortingState->sorting_state) {
             $this->startNewSorting();
         }
         
@@ -54,7 +45,7 @@ class SongRankProcess extends Component
 
     protected function startNewSorting()
     {
-        $songs = $this->ranking->songs->shuffle()->values()->map(function ($song) {
+        $songs = $this->ranking->songs->shuffle()->values()->map(function (Song $song) {
             return [
                 'id' => $song->id,
                 'title' => $song->title,
@@ -78,17 +69,18 @@ class SongRankProcess extends Component
             'completed_segments' => [] // Store completed sorted segments
         ];
         
-        $this->ranking->update([
+        $this->sortingState->update([
             'sorting_state' => $state,
-            'total_comparisons' => $this->calculateTotalComparisons(count($songs)),
+            'aprox_comparisons' => $this->calculateTotalComparisons(count($songs)),
             'completed_comparisons' => 0
         ]);
     }
 
     protected function continueSort()
     {
-        $this->ranking->refresh();
-        $state = $this->ranking->sorting_state;
+        $this->sortingState->refresh();
+
+        $state = $this->sortingState->sorting_state;
         
         // If we have a current merge in progress, show the comparison
         if ($state['current_merge']) {
@@ -105,7 +97,7 @@ class SongRankProcess extends Component
             } elseif ($task['type'] === 'merge') {
                 // Start a new merge
                 $state['current_merge'] = $task;
-                $this->ranking->update(['sorting_state' => $state]);
+                $this->sortingState->update(['sorting_state' => $state]);
                 $this->processMerge();
                 return;
             }
@@ -131,7 +123,7 @@ class SongRankProcess extends Component
         if ($start >= $end) {
             $key = $start . '-' . $end;
             $state['completed_segments'][$key] = array_slice($array, $start, $end - $start + 1);
-            $this->ranking->update(['sorting_state' => $state]);
+            $this->sortingState->update(['sorting_state' => $state]);
             return;
         }
         
@@ -167,13 +159,14 @@ class SongRankProcess extends Component
             'depth' => $task['depth'] + 1
         ]);
         
-        $this->ranking->update(['sorting_state' => $state]);
+        $this->sortingState->update(['sorting_state' => $state]);
     }
 
     protected function processMerge()
     {
-        $this->ranking->refresh();
-        $state = $this->ranking->sorting_state;
+        $this->sortingState->refresh();
+
+        $state = $this->sortingState->sorting_state;
         $merge = $state['current_merge'];
         
         if (!$merge) {
@@ -195,8 +188,8 @@ class SongRankProcess extends Component
             $merge['result'] = [];
             
             $state['current_merge'] = $merge;
-            $this->ranking->update(['sorting_state' => $state]);
-            $this->ranking->refresh();
+            $this->sortingState->update(['sorting_state' => $state]);
+            $this->sortingState->refresh();
         }
         
         // Check if we need to compare
@@ -210,7 +203,7 @@ class SongRankProcess extends Component
             $state['completed_segments'][$key] = $result;
             $state['current_merge'] = null;
             
-            $this->ranking->update(['sorting_state' => $state]);
+            $this->sortingState->update(['sorting_state' => $state]);
             $this->continueSort();
         }
     }
@@ -224,8 +217,8 @@ class SongRankProcess extends Component
         $this->isProcessing = true;
 
         try {
-            $this->ranking->refresh();
-            $state = $this->ranking->sorting_state;
+            $this->sortingState->refresh();
+            $state = $this->sortingState->sorting_state;
             $merge = $state['current_merge'];
             
             if (!$merge) {
@@ -252,8 +245,8 @@ class SongRankProcess extends Component
             $state['current_merge'] = $merge;
             
             DB::transaction(function () use ($state) {
-                $this->ranking->increment('completed_comparisons');
-                $this->ranking->update(['sorting_state' => $state]);
+                $this->sortingState->increment('completed_comparisons');
+                $this->sortingState->update(['sorting_state' => $state]);
             });
             
             $this->updateProgress();
@@ -280,8 +273,8 @@ class SongRankProcess extends Component
 
     protected function updateProgress()
     {
-        if ($this->ranking->total_comparisons > 0) {
-            $this->progressPercentage = min(100, intval(($this->ranking->completed_comparisons / $this->ranking->total_comparisons) * 100));
+        if ($this->sortingState->total_comparisons > 0) {
+            $this->progressPercentage = min(100, intval(($this->sortingState->completed_comparisons / $this->sortingState->total_comparisons) * 100));
         }
     }
 
@@ -291,7 +284,10 @@ class SongRankProcess extends Component
             $this->ranking->update([
                 'is_ranked' => true,
                 'completed_at' => now(),
-                'sorting_state' => null
+            ]);
+
+            $this->sortingState->update([
+                'sorting_state' => null,
             ]);
 
             foreach ($finalResult as $index => $song) {
@@ -304,10 +300,9 @@ class SongRankProcess extends Component
 
         $this->isComplete = true;
         $this->ranking->refresh();
+        $this->sortingState->refresh();
         
-        if (auth()->check()) {
-            \Log::channel('discord')->info(auth()->user()->name . ' completed a ranking: ' . $this->ranking->name);
-        }
+        Log::channel('discord')->info($this->ranking->user->name . ' completed a ranking: ' . $this->ranking->name);
     }
 
     public function toggleEmbeds()

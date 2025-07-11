@@ -3,5 +3,8 @@
 @section('content')
     @include('layouts.nav')
     
-    <livewire:song-rank-process :rankingId="$rankingId" />
+    <livewire:song-rank-process
+        :ranking="$ranking"
+        :sortingState="$sortingState"
+    />
 @endsection

@@ -3,7 +3,7 @@
 @endphp
 
 <div>
-    <div class="pl-4 pr-4 bg-white border border-zinc-800 rounded-lg mt-4">
+    <div class="pl-4 pr-4 bg-white shadow-lg rounded-lg mt-4">
         @if ($ranking->is_ranked)
             <div class="flex justify-between items-center">
                 <div>
@@ -168,15 +168,6 @@
                 </div>
             </div>
         @endif
-    </div>
-
-    {{-- Temporary Debug Section --}}
-    <div class="bg-red-100 p-2 mb-4 text-xs">
-        <strong>Debug:</strong>
-        Processing: {{ $isProcessing ? 'YES' : 'NO' }} |
-        Song1 ID: {{ $currentSong1['id'] ?? 'NULL' }} |
-        Song2 ID: {{ $currentSong2['id'] ?? 'NULL' }} |
-        Progress: {{ $progressPercentage }}%
     </div>
 </div>
 

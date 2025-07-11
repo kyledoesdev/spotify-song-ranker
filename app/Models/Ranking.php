@@ -27,9 +27,6 @@ class Ranking extends Model
         'is_ranked',
         'is_public',
         'completed_at',
-        'sorting_state',
-        'total_comparisons',
-        'completed_comparisons',
     ];
 
     protected $appends = [
@@ -41,9 +38,6 @@ class Ranking extends Model
     {
         return [
             'is_ranked' => 'boolean',
-            'sorting_state' => 'array',
-            'total_comparisons' => 'integer',
-            'completed_comparisons' => 'integer',
         ];
     }
 
@@ -60,6 +54,11 @@ class Ranking extends Model
     public function songs(): HasMany
     {
         return $this->hasMany(Song::class);
+    }
+
+    public function sortingState(): HasOne
+    {
+        return $this->hasOne(RankingSortingState::class, 'ranking_id', 'id');
     }
 
     public function getCompletedAtAttribute()
@@ -117,6 +116,9 @@ class Ranking extends Model
                 'total_comparisons' => 0,
                 'completed_comparisons' => 0,
             ]);
+
+            /* create the relation to the ranking's sorted state */
+            $ranking->sortingState()->create();
 
             $songs = [];
             foreach ($request->songs as $song) {
