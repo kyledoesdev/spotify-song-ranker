@@ -27,6 +27,9 @@ class Ranking extends Model
         'is_ranked',
         'is_public',
         'completed_at',
+        'sorting_state',
+        'total_comparisons',
+        'completed_comparisons',
     ];
 
     protected $appends = [
@@ -38,6 +41,9 @@ class Ranking extends Model
     {
         return [
             'is_ranked' => 'boolean',
+            'sorting_state' => 'array',
+            'total_comparisons' => 'integer',
+            'completed_comparisons' => 'integer',
         ];
     }
 
@@ -79,6 +85,15 @@ class Ranking extends Model
         return route('rank.show', ['id' => $this->getKey()]);
     }
 
+    public function getProgressPercentageAttribute()
+    {
+        if ($this->total_comparisons == 0) {
+            return 0;
+        }
+
+        return intval(($this->completed_comparisons / $this->total_comparisons) * 100);
+    }
+
     /**
      * Start a new ranking.
      */
@@ -99,6 +114,8 @@ class Ranking extends Model
                 'artist_id' => $artist->getKey(),
                 'name' => Str::limit($request->name ?? $artist->artist_name . ' List', 30),
                 'is_public' => $request->is_public ?? false,
+                'total_comparisons' => 0,
+                'completed_comparisons' => 0,
             ]);
 
             $songs = [];
@@ -107,7 +124,7 @@ class Ranking extends Model
                     'ranking_id' => $ranking->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => Str::uuid(),
-                    'title' => $song['name'] ?? 'track deleted from spotify servers', //have to include this null check because fucking kanye west songs can have no title. ya know, because kanye west. thanks a lot
+                    'title' => $song['name'] ?? 'track deleted from spotify servers',
                     'cover' => $song['cover'],
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -125,6 +142,9 @@ class Ranking extends Model
         return $ranking;
     }
 
+    /**
+     * Complete a ranking (legacy method, now handled by Livewire component)
+     */
     public static function complete($songs, $id): void
     {
         $data = [];
@@ -143,7 +163,11 @@ class Ranking extends Model
         $ranking = self::find($id);
 
         DB::transaction(function () use ($ranking, $data) {
-            $ranking->update(['is_ranked' => true, 'completed_at' => now()]);
+            $ranking->update([
+                'is_ranked' => true, 
+                'completed_at' => now(),
+                'sorting_state' => null
+            ]);
             
             Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
         });
@@ -185,10 +209,23 @@ class Ranking extends Model
     public function scopeForReminders(Builder $query)
     {
         $query->newQuery()
-            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at')
+            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at', 'completed_comparisons', 'total_comparisons')
             ->where('is_ranked', false)
             ->with('artist')
             ->withCount('songs');
+    }
+
+    public function scopeInProgress(Builder $query)
+    {
+        $query->where('is_ranked', false)
+            ->whereNotNull('sorting_state');
+    }
+
+    public function scopeAbandoned(Builder $query, $days = 7)
+    {
+        $query->where('is_ranked', false)
+            ->whereNotNull('sorting_state')
+            ->where('updated_at', '<', now()->subDays($days));
     }
 
     /* -- Filament Admin Functions -- */

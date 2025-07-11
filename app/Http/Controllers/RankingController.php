@@ -15,19 +15,8 @@ class RankingController extends Controller
 {
     public function show($id): View
     {
-        $ranking = Ranking::query()
-            ->with('user', 'songs')
-            ->findOrFail($id);
-
-        // if ranking is not complete && the ranking doesn't belong to auth user abort
-        if (! $ranking->is_ranked && $ranking->user_id != auth()->id()) {
-            abort(403, 'This ranking is not complete. You can not view it.');
-        }
-
         return view('rank.show', [
-            'songs' => $ranking->songs,
-            'ranking' => $ranking,
-            'creator' => $ranking->user->name,
+            'rankingId' => $id,
         ]);
     }
 
