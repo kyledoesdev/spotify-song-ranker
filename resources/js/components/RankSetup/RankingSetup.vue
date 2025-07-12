@@ -1,111 +1,125 @@
 <template>
-    <div v-if="this.artistSelected" v-auto-animate>
-        <div class="grid grid-cols-1 md:grid-cols-2 m-2 p-2">
-            <div>
-                <div class="grid">
-                    <h5 class="md:text-2xl mb-2">
-                        Artist: {{ this.name }}
-                    </h5>
-                    <div class="mb-4">
-                        <img
-                            class="rounded-4xl w-48 h-48"
-                            :src="albumArt"
-                            @click="loadSongs()"
-                            :alt="this.name"
-                        />
-                        <div class="flex flex-col">
-                            <div class="mt-1">
-                                <spotify-logo :artist="this.id" />
+    <div :class="{ 'blur-sm pointer-events-none': isLoadingSongs }">
+        <div v-if="this.artistSelected" v-auto-animate>
+            <div class="grid grid-cols-1 md:grid-cols-2 m-2 p-2">
+                <div>
+                    <div class="grid">
+                        <h5 class="md:text-2xl mb-2">
+                            Artist: {{ this.name }}
+                        </h5>
+                        <div class="mb-4">
+                            <img
+                                class="rounded-4xl w-48 h-48"
+                                :src="albumArt"
+                                @click="loadSongs()"
+                                :alt="this.name"
+                            />
+                            <div class="flex flex-col">
+                                <div class="mt-1">
+                                    <spotify-logo :artist="this.id" />
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="md:w-1/2">
+                        <div class="mt-3 mb-4">
+                            <h5 class="md:text-2xl mb-2">Filters</h5>
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    class="btn-primary px-2 py-1 text-sm"
+                                    @click="filterSongs('remix')"
+                                >
+                                    Remove Remixes
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn-secondary px-2 py-1 text-sm"
+                                    @click="filterSongs('live from')"
+                                >
+                                    Remove "Live From" Tracks
+                                </button>
+                                <button
+                                    type="button"
+                                    class="btn-helper px-2 py-1 text-sm"
+                                    @click="filterSongs('instrumental')"
+                                >
+                                    Remove "Instrumental" Tracks
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block md:text-xl mb-2">Custom Ranking Name?</label>
+                            <input
+                                type="text"
+                                class="w-full bg-zinc-100 rounded-lg p-2"
+                                :placeholder="this.name + ' List'"
+                                v-model="rankingName"
+                                maxlength="30"
+                            />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="block mb-2">Show In Explore Feed?</label>
+                            <select class="w-full bg-zinc-100 rounded-lg bg-white p-2" v-model="is_public" required>
+                                <option :value="true" selected>Yes</option>
+                                <option :value="false">No</option>
+                            </select>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-animated p-2 w-full"
+                            @click="beginRanking"
+                        >
+                            <h5 class="text-lg md:text-2xl uppercase cursor-pointer">Begin Ranking</h5>
+                        </button>
+                    </div>
                 </div>
-                <div class="md:w-1/2">
-                    <div class="mt-3 mb-4">
-                        <h5 class="md:text-2xl mb-2">Filters</h5>
-                        <div class="flex flex-wrap gap-2">
-                            <button
-                                type="button"
-                                class="btn-primary px-2 py-1 text-sm"
-                                @click="filterSongs('remix')"
+                <div class="w-full">
+                    <h5 class="md:text-4xl mb-2">Tracks</h5>
+                    
+                    <!-- Songs list -->
+                    <div class="card-scroller" v-auto-animate>
+                        <div v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
+                            <songlistitem
+                                :id="song.id"
+                                :spotifyId="song.spotify_song_id"
+                                :name="song.name"
+                                :cover="song.cover"
+                                :candelete="true"
+                                :spacer="true"
                             >
-                                Remove Remixes
-                            </button>
-                            <button
-                                type="button"
-                                class="btn-secondary px-2 py-1 text-sm"
-                                @click="filterSongs('live from')"
-                            >
-                                Remove "Live From" Tracks
-                            </button>
-                            <button
-                                type="button"
-                                class="btn-helper px-2 py-1 text-sm"
-                                @click="filterSongs('instrumental')"
-                            >
-                                Remove "Instrumental" Tracks
-                            </button>
+                            </songlistitem>
                         </div>
                     </div>
-
-                    <div class="mb-4">
-                        <label class="block md:text-xl mb-2">Custom Ranking Name?</label>
-                        <input
-                            type="text"
-                            class="w-full bg-zinc-100 rounded-lg p-2"
-                            :placeholder="this.name + ' List'"
-                            v-model="rankingName"
-                            maxlength="30"
-                        />
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block mb-2">Show In Explore Feed?</label>
-                        <select class="w-full bg-zinc-100 rounded-lg bg-white p-2" v-model="is_public" required>
-                            <option :value="true" selected>Yes</option>
-                            <option :value="false">No</option>
-                        </select>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn-animated p-2 w-full"
-                        @click="beginRanking"
-                    >
-                        <h5 class="text-lg md:text-2xl uppercase cursor-pointer">Begin Ranking</h5>
-                    </button>
-                </div>
-            </div>
-            <div class="w-full">
-                <h5 class="md:text-4xl mb-2">Tracks</h5>
-                <div class="card-scroller" v-auto-animate>
-                    <div v-for="song in this.artistSongs" :key="song.id" v-auto-animate>
-                        <songlistitem
-                            :id="song.id"
-                            :spotifyId="song.spotify_song_id"
-                            :name="song.name"
-                            :cover="song.cover"
-                            :candelete="true"
-                            :spacer="true"
-                        >
-                        </songlistitem>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div v-else>
-        <div class="m-2 p-2">
-            <img
-                class="shadow-md rounded-4xl m-2"
-                :src="cover"
-                @click="loadSongs"
-                :alt="this.name"
-            >
-            <h5 class="mt-1">{{ this.name }}</h5>
-            <spotify-logo :artist="this.id" />
+        <div v-else>
+            <div class="m-2 p-2">
+                <img
+                    class="shadow-md rounded-4xl m-2"
+                    :src="cover"
+                    @click="loadSongs"
+                    :alt="this.name"
+                >
+                <h5 class="mt-1">{{ this.name }}</h5>
+                <spotify-logo :artist="this.id" />
+            </div>
         </div>
     </div>
+
+    <!-- Loading spinner for artists with a lot of tracks -->
+    <transition name="fade">
+        <div v-if="isLoadingSongs" class="fixed inset-0 flex justify-center items-center z-50">
+            <div class="flex flex-col items-center bg-white bg-opacity-90 backdrop-blur-sm rounded-lg p-8 shadow-xl">
+                <div class="animate-spin rounded-full h-20 w-20 border-4 border-gray-300 border-t-blue-600"></div>
+                <p class="mt-6 text-gray-700 font-medium text-xl">Loading tracks...</p>
+            </div>
+        </div>
+    </transition>
 </template>
 
 <script>
@@ -120,11 +134,14 @@
                 is_public: true,
                 artistSelected: false,
                 artistSongs: [],
+                isLoadingSongs: false,
             }
         },
 
         methods: {
             loadSongs() {
+                this.isLoadingSongs = true;
+                
                 axios.get('/spotify/artist_songs', {
                     params: {
                         'id': this.id
@@ -149,6 +166,9 @@
                 .catch(error => {
                     console.error(error);
                 })
+                .finally(() => {
+                    this.isLoadingSongs = false;
+                });
             },
 
             filterSongs(phrase) {
@@ -244,5 +264,12 @@
     .card-scroller {
         max-height: 80vh;
         overflow-y: auto;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 0.3s ease;
+    }
+    .fade-enter-from, .fade-leave-to {
+        opacity: 0;
     }
 </style>
