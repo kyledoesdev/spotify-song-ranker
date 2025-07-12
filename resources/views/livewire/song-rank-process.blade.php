@@ -1,5 +1,5 @@
 @php 
-    $title = $ranking->is_ranked ? $ranking->name : 'Ranking - ' . $ranking->artist->artist_name; 
+    $title = $ranking->name;
 @endphp
 
 <div>
@@ -10,8 +10,8 @@
                     <h5 class="text-base sm:text-lg md:text-xl font-medium">{{ $ranking->name }}</h5>
                 </div>
                 <div class="flex">
-                    <a onclick="history.back()" class="btn-secondary p-1 sm:p-2 m-1 sm:m-2">
-                        <i class="fa fa-solid fa-arrow-left text-sm sm:text-base"></i>
+                    <a href="{{ auth()->check() ? route('home') : route('explore.index') }}" class="btn-primary p-1 sm:p-2 m-1 sm:m-2">
+                        <i class="fa fa-solid {{ auth()->check() ? 'fa-house' : 'fa-magnifying-glass' }} text-sm sm:text-base"></i>
                     </a>
                     <share />
                 </div>
@@ -19,7 +19,7 @@
             <hr>
         @endif
 
-        @if (!$ranking->is_ranked && !$isComplete)
+        @if (!$ranking->is_ranked)
             <div class="flex justify-center bg-white p-4">
                 <div class="flex items-center space-x-2 k-line">
                     <span class="text-xs sm:text-sm md:text-base whitespace-nowrap font-bold">
@@ -46,7 +46,7 @@
         @endif
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-2 md:px-4 overflow-x-hidden">
-            @if ($ranking->is_ranked || $isComplete)
+            @if ($ranking->is_ranked)
                 <div class="md:col-span-2 w-full m-2" style="max-height: 600px; overflow-y: auto;">
                     <ol>
                         @foreach ($ranking->songs->sortBy('rank') as $song)
@@ -54,13 +54,7 @@
                                 <div class="p-2 md:p-4 mt-4">{{ $song->rank }}.</div>
                                 <div class="flex-1">
                                     <li>
-                                        <songlistitem 
-                                            id="{{ $song->getKey() }}"
-                                            spotifyid="{{ $song->spotify_song_id }}"
-                                            name="{{ $song->title }}" 
-                                            cover="{{ $song->cover }}" 
-                                            :candelete="false"
-                                        ></songlistitem>
+                                        <x-song-ranked-item :song="$song" />
                                     </li>
                                 </div>
                             </div>
@@ -150,7 +144,7 @@
 
         <hr class="my-4" />
         
-        @if (!$ranking->is_ranked && !$isComplete)
+        @if (!$ranking->is_ranked)
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 space-y-3 sm:space-y-0">
                 <span class="text-sm sm:text-base flex items-center">
                     Get Cozy, this may take you a while. Enjoy the process, don't rush.

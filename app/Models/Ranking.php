@@ -144,39 +144,6 @@ class Ranking extends Model
         return $ranking;
     }
 
-    /**
-     * Complete a ranking (legacy method, now handled by Livewire component)
-     */
-    public static function complete($songs, $id): void
-    {
-        $data = [];
-        for ($i = 0; $i < count($songs); $i++) {
-            array_push($data, [
-                'ranking_id' => $id,
-                'spotify_song_id' => $songs[$i]['spotify_song_id'],
-                'uuid' => $songs[$i]['uuid'],
-                'title' => $songs[$i]['title'],
-                'cover' => $songs[$i]['cover'],
-                'rank' => $i + 1,
-                'updated_at' => now(),
-            ]);
-        }
-
-        $ranking = self::find($id);
-
-        DB::transaction(function () use ($ranking, $data) {
-            $ranking->update([
-                'is_ranked' => true, 
-                'completed_at' => now(),
-                'sorting_state' => null
-            ]);
-            
-            Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
-        });
-
-        Log::channel('discord')->info("{$ranking->user->name} completed a ranking: {$ranking->name}.");
-    }
-
     /* scopes */
     public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = null)
     {
