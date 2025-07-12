@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Carbon\Carbon;
-use Exception;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -31,7 +29,7 @@ class Ranking extends Model
 
     protected $appends = [
         'show_route',
-        'formatted_completed_at'
+        'formatted_completed_at',
     ];
 
     protected function casts(): array
@@ -54,6 +52,11 @@ class Ranking extends Model
     public function songs(): HasMany
     {
         return $this->hasMany(Song::class);
+    }
+
+    public function sortingState(): HasOne
+    {
+        return $this->hasOne(RankingSortingState::class, 'ranking_id', 'id');
     }
 
     public function getCompletedAtAttribute()
@@ -79,13 +82,22 @@ class Ranking extends Model
         return route('rank.show', ['id' => $this->getKey()]);
     }
 
+    public function getProgressPercentageAttribute()
+    {
+        if ($this->total_comparisons == 0) {
+            return 0;
+        }
+
+        return intval(($this->completed_comparisons / $this->total_comparisons) * 100);
+    }
+
     /**
      * Start a new ranking.
      */
     public static function start($request): self
     {
         $ranking = DB::transaction(function () use ($request) {
-            /* update or create the artist  */
+            /* update or create the artist */
             $artist = Artist::updateOrCreate([
                 'artist_id' => $request->artist_id,
             ], [
@@ -93,13 +105,18 @@ class Ranking extends Model
                 'artist_img' => $request->artist_img,
             ]);
 
-            /* create a new ranking  */
+            /* create a new ranking */
             $ranking = self::create([
                 'user_id' => auth()->id(),
                 'artist_id' => $artist->getKey(),
-                'name' => Str::limit($request->name ?? $artist->artist_name . ' List', 30),
+                'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
                 'is_public' => $request->is_public ?? false,
+                'total_comparisons' => 0,
+                'completed_comparisons' => 0,
             ]);
+
+            /* create the relation to the ranking's sorted state */
+            $ranking->sortingState()->create();
 
             $songs = [];
             foreach ($request->songs as $song) {
@@ -107,7 +124,7 @@ class Ranking extends Model
                     'ranking_id' => $ranking->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => Str::uuid(),
-                    'title' => $song['name'] ?? 'track deleted from spotify servers', //have to include this null check because fucking kanye west songs can have no title. ya know, because kanye west. thanks a lot
+                    'title' => $song['name'] ?? 'track deleted from spotify servers',
                     'cover' => $song['cover'],
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -120,35 +137,9 @@ class Ranking extends Model
             return $ranking;
         });
 
-        Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
+        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
 
         return $ranking;
-    }
-
-    public static function complete($songs, $id): void
-    {
-        $data = [];
-        for ($i = 0; $i < count($songs); $i++) {
-            array_push($data, [
-                'ranking_id' => $id,
-                'spotify_song_id' => $songs[$i]['spotify_song_id'],
-                'uuid' => $songs[$i]['uuid'],
-                'title' => $songs[$i]['title'],
-                'cover' => $songs[$i]['cover'],
-                'rank' => $i + 1,
-                'updated_at' => now(),
-            ]);
-        }
-
-        $ranking = self::find($id);
-
-        DB::transaction(function () use ($ranking, $data) {
-            $ranking->update(['is_ranked' => true, 'completed_at' => now()]);
-            
-            Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
-        });
-
-        Log::channel('discord')->info("{$ranking->user->name} completed a ranking: {$ranking->name}.");
     }
 
     /* scopes */
@@ -185,7 +176,7 @@ class Ranking extends Model
     public function scopeForReminders(Builder $query)
     {
         $query->newQuery()
-            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at')
+            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at', 'completed_comparisons', 'total_comparisons')
             ->where('is_ranked', false)
             ->with('artist')
             ->withCount('songs');

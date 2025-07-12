@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\EmailTemplate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -9,6 +10,8 @@ use Illuminate\Notifications\Notification;
 class EmailBlastNotification extends Notification
 {
     use Queueable;
+
+    public function __construct(private EmailTemplate $emailTemplate) {}
 
     public function via(object $notifiable): array
     {
@@ -19,7 +22,8 @@ class EmailBlastNotification extends Notification
     {
         return (new MailMessage)->markdown('emails.email-blast', [
             'notifiable' => $notifiable,
-        ])->subject('songrank.dev - Discovery Survey!');
+            'emailTemplate' => $this->emailTemplate,
+        ])->subject($this->emailTemplate->subject);
     }
 
     /**

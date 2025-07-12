@@ -77,7 +77,13 @@
                         const data = response.data;
 
                         if (data && data.message && data.rankings) {
-                            this.flash('Ranking Deleted', data.message, 'success');
+                            this.buildFlash()
+                                .overrideFlashStyles({
+                                    'confirm-btn': 'btn-primary m-2 p-2',
+                                    'cancel-btn': 'btn-secondary m-2 p-2'
+                                })
+                                .flash('Ranking Deleted', data.message, 'success');
+                                
                             this.ranks = data.rankings;
                         }
                     })

@@ -7,7 +7,6 @@ use App\Http\Requests\Rankings\DestroyRankingRequest;
 use App\Http\Requests\Rankings\UpdateRankingRequest;
 use App\Models\Ranking;
 use App\Models\Song;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
@@ -16,18 +15,20 @@ class RankingController extends Controller
     public function show($id): View
     {
         $ranking = Ranking::query()
-            ->with('user', 'songs')
+            ->with(['user', 'songs', 'artist', 'sortingState'])
             ->findOrFail($id);
 
-        // if ranking is not complete && the ranking doesn't belong to auth user abort
+        if (! $ranking->is_public && $ranking->user_id != auth()->id()) {
+            abort(404);
+        }
+
         if (! $ranking->is_ranked && $ranking->user_id != auth()->id()) {
             abort(403, 'This ranking is not complete. You can not view it.');
         }
 
         return view('rank.show', [
-            'songs' => $ranking->songs,
             'ranking' => $ranking,
-            'creator' => $ranking->user->name,
+            'sortingState' => $ranking->sortingState,
         ]);
     }
 
@@ -37,7 +38,7 @@ class RankingController extends Controller
 
         return response()->json([
             'redirect' => route('rank.show', [
-                'id' => $ranking->getKey()
+                'id' => $ranking->getKey(),
             ]),
         ], 200);
     }
@@ -78,7 +79,7 @@ class RankingController extends Controller
             'message' => 'Your ranking has been deleted.',
             'rankings' => Ranking::query()
                 ->forProfilePage(auth()->user())
-                ->get()
+                ->get(),
         ], 200);
     }
 }
