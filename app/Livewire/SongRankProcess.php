@@ -13,14 +13,19 @@ use Livewire\Component;
 class SongRankProcess extends Component
 {
     public Ranking $ranking;
+
     public RankingSortingState $sortingState;
-    
+
     public array $currentSong1 = [];
+
     public array $currentSong2 = [];
+
     public bool $showEmbeds = true;
+
     public bool $isProcessing = false;
+
     public int $progressPercentage = 0;
-    
+
     protected $listeners = ['toggleEmbeds'];
 
     public function mount(): void
@@ -35,7 +40,7 @@ class SongRankProcess extends Component
         if (! $this->sortingState->sorting_state) {
             $this->startNewSorting();
         }
-        
+
         $this->updateProgress();
         $this->continueSort();
     }
@@ -46,9 +51,9 @@ class SongRankProcess extends Component
             ->inRandomOrder()
             ->pluck('id')
             ->toArray();
-            
+
         $songsCount = count($songIds);
-        
+
         $this->sortingState->update([
             'sorting_state' => [
                 'stack' => [
@@ -57,26 +62,27 @@ class SongRankProcess extends Component
                         'ids' => $songIds,
                         'start' => 0,
                         'end' => $songsCount - 1,
-                        'depth' => 0
-                    ]
+                        'depth' => 0,
+                    ],
                 ],
                 'current_merge' => null,
-                'completed_segments' => []
+                'completed_segments' => [],
             ],
             'aprox_comparisons' => $songsCount > 1 ? intval($songsCount * log($songsCount, 2)) : 0,
-            'completed_comparisons' => 0
+            'completed_comparisons' => 0,
         ]);
     }
 
     protected function continueSort(): void
     {
         $state = $this->sortingState->fresh()->sorting_state;
-        
+
         if ($state['current_merge']) {
             $this->processMerge();
+
             return;
         }
-        
+
         while ($task = array_pop($state['stack'])) {
             if ($task['type'] === 'sort') {
                 $this->handleSortTask($task, $state);
@@ -86,14 +92,15 @@ class SongRankProcess extends Component
                 $state['current_merge'] = $task;
                 $this->sortingState->update(['sorting_state' => $state]);
                 $this->processMerge();
+
                 return;
             }
         }
-        
+
         // Check for completion
         if (empty($state['stack']) && ! $state['current_merge']) {
-            $finalKey = "0-" . (count($this->ranking->songs) - 1);
-            
+            $finalKey = '0-'.(count($this->ranking->songs) - 1);
+
             if (isset($state['completed_segments'][$finalKey])) {
                 $this->complete($state['completed_segments'][$finalKey]);
             }
@@ -103,17 +110,18 @@ class SongRankProcess extends Component
     protected function handleSortTask(array $task, array &$state): void
     {
         ['start' => $start, 'end' => $end, 'ids' => $ids, 'depth' => $depth] = $task;
-        
+
         if ($start >= $end) {
             $state['completed_segments']["{$start}-{$end}"] = array_slice($ids, $start, max(1, $end - $start + 1));
             $this->sortingState->update(['sorting_state' => $state]);
+
             return;
         }
-        
+
         $mid = intval(($start + $end) / 2);
-        
+
         /* Push tasks in reverse order (LIFO) */
-        array_push($state['stack'], 
+        array_push($state['stack'],
             [
                 'type' => 'merge',
                 'ids' => $ids,
@@ -121,25 +129,25 @@ class SongRankProcess extends Component
                 'mid' => $mid,
                 'end' => $end,
                 'left_key' => "{$start}-{$mid}",
-                'right_key' => ($mid + 1) . "-{$end}",
-                'depth' => $depth + 1
+                'right_key' => ($mid + 1)."-{$end}",
+                'depth' => $depth + 1,
             ],
             [
                 'type' => 'sort',
                 'ids' => $ids,
                 'start' => $mid + 1,
                 'end' => $end,
-                'depth' => $depth + 1
+                'depth' => $depth + 1,
             ],
             [
                 'type' => 'sort',
                 'ids' => $ids,
                 'start' => $start,
                 'end' => $mid,
-                'depth' => $depth + 1
+                'depth' => $depth + 1,
             ]
         );
-        
+
         $this->sortingState->update(['sorting_state' => $state]);
     }
 
@@ -147,39 +155,40 @@ class SongRankProcess extends Component
     {
         $state = $this->sortingState->fresh()->sorting_state;
         $merge = $state['current_merge'] ?? null;
-        
+
         if (is_null($merge)) {
             $this->continueSort();
+
             return;
         }
-        
+
         if (! isset($merge['left_ids'])) {
             $merge = array_merge($merge, [
                 'left_ids' => array_values($state['completed_segments'][$merge['left_key']] ?? []),
                 'right_ids' => array_values($state['completed_segments'][$merge['right_key']] ?? []),
-                'result_ids' => []
+                'result_ids' => [],
             ]);
-            
+
             $state['current_merge'] = $merge;
             $this->sortingState->update(['sorting_state' => $state]);
             $state = $this->sortingState->fresh()->sorting_state;
             $merge = $state['current_merge'];
         }
-        
+
         if (filled($merge['left_ids']) && filled($merge['right_ids'])) {
             $songs = $this->ranking->songs
                 ->whereIn('id', [$merge['left_ids'][0], $merge['right_ids'][0]])
                 ->keyBy('id');
-            
+
             $this->currentSong1 = $songs[$merge['left_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']);
             $this->currentSong2 = $songs[$merge['right_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']);
         } else {
             $result = [...$merge['result_ids'], ...$merge['left_ids'], ...$merge['right_ids']];
             $key = "{$merge['start']}-{$merge['end']}";
-            
+
             $state['completed_segments'][$key] = $result;
             $state['current_merge'] = null;
-            
+
             $this->sortingState->update(['sorting_state' => $state]);
             $this->continueSort();
         }
@@ -196,31 +205,31 @@ class SongRankProcess extends Component
         try {
             $state = $this->sortingState->fresh()->sorting_state;
             $merge = $state['current_merge'] ?? null;
-            
+
             if (is_null($merge)) {
                 return;
             }
-            
+
             if (! in_array($songId, [$this->currentSong1['id'], $this->currentSong2['id']])) {
                 return;
             }
 
             $chosenFromLeft = $songId === $this->currentSong1['id'];
-            
-            $merge['result_ids'][] = $chosenFromLeft 
+
+            $merge['result_ids'][] = $chosenFromLeft
                 ? array_shift($merge['left_ids'])
                 : array_shift($merge['right_ids']);
-            
+
             $state['current_merge'] = $merge;
-            
+
             DB::transaction(function () use ($state) {
                 $this->sortingState->increment('completed_comparisons');
                 $this->sortingState->update(['sorting_state' => $state]);
             });
-            
+
             $this->updateProgress();
             $this->processMerge();
-            
+
         } catch (Exception $e) {
             Log::error('Error in chooseSong', ['error' => $e->getMessage()]);
         } finally {
@@ -232,8 +241,8 @@ class SongRankProcess extends Component
     {
         $total = $this->sortingState->aprox_comparisons;
         $completed = $this->sortingState->completed_comparisons;
-        
-        $this->progressPercentage = $total > 0 
+
+        $this->progressPercentage = $total > 0
             ? min(100, intval(($completed / $total) * 100))
             : 0;
     }
@@ -253,7 +262,7 @@ class SongRankProcess extends Component
             ]);
 
             /* map the songs and upsert them */
-            $data = collect($finalSongIds)->map(function($id, $index) {
+            $data = collect($finalSongIds)->map(function ($id, $index) {
                 $song = $this->ranking->songs->firstWhere('id', $id);
 
                 return [
@@ -262,8 +271,8 @@ class SongRankProcess extends Component
                     'uuid' => $song->uuid,
                     'title' => $song->title,
                     'cover' => $song->cover,
-                    'rank' => $index + 1, 
-                    'updated_at' => now()
+                    'rank' => $index + 1,
+                    'updated_at' => now(),
                 ];
             })->toArray();
 
@@ -272,7 +281,7 @@ class SongRankProcess extends Component
 
         $this->ranking->refresh();
         $this->sortingState->refresh();
-        
+
         Log::channel('discord')->info("{$this->ranking->user->name} completed a ranking: {$this->ranking->name}");
     }
 

@@ -22,7 +22,7 @@ class EmailBlastNotification extends Notification
     {
         return (new MailMessage)->markdown('emails.email-blast', [
             'notifiable' => $notifiable,
-            'emailTemplate' => $this->emailTemplate
+            'emailTemplate' => $this->emailTemplate,
         ])->subject($this->emailTemplate->subject);
     }
 

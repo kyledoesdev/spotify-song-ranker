@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('uuid')->nullable()->after('spotify_song_id');
         });
 
-        DB::transaction(function () {            
+        DB::transaction(function () {
             Song::query()->withTrashed()->chunk(1000, function ($songs) {
                 $songs->each(fn (Song $song) => $song->update(['uuid' => Str::uuid()]));
             });

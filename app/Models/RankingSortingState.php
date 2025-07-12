@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RankingSortingState extends Model
@@ -11,7 +10,7 @@ class RankingSortingState extends Model
         'ranking_id',
         'sorting_state',
         'aprox_comparisons',
-        'completed_comparisons'
+        'completed_comparisons',
     ];
 
     protected function casts(): array

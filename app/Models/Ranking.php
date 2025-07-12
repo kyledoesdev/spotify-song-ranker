@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Carbon\Carbon;
-use Exception;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -31,7 +29,7 @@ class Ranking extends Model
 
     protected $appends = [
         'show_route',
-        'formatted_completed_at'
+        'formatted_completed_at',
     ];
 
     protected function casts(): array
@@ -99,7 +97,7 @@ class Ranking extends Model
     public static function start($request): self
     {
         $ranking = DB::transaction(function () use ($request) {
-            /* update or create the artist  */
+            /* update or create the artist */
             $artist = Artist::updateOrCreate([
                 'artist_id' => $request->artist_id,
             ], [
@@ -107,11 +105,11 @@ class Ranking extends Model
                 'artist_img' => $request->artist_img,
             ]);
 
-            /* create a new ranking  */
+            /* create a new ranking */
             $ranking = self::create([
                 'user_id' => auth()->id(),
                 'artist_id' => $artist->getKey(),
-                'name' => Str::limit($request->name ?? $artist->artist_name . ' List', 30),
+                'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
                 'is_public' => $request->is_public ?? false,
                 'total_comparisons' => 0,
                 'completed_comparisons' => 0,
@@ -139,7 +137,7 @@ class Ranking extends Model
             return $ranking;
         });
 
-        Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
+        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
 
         return $ranking;
     }
@@ -182,19 +180,6 @@ class Ranking extends Model
             ->where('is_ranked', false)
             ->with('artist')
             ->withCount('songs');
-    }
-
-    public function scopeInProgress(Builder $query)
-    {
-        $query->where('is_ranked', false)
-            ->whereNotNull('sorting_state');
-    }
-
-    public function scopeAbandoned(Builder $query, $days = 7)
-    {
-        $query->where('is_ranked', false)
-            ->whereNotNull('sorting_state')
-            ->where('updated_at', '<', now()->subDays($days));
     }
 
     /* -- Filament Admin Functions -- */

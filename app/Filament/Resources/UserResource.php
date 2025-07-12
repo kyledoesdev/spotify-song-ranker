@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Filament\Resources\UserResource\RelationManagers\PreferencesRelationManager;
 use App\Filament\Resources\UserResource\RelationManagers\RankingsRelationManager;
 use App\Models\User;
@@ -19,8 +18,6 @@ use Filament\Resources\RelationManagers\RelationGroup;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
 {
@@ -82,7 +79,7 @@ class UserResource extends Resource
             ->filters([])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                //Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([]);
     }
@@ -122,7 +119,7 @@ class UserResource extends Resource
                                             ->inUserTimezone()
                                             ->format('m/d/Y g:i A T');
                                     }),
-                            ])
+                            ]),
                     ]),
             ]);
     }
@@ -133,7 +130,7 @@ class UserResource extends Resource
             RelationGroup::make('', [
                 RankingsRelationManager::class,
                 PreferencesRelationManager::class,
-            ])
+            ]),
         ];
     }
 
