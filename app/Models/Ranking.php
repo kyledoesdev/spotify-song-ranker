@@ -176,7 +176,7 @@ class Ranking extends Model
     public function scopeForReminders(Builder $query)
     {
         $query->newQuery()
-            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at', 'completed_comparisons', 'total_comparisons')
+            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at')
             ->where('is_ranked', false)
             ->with('artist')
             ->withCount('songs');
