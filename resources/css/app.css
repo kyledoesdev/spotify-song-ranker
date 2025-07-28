@@ -9,6 +9,28 @@ layer(base);
   --font-sans: 'Poppins', sans-serif;
 }
 
+@utility btn-primary {
+  @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-secondary {
+  @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-helper {
+  @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-danger {
+  @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-animated {
+  @apply rounded-xl shadow-md bg-linear-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
+  background-size: 400% 400%;
+  animation: gradientAnimation 20s linear infinite;
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -69,25 +91,3 @@ layer(base);
       }
     }
   }
-
-@utility btn-primary {
-  @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-secondary {
-  @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-helper {
-  @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-danger {
-  @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-animated {
-    @apply rounded-xl shadow-md bg-gradient-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
-    background-size: 400% 400%;
-    animation: gradientAnimation 20s linear infinite;
-}

@@ -8,7 +8,7 @@
             <div 
                 v-for="(artist, index) in duplicatedArtists" 
                 :key="index" 
-                class="artist-slide flex-shrink-0 px-2"
+                class="artist-slide shrink-0 px-2"
             >
                 <img 
                     :src="artist.artist_img" 

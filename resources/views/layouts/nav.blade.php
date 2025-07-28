@@ -37,7 +37,7 @@
                     class="flex items-center px-2 gap-2 rounded-md cursor-pointer"
                 >
                     <img
-                        class="hidden md:block md:w-8 md:h-8 md:rounded-xl md:border-1 md:border-zinc-900" 
+                        class="hidden md:block md:w-8 md:h-8 md:rounded-xl md:border md:border-zinc-900" 
                         src="{{ auth()->user()->avatar }}" 
                         alt="User Actions"
                     />
