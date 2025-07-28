@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <div>
         <div class="mb-4">
             @include('layouts.nav')
@@ -24,4 +22,4 @@
         >
         </dashboard>
     </div>
-@endsection
+</x-app-layout>

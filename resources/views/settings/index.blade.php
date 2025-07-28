@@ -1,10 +1,8 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <div>
         @include('layouts.nav', ['title' => 'Settings & Preferences'])
     </div>
     <div>
         <settings :preferences="{{ auth()->user()->preferences }}" />
     </div>
-@endsection
+</x-app-layout>

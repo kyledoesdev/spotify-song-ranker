@@ -1,10 +1,8 @@
-@extends('layouts.app')
-
-@section('content')
+<x-guest-layout>
     @include('layouts.nav')
     
     <livewire:song-rank-process
         :ranking="$ranking"
         :sortingState="$sortingState"
     />
-@endsection
+</x-guest-layout>

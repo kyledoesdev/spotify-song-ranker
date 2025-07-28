@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-guest-layout>
     @include('layouts.nav')
 
     <profile 
@@ -8,4 +6,4 @@
         :rankings="{{ $rankings }} "
         name="{{ $name }}"
     />
-@endsection
+</x-guest-layout>

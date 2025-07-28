@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     @include('layouts.nav')
 
     <div class="mb-4">
         <editranking :ranking="{{ $ranking }}" />
     </div>
-@endsection
+</x-app-layout>

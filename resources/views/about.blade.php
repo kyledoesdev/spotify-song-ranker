@@ -1,9 +1,7 @@
-@extends('layouts.app')
-
-@section('content')
+<x-guest-layout>
     @include('layouts.nav', ['title' => 'About Song Rank'])
 
     <div class="mt-4">
         <about />
     </div>
-@endsection
+</x-guest-layout>

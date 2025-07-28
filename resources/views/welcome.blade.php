@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-guest-layout>
     @php
         $artists = App\Models\Artist::query()->topArtists()->get();
         $artistCount = round($artists->count() / 25) * 25;
@@ -16,4 +14,4 @@
             :rankings="{{ $rankings }}"
         />
     </div>
-@endsection
+</x-guest-layout>
