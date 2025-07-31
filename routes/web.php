@@ -45,9 +45,6 @@ Route::middleware(['auth'])->group(function () {
     /* Ranking Export */
     Route::get('/ranking-download', [RankingDownloadController::class, 'index'])->name('ranking-download.index');
 
-    /* Song Placement */
-    Route::post('/song-placement/store', [SongPlacementController::class, 'store'])->name('song-placement.store');
-
     /* Settings */
     Route::get('/settings', Settings::class)->name('settings');
 

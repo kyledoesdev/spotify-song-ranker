@@ -21,6 +21,8 @@
 
         <!-- Fonts -->
         <script src="https://kit.fontawesome.com/07b7751319.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -29,9 +31,12 @@
         <main class="flex-1" id="app">
             <div class="container mx-auto p-4">
                 @include('layouts.partials.messages')
-                @auth
+                
+                {{-- todo this sucks --}}
+                @if (auth()->check() && ! in_array(get_route(), ['welcome', 'about']))
                     @include('layouts.nav')
-                @endauth
+                @endif
+
                 {{ $slot }}
             </div>
         </main>

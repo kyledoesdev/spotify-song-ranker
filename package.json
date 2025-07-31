@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@formkit/auto-animate": "^0.8.1",
+        "@tailwindcss/typography": "^0.5.16",
         "@tailwindcss/vite": "^4.1.11",
         "alpinejs": "^3.14.1",
         "mitt": "^3.0.1",
