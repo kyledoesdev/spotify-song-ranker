@@ -1,4 +1,6 @@
 import './bootstrap';
+import './alerts';
+
 import mitt from 'mitt';
 import { createApp } from 'vue';
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue';
@@ -8,15 +10,9 @@ import Globals from './modules/globals';
 import Alerts from './modules/alerts';
 
 /* Components */
-import Welcome from './components/Welcome/Welcome.vue';
-import ArtistSlideShow from './components/Welcome/ArtistSlideShow.vue';
-import Stats from './components/Welcome/Stats.vue';
-import About from './components/About.vue';
-import Settings from './components/Settings.vue';
 import Dashboard from './components/Dashboard.vue';
 import RankingSetup from './components/RankSetup/RankingSetup.vue';
 import SongListItem from './components/RankSetup/SongListItem.vue';
-import Profile from './components/Profile.vue';
 import EditRanking from './components/RankSetup/EditRanking.vue';
 import Logo from './components/Spotify/Logo.vue';
 import Share from './components/Share.vue';
@@ -40,15 +36,9 @@ app.mixin(Alerts);
 
 app.use(autoAnimatePlugin);
 
-app.component('welcome', Welcome);
-app.component('artistslideshow', ArtistSlideShow);
-app.component('welcomestats', Stats);
-app.component('about', About);
-app.component('settings', Settings);
 app.component('dashboard', Dashboard);
 app.component('rankingsetup', RankingSetup);
 app.component('songlistitem', SongListItem);
-app.component('profile', Profile);
 app.component('editranking', EditRanking);
 app.component('spotify-logo', Logo);
 app.component('share', Share);

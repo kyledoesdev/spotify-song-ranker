@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Rankings\CreateRankingRequest;
-use App\Http\Requests\Rankings\DestroyRankingRequest;
 use App\Http\Requests\Rankings\UpdateRankingRequest;
 use App\Models\Ranking;
 use App\Models\Song;
@@ -66,20 +65,7 @@ class RankingController extends Controller
         session()->flash('success', 'Ranking was succesfully updated!');
 
         return response()->json([
-            'redirect' => route('profile.show', ['id' => auth()->user()->spotify_id]),
-        ], 200);
-    }
-
-    public function destroy(DestroyRankingRequest $request): JsonResponse
-    {
-        Ranking::findOrFail($request->rankingId)->delete();
-        Song::where('ranking_id', $request->rankingId)->delete();
-
-        return response()->json([
-            'message' => 'Your ranking has been deleted.',
-            'rankings' => Ranking::query()
-                ->forProfilePage(auth()->user())
-                ->get(),
+            'redirect' => route('profile', ['id' => auth()->user()->spotify_id]),
         ], 200);
     }
 }

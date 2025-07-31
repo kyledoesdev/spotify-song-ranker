@@ -1,7 +1,7 @@
-<div class="flex justify-between shadow-md bg-white rounded-lg p-4">
+<div class="flex justify-between shadow-md bg-white rounded-lg py-4">
     <div>
         <a href="{{ auth()->check() ? route('home') : route('welcome') }}">
-            <h5 class="text-xs md:text-base lg:text-xl">songrank 🎵</h5>
+            <h5 class="text-xs md:text-base lg:text-xl p-1 mx-3">songrank 🎵</h5>
         </a>
     </div>
     <div>
@@ -58,7 +58,7 @@
 							Home
 						</a>
 					@endif
-					<a href="{{ route('profile.show', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+					<a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
 						Profile
 					</a>
 					@if (get_route() != 'explore.index')
@@ -66,8 +66,8 @@
 							Explore
 						</a>
 					@endif
-					@if (get_route() != 'settings.index')
-						<a href="{{ route('settings.index') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+					@if (get_route() != 'settings')
+						<a href="{{ route('settings') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
 							Settings
 						</a>
 					@endif

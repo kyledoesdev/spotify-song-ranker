@@ -9,17 +9,21 @@ use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
 use App\Http\Controllers\UserSettingsController;
 use App\Http\Middleware\IsDeveloper;
+use App\Livewire\About;
+use App\Livewire\Profile;
+use App\Livewire\Settings;
+use App\Livewire\Welcome;
 use Illuminate\Support\Facades\Route;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
-Route::view('/', 'welcome')->name('welcome');
-Route::view('/about', 'about')->name('about');
+Route::get('/', Welcome::class)->name('welcome');
+Route::get('/about', About::class)->name('about');
 
 Route::view('/explore', [ExploreController::class, 'explore.index'])->name('explore.index');
 Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 
 Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
-Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('/profile/{id}', Profile::class)->name('profile');
 
 Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');
 Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
@@ -45,9 +49,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/song-placement/store', [SongPlacementController::class, 'store'])->name('song-placement.store');
 
     /* Settings */
-    Route::view('/settings', 'settings.index')->name('settings.index');
-    Route::post('/settings/update', [UserSettingsController::class, 'update'])->name('settings.update');
-    Route::post('/settings/destroy', [UserSettingsController::class, 'destroy'])->name('settings.destroy');
+    Route::get('/settings', Settings::class)->name('settings');
 
     Route::supportBubble();
 

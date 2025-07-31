@@ -1,9 +1,5 @@
 <x-app-layout>
-    <div>
-        <div class="mb-4">
-            @include('layouts.nav')
-        </div>
-
+    <div class="mt-4">
         @php
             $inProgressRankings = App\Models\Ranking::query()
                 ->where('user_id', auth()->id())

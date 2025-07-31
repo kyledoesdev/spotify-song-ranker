@@ -90,4 +90,22 @@ layer(base);
         background-position: 100% 50%;
       }
     }
+
+    @keyframes slideLeft {
+      0% { 
+          transform: translateX(0); 
+      }
+      100% { 
+          transform: translateX(-25%); 
+      }
+    }
+  
+  @keyframes slideRight {
+      0% { 
+          transform: translateX(-25%); 
+      }
+      100% { 
+          transform: translateX(0); 
+      }
+    }
   }

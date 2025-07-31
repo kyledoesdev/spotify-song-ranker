@@ -29,6 +29,9 @@
         <main class="flex-1" id="app">
             <div class="container mx-auto p-4">
                 @include('layouts.partials.messages')
+                @auth
+                    @include('layouts.nav')
+                @endauth
                 {{ $slot }}
             </div>
         </main>
