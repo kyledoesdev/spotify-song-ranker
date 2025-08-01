@@ -17,7 +17,7 @@ class RankingController extends Controller
             ->with(['user', 'songs', 'artist', 'sortingState'])
             ->findOrFail($id);
 
-        if (! $ranking->is_public && $ranking->user_id != auth()->id()) {
+        if (! $ranking->isPublic()) {
             abort(404);
         }
 

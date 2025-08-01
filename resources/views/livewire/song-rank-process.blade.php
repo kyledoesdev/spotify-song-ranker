@@ -4,64 +4,32 @@
 
 <div>
     <div class="pl-4 pr-4 bg-white shadow-lg rounded-lg mt-4">
-        @if ($ranking->is_ranked)
-            <div class="flex justify-between items-center">
-                <div>
-                    <h5 class="text-base sm:text-lg md:text-xl font-medium">{{ $ranking->name }}</h5>
-                </div>
-                <div class="flex">
-                    <a href="{{ auth()->check() ? route('home') : route('explore.index') }}" class="btn-primary p-1 sm:p-2 m-1 sm:m-2">
-                        <i class="fa fa-solid {{ auth()->check() ? 'fa-house' : 'fa-magnifying-glass' }} text-sm sm:text-base"></i>
-                    </a>
-                    <share />
-                </div>
+        <div class="flex justify-center bg-white p-4">
+            <div class="flex items-center space-x-2 k-line">
+                <span class="text-xs sm:text-sm md:text-base whitespace-nowrap font-bold">
+                    Progress will be saved automatically as you rank!
+                </span>
             </div>
-            <hr>
-        @endif
+        </div>
 
-        @if (!$ranking->is_ranked)
-            <div class="flex justify-center bg-white p-4">
-                <div class="flex items-center space-x-2 k-line">
-                    <span class="text-xs sm:text-sm md:text-base whitespace-nowrap font-bold">
-                        Progress will be saved automatically as you rank!
-                    </span>
-                </div>
+        <!-- Progress Bar -->
+        <div class="px-4 py-2">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium">Progress</span>
+                <span class="text-sm text-gray-600">{{ $progressPercentage }}%</span>
             </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                    style="width: {{ $progressPercentage }}%"></div>
+            </div>
+        </div>
 
-            <!-- Progress Bar -->
-            <div class="px-4 py-2">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm font-medium">Progress</span>
-                    <span class="text-sm text-gray-600">{{ $progressPercentage }}%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-2">
-                    <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                        style="width: {{ $progressPercentage }}%"></div>
-                </div>
-            </div>
-
-            <div class="flex justify-center mb-4 md:mb-8 px-4">
-                <span class="text-center">Directions: click on the song title button for the song you like more.</span>
-            </div>
-        @endif
+        <div class="flex justify-center mb-4 md:mb-8 px-4">
+            <span class="text-center">Directions: click on the song title button for the song you like more.</span>
+        </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-2 md:px-4 overflow-x-hidden">
-            @if ($ranking->is_ranked)
-                <div class="md:col-span-2 w-full m-2" style="max-height: 600px; overflow-y: auto;">
-                    <ol>
-                        @foreach ($ranking->songs->sortBy('rank') as $song)
-                            <div class="flex">
-                                <div class="p-2 md:p-4 mt-4">{{ $song->rank }}.</div>
-                                <div class="flex-1">
-                                    <li>
-                                        <x-song-ranked-item :song="$song" />
-                                    </li>
-                                </div>
-                            </div>
-                        @endforeach
-                    </ol>
-                </div>
-            @elseif($currentSong1 && $currentSong2)
+            @if($currentSong1 && $currentSong2)
                 <div class="w-full overflow-x-hidden">
                     <div class="w-full flex flex-col">
                         @if ($showEmbeds)
@@ -144,24 +112,22 @@
 
         <hr class="my-4" />
         
-        @if (!$ranking->is_ranked)
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 space-y-3 sm:space-y-0">
-                <span class="text-sm sm:text-base flex items-center">
-                    Get Cozy, this may take you a while. Enjoy the process, don't rush.
-                    <i class="fa-solid fa-mug-saucer ml-2"></i>
-                </span>
-                <div class="flex items-center">
-                    <label class="flex items-center cursor-pointer select-none">
-                        <input 
-                            type="checkbox" 
-                            wire:model.live="showEmbeds"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
-                        >
-                        <span class="ml-2 text-sm sm:text-base text-gray-700">Toggle Spotify Players</span>
-                    </label>
-                </div>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 space-y-3 sm:space-y-0">
+            <span class="text-sm sm:text-base flex items-center">
+                Get Cozy, this may take you a while. Enjoy the process, don't rush.
+                <i class="fa-solid fa-mug-saucer ml-2"></i>
+            </span>
+            <div class="flex items-center">
+                <label class="flex items-center cursor-pointer select-none">
+                    <input 
+                        type="checkbox" 
+                        wire:model.live="showEmbeds"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
+                    >
+                    <span class="ml-2 text-sm sm:text-base text-gray-700">Toggle Spotify Players</span>
+                </label>
             </div>
-        @endif
+        </div>
     </div>
 </div>
 

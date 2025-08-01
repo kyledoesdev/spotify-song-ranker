@@ -34,7 +34,7 @@
                 
                 {{-- todo this sucks --}}
                 @if (auth()->check() && ! in_array(get_route(), ['welcome', 'about']))
-                    @include('layouts.nav')
+                    <livewire:navigation />
                 @endif
 
                 {{ $slot }}

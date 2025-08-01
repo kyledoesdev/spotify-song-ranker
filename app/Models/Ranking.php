@@ -91,6 +91,17 @@ class Ranking extends Model
         return intval(($this->completed_comparisons / $this->total_comparisons) * 100);
     }
 
+    public function isPublic(): bool
+    {
+        $user = auth()->check() ? auth()->user() : null;
+
+        if (is_null($user) && $this->is_public) {
+            return true;
+        }
+
+        return $this->is_public || ($user && $user->is_dev); //allow admin view of private rankings
+    }
+
     /**
      * Start a new ranking.
      */
