@@ -6,6 +6,7 @@ use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class SpotifyAPIController extends Controller
 {
@@ -19,14 +20,14 @@ class SpotifyAPIController extends Controller
         $this->errorMsg = "Something went wrong authenticating with Spotify's servers. Please log out and log back in.";
     }
 
-    public function search(Request $request): JsonResponse
+    public function search(string $searchTerm): ?Collection
     {
         $this->refreshToken();
 
         try {
             $response = $this->client->request(
                 'GET',
-                "https://api.spotify.com/v1/search?q={$request->artist}&type=artist&limit=10", [
+                "https://api.spotify.com/v1/search?q={$searchTerm}&type=artist&limit=10", [
                     'headers' => [
                         'Authorization' => 'Bearer '.auth()->user()->external_token,
                         'Content-Type' => 'application/json',
@@ -48,17 +49,13 @@ class SpotifyAPIController extends Controller
                 }
             });
         } catch (Exception) {
-            return response()->json([
-                'message' => $this->errorMsg,
-            ], 500);
+            return null;
         }
 
-        return response()->json([
-            'artists' => $artists,
-        ], 200);
+        return $artists;
     }
 
-    public function artistSongs(Request $request): JsonResponse
+    public function artistSongs(string $artistId): Collection|string|null
     {
         $this->refreshToken();
 
@@ -66,7 +63,7 @@ class SpotifyAPIController extends Controller
             // first get the total number of artist albums
             $response = $this->client->request(
                 'GET',
-                "https://api.spotify.com/v1/artists/{$request->id}/albums?include_groups=album,single&limit=50", [
+                "https://api.spotify.com/v1/artists/{$artistId}/albums?include_groups=album,single&limit=50", [
                     'headers' => [
                         'Authorization' => 'Bearer '.auth()->user()->external_token,
                         'Content-Type' => 'application/json',
@@ -81,7 +78,7 @@ class SpotifyAPIController extends Controller
             for ($i = 0; $i < round($totalAlbumCount / 50, 2, PHP_ROUND_HALF_UP); $i++) {
                 $response = $this->client->request(
                     'GET',
-                    "https://api.spotify.com/v1/artists/{$request->id}/albums?include_groups=album,single&limit=50&offset={$offset}", [
+                    "https://api.spotify.com/v1/artists/{$artistId}/albums?include_groups=album,single&limit=50&offset={$offset}", [
                         'headers' => [
                             'Authorization' => 'Bearer '.auth()->user()->external_token,
                             'Content-Type' => 'application/json',
@@ -127,15 +124,11 @@ class SpotifyAPIController extends Controller
             // filter duplicate songs, like if a song is on an album and single.
             $songs = $songs->groupBy('name')->map->first();
 
-        } catch (Exception) {
-            return response()->json([
-                'message' => $this->errorMsg,
-            ], 500);
+        } catch (Exception $e) {
+            dd($e->getMessage());
         }
 
-        return response()->json([
-            'songs' => $songs,
-        ], 200);
+        return $songs;
     }
 
     public function refreshToken()

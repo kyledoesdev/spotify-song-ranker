@@ -2,12 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Models\Ranking;
+use App\Models\Ranking as RankingModel;
 use Livewire\Component;
 
-class SongRanking extends Component
+class Ranking extends Component
 {
-    public Ranking $ranking;
+    public RankingModel $ranking;
 
     public function render()
     {

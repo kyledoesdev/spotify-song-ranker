@@ -136,4 +136,13 @@
             background-position: 100% 50%;
         }
     }
+
+    img {
+        cursor: pointer;
+    }
+
+    .card-scroller {
+        max-height: 80vh;
+        overflow-y: auto;
+    }
 }

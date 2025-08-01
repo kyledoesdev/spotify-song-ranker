@@ -41,6 +41,7 @@ class Settings extends Component
                 message: 'Are you sure you want to delete your account? By deleting your account, we will email you one last email with your ranking records & then delete them & your account. Are you sure you want to go?',
                 confirmText: 'It's time for me to go.',
                 entityId: " . auth()->id() . ",
+                componentId: '{$this->getId()}',
                 action: 'destroy'
             });
         ");

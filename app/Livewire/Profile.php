@@ -35,11 +35,12 @@ class Profile extends Component
     public function confirmDestroy($rankingId)
     {
         $this->js("
-            window.confirmDelete({
-                entityId: {$rankingId},
+            window.confirm({
                 title: 'Delete Ranking?',
                 message: 'Are you sure you want to delete this ranking?',
-                confirmText: 'Delete'
+                confirmText: 'Delete',
+                entityId: {$rankingId},
+                componentId: '{$this->getId()}',
             });
         ");
     }

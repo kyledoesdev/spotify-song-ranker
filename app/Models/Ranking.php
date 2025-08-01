@@ -12,9 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class Ranking extends Model
 {
@@ -100,57 +97,6 @@ class Ranking extends Model
         }
 
         return $this->is_public || ($user && $user->is_dev); //allow admin view of private rankings
-    }
-
-    /**
-     * Start a new ranking.
-     */
-    public static function start($request): self
-    {
-        $ranking = DB::transaction(function () use ($request) {
-            /* update or create the artist */
-            $artist = Artist::updateOrCreate([
-                'artist_id' => $request->artist_id,
-            ], [
-                'artist_name' => $request->artist_name,
-                'artist_img' => $request->artist_img,
-            ]);
-
-            /* create a new ranking */
-            $ranking = self::create([
-                'user_id' => auth()->id(),
-                'artist_id' => $artist->getKey(),
-                'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
-                'is_public' => $request->is_public ?? false,
-                'total_comparisons' => 0,
-                'completed_comparisons' => 0,
-            ]);
-
-            /* create the relation to the ranking's sorted state */
-            $ranking->sortingState()->create();
-
-            $songs = [];
-            foreach ($request->songs as $song) {
-                array_push($songs, [
-                    'ranking_id' => $ranking->getKey(),
-                    'spotify_song_id' => $song['id'],
-                    'uuid' => Str::uuid(),
-                    'title' => $song['name'] ?? 'track deleted from spotify servers',
-                    'cover' => $song['cover'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-
-            /* batch insert the song records */
-            Song::insert($songs);
-
-            return $ranking;
-        });
-
-        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
-
-        return $ranking;
     }
 
     /* scopes */

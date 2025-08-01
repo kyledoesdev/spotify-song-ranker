@@ -16,7 +16,7 @@ class LivewireSweetAlert {
         window.flash = this.flash.bind(this);
     }
 
-    async confirm({ title, message, confirmText, entityId = null, styles = {}, action = null }) {
+    async confirm({ title, message, confirmText, componentId = null, entityId = null, action = null, styles = {}}) {
         const confirmStyles = {
             'confirm-btn': styles['confirm-btn'] || 'btn-primary m-2 p-2',
             'cancel-btn': styles['cancel-btn'] || 'btn-secondary m-2 p-2'
@@ -33,9 +33,11 @@ class LivewireSweetAlert {
         });
     
         if (result.isConfirmed && action) {
-            const component = Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
+            const component = componentId 
+                ? Livewire.find(componentId)
+                : Livewire.find(document.querySelector('[wire\\:id]').getAttribute('wire:id'));
             
-            if (entityId) {
+            if (entityId != null) {
                 await component.call(action, entityId);
             } else {
                 await component.call(action);
