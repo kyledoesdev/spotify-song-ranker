@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\SongRank;
 
 use App\Models\Ranking;
 use App\Models\RankingSortingState;
@@ -292,6 +292,6 @@ class SongRankProcess extends Component
 
     public function render()
     {
-        return view('livewire.song-rank-process');
+        return view('livewire.song-rank.song-rank-process');
     }
 }

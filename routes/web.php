@@ -5,19 +5,20 @@ use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
 use App\Http\Middleware\IsDeveloper;
 use App\Livewire\About;
-use App\Livewire\EditRanking;
-use App\Livewire\Profile;
-use App\Livewire\Ranking;
-use App\Livewire\Settings;
-use App\Livewire\Welcome;
+use App\Livewire\Dashboard\Dashboard;
+use App\Livewire\Explorer;
+use App\Livewire\Profile\Profile;
+use App\Livewire\Profile\Settings;
+use App\Livewire\Ranking\EditRanking;
+use App\Livewire\Ranking\Ranking;
+use App\Livewire\Welcome\Welcome;
 use Illuminate\Support\Facades\Route;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::get('/', Welcome::class)->name('welcome');
 Route::get('/about', About::class)->name('about');
 
-Route::view('/explore', [ExploreController::class, 'explore.index'])->name('explore.index');
-Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
+Route::get('/explore', Explorer::class)->name('explore');
 
 Route::get('/rank/{id}', Ranking::class)->name('rank.show');
 Route::get('/profile/{id}', Profile::class)->name('profile');
@@ -27,16 +28,10 @@ Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLog
 Route::get('/logout', [SpotifyAuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::view('/home', 'home')->name('home');
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
-    /* Spotify API routes */
-    Route::get('/spotify/search', [SpotifyAPIController::class, 'search'])->name('spotify.search_api');
-    Route::get('/spotify/artist_songs', [SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
-
-    /* Ranking CRUD routes */
     Route::get('/rank/{id}/edit', EditRanking::class)->name('rank.edit');
 
-    /* Settings */
     Route::get('/settings', Settings::class)->name('settings');
 
     Route::supportBubble();

@@ -17,7 +17,7 @@
     
     <div>
         <div class="flex justify-center mt-8">
-            <livewire:artist-slideshow 
+            <livewire:welcome.artist-slideshow 
                 :artists="$artists" 
                 :speed="2" 
                 direction="left" 
@@ -25,7 +25,7 @@
         </div>
     </div>
     
-    <livewire:welcome-stats 
+    <livewire:welcome.stats 
         :users="$users"
         :rankings="$rankings"
         :artists="$artistsCount"
@@ -36,7 +36,7 @@
             <span class="pb-2">Explore</span>
         </a>
 
-        <a class="btn-primary m-2 p-2" href="{{ auth()->check() ? route('home') : route('spotify.login') }}">
+        <a class="btn-primary m-2 p-2" href="{{ auth()->check() ? route('dashboard') : route('spotify.login') }}">
             @if(auth()->check())
                 <span>View Dashboard</span>
             @else

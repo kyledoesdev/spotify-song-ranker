@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\SongRank;
 
 use Livewire\Component;
 
@@ -11,7 +11,7 @@ class SongListItem extends Component
 
     public function render()
     {
-        return view('livewire.song-list-item');
+        return view('livewire.song-rank.song-list-item');
     }
 
     public function removeSong(string $songId)

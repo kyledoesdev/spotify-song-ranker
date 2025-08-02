@@ -183,7 +183,7 @@
                                         x-transition:leave-start="opacity-100 transform translate-x-0"
                                         x-transition:leave-end="opacity-0 transform -translate-x-4"
                                     >
-                                        <livewire:song-list-item
+                                        <livewire:song-rank.song-list-item
                                             :key="'song-item-'.$song['id']"
                                             :song="$song"
                                             :canDelete="true"

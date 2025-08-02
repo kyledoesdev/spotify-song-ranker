@@ -42,6 +42,7 @@ class Artist extends Model
             })
             ->groupBy('rankings.artist_id')
             ->orderBy('artist_rankings_count', 'desc')
-            ->orderBy('artists.artist_name', 'asc');
+            ->orderBy('artists.artist_name', 'asc')
+            ->limit(10);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Welcome;
 
 use Illuminate\Support\Collection;
 use Livewire\Component;
@@ -24,6 +24,6 @@ class ArtistSlideshow extends Component
 
     public function render()
     {
-        return view('livewire.artist-slideshow');
+        return view('livewire.welcome.artist-slideshow');
     }
 }

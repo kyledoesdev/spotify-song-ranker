@@ -6,7 +6,7 @@
                     <h5 class="text-base sm:text-lg md:text-xl font-medium">{{ $ranking->name }}</h5>
                 </div>
                 <div class="flex">
-                    <a href="{{ auth()->check() ? route('home') : route('explore.index') }}" class="btn-primary p-1 sm:p-2 m-1 sm:m-2">
+                    <a href="{{ auth()->check() ? route('dashboard') : route('explore.index') }}" class="btn-primary p-1 sm:p-2 m-1 sm:m-2">
                         <i class="fa fa-solid {{ auth()->check() ? 'fa-house' : 'fa-magnifying-glass' }} text-sm sm:text-base"></i>
                     </a>
                     <share />

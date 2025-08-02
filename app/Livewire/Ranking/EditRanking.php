@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Ranking;
 
 use App\Livewire\Forms\RankingForm;
 use App\Models\Ranking;
@@ -30,7 +30,7 @@ class EditRanking extends Component
 
     public function render()
     {
-        return view('livewire.edit-ranking');
+        return view('livewire.ranking.edit-ranking');
     }
 
     public function update()

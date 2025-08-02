@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Profile;
 
 use App\Models\Ranking;
 use App\Models\Song;
@@ -19,7 +19,7 @@ class Profile extends Component
 
     public function render()
     {
-        return view('livewire.profile', [
+        return view('livewire.profile.profile', [
             'name' => get_formatted_name($this->user->name),
         ]);
     }

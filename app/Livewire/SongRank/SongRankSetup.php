@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\SongRank;
 
+use App\Actions\Spotify\GetArtistSongs;
+use App\Actions\Spotify\SearchArtists;
 use App\Actions\StoreRanking;
-use App\Http\Controllers\SpotifyAPIController;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;
 use App\Models\Ranking;
@@ -34,7 +35,7 @@ class SongRankSetup extends Component
 
     public function render()
     {
-        return view('livewire.song-rank-setup');
+        return view('livewire.song-rank.song-rank-setup');
     }
 
     public function searchArtist()
@@ -50,7 +51,7 @@ class SongRankSetup extends Component
             return;
         }
 
-        $this->searchedArtists = (new SpotifyAPIController)->search($this->searchTerm);
+        $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->searchTerm);
 
         if ($this->searchedArtists->isEmpty() || is_null($this->searchedArtists)) {
             $this->js("
@@ -69,9 +70,9 @@ class SongRankSetup extends Component
 
         $this->searchedArtists = null;
 
-        $tracks = (new SpotifyAPIController)->artistSongs($artistId);
+        $tracks = (new GetArtistSongs)->handle(auth()->user(), $artistId);
 
-        if (count($tracks) <= 1) {
+        if (count($tracks) <= 1 || is_null($tracks)) {
             $this->js("
                 window.flash({
                     title: 'Not enough tracks to rank.',

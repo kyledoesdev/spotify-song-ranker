@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Profile;
 
 use App\Jobs\DeleteUserJob;
 use App\Models\Ranking;
@@ -15,7 +15,7 @@ class Settings extends Component
 {
     public function render()
     {
-        return view('livewire.settings');
+        return view('livewire.profile.settings');
     }
 
     public function updateEmailPreference($receiveEmails)

@@ -89,7 +89,7 @@ class Ranking extends Model
             ->whereHas('artist', function ($query2) use ($search, $artist) {
                 $query2
                     ->when($search != '', fn ($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
-                    ->when($artist != null, fn ($q) => $q->where('id', $artist));
+                    ->when($artist != '', fn ($q) => $q->where('id', $artist));
             })
             ->with('user', 'artist')
             ->with('songs', fn ($q) => $q->where('rank', 1))

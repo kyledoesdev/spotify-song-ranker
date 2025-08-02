@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Dashboard;
 
 use App\Models\Ranking;
 use Livewire\Component;
@@ -9,7 +9,7 @@ class InProcessRankings extends Component
 {
     public function render()
     {
-        return view('livewire.in-process-rankings', [
+        return view('livewire.dashboard.in-process-rankings', [
             'rankings' => Ranking::query()
                 ->where('user_id', auth()->id())
                 ->where('is_ranked', false)

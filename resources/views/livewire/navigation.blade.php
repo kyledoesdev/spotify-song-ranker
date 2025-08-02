@@ -1,7 +1,7 @@
 <div>
     <div class="flex justify-between shadow-md bg-white rounded-lg py-4">
         <div>
-            <a href="{{ auth()->check() ? route('home') : route('welcome') }}">
+            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}">
                 <h5 class="text-xs md:text-base lg:text-xl p-1 mx-3">songrank 🎵</h5>
             </a>
         </div>
@@ -38,41 +38,49 @@
                         class="flex items-center px-2 gap-2 rounded-md cursor-pointer"
                     >
                         <img
-                            class="hidden md:block md:w-8 md:h-8 md:rounded-xl md:border md:border-zinc-900" 
+                            class="w-8 h-8 rounded-xl border border-zinc-900" 
                             src="{{ auth()->user()->avatar }}" 
                             alt="User Actions"
                         />
-                        <span class="text-sm sm:text-base md:text-lg">
+                        <span class="text-sm sm:text-base md:text-lg hidden md:block">
                             {{ auth()->user()->name }} <i class="fa fa-solid fa-chevron-down"></i>
+                        </span>
+                        <span class="md:hidden">
+                            <i class="fa fa-solid fa-chevron-down"></i>
                         </span>
                     </button>
                     <div
                         x-ref="panel"
                         x-show="open"
-                        x-transition.origin.top.left
+                        x-transition.origin.top.right
                         x-on:click.outside="close($refs.button)"
                         style="display: none;"
-                        class="absolute left-0 mt-2 w-40 rounded-md bg-white shadow-md"
+                        class="absolute right-0 mt-2 w-40 rounded-md bg-white shadow-md"
                     >
                         @if (get_route() != 'home')
-                            <a href="{{ route('home') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
-                                Home
+                            <a href="{{ route('dashboard') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                                <i class="fa fa-solid fa-tachometer-alt"></i>
+                                Dashboard
                             </a>
                         @endif
                         <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                            <i class="fa fa-solid fa-user"></i>
                             Profile
                         </a>
-                        @if (get_route() != 'explore.index')
-                            <a href="{{ route('explore.index') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                        @if (get_route() != 'explore')
+                            <a href="{{ route('explore') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                                <i class="fa fa-solid fa-compass"></i>
                                 Explore
                             </a>
                         @endif
                         @if (get_route() != 'settings')
                             <a href="{{ route('settings') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                                <i class="fa fa-solid fa-cog"></i>
                                 Settings
                             </a>
                         @endif
                         <a href="{{ route('logout') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                            <i class="fa fa-solid fa-sign-out-alt"></i>
                             Logout
                         </a>
                     </div>

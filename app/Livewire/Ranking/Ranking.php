@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Ranking;
 
 use App\Models\Ranking as RankingModel;
 use Livewire\Component;
@@ -26,7 +26,7 @@ class Ranking extends Component
 
     public function render()
     {
-        return view('livewire.ranking', [
+        return view('livewire.ranking.ranking', [
             'ranking' => $this->ranking,
             'sortingState' => $this->ranking->sortingState,
         ]);

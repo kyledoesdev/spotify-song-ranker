@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Welcome;
 
 use Livewire\Component;
 
-class WelcomeStats extends Component
+class Stats extends Component
 {
     public int $users;
     public int $rankings;
@@ -12,6 +12,6 @@ class WelcomeStats extends Component
 
     public function render()
     {
-        return view('livewire.welcome-stats');
+        return view('livewire.welcome.stats');
     }
 }
