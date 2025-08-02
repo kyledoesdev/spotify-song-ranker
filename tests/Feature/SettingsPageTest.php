@@ -6,6 +6,6 @@ test('settings page loads', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)
-        ->get(route('settings.index'))
+        ->get(route('settings'))
         ->assertOk();
 });
