@@ -51,7 +51,6 @@ class SongRankSetup extends Component
         $this->searchedArtists = (new SpotifyAPIController)->search($this->searchTerm);
 
         if ($this->searchedArtists->isEmpty() || is_null($this->searchedArtists)) {
-            // Fixed: Escaped the single quote or use double quotes
             $this->js("
                 window.flash({
                     title: 'No Artists found.',
@@ -68,7 +67,23 @@ class SongRankSetup extends Component
 
         $this->searchedArtists = null;
 
-        $this->selectedArtistTracks = (new SpotifyAPIController)->artistSongs($artistId);
+        $tracks = (new SpotifyAPIController)->artistSongs($artistId);
+
+        if (count($tracks) <= 1) {
+            $this->js("
+                window.flash({
+                    title: 'Not enough tracks to rank.',
+                    message: 'The artist: {$this->selectedArtist['name']} does not have enough tracks to rank.',
+                    icon: 'error',
+                });
+            ");
+
+            $this->resetSetup();
+
+            return;
+        }
+
+        $this->selectedArtistTracks = $tracks;
     }
 
     public function filterSongs(string $key)
@@ -159,6 +174,13 @@ class SongRankSetup extends Component
 
     public function resetSetup()
     {
-        $this->reset();
+        $this->reset([
+            'searchTerm',
+            'rankingName',
+            'isPublic',
+            'searchedArtists',
+            'selectedArtistTracks',
+            'selectedArtist'
+        ]);
     }
 }

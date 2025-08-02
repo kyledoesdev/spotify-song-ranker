@@ -33,20 +33,6 @@ class Settings extends Component
         ");
     }
 
-    public function confirmDestroy()
-    {
-        $this->js("
-            window.confirm({
-                title: 'Delete your account?',
-                message: 'Are you sure you want to delete your account? By deleting your account, we will email you one last email with your ranking records & then delete them & your account. Are you sure you want to go?',
-                confirmText: 'It's time for me to go.',
-                entityId: " . auth()->id() . ",
-                componentId: '{$this->getId()}',
-                action: 'destroy'
-            });
-        ");
-    }
-
     public function destroy($userId)
     {
         // Security check
@@ -67,18 +53,6 @@ class Settings extends Component
         session()->flash('success', "We're sorry to see you go {$user->name}. Be Well.");
 
         $this->redirect('/');
-    }
-
-    public function confirmDownload()
-    {
-        $this->js("
-            window.confirm({
-                title: 'Begin downloading your data?',
-                message: 'Would you like to download all of your rankings? The export will be queued and emailed to you when completed.',
-                confirmText: 'Go',
-                action: 'download'
-            });
-        ");
     }
 
     public function download()

@@ -1,7 +1,6 @@
 
 <div 
     class="bg-white shadow-md rounded-lg cursor-pointer hover:shadow-lg transition-shadow relative p-2"
-    wire:key="{{ $ranking->getKey() }}"
 >
     <div class="m-2" style="min-width: 35vw;" onclick="window.location.href='{{ route('rank.show', ['id' => $ranking->getKey() ]) }}'">
         <div class="flex space-x-6">
@@ -88,7 +87,7 @@
     @if (auth()->id() === $ranking->user_id && get_route() === 'profile')
         <div class="absolute top-2 right-2 flex space-x-1">
             <a 
-                class="text-gray-500 hover:text-green-600 transition-colors p-1 text-sm"
+                class="text-gray-500 hover:text-green-600 transition-colors p-1 text-sm cursor-pointer"
                 href="{{ route('rank.edit', ['id' => $ranking->getKey() ]) }}"
                 title="Edit"
                 onclick="event.stopPropagation()"
@@ -97,10 +96,17 @@
             </a>
             
             <button 
-                class="text-gray-500 hover:text-red-600 transition-colors p-1 text-sm"
-                wire:click="confirmDestroy({{ $ranking->getKey() }})"
+                class="text-gray-500 hover:text-red-600 transition-colors p-1 text-sm cursor-pointer"
+                onclick="window.confirm({
+                    title: 'Delete Ranking?',
+                    message: 'Are you sure you want to delete this ranking?',
+                    confirmText: 'Delete',
+                    componentId: '{{ $this->getId() }}',
+                    entityId: {{ $ranking->getKey() }},
+                    action: 'destroy'
+                })"
                 title="Delete"
-                onclick="event.stopPropagation()"
+                @click.stop
             >
                 <i class="fa fa-trash"></i>
             </button>

@@ -24,11 +24,6 @@ class Ranking extends Model
         'completed_at',
     ];
 
-    protected $appends = [
-        'show_route',
-        'formatted_completed_at',
-    ];
-
     protected function casts(): array
     {
         return [
@@ -72,20 +67,6 @@ class Ranking extends Model
         }
 
         return Carbon::parse($this->attributes['completed_at'])->inUserTimezone()->format('M d, Y g:i A T');
-    }
-
-    public function getShowRouteAttribute()
-    {
-        return route('rank.show', ['id' => $this->getKey()]);
-    }
-
-    public function getProgressPercentageAttribute()
-    {
-        if ($this->total_comparisons == 0) {
-            return 0;
-        }
-
-        return intval(($this->completed_comparisons / $this->total_comparisons) * 100);
     }
 
     public function isPublic(): bool

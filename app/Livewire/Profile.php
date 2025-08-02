@@ -32,19 +32,6 @@ class Profile extends Component
             ->get();
     }
 
-    public function confirmDestroy($rankingId)
-    {
-        $this->js("
-            window.confirm({
-                title: 'Delete Ranking?',
-                message: 'Are you sure you want to delete this ranking?',
-                confirmText: 'Delete',
-                entityId: {$rankingId},
-                componentId: '{$this->getId()}',
-            });
-        ");
-    }
-
     public function destroy(int $rankingId)
     {
         abort_unless(auth()->check() && Ranking::findOrFail($rankingId)->user_id == auth()->id(), 403);

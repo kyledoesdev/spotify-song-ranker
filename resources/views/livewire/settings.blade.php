@@ -12,7 +12,30 @@
     </div>
     <div>
         <h5 class="md:text-xl">Other Settings</h5>
-        <button class="btn-primary" wire:click="confirmDownload">Export your data</button>
-        <button class="btn-danger" wire:click="confirmDestroy">Delete your account</button>
+        <button
+            class="btn-primary"
+            onclick="window.confirm({
+                title: 'Begin downloading your data?',
+                message: 'Would you like to download all of your rankings? The export will be queued and emailed to you when completed.',
+                confirmText: 'Go',
+                componentId: '{{ $this->getId() }}',
+                action: 'download'
+            });"
+        >
+            Export your data
+        </button>
+        <button
+            class="btn-danger"
+            onclick="window.confirm({
+                title: 'Delete your account?',
+                message: 'Are you sure you want to delete your account? By deleting your account, we will email you one last email with your ranking records & then delete them & your account. Are you sure you want to go?',
+                confirmText: 'It\'s time for me to go.',
+                entityId: {{ auth()->id() }},
+                componentId: '{{ $this->getId() }}',
+                action: 'destroy'
+            })"
+        >
+            Delete your account
+        </button>
     </div>
 </div>

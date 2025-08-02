@@ -17,9 +17,6 @@ class SendEmailJob implements ShouldQueue
 
     public function __construct(private EmailTemplate $emailTemplate) {}
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
         $users = User::query()

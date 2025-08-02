@@ -153,9 +153,7 @@ class SpotifyAPIController extends Controller
             ]);
 
         } catch (Exception) {
-            return response()->json([
-                'message' => $this->errorMsg,
-            ], 500);
+            return;
         }
     }
 }

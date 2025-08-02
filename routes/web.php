@@ -22,7 +22,7 @@ Route::get('/about', About::class)->name('about');
 Route::view('/explore', [ExploreController::class, 'explore.index'])->name('explore.index');
 Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 
-Route::get('/rank/{id}', [RankingController::class, 'show'])->name('rank.show');
+Route::get('/rank/{id}', RankingController::class)->name('rank.show');
 Route::get('/profile/{id}', Profile::class)->name('profile');
 
 Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');
