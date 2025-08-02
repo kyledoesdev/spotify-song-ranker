@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 
-class LivewireSweetAlert {
+export default class LivewireSweetAlert {
     constructor() {
         this.flash_styles = {
             'confirm-btn': 'btn-primary m-2 p-2 cursor-pointer shadow-md',
@@ -8,10 +8,6 @@ class LivewireSweetAlert {
             'redirect-btn': 'btn-primary m-2 p-2 cursor-pointer shadow-md',
         };
 
-        this.setupGlobalMethods();
-    }
-
-    setupGlobalMethods() {
         window.confirm = this.confirm.bind(this);
         window.flash = this.flash.bind(this);
     }
@@ -74,18 +70,4 @@ class LivewireSweetAlert {
             buttonsStyling: false
         });
     }
-
-    overrideFlashStyles(newstyles) {
-        for (const style in newstyles) {
-            this.flash_styles[style] = newstyles[style];
-        }
-        return this;
-    }
 }
-
-// Initialize when Livewire is ready
-document.addEventListener('livewire:init', () => {
-    new LivewireSweetAlert();
-});
-
-export default LivewireSweetAlert;

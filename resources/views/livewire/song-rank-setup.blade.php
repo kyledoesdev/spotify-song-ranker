@@ -19,7 +19,9 @@
                     <button 
                         type="button" 
                         class="btn-primary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
-                        wire:click="searchArtist" 
+                        wire:click="searchArtist"
+                        x-data 
+                        @click="window.showLoader(); $wire.searchArtist().then(() => window.hideLoader())"
                     >
                         <i class="text-lg text-zinc-800 fa fa-magnifying-glass mt-1"></i>
                     </button>
@@ -58,6 +60,8 @@
                                 src="{{ $artist['cover'] }}"
                                 wire:click="loadArtistSongs('{{ $artist['id'] }}')"
                                 alt="{{ $artist['name'] }}"
+                                x-data 
+                                @click="window.showLoader(); $wire.searchArtist().then(() => window.hideLoader())"
                             >
                             <h5 class="mt-1 transition-all duration-300">{{ $artist['name'] }}</h5>
                             <div x-auto-animate>
@@ -132,16 +136,20 @@
                                     type="text"
                                     class="w-full bg-zinc-100 rounded-lg p-2 transition-all duration-300 focus:ring-2 focus:ring-blue-400 focus:scale-105"
                                     placeholder="{{ $selectedArtist['name'] . ' List' }}"
-                                    wire:model.live.debounce.500ms="rankingName"
+                                    wire:model.live.debounce.500ms="form.name"
                                     maxlength="30"
                                 />
                             </div>
 
                             <div class="mb-4" x-auto-animate>
                                 <label class="block mb-2 transition-all duration-300">Show In Explore Feed?</label>
-                                <select class="w-full bg-zinc-100 rounded-lg bg-white p-2 transition-all duration-300 focus:ring-2 focus:ring-blue-400" wire:model.live="isPublic" required>
-                                    <option :value="true" selected>Yes</option>
-                                    <option :value="false">No</option>
+                                <select
+                                    class="w-full rounded-lg bg-white p-2 transition-all duration-300 focus:ring-2 focus:ring-blue-400"
+                                    wire:model.live.debounce.500ms="form.is_public"
+                                    required
+                                >
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
                                 </select>
                             </div>
 

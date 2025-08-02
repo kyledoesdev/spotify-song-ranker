@@ -1,0 +1,26 @@
+@layer utilities {
+    .portfolio-webring {
+        background: linear-gradient(45deg, #00E5FF 25%, #1200FF);
+        background-size: 400% 400%;
+        animation: webring 5s linear infinite;
+        min-width: 88px;
+        max-width: 88px;
+        min-height: 31px;
+        max-height: 31px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid black;
+    }
+
+    @keyframes webring {
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+}

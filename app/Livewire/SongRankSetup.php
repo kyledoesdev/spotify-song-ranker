@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Actions\StoreRanking;
 use App\Http\Controllers\SpotifyAPIController;
+use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\Song;
@@ -16,13 +18,13 @@ use Livewire\Component;
 
 class SongRankSetup extends Component
 {
-    public string $searchTerm = '';
-    public string $randomArtist = '';
-    public string $rankingName = '';
-    public bool $isPublic = true;
-    
+    public RankingForm $form;
+
     public ?Collection $searchedArtists = null;
     public ?Collection $selectedArtistTracks = null;
+
+    public string $searchTerm = '';
+    public string $randomArtist = '';
     public array $selectedArtist = [];
     
     public function mount()
@@ -108,10 +110,10 @@ class SongRankSetup extends Component
     public function confirmBeginRanking()
     {
         $songCount = count($this->selectedArtistTracks);
-        $message = "Are you ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.";
+        $message = "Are you sure you are ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.";
         
         if ($songCount >= 50) {
-            $extraWarning = "Your ranking has {$songCount} songs, it may take > ~30 minutes to complete the ranking.";
+            $extraWarning = "Your ranking has {$songCount} songs, it may take > ~30 minutes to complete the ranking. (You can always start it now and pick back up where you left off later).";
             $message = $message . ' ' . $extraWarning;
         }
 
@@ -128,44 +130,14 @@ class SongRankSetup extends Component
 
     public function beginRanking()
     {
-        $ranking = DB::transaction(function () {
-            /* update or create the artist */
-            $artist = Artist::updateOrCreate([
-                'artist_id' => $this->selectedArtist['id'],
-            ], [
-                'artist_name' => $this->selectedArtist['name'],
-                'artist_img' => $this->selectedArtist['cover'],
-            ]);
-
-            /* create a new ranking */
-            $ranking = Ranking::create([
-                'user_id' => auth()->id(),
-                'artist_id' => $artist->getKey(),
-                'name' => Str::limit($this->rankingName ?? $artist->artist_name.' List', 30),
-                'is_public' => $this->isPublic ?? false,
-            ]);
-
-            /* create the relation to the ranking's sorted state */
-            $ranking->sortingState()->create();
-
-            $songs = [];
-            foreach ($this->selectedArtistTracks as $song) {
-                array_push($songs, [
-                    'ranking_id' => $ranking->getKey(),
-                    'spotify_song_id' => $song['id'],
-                    'uuid' => Str::uuid(),
-                    'title' => $song['name'] ?? 'track deleted from spotify servers',
-                    'cover' => $song['cover'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-
-            /* batch insert the song records */
-            Song::insert($songs);
-
-            return $ranking;
-        });
+        $ranking = (new StoreRanking)->handle(auth()->user(), [
+            'artist_id' => $this->selectedArtist['id'],
+            'artist_name' => $this->selectedArtist['name'],
+            'artist_img' => $this->selectedArtist['cover'],
+            'ranking_name' => $this->form->name,
+            'is_public' => (bool) $this->form->is_public,
+            'tracks' => $this->selectedArtistTracks
+        ]);
 
         Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
 
@@ -176,8 +148,8 @@ class SongRankSetup extends Component
     {
         $this->reset([
             'searchTerm',
-            'rankingName',
-            'isPublic',
+            'form.name',
+            'form.is_public',
             'searchedArtists',
             'selectedArtistTracks',
             'selectedArtist'

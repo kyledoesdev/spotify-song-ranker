@@ -1,16 +1,13 @@
 <?php
 
 use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RankingController;
-use App\Http\Controllers\RankingDownloadController;
-use App\Http\Controllers\SongPlacementController;
 use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
-use App\Http\Controllers\UserSettingsController;
 use App\Http\Middleware\IsDeveloper;
 use App\Livewire\About;
+use App\Livewire\EditRanking;
 use App\Livewire\Profile;
+use App\Livewire\Ranking;
 use App\Livewire\Settings;
 use App\Livewire\Welcome;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +19,7 @@ Route::get('/about', About::class)->name('about');
 Route::view('/explore', [ExploreController::class, 'explore.index'])->name('explore.index');
 Route::get('/explore/pages', [ExploreController::class, 'pages'])->name('explore.pages');
 
-Route::get('/rank/{id}', RankingController::class)->name('rank.show');
+Route::get('/rank/{id}', Ranking::class)->name('rank.show');
 Route::get('/profile/{id}', Profile::class)->name('profile');
 
 Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');
@@ -37,13 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/spotify/artist_songs', [SpotifyAPIController::class, 'artistSongs'])->name('spotify.artist_songs');
 
     /* Ranking CRUD routes */
-    Route::post('/rank/create', [RankingController::class, 'create'])->name('rank.create');
-    Route::get('/rank/{id}/edit', [RankingController::class, 'edit'])->name('rank.edit');
-    Route::post('/rank/{id}/update', [RankingController::class, 'update'])->name('rank.update');
-    Route::post('/rank/destroy', [RankingController::class, 'destroy'])->name('rank.destroy');
-
-    /* Ranking Export */
-    Route::get('/ranking-download', [RankingDownloadController::class, 'index'])->name('ranking-download.index');
+    Route::get('/rank/{id}/edit', EditRanking::class)->name('rank.edit');
 
     /* Settings */
     Route::get('/settings', Settings::class)->name('settings');

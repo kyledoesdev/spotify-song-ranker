@@ -1,0 +1,40 @@
+@layer utilities {
+    .gradient-background {
+        background: linear-gradient(45deg,
+                rgba(207, 120, 224, 1) 25%,
+                rgba(100, 249, 179, 1));
+        background-size: 400% 400%;
+        animation: gradientAnimation 20s linear infinite;
+    }
+
+    @keyframes gradientAnimation {
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    @keyframes artistSlideLeft {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-25%);
+        }
+    }
+
+    @keyframes artistSlideRight {
+        0% {
+            transform: translateX(-25%);
+        }
+
+        100% {
+            transform: translateX(0);
+        }
+    }
+}
