@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\ExploreController;
-use App\Http\Controllers\SpotifyAPIController;
 use App\Http\Controllers\SpotifyAuthController;
 use App\Http\Middleware\IsDeveloper;
 use App\Livewire\About;

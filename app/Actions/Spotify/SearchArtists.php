@@ -2,7 +2,6 @@
 
 namespace App\Actions\Spotify;
 
-use App\Actions\Spotify\RefreshToken;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Collection;
@@ -20,9 +19,9 @@ final class SearchArtists
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $user->external_token,
+                'Authorization' => 'Bearer '.$user->external_token,
                 'Content-Type' => 'application/json',
-            ])->get("https://api.spotify.com/v1/search", [
+            ])->get('https://api.spotify.com/v1/search', [
                 'q' => $searchTerm,
                 'type' => 'artist',
                 'limit' => 10,

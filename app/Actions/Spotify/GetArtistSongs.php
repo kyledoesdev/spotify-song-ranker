@@ -2,7 +2,6 @@
 
 namespace App\Actions\Spotify;
 
-use App\Actions\Spotify\RefreshToken;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Collection;
@@ -20,7 +19,7 @@ final class GetArtistSongs
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $user->external_token,
+                'Authorization' => 'Bearer '.$user->external_token,
                 'Content-Type' => 'application/json',
             ])->get("https://api.spotify.com/v1/artists/{$artistId}/albums", [
                 'include_groups' => 'album,single',
@@ -33,7 +32,7 @@ final class GetArtistSongs
 
             for ($i = 0; $i < round($totalAlbumCount / 50, 2, PHP_ROUND_HALF_UP); $i++) {
                 $response = Http::withHeaders([
-                    'Authorization' => 'Bearer ' . $user->external_token,
+                    'Authorization' => 'Bearer '.$user->external_token,
                     'Content-Type' => 'application/json',
                 ])->get("https://api.spotify.com/v1/artists/{$artistId}/albums", [
                     'include_groups' => 'album,single',
@@ -48,9 +47,9 @@ final class GetArtistSongs
                     $albumIds = implode(',', $albumRequest);
 
                     $response = Http::withHeaders([
-                        'Authorization' => 'Bearer ' . $user->external_token,
+                        'Authorization' => 'Bearer '.$user->external_token,
                         'Content-Type' => 'application/json',
-                    ])->get("https://api.spotify.com/v1/albums", [
+                    ])->get('https://api.spotify.com/v1/albums', [
                         'ids' => $albumIds,
                     ]);
 

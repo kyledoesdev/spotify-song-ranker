@@ -5,7 +5,6 @@ namespace App\Livewire\SongRank;
 use App\Actions\CompleteSongRankProcess;
 use App\Models\Ranking;
 use App\Models\RankingSortingState;
-use App\Models\Song;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -250,10 +249,10 @@ class SongRankProcess extends Component
 
     protected function complete(array $finalSongIds): void
     {
-        $this->js("window.showLoader()");
+        $this->js('window.showLoader()');
 
         (new CompleteSongRankProcess)->handle($this->ranking, [
-            'finalSongIds' => $finalSongIds
+            'finalSongIds' => $finalSongIds,
         ]);
 
         Log::channel('discord')->info("{$this->ranking->user->name} completed a ranking: {$this->ranking->name}");

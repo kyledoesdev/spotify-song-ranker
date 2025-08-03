@@ -13,6 +13,7 @@ class Explorer extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $artist = '';
 
     public bool $isSideBarOpen = false;
@@ -20,7 +21,7 @@ class Explorer extends Component
     public function render()
     {
         return view('livewire.explorer', [
-            'artists' => Artist::query()->topArtists()->get()
+            'artists' => Artist::query()->topArtists()->get(),
         ]);
     }
 

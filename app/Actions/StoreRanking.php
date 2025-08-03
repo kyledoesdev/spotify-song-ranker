@@ -23,7 +23,7 @@ final class StoreRanking
             ]);
 
             $name = $attributes['ranking_name'] === '' || is_null($attributes['ranking_name'])
-                ? $artist->artist_name . ' List'
+                ? $artist->artist_name.' List'
                 : $attributes['ranking_name'];
 
             /* create a new ranking */

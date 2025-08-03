@@ -7,13 +7,8 @@ use App\Actions\Spotify\SearchArtists;
 use App\Actions\StoreRanking;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;
-use App\Models\Ranking;
-use App\Models\Song;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -22,12 +17,15 @@ class SongRankSetup extends Component
     public RankingForm $form;
 
     public ?Collection $searchedArtists = null;
+
     public ?Collection $selectedArtistTracks = null;
 
     public string $searchTerm = '';
+
     public string $randomArtist = '';
+
     public array $selectedArtist = [];
-    
+
     public function mount()
     {
         $this->randomArtist = Artist::inRandomOrder()->first()->artist_name;
@@ -91,7 +89,7 @@ class SongRankSetup extends Component
 
     public function filterSongs(string $key)
     {
-        $this->selectedArtistTracks = collect($this->selectedArtistTracks)->reject(function($song) use ($key) {
+        $this->selectedArtistTracks = collect($this->selectedArtistTracks)->reject(function ($song) use ($key) {
             return str_contains(strtolower($song['name']), strtolower($key));
         })->values();
     }
@@ -100,22 +98,22 @@ class SongRankSetup extends Component
     public function updateSelectedArtistTracks($id)
     {
         $currentTracks = collect($this->selectedArtistTracks)->toArray();
-        
-        $filteredTracks = array_values(array_filter($currentTracks, function($song) use ($id) {
+
+        $filteredTracks = array_values(array_filter($currentTracks, function ($song) use ($id) {
             return $song['id'] !== $id;
         }));
-        
+
         $this->selectedArtistTracks = collect($filteredTracks);
     }
 
     public function confirmBeginRanking()
     {
         $songCount = count($this->selectedArtistTracks);
-        $message = "Are you sure you are ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.";
-        
+        $message = 'Are you sure you are ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.';
+
         if ($songCount >= 50) {
             $extraWarning = "Your ranking has {$songCount} songs, it may take > ~30 minutes to complete the ranking. (You can always start it now and pick back up where you left off later).";
-            $message = $message . ' ' . $extraWarning;
+            $message = $message.' '.$extraWarning;
         }
 
         $this->js("
@@ -137,10 +135,10 @@ class SongRankSetup extends Component
             'artist_img' => $this->selectedArtist['cover'],
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
-            'tracks' => $this->selectedArtistTracks
+            'tracks' => $this->selectedArtistTracks,
         ]);
 
-        Log::channel('discord')->info(auth()->user()->name . ' started ranking: ' . $ranking->name);
+        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
 
         $this->redirect(route('rank.show', ['id' => $ranking->getKey()]));
     }
@@ -153,7 +151,7 @@ class SongRankSetup extends Component
             'form.is_public',
             'searchedArtists',
             'selectedArtistTracks',
-            'selectedArtist'
+            'selectedArtist',
         ]);
     }
 }

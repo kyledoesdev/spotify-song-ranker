@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Model;
-
 class ApplicationDashboard extends Model
 {
     protected $table = 'application_dashboard';

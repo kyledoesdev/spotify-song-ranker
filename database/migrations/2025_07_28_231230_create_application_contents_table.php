@@ -21,7 +21,7 @@ return new class extends Migration
         ApplicationDashboard::create([
             'name' => config('app.name'),
             'about_page' => null,
-            'version' => '2.0'
+            'version' => '2.0',
         ]);
     }
 };

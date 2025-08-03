@@ -13,5 +13,5 @@ test('home page loads', function () {
     Livewire::actingAs($user)
         ->test(Dashboard::class)
         ->assertOk()
-        ->assertSee("Search for an artist to rank to get started.");
+        ->assertSee('Search for an artist to rank to get started.');
 });

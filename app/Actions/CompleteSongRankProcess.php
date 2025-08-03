@@ -10,7 +10,7 @@ final class CompleteSongRankProcess
 {
     public function handle(Ranking $ranking, array $attributes)
     {
-        DB::transaction(function() use ($ranking, $attributes) {
+        DB::transaction(function () use ($ranking, $attributes) {
             /* update that the ranking was completed */
             $ranking->update([
                 'is_ranked' => true,

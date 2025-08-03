@@ -66,5 +66,5 @@ test('can not explore private uncompleted rankings on explore page', function ()
 
     $this->actingAs($user)->get(route('explore'))
         ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);  
+        ->assertDontSee($user->rankings->first()->name);
 });

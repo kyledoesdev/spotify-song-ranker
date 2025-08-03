@@ -77,7 +77,7 @@ class Ranking extends Model
             return true;
         }
 
-        return $this->is_public || ($user && $user->is_dev); //allow admin view of private rankings
+        return $this->is_public || ($user && $user->is_dev); // allow admin view of private rankings
     }
 
     /* scopes */

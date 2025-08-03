@@ -16,7 +16,7 @@ class InProcessRankings extends Component
                 ->with(['artist', 'user'])
                 ->with('songs', fn ($q) => $q->where('rank', 1))
                 ->withCount('songs')
-                ->get()
+                ->get(),
         ]);
     }
 }

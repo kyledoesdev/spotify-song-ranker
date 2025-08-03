@@ -5,7 +5,6 @@ namespace App\Livewire\Welcome;
 use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
 
 class Welcome extends Component
@@ -26,7 +25,7 @@ class Welcome extends Component
                 ->where('is_public', true)
                 ->whereHas('artist')
                 ->distinct('artist_id')
-                ->count('artist_id')
+                ->count('artist_id'),
         ]);
     }
 }

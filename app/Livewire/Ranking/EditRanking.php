@@ -24,7 +24,7 @@ class EditRanking extends Component
 
         $this->form->fill([
             'name' => $this->ranking->name,
-            'is_public' => $this->ranking->is_public ? '1' : '0'
+            'is_public' => $this->ranking->is_public ? '1' : '0',
         ]);
     }
 
@@ -36,10 +36,10 @@ class EditRanking extends Component
     public function update()
     {
         $this->form->validate();
-        
+
         $this->ranking->update([
             'name' => $this->form->name,
-            'is_public' => $this->form->is_public === '1' || $this->form->is_public === true
+            'is_public' => $this->form->is_public === '1' || $this->form->is_public === true,
         ]);
 
         $this->js("window.flash({

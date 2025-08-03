@@ -9,7 +9,7 @@ use App\Models\Song;
 use App\Models\User;
 use Livewire\Livewire;
 
-beforeEach(fn() => Artist::factory()->create());
+beforeEach(fn () => Artist::factory()->create());
 
 test('can start ranking with valid request', function () {
     $user = User::factory()->create();

@@ -4,7 +4,6 @@ namespace App\Livewire\Profile;
 
 use App\Jobs\DeleteUserJob;
 use App\Models\Ranking;
-use App\Models\User;
 use App\Notifications\DownloadDataNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -19,9 +18,9 @@ class Settings extends Component
     }
 
     public function updateEmailPreference($receiveEmails)
-    {        
+    {
         auth()->user()->preferences()->update([
-            'recieve_reminder_emails' => $receiveEmails
+            'recieve_reminder_emails' => $receiveEmails,
         ]);
 
         $this->js("
