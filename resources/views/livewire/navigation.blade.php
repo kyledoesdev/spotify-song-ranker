@@ -57,16 +57,18 @@
                         style="display: none;"
                         class="absolute right-0 mt-2 w-40 rounded-md bg-white shadow-md"
                     >
-                        @if (get_route() != 'home')
+                        @if (get_route() != 'dashboard')
                             <a href="{{ route('dashboard') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
                                 <i class="fa fa-solid fa-tachometer-alt"></i>
                                 Dashboard
                             </a>
                         @endif
-                        <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
-                            <i class="fa fa-solid fa-user"></i>
-                            Profile
-                        </a>
+                        @if (get_route() != 'profile')
+                            <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
+                                <i class="fa fa-solid fa-user"></i>
+                                Profile
+                            </a>
+                        @endif
                         @if (get_route() != 'explore')
                             <a href="{{ route('explore') }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
                                 <i class="fa fa-solid fa-compass"></i>

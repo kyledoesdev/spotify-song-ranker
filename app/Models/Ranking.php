@@ -81,7 +81,7 @@ class Ranking extends Model
     }
 
     /* scopes */
-    public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = null)
+    public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = '')
     {
         $query->newQuery()
             ->where('is_ranked', true)

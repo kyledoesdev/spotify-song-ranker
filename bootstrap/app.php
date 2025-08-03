@@ -21,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->redirectGuestsTo(fn () => route('welcome'));
-        $middleware->redirectUsersTo(AppServiceProvider::HOME);
+        $middleware->redirectUsersTo(fn () => route('dashboard'));
 
         $middleware->throttleApi();
 
@@ -30,4 +30,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule) {})
-    ->withExceptions(function (Exceptions $exceptions) {})->create();
+    ->withExceptions(function (Exceptions $exceptions) {})
+    ->create();

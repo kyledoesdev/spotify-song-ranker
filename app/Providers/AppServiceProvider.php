@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Spotify\Provider;
@@ -20,18 +23,12 @@ use Spatie\Health\Facades\Health;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * The path to your application's "home" route.
-     *
-     * Typically, users are redirected here after authentication.
-     *
-     * @var string
-     */
-    public const HOME = '/home';
-
-    /**
      * Register any application services.
      */
-    public function register(): void {}
+    public function register(): void
+    {
+
+    }
 
     /**
      * Bootstrap any application services.
@@ -45,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
         Carbon::macro('inUserTimezone', function () {
             return $this->tz(auth()->user()?->timezone ?? 'America/New_York');
         });
+
+        DB::prohibitDestructiveCommands(app()->isProduction());
+
+        Model::automaticallyEagerLoadRelationships();
+
+        Vite::useAggressivePrefetching();
 
         Health::checks([
             EnvironmentCheck::new(),
