@@ -164,7 +164,7 @@
                     </div>
                     <div class="w-full" x-auto-animate>
                         <h5 class="md:text-4xl mb-2 transition-all duration-300">
-                            Tracks ({{ count($selectedArtistTracks) }})
+                            Tracks ({{ $selectedArtistTracks ? count($selectedArtistTracks) : 0 }})
                         </h5>
                         
                         <!-- Songs list with auto-animate for smooth add/remove -->

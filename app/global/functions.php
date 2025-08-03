@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
-function get_route(): string
+function get_route(): ?string
 {
     return Route::currentRouteName();
 }

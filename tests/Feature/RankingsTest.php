@@ -1,61 +1,66 @@
 <?php
 
+use App\Livewire\Profile\Profile;
+use App\Livewire\Ranking\EditRanking;
+use App\Livewire\SongRank\SongRankSetup;
+use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
+use Livewire\Livewire;
 
-/* test('can start ranking with valid request', function () {
-    $request = [
-        'artist_id' => str()->random(16),
-        'artist_name' => 'Local Natives',
-        'artist_img' => 'https://api.dicebear.com/7.x/initials/svg?seed=testing',
-        'name' => 'Local Natives List',
-        'is_public' => true,
-        'songs' => [
-            'Ceilings' => [
-                'id' => str()->random(22),
-                'name' => 'Ceilings',
-                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
-            ],
-            'Sun Hands' => [
-                'id' => str()->random(22),
-                'name' => 'Sun Hands',
-                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
-            ],
-            'Featherweight' => [
-                'id' => str()->random(22),
-                'name' => 'Featherweight',
-                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
-            ],
-        ],
-    ];
+beforeEach(fn() => Artist::factory()->create());
 
+test('can start ranking with valid request', function () {
     $user = User::factory()->create();
 
     $this->assertDatabaseMissing('artists', [
-        'artist_id' => $request['artist_id'],
-        'artist_name' => $request['artist_name'],
-        'artist_img' => $request['artist_img'],
+        'artist_id' => 'test-artist-id',
+        'artist_name' => 'Local Natives',
     ]);
 
     $this->assertDatabaseMissing('rankings', [
         'name' => 'Local Natives List',
     ]);
 
-    $response = $this->actingAs($user)
-        ->postJson(route('rank.create'), $request)
-        ->assertOk();
+    Livewire::actingAs($user)
+        ->test(SongRankSetup::class)
+        ->set('selectedArtist', [
+            'id' => 'test-artist-id',
+            'name' => 'Local Natives',
+            'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=testing',
+        ])
+        ->set('selectedArtistTracks', collect([
+            [
+                'id' => 'ceilings-id',
+                'name' => 'Ceilings',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
+            ],
+            [
+                'id' => 'sun-hands-id',
+                'name' => 'Sun Hands',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
+            ],
+            [
+                'id' => 'featherweight-id',
+                'name' => 'Featherweight',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
+            ],
+        ]))
+        ->set('form.name', 'Local Natives List')
+        ->set('form.is_public', true)
+        ->call('beginRanking')
+        ->assertHasNoErrors();
 
     $this->assertDatabaseHas('artists', [
-        'artist_id' => $request['artist_id'],
-        'artist_name' => $request['artist_name'],
-        'artist_img' => $request['artist_img'],
+        'artist_id' => 'test-artist-id',
+        'artist_name' => 'Local Natives',
     ]);
 
     $this->assertDatabaseHas('rankings', [
         'name' => 'Local Natives List',
     ]);
-}); */
+});
 
 test('ranking owner can view the ranking edit page', function () {
     $user = User::factory()
@@ -76,26 +81,19 @@ test('ranking non-owner can not view a ranking edit page that does not belong to
         ->assertForbidden();
 });
 
-/* test('ranking owner can update ranking name and visibility', function () {
+test('ranking owner can update ranking name and visibility', function () {
     $user = User::factory()->create();
 
     $ranking = Ranking::factory()
         ->has(Song::factory()->count(5))
         ->create(['user_id' => $user->getKey(), 'is_public' => false]);
 
-    $this->assertDatabaseHas('rankings', [
-        'id' => $ranking->getKey(),
-        'user_id' => $user->getKey(),
-        'name' => $ranking->name,
-        'is_public' => false,
-    ]);
-
-    $this->actingAs($user)
-        ->postJson(route('rank.update', ['id' => $ranking->getKey()]), [
-            'name' => 'new name',
-            'is_public' => true,
-        ])
-        ->assertOk();
+    Livewire::actingAs($user)
+        ->test(EditRanking::class, ['id' => $ranking->getKey()])
+        ->set('form.name', 'new name')
+        ->set('form.is_public', true)
+        ->call('update')
+        ->assertHasNoErrors();
 
     $this->assertDatabaseHas('rankings', [
         'id' => $ranking->getKey(),
@@ -103,64 +101,59 @@ test('ranking non-owner can not view a ranking edit page that does not belong to
         'name' => 'new name',
         'is_public' => true,
     ]);
-}); */
+});
 
-/* test('ranking non-owner can not update ranking name and visibility', function () {
+test('ranking non-owner can not update ranking name and visibility', function () {
     $user = User::factory()->create();
 
     $ranking = Ranking::factory()
         ->has(Song::factory()->count(5))
         ->create(['is_public' => false]);
 
-    $this->assertDatabaseHas('rankings', [
-        'id' => $ranking->getKey(),
-        'user_id' => $ranking->user->getKey(),
-        'name' => $ranking->name,
-        'is_public' => false,
-    ]);
-
-    $this->actingAs($user)
-        ->postJson(route('rank.update', ['id' => $ranking->getKey()]), [
-            'name' => 'new name',
-            'is_public' => true,
-        ])
+    Livewire::actingAs($user)
+        ->test(EditRanking::class, ['id' => $ranking->getKey()])
         ->assertForbidden();
-}); */
+});
 
-/* test('ranking owner can delete their ranking', function () {
+test('ranking owner can delete their ranking', function () {
     $user = User::factory()
         ->has(Ranking::factory()->has(Song::factory()->count(10)))
         ->create();
 
-    $rankingId = $user->rankings->first()->getKey();
+    $ranking = $user->rankings->first();
 
-    expect(null, Ranking::findOrFail($rankingId)->deleted_at);
-    expect(10, Song::where('ranking_id', $rankingId)->count());
+    expect($ranking->deleted_at)->toBeNull();
+    expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(10);
 
     $this->actingAs($user)
-        ->postJson(route('rank.destroy'), ['rankingId' => $rankingId])
+        ->get(route('profile', ['id' => $user->spotify_id]))
         ->assertOk();
 
-    expect(now(), Ranking::withTrashed()->findOrFail($rankingId)->deleted_at);
-    expect(0, Song::where('ranking_id', $rankingId)->count());
-}); */
+    Livewire::actingAs($user)
+        ->test(Profile::class, ['id' => $user->spotify_id])
+        ->call('destroy', $ranking->getKey())
+        ->assertHasNoErrors();
 
-/* test('ranking non-owner can not delete someone elses rankings', function () {
+    expect(Ranking::withTrashed()->find($ranking->getKey())->deleted_at)->not->toBeNull();
+    expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(0);
+});
+
+test('ranking non-owner can not delete someone elses rankings', function () {
     $user = User::factory()
         ->has(Ranking::factory()->has(Song::factory()->count(10)))
         ->create();
 
     $otherUser = User::factory()->create();
+    $ranking = $user->rankings->first();
 
-    $rankingId = $user->rankings->first()->getKey();
+    expect($ranking->deleted_at)->toBeNull();
+    expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(10);
 
-    expect(null, Ranking::findOrFail($rankingId)->deleted_at);
-    expect(10, Song::where('ranking_id', $rankingId)->count());
-
-    $this->actingAs($otherUser)
-        ->postJson(route('rank.destroy'), ['rankingId' => $rankingId])
+    Livewire::actingAs($otherUser)
+        ->test(Profile::class, ['id' => $user->spotify_id])
+        ->call('destroy', $ranking->getKey())
         ->assertForbidden();
 
-    expect(null, Ranking::withTrashed()->findOrFail($rankingId)->deleted_at);
-    expect(10, Song::where('ranking_id', $rankingId)->count());
-}); */
+    expect($ranking->fresh()->deleted_at)->toBeNull();
+    expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(10);
+});

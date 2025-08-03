@@ -39,7 +39,7 @@ class EditRanking extends Component
         
         $this->ranking->update([
             'name' => $this->form->name,
-            'is_public' => $this->form->is_public === '1'
+            'is_public' => $this->form->is_public === '1' || $this->form->is_public === true
         ]);
 
         $this->js("window.flash({

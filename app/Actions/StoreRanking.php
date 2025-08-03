@@ -11,11 +11,9 @@ use Illuminate\Support\Str;
 
 final class StoreRanking
 {
-    public function handle(User $user, array $attributes)
+    public function handle(User $user, array $attributes): Ranking
     {
-        dd($attributes);
-
-        DB::transaction(function () use ($user, $attributes) {
+        return DB::transaction(function () use ($user, $attributes) {
             /* update or create the artist */
             $artist = Artist::updateOrCreate([
                 'artist_id' => $attributes['artist_id'],
@@ -24,7 +22,7 @@ final class StoreRanking
                 'artist_img' => $attributes['artist_img'],
             ]);
 
-            $name = $attributes['ranking_name'] === '' || is_null(attributes['ranking_name'])
+            $name = $attributes['ranking_name'] === '' || is_null($attributes['ranking_name'])
                 ? $artist->artist_name . ' List'
                 : $attributes['ranking_name'];
 
