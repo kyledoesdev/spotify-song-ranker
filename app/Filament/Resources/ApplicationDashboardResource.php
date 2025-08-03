@@ -30,6 +30,9 @@ class ApplicationDashboardResource extends Resource
                 Forms\Components\TextInput::make('version')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('slideshow_speed')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
@@ -42,6 +45,8 @@ class ApplicationDashboardResource extends Resource
                 Tables\Columns\TextColumn::make('about_page')
                     ->limit(25),
                 Tables\Columns\TextColumn::make('version')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slideshow_speed')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
