@@ -12,20 +12,20 @@ class Welcome extends Component
     public function render()
     {
         return view('livewire.welcome.welcome', [
-            'users' => User::count(),
-            'rankings' => Ranking::query()
+            'users' => round(User::count() / 50) * 50,
+            'rankings' => round(Ranking::query()
                 ->where('is_ranked', true)
                 ->where('is_public', true)
-                ->count(),
+                ->count() / 25) * 25,
             'artists' => Artist::query()
                 ->inRandomOrder()
                 ->get(),
-            'artistsCount' => Ranking::query()
+            'artistsCount' => round(Ranking::query()
                 ->where('is_ranked', true)
                 ->where('is_public', true)
                 ->whereHas('artist')
                 ->distinct('artist_id')
-                ->count('artist_id'),
+                ->count('artist_id') / 25) * 25,
         ]);
     }
 }
