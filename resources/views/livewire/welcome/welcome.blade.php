@@ -2,6 +2,7 @@
     <div>
         <div class="flex justify-center">
             <h5 class="text-4xl md:text-6xl lg:text-7xl md:mb-2 font-bold">Song - Rank</h5>
+            
         </div>
         <div class="flex justify-center">
             <h5 class="text-xs mt-1 md:text-lg">Rank you favorite artists' tracks.</h5>

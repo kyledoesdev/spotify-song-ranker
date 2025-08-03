@@ -16,9 +16,9 @@
                     <x-spotify-logo :artist="$ranking->artist->artist_id" />
                 </div>
             </div>
-            <div>
-                <h5 class="mb-1" title="{{ $ranking->name }}">
-                    <span class="text-base md:text-lg">{{ Str::limit($ranking->name, 30) }}</span>
+            <div class="space-y-1">
+                <h5 class="mb-2" title="{{ $ranking->name }}">
+                    <span class="text-base md:text-lg font-bold k-line">{{ Str::limit($ranking->name, 30) }}</span>
                 </h5>
                 
                 {{-- Artist Name --}}
@@ -51,7 +51,7 @@
                         <i class="fa fa-solid fa-hashtag text-xs md:text-base"></i>
                     </div>
                     <div class="p-0">
-                        <span class="text-xs md:text-base">{{ $ranking->songs_count }} songs ranked.</span>
+                        <span class="text-xs md:text-base">{{ $ranking->songs_count }} songs {{ $ranking->is_ranked ? ' ranked.' : ' in process.' }}</span>
                     </div>
                 </div>
                 

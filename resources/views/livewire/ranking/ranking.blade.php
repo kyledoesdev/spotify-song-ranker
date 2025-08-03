@@ -33,7 +33,7 @@
             </div>
         </div>
     @else
-        <livewire:song-rank-process
+        <livewire:song-rank.song-rank-process
             :ranking="$ranking"
             :sortingState="$sortingState"
         />

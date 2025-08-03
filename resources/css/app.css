@@ -6,7 +6,7 @@
 @source '../../vendor/spatie/laravel-support-bubble/resources/views/**/*.blade.php';
 
 @theme {
-    --font-sans: 'Inter', 'Popins', sans-serif;
+    --font-sans: 'Inter', 'Popins', sans-serif; /* 'Fredoka',  */
 }
 
 /* Import component styles */

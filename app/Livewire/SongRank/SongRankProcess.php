@@ -2,6 +2,7 @@
 
 namespace App\Livewire\SongRank;
 
+use App\Actions\CompleteSongRankProcess;
 use App\Models\Ranking;
 use App\Models\RankingSortingState;
 use App\Models\Song;
@@ -249,40 +250,15 @@ class SongRankProcess extends Component
 
     protected function complete(array $finalSongIds): void
     {
-        DB::transaction(function () use ($finalSongIds) {
-            /* update that the ranking was completed */
-            $this->ranking->update([
-                'is_ranked' => true,
-                'completed_at' => now(),
-            ]);
+        $this->js("window.showLoader()");
 
-            /* purge the state to clear data */
-            $this->sortingState->update([
-                'sorting_state' => null,
-            ]);
-
-            /* map the songs and upsert them */
-            $data = collect($finalSongIds)->map(function ($id, $index) {
-                $song = $this->ranking->songs->firstWhere('id', $id);
-
-                return [
-                    'ranking_id' => $this->ranking->getKey(),
-                    'spotify_song_id' => $song->spotify_song_id,
-                    'uuid' => $song->uuid,
-                    'title' => $song->title,
-                    'cover' => $song->cover,
-                    'rank' => $index + 1,
-                    'updated_at' => now(),
-                ];
-            })->toArray();
-
-            Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
-        });
-
-        $this->ranking->refresh();
-        $this->sortingState->refresh();
+        (new CompleteSongRankProcess)->handle($this->ranking, [
+            'finalSongIds' => $finalSongIds
+        ]);
 
         Log::channel('discord')->info("{$this->ranking->user->name} completed a ranking: {$this->ranking->name}");
+
+        $this->redirect(route('rank.show', ['id' => $this->ranking->getKey()]), navigate: true);
     }
 
     public function toggleEmbeds(): void

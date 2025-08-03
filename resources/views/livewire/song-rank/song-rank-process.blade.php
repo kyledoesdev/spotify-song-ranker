@@ -59,7 +59,7 @@
                         <div class="mt-4 flex flex-col items-center">
                             <hr class="w-full my-3">
                             <button 
-                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors"
+                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer"
                                 wire:click="chooseSong({{ $currentSong1['id'] }})"
                                 wire:key="song1-{{ $currentSong1['id'] }}"
                             >
@@ -98,7 +98,7 @@
                         <div class="mt-4 flex flex-col items-center">
                             <hr class="w-full my-3">
                             <button 
-                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors"
+                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer"
                                 wire:click="chooseSong({{ $currentSong2['id'] }})"
                                 wire:key="song2-{{ $currentSong2['id'] }}"
                             >
