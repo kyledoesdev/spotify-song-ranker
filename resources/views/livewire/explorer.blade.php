@@ -89,20 +89,22 @@
             <div class="w-full md:flex md:justify-center">
                 <div class="max-w-3xl w-full px-4">
                     @if ($this->rankings->count())
-                        <div class="flex flex-col space-y-4">
+                        <div 
+                            class="flex flex-col space-y-4"
+                            x-data="{ show: false }"
+                            x-init="setTimeout(() => show = true, 100)"
+                            x-show="show"
+                            x-transition:enter="transition ease-out duration-500"
+                            x-transition:enter-start="opacity-0 transform translate-y-4"
+                            x-transition:enter-end="opacity-100 transform translate-y-0"
+                            x-transition:leave="transition ease-in duration-300"
+                            x-transition:leave-start="opacity-100 transform translate-y-0"
+                            x-transition:leave-end="opacity-0 transform -translate-y-4"
+                        >
                             @foreach ($this->rankings as $ranking)
                                 <div 
                                     class="rounded-md cursor-pointer p-1 transform transition-all duration-300 hover:scale-101" 
                                     wire:key="ranking-{{ $ranking->getKey() }}"
-                                    x-data="{ show: false }"
-                                    x-init="setTimeout(() => show = true, {{ $loop->index * 100 }})"
-                                    x-show="show"
-                                    x-transition:enter="transition ease-out duration-500"
-                                    x-transition:enter-start="opacity-0 transform translate-y-4"
-                                    x-transition:enter-end="opacity-100 transform translate-y-0"
-                                    x-transition:leave="transition ease-in duration-300"
-                                    x-transition:leave-start="opacity-100 transform translate-y-0"
-                                    x-transition:leave-end="opacity-0 transform -translate-y-4"
                                 >
                                     <x-ranking-card :ranking="$ranking" />
                                 </div>
