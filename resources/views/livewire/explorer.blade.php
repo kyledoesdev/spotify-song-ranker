@@ -9,9 +9,9 @@
         </button>
 
         <div class="flex flex-1 py-4">
-            <!-- Mobile Sidebar Overlay -->
+            <!-- Mobile Sidebar Overlay (Invisible) -->
             @if($isSideBarOpen)
-                <div class="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" wire:click="toggleSidebar"></div>
+                <div class="md:hidden fixed inset-0 bg-transparent z-40" wire:click="toggleSidebar"></div>
             @endif
 
             <!-- Filters Sidebar -->
