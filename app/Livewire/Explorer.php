@@ -21,7 +21,7 @@ class Explorer extends Component
     public function render()
     {
         return view('livewire.explorer', [
-            'artists' => Artist::query()->topArtists()->get(),
+            'artists' => Artist::query()->topArtists()->limit(10)->get(),
         ]);
     }
 
