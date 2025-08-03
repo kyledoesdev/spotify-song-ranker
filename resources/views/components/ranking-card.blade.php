@@ -56,7 +56,7 @@
                 </div>
                 
                 {{-- Ranking Creator (only on explore.index) --}}
-                @if(get_route() === 'explore.index')
+                @if(get_route() === 'explore')
                     <div class="flex">
                         <div class="mr-1">
                             <i class="fa fa-regular fa-user text-xs md:text-base"></i>
