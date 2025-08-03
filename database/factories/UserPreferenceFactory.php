@@ -12,7 +12,7 @@ class UserPreferenceFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::facotry(),
+            'user_id' => User::factory(),
             'recieve_reminder_emails' => $this->recieveReminderEmails,
         ];
     }

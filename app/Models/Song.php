@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class Song extends Model
 {
     protected $fillable = [
@@ -17,6 +19,6 @@ class Song extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('default_order', fn ($query) => $query->orderBy('rank', 'asc'));
+        static::addGlobalScope('default_order', fn (Builder $query) => $query->orderBy('rank', 'asc'));
     }
 }

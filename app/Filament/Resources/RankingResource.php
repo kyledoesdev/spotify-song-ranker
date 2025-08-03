@@ -89,4 +89,12 @@ class RankingResource extends Resource
             'edit' => Pages\EditRanking::route('/{record}/edit'),
         ];
     }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return Ranking::query()
+            ->where('is_ranked', true)
+            ->where('is_public', true)
+            ->count();
+    }
 }

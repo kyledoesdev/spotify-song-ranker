@@ -1,0 +1,15 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Support\Facades\DB;
+
+final class {{ class }}
+{
+    public function handle()
+    {
+        DB::transaction(function() {
+
+        });
+    }
+}

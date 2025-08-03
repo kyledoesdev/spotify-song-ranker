@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
+use App\Models\UserPreference;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
@@ -18,5 +20,14 @@ class UserFactory extends Factory
             'external_token' => str()->random(32),
             'external_refresh_token' => str()->random(32),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            UserPreference::factory()->create([
+                'user_id' => $user->getKey(),
+            ]);
+        });
     }
 }

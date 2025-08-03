@@ -12,9 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class Ranking extends Model
 {
@@ -25,11 +22,6 @@ class Ranking extends Model
         'is_ranked',
         'is_public',
         'completed_at',
-    ];
-
-    protected $appends = [
-        'show_route',
-        'formatted_completed_at',
     ];
 
     protected function casts(): array
@@ -77,73 +69,19 @@ class Ranking extends Model
         return Carbon::parse($this->attributes['completed_at'])->inUserTimezone()->format('M d, Y g:i A T');
     }
 
-    public function getShowRouteAttribute()
+    public function isPublic(): bool
     {
-        return route('rank.show', ['id' => $this->getKey()]);
-    }
+        $user = auth()->check() ? auth()->user() : null;
 
-    public function getProgressPercentageAttribute()
-    {
-        if ($this->total_comparisons == 0) {
-            return 0;
+        if (is_null($user) && $this->is_public) {
+            return true;
         }
 
-        return intval(($this->completed_comparisons / $this->total_comparisons) * 100);
-    }
-
-    /**
-     * Start a new ranking.
-     */
-    public static function start($request): self
-    {
-        $ranking = DB::transaction(function () use ($request) {
-            /* update or create the artist */
-            $artist = Artist::updateOrCreate([
-                'artist_id' => $request->artist_id,
-            ], [
-                'artist_name' => $request->artist_name,
-                'artist_img' => $request->artist_img,
-            ]);
-
-            /* create a new ranking */
-            $ranking = self::create([
-                'user_id' => auth()->id(),
-                'artist_id' => $artist->getKey(),
-                'name' => Str::limit($request->name ?? $artist->artist_name.' List', 30),
-                'is_public' => $request->is_public ?? false,
-                'total_comparisons' => 0,
-                'completed_comparisons' => 0,
-            ]);
-
-            /* create the relation to the ranking's sorted state */
-            $ranking->sortingState()->create();
-
-            $songs = [];
-            foreach ($request->songs as $song) {
-                array_push($songs, [
-                    'ranking_id' => $ranking->getKey(),
-                    'spotify_song_id' => $song['id'],
-                    'uuid' => Str::uuid(),
-                    'title' => $song['name'] ?? 'track deleted from spotify servers',
-                    'cover' => $song['cover'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-
-            /* batch insert the song records */
-            Song::insert($songs);
-
-            return $ranking;
-        });
-
-        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
-
-        return $ranking;
+        return $this->is_public || ($user && $user->is_dev); // allow admin view of private rankings
     }
 
     /* scopes */
-    public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = null)
+    public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = '')
     {
         $query->newQuery()
             ->where('is_ranked', true)
@@ -151,7 +89,7 @@ class Ranking extends Model
             ->whereHas('artist', function ($query2) use ($search, $artist) {
                 $query2
                     ->when($search != '', fn ($q) => $q->where('artist_name', 'LIKE', "%{$search}%"))
-                    ->when($artist != null, fn ($q) => $q->where('id', $artist));
+                    ->when($artist != '', fn ($q) => $q->where('id', $artist));
             })
             ->with('user', 'artist')
             ->with('songs', fn ($q) => $q->where('rank', 1))

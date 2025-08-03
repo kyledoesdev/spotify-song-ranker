@@ -12,8 +12,6 @@
             <!-- Links -->
             <div class="flex justify-center text-white flex-col items-center lg:flex-row lg:space-x-4">
                 <a href="{{ route('about') }}" class="hover:text-gray-400">About</a>
-                <a target="_blank" href="https://github.com/kyledoesdev/spotify-song-ranker" class="hover:text-gray-400">Source</a>
-                <a target="_blank" href="https://github.com/kyledoesdev/spotify-song-ranker/blob/master/contributing.md" class="hover:text-gray-400">Contributing</a>
                 <a target="_blank" href="https://ko-fi.com/spacelampsix" class="hover:text-gray-400">Support</a>
             </div>
 
@@ -26,7 +24,3 @@
         </div>
     </div>
 </footer>
-
-<input type="hidden" id="authid" value="{{ auth()->id() }}" />
-<input type="hidden" id="authname" value="{{ auth()->user()?->name }}" />
-<input type="hidden" id="routename" value="{{ get_route() }}" />

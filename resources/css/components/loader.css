@@ -1,0 +1,58 @@
+@layer utilities {
+    .livewire-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .livewire-loader.show {
+        display: flex;
+    }
+
+    .livewire-loader__notes {
+        display: flex;
+        gap: 15px;
+        align-items: flex-end;
+    }
+
+    .livewire-loader__note {
+        font-size: 4rem;
+        font-weight: bold;
+        background: linear-gradient(45deg,
+                rgba(207, 120, 224, 1) 25%,
+                rgba(100, 249, 179, 1));
+        background-size: 400% 400%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: musicBounce 1.2s ease-in-out infinite, gradientAnimation 20s linear infinite;
+    }
+
+    .livewire-loader__note--1 {
+        animation-delay: 0s;
+    }
+
+    .livewire-loader__note--2 {
+        animation-delay: 0.2s;
+    }
+
+    .livewire-loader__note--3 {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes musicBounce {
+        0%, 60%, 100% {
+            transform: translateY(0);
+        }
+        30% {
+            transform: translateY(-25px);
+        }
+    }
+}

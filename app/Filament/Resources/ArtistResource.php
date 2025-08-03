@@ -44,15 +44,15 @@ class ArtistResource extends Resource
             ->bulkActions([]);
     }
 
-    public static function getRelations(): array
-    {
-        return [];
-    }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListArtists::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }

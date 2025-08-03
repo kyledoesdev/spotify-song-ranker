@@ -1,13 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap')
-layer(base);
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap') layer(base);
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @source '../../vendor/spatie/laravel-support-bubble/config/**/*.php';
 @source '../../vendor/spatie/laravel-support-bubble/resources/views/**/*.blade.php';
 
 @theme {
-  --font-sans: 'Poppins', sans-serif;
+    --font-sans: 'Inter', 'Popins', sans-serif; /* 'Fredoka',  */
 }
+
+/* Import component styles */
+@import './components/buttons.css';
+@import './components/loader.css';
+@import './components/webring.css';
+@import './components/animations.css';
+@import './components/layout.css';
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -18,76 +25,11 @@ layer(base);
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-
-@layer utilities {
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
     }
-  
-    .gradient-background {
-      background: linear-gradient(
-        45deg,
-        rgba(207, 120, 224, 1) 25%,
-        rgba(100, 249, 179, 1)
-      );
-      background-size: 400% 400%; /* Adjust for animation speed */
-      animation: gradientAnimation 20s linear infinite;
-    }
-  
-    /* kyle underline - a kyle project staple */
-    .k-line {
-      padding-bottom: 4px;
-      border-bottom: 1px solid;
-      border-color: black;
-    }
-  
-    .k-line-light {
-      padding-bottom: 4px;
-      border-bottom: 1px solid;
-      border-color: white;
-    }
-  
-    /* Create a keyframe animation for the background */
-    @keyframes gradientAnimation {
-      0%,
-      100% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-    }
-  }
-
-@utility btn-primary {
-  @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-secondary {
-  @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-helper {
-  @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-danger {
-  @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
-}
-
-@utility btn-animated {
-    @apply rounded-xl shadow-md bg-gradient-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
-    background-size: 400% 400%;
-    animation: gradientAnimation 20s linear infinite;
 }

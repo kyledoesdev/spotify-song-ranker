@@ -1,9 +1,9 @@
 <!--
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(c){{ now()->format('Y') }} Kyle Online. All rights reserved.
+(c){{ now()->format('Y') }} kyledoesdev. All rights reserved.
 
-(c){{ now()->format('Y') }} Kyle's Song Ranker. All rights reserved.
+(c){{ now()->format('Y') }} songrank.dev All rights reserved.
 
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -->
@@ -21,6 +21,9 @@
 
         <!-- Fonts -->
         <script src="https://kit.fontawesome.com/07b7751319.js" crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=fredoka:400,500,600" rel="stylesheet">
+        <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -29,14 +32,18 @@
         <main class="flex-1" id="app">
             <div class="container mx-auto p-4">
                 @include('layouts.partials.messages')
-                @yield('content')
+                
+                {{-- todo this sucks --}}
+                @if (! in_array(get_route(), ['welcome', 'about']))
+                    <livewire:navigation />
+                @endif
+
+                {{ $slot }}
             </div>
         </main>
 
         <footer class="bg-dark text-light">
-            @auth
-                <x-support-bubble />
-            @endauth
+            <x-support-bubble />
             @include('layouts.partials.footer')
             @stack('scripts')
         </footer>
