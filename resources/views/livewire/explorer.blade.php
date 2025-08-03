@@ -82,6 +82,11 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Pagination (Desktop Only) -->
+                    <div class="hidden md:block p-4 border-t">
+                        {{ $this->rankings->links() }}
+                    </div>
                 </div>
             </div>
 
@@ -91,31 +96,49 @@
                     @if ($this->rankings->count())
                         <div 
                             class="flex flex-col space-y-4"
-                            x-data="{ show: false }"
-                            x-init="setTimeout(() => show = true, 100)"
-                            x-show="show"
-                            x-transition:enter="transition ease-out duration-500"
-                            x-transition:enter-start="opacity-0 transform translate-y-4"
-                            x-transition:enter-end="opacity-100 transform translate-y-0"
-                            x-transition:leave="transition ease-in duration-300"
-                            x-transition:leave-start="opacity-100 transform translate-y-0"
-                            x-transition:leave-end="opacity-0 transform -translate-y-4"
+                            x-data="{ 
+                                init() {
+                                    this.animateCards();
+                                    Livewire.hook('morph.updated', () => {
+                                        this.$nextTick(() => this.animateCards());
+                                    });
+                                },
+                                animateCards() {
+                                    const cards = this.$el.querySelectorAll('[data-ranking-card]');
+                                    cards.forEach((card) => {
+                                        card.style.opacity = '0';
+                                        card.style.transform = 'translateY(20px) scale(0.98)';
+                                        card.style.transition = 'none';
+                                    });
+                                    
+                                    setTimeout(() => {
+                                        cards.forEach((card) => {
+                                            card.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                                            card.style.opacity = '1';
+                                            card.style.transform = 'translateY(0) scale(1)';
+                                        });
+                                    }, 50);
+                                }
+                            }"
                         >
-                            @foreach ($this->rankings as $ranking)
+                            @foreach ($this->rankings as $index => $ranking)
                                 <div 
                                     class="rounded-md cursor-pointer p-1 transform transition-all duration-300 hover:scale-101" 
                                     wire:key="ranking-{{ $ranking->getKey() }}"
+                                    data-ranking-card
                                 >
                                     <x-ranking-card :ranking="$ranking" />
                                 </div>
                             @endforeach
                         </div>
 
-                        <div class="w-full overflow-x-auto mt-4">
+                        <div class="mt-4 md:hidden">
                             {{ $this->rankings->links() }}
                         </div>
                     @else
-                        <div class="flex justify-center">
+                        <div 
+                            class="flex justify-center"
+                        >
                             <span>Loading Rankings...</span>
                         </div>
                     @endif
