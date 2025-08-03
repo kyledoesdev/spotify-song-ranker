@@ -18,11 +18,7 @@
     
     <div>
         <div class="flex justify-center mt-8">
-            <livewire:welcome.artist-slideshow 
-                :artists="$artists" 
-                :speed="2" 
-                direction="left" 
-            />
+            <livewire:welcome.artist-slideshow />
         </div>
     </div>
     
