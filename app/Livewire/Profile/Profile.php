@@ -43,7 +43,7 @@ class Profile extends Component
 
         Song::where('ranking_id', $rankingId)->delete();
 
-        Log::channel('discord')->info(auth()->user()->name . ' deleted ranking: ' . $ranking->name);
+        Log::channel('discord_ranking_updates')->info(auth()->user()->name . ' deleted ranking: ' . $ranking->name);
 
         $this->js("
             window.flash({

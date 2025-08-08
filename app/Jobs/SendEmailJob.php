@@ -27,6 +27,6 @@ class SendEmailJob implements ShouldQueue
             Notification::send($user, new EmailBlastNotification($this->emailTemplate));
         }
 
-        Log::channel('discord')->info("Blasted {$users->count()} users.");
+        Log::channel('discord_other_updates')->info("Blasted {$users->count()} users.");
     }
 }
