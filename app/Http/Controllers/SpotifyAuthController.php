@@ -26,7 +26,7 @@ class SpotifyAuthController extends Controller
             ->first();
 
         if (! is_null($deletedUser)) {
-            Log::channel('discord')->warning($user->name.' is back from the dead!!!!');
+            Log::channel('discord_user_updates')->warning($user->name.' is back from the dead!!!!');
             $deletedUser->restore();
             session()->flash('success', "Welcome back {$user->name}.. we've been expecting you.. To revive your rankings - create an issue on our github page. (Link in the footer of the site.)");
         }
@@ -47,9 +47,9 @@ class SpotifyAuthController extends Controller
 
         if ($user->wasRecentlyCreated) {
             $user->preferences()->create(['recieve_reminder_emails' => true]);
-            Log::channel('discord')->warning("New User: $user->name ($user->email) just logged in!!");
+            Log::channel('discord_user_updates')->warning("New User: $user->name ($user->email) just logged in!!");
         } else {
-            Log::channel('discord')->warning("$user->name ($user->email) just logged in!!");
+            Log::channel('discord_user_updates')->warning("$user->name ($user->email) just logged in!!");
         }
 
         Auth::login($user);

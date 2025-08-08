@@ -138,7 +138,7 @@ class SongRankSetup extends Component
             'tracks' => $this->selectedArtistTracks,
         ]);
 
-        Log::channel('discord')->info(auth()->user()->name.' started ranking: '.$ranking->name);
+        Log::channel('discord_ranking_updates')->info(auth()->user()->name.' started ranking: '.$ranking->name);
 
         $this->redirect(route('rank.show', ['id' => $ranking->getKey()]));
     }

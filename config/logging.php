@@ -109,11 +109,35 @@ return [
             'driver' => 'bugsnag',
         ],
 
-        'discord' => [
+        'discord_user_updates' => [
             'driver' => 'custom',
             'via' => MarvinLabs\DiscordLogger\Logger::class,
             'level' => 'debug',
-            'url' => env('DISCORD_WEBHOOK'),
+            'url' => env('DISCORD_WEBHOOK_USER_UPDATES'),
+            'ignore_exceptions' => env('LOG_DISCORD_IGNORE_EXCEPTIONS', false),
+        ],
+
+        'discord_ranking_updates' => [
+            'driver' => 'custom',
+            'via' => MarvinLabs\DiscordLogger\Logger::class,
+            'level' => 'debug',
+            'url' => env('DISCORD_WEBHOOK_RANKING_UPDATES'),
+            'ignore_exceptions' => env('LOG_DISCORD_IGNORE_EXCEPTIONS', false),
+        ],
+
+        'discord_billing_updates' => [
+            'driver' => 'custom',
+            'via' => MarvinLabs\DiscordLogger\Logger::class,
+            'level' => 'debug',
+            'url' => env('DISCORD_WEBHOOK_BILLING_UPDATES'),
+            'ignore_exceptions' => env('LOG_DISCORD_IGNORE_EXCEPTIONS', false),
+        ],
+
+        'discord_other_updates' => [
+            'driver' => 'custom',
+            'via' => MarvinLabs\DiscordLogger\Logger::class,
+            'level' => 'debug',
+            'url' => env('DISCORD_WEBHOOK_OTHER_UPDATES'),
             'ignore_exceptions' => env('LOG_DISCORD_IGNORE_EXCEPTIONS', false),
         ],
     ],

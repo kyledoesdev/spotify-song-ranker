@@ -20,7 +20,7 @@ class RankingReminderCommand extends Command
             ->forRankingReminders()
             ->get();
 
-        Log::channel('discord')->info("Reminding {$users->count()} users to complete their rankings.");
+        Log::channel('discord_other_updates')->info("Reminding {$users->count()} users to complete their rankings.");
 
         $users->each(function (User $user) {
             if ($user->preferences && $user->preferences->recieve_reminder_emails === true) {
@@ -28,6 +28,6 @@ class RankingReminderCommand extends Command
             }
         });
 
-        Log::channel('discord')->info('Completed Ranking Reminders.');
+        Log::channel('discord_other_updates')->info('Completed Ranking Reminders.');
     }
 }

@@ -231,7 +231,7 @@ class SongRankProcess extends Component
             $this->processMerge();
 
         } catch (Exception $e) {
-            Log::error('Error in chooseSong', ['error' => $e->getMessage()]);
+            Log::channel('discord_other_updates')->error('Error in chooseSong', ['error' => $e->getMessage()]);
         } finally {
             $this->isProcessing = false;
         }
@@ -255,7 +255,7 @@ class SongRankProcess extends Component
             'finalSongIds' => $finalSongIds,
         ]);
 
-        Log::channel('discord')->info("{$this->ranking->user->name} completed a ranking: {$this->ranking->name}");
+        Log::channel('discord_ranking_updates')->info("{$this->ranking->user->name} completed a ranking: {$this->ranking->name}");
 
         $this->redirect(route('rank.show', ['id' => $this->ranking->getKey()]), navigate: true);
     }
