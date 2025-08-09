@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\SpotifyAPIController;
+use App\Actions\Spotify\RefreshToken;
 use App\Models\Artist;
 use App\Models\User;
 use Exception;
@@ -62,10 +62,11 @@ class UpdateArtistImages extends Command
     private function authenticateForSpotify(): bool
     {
         try {
-            Auth::login(User::where('spotify_id', config('services.spotify.system_id'))->firstOrFail());
-            (new SpotifyAPIController)->refreshToken();
+            $user = User::where('spotify_id', config('services.spotify.system_id'))->firstOrFail();
 
-            return true;
+            $success = (new RefreshToken)->handle($user);
+
+            return $success;
         } catch (Exception $e) {
             Log::channel('discord_other_updates')->error('Could not authenticate with spotify for updating artist images.');
 
