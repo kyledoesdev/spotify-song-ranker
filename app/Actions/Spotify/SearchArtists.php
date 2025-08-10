@@ -40,7 +40,9 @@ final class SearchArtists
                     ]);
                 }
             });
-        } catch (Exception) {
+        } catch (Exception $e) {
+            report($e);
+
             return null;
         }
 

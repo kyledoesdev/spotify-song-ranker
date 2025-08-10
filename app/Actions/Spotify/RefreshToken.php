@@ -27,6 +27,8 @@ final class RefreshToken
             return true;
 
         } catch (Exception $e) {
+            report($e);
+
             return false;
         }
     }
