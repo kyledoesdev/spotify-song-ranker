@@ -51,7 +51,7 @@ class SongRankSetup extends Component
 
         $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->searchTerm);
 
-        if ($this->searchedArtists->isEmpty() || is_null($this->searchedArtists)) {
+        if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
             $this->js("
                 window.flash({
                     title: 'No Artists found.',

@@ -74,6 +74,8 @@ final class GetArtistSongs
             $songs = $songs->groupBy('name')->map->first();
 
         } catch (Exception $e) {
+            report($e);
+
             return null;
         }
 

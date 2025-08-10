@@ -58,10 +58,9 @@
                             <img
                                 class="shadow-md rounded-4xl m-2 cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
                                 src="{{ $artist['cover'] }}"
-                                wire:click="loadArtistSongs('{{ $artist['id'] }}')"
                                 alt="{{ $artist['name'] }}"
                                 x-data 
-                                @click="window.showLoader(); $wire.searchArtist().then(() => window.hideLoader())"
+                                @click="window.showLoader(); $wire.loadArtistSongs('{{ $artist['id'] }}').then(() => window.hideLoader())"
                             >
                             <h5 class="mt-1 transition-all duration-300">{{ $artist['name'] }}</h5>
                             <div x-auto-animate>
