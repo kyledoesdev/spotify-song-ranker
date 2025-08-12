@@ -69,17 +69,6 @@ class Ranking extends Model
         return Carbon::parse($this->attributes['completed_at'])->inUserTimezone()->format('M d, Y g:i A T');
     }
 
-    public function isPublic(): bool
-    {
-        $user = auth()->check() ? auth()->user() : null;
-
-        if (is_null($user) && $this->is_public) {
-            return true;
-        }
-
-        return $this->is_public || ($user && $user->is_dev); // allow admin view of private rankings
-    }
-
     /* scopes */
     public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = '')
     {
