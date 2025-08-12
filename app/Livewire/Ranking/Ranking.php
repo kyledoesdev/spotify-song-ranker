@@ -3,19 +3,28 @@
 namespace App\Livewire\Ranking;
 
 use App\Models\Ranking as RankingModel;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Ranking extends Component
 {
-    public RankingModel $ranking;
+    public ?RankingModel $ranking;
 
-    public function mount(int $id)
+    public function mount($id)
     {
         $this->ranking = RankingModel::query()
             ->with(['user', 'songs', 'artist', 'sortingState'])
-            ->findOrFail($id);
+            ->find($id);
 
-        if (! $this->ranking->isPublic()) {
+        if (is_null($this->ranking)) {
+            $email = auth()->check() ? auth()->user()->email : request()->ip();
+            
+            Log::channel('discord_other_updates')->info("Ranking not found: Id Given: {$id} :: User Email: {$email}");
+
+            abort(404);
+        }
+
+        if (! $this->ranking->is_public && $this->ranking->user_id != auth()->id()) {
             abort(404);
         }
 

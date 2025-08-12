@@ -4,21 +4,30 @@ namespace App\Livewire\Ranking;
 
 use App\Livewire\Forms\RankingForm;
 use App\Models\Ranking;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class EditRanking extends Component
 {
-    public Ranking $ranking;
+    public ?Ranking $ranking;
 
     public RankingForm $form;
 
-    public function mount(int $id)
+    public function mount($id)
     {
         $this->ranking = Ranking::query()
             ->with('songs')
-            ->findOrFail($id);
+            ->find($id);
 
-        if ($this->ranking->user_id !== auth()->id()) {
+        if (is_null($this->ranking)) {
+            $email = auth()->check() ? auth()->user()->email : request()->ip();
+            
+            Log::channel('discord_other_updates')->info("Ranking not found: Id Given: {$id} :: User Email: {$email}");
+
+            abort(404);
+        }
+
+        if ($this->ranking->user_id != auth()->id()) {
             abort(403, 'You are not allowed to edit this ranking.');
         }
 

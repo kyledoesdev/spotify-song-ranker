@@ -11,5 +11,5 @@ class RankingForm extends Form
     public string $name = '';
 
     #[Validate('required')]
-    public $is_public;
+    public $is_public = true;
 }
