@@ -131,6 +131,10 @@ class Ranking extends Model
     public static function getAdminTable(?int $user_id = null): array
     {
         return [
+            TextColumn::make('id')
+                ->label('ID')
+                ->searchable()
+                ->sortable(),
             TextColumn::make('user.name')
                 ->label('Creator')
                 ->searchable()
@@ -160,7 +164,14 @@ class Ranking extends Model
                 ->trueIcon('heroicon-o-check-badge')
                 ->falseIcon('heroicon-o-x-mark')
                 ->toggleable(isToggledHiddenByDefault: false),
+            TextColumn::make('created_at')
+                ->label('Created')
+                ->searchable()
+                ->sortable()
+                ->dateTime()
+                ->toggleable(isToggledHiddenByDefault: false),
             TextColumn::make('completed_at')
+                ->label('Completed')
                 ->searchable()
                 ->sortable()
                 ->dateTime()
@@ -176,11 +187,6 @@ class Ranking extends Model
                         ->inUserTimezone()
                         ->format('m/d/Y g:i A T');
                 }),
-            TextColumn::make('created_at')
-                ->searchable()
-                ->sortable()
-                ->dateTime()
-                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('songs_count')
                 ->sortable()
                 ->label('Songs')

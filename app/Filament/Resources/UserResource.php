@@ -47,6 +47,10 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\ImageColumn::make('avatar')
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')
@@ -69,7 +73,7 @@ class UserResource extends Resource
                     ->label('Signed Up At')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: false),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Last Logged In At')
                     ->dateTime()
@@ -99,6 +103,7 @@ class UserResource extends Resource
                         Group::make()
                             ->columns(2)
                             ->schema([
+                                TextEntry::make('id'),
                                 TextEntry::make('name'),
                                 TextEntry::make('email'),
                                 TextEntry::make('timezone'),
