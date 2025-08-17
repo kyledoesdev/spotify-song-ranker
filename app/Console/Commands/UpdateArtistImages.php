@@ -64,7 +64,11 @@ class UpdateArtistImages extends Command
         try {
             $user = User::where('spotify_id', config('services.spotify.system_id'))->firstOrFail();
 
+            Auth::login($user);
+
             $success = (new RefreshToken)->handle($user);
+
+            Auth::logout();
 
             return $success;
         } catch (Exception $e) {

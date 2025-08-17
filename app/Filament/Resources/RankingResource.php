@@ -41,7 +41,7 @@ class RankingResource extends Resource
     {
         return $infolist
             ->schema([
-                Section::make('Ranking Information')
+                Section::make(fn (Ranking $ranking) => "Ranking ID: {$ranking->getKey()}.")
                     ->columns(2)
                     ->schema([
                         Group::make()
