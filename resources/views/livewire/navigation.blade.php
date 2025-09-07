@@ -1,8 +1,14 @@
 <div>
     <div class="flex justify-between shadow-md bg-white rounded-lg py-4">
         <div>
-            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}">
-                <h5 class="text-xs md:text-base lg:text-xl p-1 mx-3">songrank 🎵</h5>
+            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="h-10 flex items-center me-4 mx-2">
+                <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0">
+                    <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8" />
+                </div>
+
+                <div class="text-sm font-medium truncate text-zinc-800 mx-2">
+                    {{ config('app.name') }}
+                </div>
             </a>
         </div>
         <div>
