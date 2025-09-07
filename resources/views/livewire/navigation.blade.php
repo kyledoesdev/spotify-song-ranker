@@ -41,19 +41,17 @@
                         x-on:click="toggle()"
                         :aria-expanded="open"
                         type="button"
-                        class="flex items-center px-2 gap-2 rounded-md cursor-pointer"
+                        class="h-10 flex items-center me-4 mx-2"
                     >
-                        <img
-                            class="w-8 h-8 rounded-xl border border-zinc-900" 
-                            src="{{ auth()->user()->avatar }}" 
-                            alt="User Actions"
-                        />
-                        <span class="text-sm sm:text-base md:text-lg hidden md:block">
-                            {{ auth()->user()->name }} <i class="fa fa-solid fa-chevron-down"></i>
-                        </span>
-                        <span class="md:hidden">
-                            <i class="fa fa-solid fa-chevron-down"></i>
-                        </span>
+                        <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0">
+                            <img src="{{ auth()->user()->avatar }}" alt="User Actions" class="h-8 w-8" />
+                        </div>
+
+                        <div class="text-sm font-medium truncate text-zinc-800 mx-2 hidden md:block">
+                            {{ auth()->user()->name }}
+                        </div>
+
+                        <i class="fa fa-solid fa-chevron-down hidden md:block ml-2 md:ml-0"></i>
                     </button>
                     <div
                         x-ref="panel"
