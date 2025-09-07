@@ -39,7 +39,7 @@ class SpotifyAuthController extends Controller
             'avatar' => $user->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$user->name}",
             'external_token' => $user->token,
             'external_refresh_token' => $user->refreshToken,
-            'timezone' => get_timezone(),
+            'timezone' => timezone(),
             'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',

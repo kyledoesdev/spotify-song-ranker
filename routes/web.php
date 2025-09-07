@@ -9,12 +9,14 @@ use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\Settings;
 use App\Livewire\Ranking\EditRanking;
 use App\Livewire\Ranking\Ranking;
+use App\Livewire\Terms;
 use App\Livewire\Welcome\Welcome;
 use Illuminate\Support\Facades\Route;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::get('/', Welcome::class)->name('welcome');
 Route::get('/about', About::class)->name('about');
+Route::get('/terms', Terms::class)->name('terms');
 
 Route::get('/explore', Explorer::class)->name('explore');
 
