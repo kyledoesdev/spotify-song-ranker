@@ -43,9 +43,12 @@
         </main>
 
         <footer class="bg-dark text-light">
-            <x-support-bubble />
             @include('layouts.partials.footer')
-            @stack('scripts')
+            
+            {{-- for now --}}
+            @auth
+                <x-support-bubble />
+            @endauth
         </footer>
     </body>
 </html>

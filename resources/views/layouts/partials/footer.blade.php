@@ -10,9 +10,9 @@
             </div>
 
             <!-- Links -->
-            <div class="flex justify-center text-white flex-col items-center lg:flex-row lg:space-x-4">
+            <div class="flex justify-center text-white items-center lg:flex-row space-x-4">
                 <a href="{{ route('about') }}" class="hover:text-gray-400">About</a>
-                <a target="_blank" href="https://ko-fi.com/spacelampsix" class="hover:text-gray-400">Support</a>
+                <a href="{{ route('terms') }}" class="hover:text-gray-400">Terms</a>
             </div>
 
             <!-- Social Media -->
@@ -20,6 +20,7 @@
                 <a target="_blank" href="https://discord.gg/zXe9kqyFEJ" class="text-gray-400 hover:text-white">Discord</a>
                 <a target="_blank" href="https://github.com/kyledoesdev" class="text-gray-400 hover:text-white">Github</a>
                 <a target="_blank" href="https://bsky.app/profile/kyledoes.dev" class="text-gray-400 hover:text-white">Bluesky</a>
+                <a target="_blank" href="https://ko-fi.com/spacelampsix" class="text-gray-400 hover:text-white">Donate</a>
             </div>
         </div>
     </div>

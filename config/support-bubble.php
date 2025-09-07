@@ -40,12 +40,12 @@ return [
      */
     'classes' => [
         'container' => 'text-base items-end z-30 flex-col m-4 gap-3',
-        // bubble icon
-        'bubble' => 'hidden sm:block | bg-purple-400 rounded-full shadow-lg w-14 h-14 p-4 border-3 border-zinc-800 cursor-pointer',
-        // input boxes
-        'input' => 'bg-gray-100 w-full max-w-full p-2 rounded-sm shadow-md text-zince-800 text-base',
-        // submit btn
-        'button' => 'inline-flex place-center px-4 py-3 h-10 border-0 bg-purple-500 hover:bg-purple-600 active:bg-purple-600 overflow-hidden rounded-sm text-white leading-none no-underline cursor-pointer',
+        // bubble icon - added relative positioning for absolute SVG children
+        'bubble' => 'hidden sm:flex items-center justify-center bg-purple-400 rounded-full shadow-lg w-14 h-14 p-3 border-2 border-zinc-800 cursor-pointer relative',
+        // input boxes - fixed typo in text-zince-800
+        'input' => 'bg-gray-100 w-full max-w-full p-2 rounded-sm shadow-md text-zinc-800 text-base',
+        // submit btn - fixed place-center utility
+        'button' => 'inline-flex items-center justify-center px-4 py-3 h-10 border-0 bg-purple-500 hover:bg-purple-600 active:bg-purple-600 overflow-hidden rounded-sm text-white leading-none no-underline cursor-pointer',
     ],
 
     /*
