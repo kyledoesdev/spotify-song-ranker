@@ -22,3 +22,4 @@ yarn-error.log
 /public/js/filament
 /public/css/filament
 /public/build/filament
+/public/fonts/filament/filament/*
