@@ -17,6 +17,8 @@ class Profile extends Component
     public function mount(string $id)
     {
         $this->user = User::where('spotify_id', $id)->firstOrFail();
+
+        session()->put(['profile_name' => $this->user->name]);
     }
 
     public function render()
