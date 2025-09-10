@@ -53,7 +53,7 @@ class RankingResource extends Resource
                                     ->label('Creator')
                                     ->icon('heroicon-m-user'),
                                 TextEntry::make('name')
-                                    ->url(fn (Ranking $ranking) => route('rank.show', ['id' => $ranking->getKey()]))
+                                    ->url(fn (Ranking $ranking) => route('ranking', ['id' => $ranking->getKey()]))
                                     ->icon('heroicon-m-link'),
                                 TextEntry::make('artist.artist_name')
                                     ->icon('heroicon-m-musical-note'),

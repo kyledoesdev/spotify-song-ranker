@@ -34,7 +34,7 @@
                 @include('layouts.partials.messages')
                 
                 {{-- todo this sucks --}}
-                @if (! in_array(get_route(), ['welcome', 'about']))
+                @if (! in_array(Route::currentRouteName(), ['welcome', 'about', 'terms']))
                     <livewire:navigation />
                 @endif
 

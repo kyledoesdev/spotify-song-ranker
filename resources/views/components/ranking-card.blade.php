@@ -2,7 +2,7 @@
 <div 
     class="bg-white shadow-md rounded-lg cursor-pointer hover:shadow-lg transition-shadow relative p-2"
 >
-    <div class="m-2" style="min-width: 35vw;" onclick="window.location.href='{{ route('rank.show', ['id' => $ranking->getKey() ]) }}'">
+    <div class="m-2" style="min-width: 35vw;" onclick="window.location.href='{{ route('ranking', ['id' => $ranking->getKey() ]) }}'">
         <div class="flex space-x-6">
             <div>
                 <img 
@@ -55,7 +55,7 @@
                     </div>
                 </div>
                 
-                @if(get_route() != 'profile')
+                @if(Route::currentRouteName() != 'profile')
                     <div class="flex">
                         <div class="mr-1">
                             <i class="fa fa-regular fa-user text-xs md:text-base"></i>
@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    @if (auth()->id() === $ranking->user_id && get_route() === 'profile')
+    @if (auth()->id() === $ranking->user_id && Route::currentRouteName() === 'profile')
         <div class="absolute top-2 right-2 flex space-x-1">
             <a 
                 class="text-gray-500 hover:text-green-600 transition-colors p-1 text-sm cursor-pointer"

@@ -140,7 +140,7 @@ class SongRankSetup extends Component
 
         Log::channel('discord_ranking_updates')->info(auth()->user()->name.' started ranking: '.$ranking->name);
 
-        $this->redirect(route('rank.show', ['id' => $ranking->getKey()]));
+        $this->redirect(route('ranking', ['id' => $ranking->getKey()]));
     }
 
     public function resetSetup()
