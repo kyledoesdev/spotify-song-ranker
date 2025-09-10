@@ -6,6 +6,7 @@ use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
@@ -21,7 +22,7 @@ class Profile extends Component
     public function render()
     {
         return view('livewire.profile.profile', [
-            'name' => get_formatted_name($this->user->name),
+            'name' => Str::endsWith($this->user->name, 's') ? Str::finish($this->user->name, "'") : $this->user->name."'s"
         ]);
     }
 

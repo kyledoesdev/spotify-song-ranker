@@ -20,7 +20,7 @@ Route::get('/terms', Terms::class)->name('terms');
 
 Route::get('/explore', Explorer::class)->name('explore');
 
-Route::get('/rank/{id}', Ranking::class)->name('rank.show');
+Route::get('/rank/{id}', Ranking::class)->name('ranking');
 Route::get('/profile/{id}', Profile::class)->name('profile');
 
 Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');

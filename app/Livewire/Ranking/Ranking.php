@@ -31,6 +31,8 @@ class Ranking extends Component
         if (! $this->ranking->is_ranked && $this->ranking->user_id != auth()->id()) {
             abort(403, 'This ranking is not complete. You can not view it.');
         }
+
+        session()->put(['ranking_name' => $this->ranking->name]);
     }
 
     public function render()
