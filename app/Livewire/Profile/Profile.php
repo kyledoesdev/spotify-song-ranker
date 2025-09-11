@@ -24,7 +24,7 @@ class Profile extends Component
     public function render()
     {
         return view('livewire.profile.profile', [
-            'name' => Str::endsWith($this->user->name, 's') ? Str::finish($this->user->name, "'") : $this->user->name."'s"
+            'name' => Str::endsWith($this->user->name, 's') ? Str::finish($this->user->name, "'") : $this->user->name."'s",
         ]);
     }
 
@@ -46,7 +46,7 @@ class Profile extends Component
 
         Song::where('ranking_id', $rankingId)->delete();
 
-        Log::channel('discord_ranking_updates')->info(auth()->user()->name . ' deleted ranking: ' . $ranking->name);
+        Log::channel('discord_ranking_updates')->info(auth()->user()->name.' deleted ranking: '.$ranking->name);
 
         $this->js("
             window.flash({

@@ -11,7 +11,7 @@ class TermsForm
     {
         return $schema
             ->components([
-                RichEditor::make('content')->columnSpanFull()
+                RichEditor::make('content')->columnSpanFull(),
             ]);
     }
 }

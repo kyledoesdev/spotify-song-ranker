@@ -27,7 +27,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-user';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-user';
 
     public static function form(Schema $schema): Schema
     {
@@ -134,12 +134,14 @@ class UserResource extends Resource
                             ->label('User Packet')
                             ->markdown()
                             ->formatStateUsing(function ($state) {
-                                if (!$state) return 'No data';
-                                                                
+                                if (! $state) {
+                                    return 'No data';
+                                }
+
                                 return collect($state)
-                                    ->map(fn($value, $key) => "- **{$key}:** {$value}")
+                                    ->map(fn ($value, $key) => "- **{$key}:** {$value}")
                                     ->join("\n");
-                            })
+                            }),
                     ]),
             ]);
     }

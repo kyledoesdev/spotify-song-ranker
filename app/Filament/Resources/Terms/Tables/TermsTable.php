@@ -30,7 +30,7 @@ class TermsTable
                     ->dateTime(),
             ])
             ->filters([
-                
+
             ])
             ->recordActions([
                 ViewAction::make(),

@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Welcome;
 
-use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\User;
 use Livewire\Component;
@@ -17,9 +16,6 @@ class Welcome extends Component
                 ->where('is_ranked', true)
                 ->where('is_public', true)
                 ->count() / 25) * 25,
-            'artists' => Artist::query()
-                ->inRandomOrder()
-                ->get(),
             'artistsCount' => round(Ranking::query()
                 ->where('is_ranked', true)
                 ->where('is_public', true)

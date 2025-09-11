@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\Rankings\Pages;
 
-use Filament\Actions\EditAction;
 use App\Filament\Resources\Rankings\RankingResource;
-use Filament\Actions;
+use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewRanking extends ViewRecord

@@ -2,13 +2,11 @@
 
 namespace App\Filament\Resources\Artists;
 
-use App\Filament\Resources\ArtistResource\Pages;
 use App\Filament\Resources\Artists\Pages\ListArtists;
 use App\Models\Artist;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -17,7 +15,7 @@ class ArtistResource extends Resource
 {
     protected static ?string $model = Artist::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-musical-note';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-musical-note';
 
     public static function form(Schema $schema): Schema
     {

@@ -21,7 +21,7 @@ class EditRanking extends Component
 
         if (is_null($this->ranking)) {
             $email = auth()->check() ? auth()->user()->email : request()->ip();
-            
+
             Log::channel('discord_other_updates')->info("Ranking not found: Id Given: {$id} :: User Email: {$email}");
 
             abort(404);

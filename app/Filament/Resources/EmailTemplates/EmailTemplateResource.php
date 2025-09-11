@@ -22,7 +22,7 @@ class EmailTemplateResource extends Resource
 {
     protected static ?string $model = EmailTemplate::class;
 
-    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-paper-airplane';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-paper-airplane';
 
     public static function form(Schema $schema): Schema
     {
