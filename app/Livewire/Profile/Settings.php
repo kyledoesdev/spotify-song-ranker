@@ -61,7 +61,9 @@ class Settings extends Component
             ->with('songs', 'artist')
             ->get();
 
-        dispatch(fn () => Notification::send(auth()->user(), new DownloadDataNotification($rankings)));
+        $user = auth()->user();
+
+        dispatch(fn () => Notification::send($user, new DownloadDataNotification($rankings)));
 
         $this->js("
             window.flash({
