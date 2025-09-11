@@ -43,6 +43,7 @@ class SpotifyAuthController extends Controller
             'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
+            'user_packet' => zuck(),
         ]);
 
         if ($user->wasRecentlyCreated) {

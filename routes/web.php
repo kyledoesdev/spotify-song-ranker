@@ -16,7 +16,7 @@ use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::get('/', Welcome::class)->name('welcome');
 Route::get('/about', About::class)->name('about');
-Route::get('/terms', Terms::class)->name('terms');
+//Route::get('/terms', Terms::class)->name('terms');
 
 Route::get('/explore', Explorer::class)->name('explore');
 

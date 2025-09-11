@@ -29,6 +29,7 @@ class User extends Authenticatable implements FilamentUser
         'ip_address',
         'user_agent',
         'user_platform',
+        'user_packet',
         'external_token',
         'external_refresh_token',
         'is_dev',
@@ -40,13 +41,14 @@ class User extends Authenticatable implements FilamentUser
         'external_token',
         'external_refresh_token',
         'ip_address',
+        'user_packet',
         'password',
     ];
 
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            'user_packet' => 'object',
         ];
     }
 
