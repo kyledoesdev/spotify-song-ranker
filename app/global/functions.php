@@ -10,12 +10,12 @@ function prev_route(): string
 
 function title(): string
 {
-    $title = config('app.name') . ' - ';
+    $title = config('app.name').' - ';
 
-    match(Route::currentRouteName()) {
+    match (Route::currentRouteName()) {
         'ranking' => $title .= session()->get('ranking_name'),
-        'profile' => $title .= session()->get('profile_name')  . ' Profile',
-        default   => $title .= Str::title(Str::lower(Str::replace('.', ' ', Route::currentRouteName())))
+        'profile' => $title .= session()->get('profile_name').' Profile',
+        default => $title .= Str::title(Str::lower(Str::replace('.', ' ', Route::currentRouteName())))
     };
 
     return $title;

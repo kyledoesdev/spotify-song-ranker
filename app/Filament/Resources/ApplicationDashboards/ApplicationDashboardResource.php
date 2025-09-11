@@ -2,21 +2,21 @@
 
 namespace App\Filament\Resources\ApplicationDashboards;
 
-use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\RichEditor;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Actions\EditAction;
 use App\Filament\Resources\ApplicationDashboards\Pages\ManageApplicationDashboards;
 use App\Models\ApplicationDashboard;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ApplicationDashboardResource extends Resource
 {
     protected static ?string $model = ApplicationDashboard::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rocket-launch';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rocket-launch';
 
     protected static ?string $navigationLabel = 'App Settings';
 

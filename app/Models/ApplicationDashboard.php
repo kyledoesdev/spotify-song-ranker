@@ -10,6 +10,6 @@ class ApplicationDashboard extends Model
         'name',
         'about_page',
         'version',
-        'slideshow_speed'
+        'slideshow_speed',
     ];
 }

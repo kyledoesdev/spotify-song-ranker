@@ -34,11 +34,11 @@
         </a>
 
         <a class="btn-primary m-2 p-2" href="{{ auth()->check() ? route('dashboard') : route('spotify.login') }}">
-            @if(auth()->check())
+            @auth
                 <span>View Dashboard</span>
             @else
                 <span>Login & Start</span>
-            @endif
+            @endauth
         </a>
     </div>     
 </div>

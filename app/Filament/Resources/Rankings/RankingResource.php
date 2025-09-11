@@ -2,27 +2,25 @@
 
 namespace App\Filament\Resources\Rankings;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\ViewAction;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Group;
+use App\Filament\Resources\Rankings\Pages\EditRanking;
 use App\Filament\Resources\Rankings\Pages\ListRankings;
 use App\Filament\Resources\Rankings\Pages\ViewRanking;
-use App\Filament\Resources\Rankings\Pages\EditRanking;
-use App\Filament\Resources\RankingResource\Pages;
 use App\Filament\Resources\Rankings\RelationManagers\SongsRelationManager;
 use App\Models\Ranking;
+use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
 
 class RankingResource extends Resource
 {
     protected static ?string $model = Ranking::class;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-list-bullet';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-list-bullet';
 
     public static function form(Schema $schema): Schema
     {

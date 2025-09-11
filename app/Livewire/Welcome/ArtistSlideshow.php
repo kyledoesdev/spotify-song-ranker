@@ -13,13 +13,13 @@ class ArtistSlideshow extends Component
 
     public function mount()
     {
-        $this->artists = Artist::query()->topArtists()->get();
+        $this->artists = Artist::query()->topArtists()->limit(100)->get();
     }
 
     public function render()
     {
         return view('livewire.welcome.artist-slideshow', [
-            'speed' => ApplicationDashboard::first()->slideshow_speed
+            'speed' => ApplicationDashboard::first()->slideshow_speed,
         ]);
     }
 }

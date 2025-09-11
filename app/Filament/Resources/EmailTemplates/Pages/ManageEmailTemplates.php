@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources\EmailTemplates\Pages;
 
-use Filament\Actions\CreateAction;
 use App\Filament\Resources\EmailTemplates\EmailTemplateResource;
-use Filament\Actions;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 
 class ManageEmailTemplates extends ManageRecords
