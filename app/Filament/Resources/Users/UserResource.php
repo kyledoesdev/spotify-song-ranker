@@ -96,7 +96,8 @@ class UserResource extends Resource
         return $schema
             ->components([
                 Section::make('User Information')
-                    ->columns(2)
+                    ->columns(3)
+                    ->columnSpanFull()
                     ->schema([
                         Group::make()
                             ->schema([
@@ -128,6 +129,17 @@ class UserResource extends Resource
                                             ->format('m/d/Y g:i A T');
                                     }),
                             ]),
+
+                        TextEntry::make('user_packet')
+                            ->label('User Packet')
+                            ->markdown()
+                            ->formatStateUsing(function ($state) {
+                                if (!$state) return 'No data';
+                                                                
+                                return collect($state)
+                                    ->map(fn($value, $key) => "- **{$key}:** {$value}")
+                                    ->join("\n");
+                            })
                     ]),
             ]);
     }

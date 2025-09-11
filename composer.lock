@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e4b198ef81dd9aa9f88eb645143d70e",
+    "content-hash": "ae500c7269f3c41e60e76198547eec27",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2727,20 +2727,19 @@
         },
         {
             "name": "kyledoesdev/essentials",
-            "version": "v0.0.1",
+            "version": "v0.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kyledoesdev/essentials.git",
-                "reference": "f8db9a02d797529dac2f62058d26f010b93da7c3"
+                "reference": "a674ec200bc90ef66253e5fe4aa934674816b5ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kyledoesdev/essentials/zipball/f8db9a02d797529dac2f62058d26f010b93da7c3",
-                "reference": "f8db9a02d797529dac2f62058d26f010b93da7c3",
+                "url": "https://api.github.com/repos/kyledoesdev/essentials/zipball/a674ec200bc90ef66253e5fe4aa934674816b5ac",
+                "reference": "a674ec200bc90ef66253e5fe4aa934674816b5ac",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "^7.8",
                 "illuminate/contracts": "^12.0",
                 "illuminate/http": "^12.0",
                 "illuminate/support": "^12.0",
@@ -2795,9 +2794,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kyledoesdev/essentials/issues",
-                "source": "https://github.com/kyledoesdev/essentials/tree/v0.0.1"
+                "source": "https://github.com/kyledoesdev/essentials/tree/v0.0.2"
             },
-            "time": "2025-09-06T18:42:11+00:00"
+            "time": "2025-09-11T02:50:10+00:00"
         },
         {
             "name": "laravel/framework",
