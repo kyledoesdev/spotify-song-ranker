@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
 
         Vite::useAggressivePrefetching();
 
-        Health::checks([
+        /* Health::checks([
             EnvironmentCheck::new(),
             DatabaseCheck::new(),
             DatabaseConnectionCountCheck::new()
@@ -52,6 +52,6 @@ class AppServiceProvider extends ServiceProvider
             UsedDiskSpaceCheck::new()
                 ->warnWhenUsedSpaceIsAbovePercentage(90)
                 ->failWhenUsedSpaceIsAbovePercentage(95),
-        ]);
+        ]); */
     }
 }
