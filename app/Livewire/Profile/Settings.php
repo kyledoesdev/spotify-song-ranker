@@ -8,6 +8,7 @@ use App\Notifications\DownloadDataNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 class Settings extends Component
@@ -44,6 +45,10 @@ class Settings extends Component
 
         // Log them out
         Auth::logout();
+
+        /* kill session */
+        Session::invalidate();
+        Session::regenerateToken();
 
         // Queue deletion
         DeleteUserJob::dispatch($user);

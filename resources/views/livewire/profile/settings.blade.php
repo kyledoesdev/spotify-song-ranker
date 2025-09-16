@@ -16,7 +16,7 @@
             class="btn-primary"
             onclick="window.confirm({
                 title: 'Begin downloading your data?',
-                message: 'Would you like to download all of your rankings? The export will be queued and emailed to you when completed.',
+                message: 'Would you like to download all of your rankings? The export will be queued and emailed to {{ auth()->user()->email }} (your spotify email address) when completed. Please make sure you have access to this email address and the inbox is not full or you won\'t be able to access the rankings.',
                 confirmText: 'Go',
                 componentId: '{{ $this->getId() }}',
                 action: 'download'
