@@ -18,16 +18,16 @@ class Settings extends Component
         return view('livewire.profile.settings');
     }
 
-    public function updateEmailPreference($receiveEmails)
+    public function updateSetting(string $name, mixed $value)
     {
         auth()->user()->preferences()->update([
-            'recieve_reminder_emails' => $receiveEmails,
+            $name => $value,
         ]);
 
         $this->js("
             window.flash({
-                title: 'Preferences Updated!',
-                message: 'Your email preferences have been saved.',
+                title: 'Settings Updated!',
+                message: 'Your settings have been saved.',
                 icon: 'success'
             });
         ");

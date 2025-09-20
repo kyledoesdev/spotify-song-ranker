@@ -2,14 +2,12 @@
 
 namespace App\Notifications;
 
-use App\Exports\RankingsExport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
 
-class DownloadDataNotification extends Notification
+class Newsletter extends Notification
 {
     use Queueable;
 
@@ -20,12 +18,22 @@ class DownloadDataNotification extends Notification
         return ['mail'];
     }
 
+    /**
+     * Get the mail representation of the notification.
+     */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->markdown('emails.downloaded-data', ['notifiable' => $notifiable])
-            ->subject(config('app.name').' - Data Download Complete')
-            ->attach(Excel::download(new RankingsExport($this->rankings), 'rankings.xlsx')->getFile(), ['as' => 'rankings.xlsx']);
+        $html = "";
+        
+        foreach ($this->rankings as $ranking) {
+            $html .= view('components.emails.ranking-card', ['ranking' => $ranking])->render();
+        }
+
+        return (new MailMessage)->view('emails.newsletter', [
+            'notifiable' => $notifiable,
+            'html' => $html,
+            'rankings' => $this->rankings
+        ])->subject("Kyle from songrank.dev - Monthly Newsletter");
     }
 
     /**

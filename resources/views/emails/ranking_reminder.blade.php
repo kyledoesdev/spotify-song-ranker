@@ -39,7 +39,7 @@ If you do not want to get these reminder emails, log in to <a href="{{ config('a
 <p style="padding-bottom: 20px;">Log in below to view complete your rankings.</p>
 
 @component('mail::button', ['url' => config('app.url')])
-    Log In to {{ config('app.name') }}
+Log In to {{ config('app.name') }}
 @endcomponent
 
 Thanks for using Song Rank!<br>

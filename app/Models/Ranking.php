@@ -109,6 +109,16 @@ class Ranking extends Model
             ->withCount('songs');
     }
 
+    public function scopeForNewsletter(Builder $query)
+    {
+        $query->where('is_public', true)
+            ->where('is_ranked', true)
+            ->where('completed_at', '<=', now()->subMonth())
+            ->with('user', 'artist')
+            ->with('songs', fn ($query) => $query->where('rank', 1))
+            ->withCount('songs');
+    }
+
     /* -- Filament Admin Functions -- */
 
     public static function getAdminForm(): array
