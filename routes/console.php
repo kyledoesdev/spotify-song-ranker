@@ -24,6 +24,16 @@ Schedule::command('artists:update-images')
         Log::channel('discord_other_updates')->info('Something went wrong updating artist images.');
     });
 
+Schedule::command('newsletter:send')
+    ->timezone('America/New_York')
+    ->monthlyOn(15, '3:00')
+    ->onSuccess(function () {
+        Log::channel('discord_other_updates')->info('Newsletter sent successfully.');
+    })
+    ->onFailure(function () {
+        Log::channel('discord_other_updates')->info('Something went wrong sending news letter emails.');
+    });
+
 Schedule::command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
 Schedule::command('model:prune', [
     '--model' => [
