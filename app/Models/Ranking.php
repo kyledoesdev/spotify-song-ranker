@@ -116,7 +116,8 @@ class Ranking extends Model
             ->whereBetween('completed_at', [now()->subMonth(), now()])
             ->with('user', 'artist')
             ->with('songs', fn ($query) => $query->where('rank', 1))
-            ->withCount('songs');
+            ->withCount('songs')
+            ->orderBy('completed_at', 'DESC');
     }
 
     /* -- Filament Admin Functions -- */

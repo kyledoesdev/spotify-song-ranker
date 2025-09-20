@@ -24,15 +24,17 @@ class Newsletter extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $html = "";
+
+        $rankings = $this->rankings->shuffle()->take(25);
         
-        foreach ($this->rankings as $ranking) {
+        foreach ($rankings as $ranking) {
             $html .= view('components.emails.ranking-card', ['ranking' => $ranking])->render();
         }
 
         return (new MailMessage)->view('emails.newsletter', [
             'notifiable' => $notifiable,
             'html' => $html,
-            'rankings' => $this->rankings
+            'rankingsCount' => $this->rankings->count()
         ])->subject("Kyle from songrank.dev - Monthly Newsletter");
     }
 
