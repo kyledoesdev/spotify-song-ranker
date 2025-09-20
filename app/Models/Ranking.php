@@ -113,7 +113,7 @@ class Ranking extends Model
     {
         $query->where('is_public', true)
             ->where('is_ranked', true)
-            ->where('completed_at', '<=', now()->subMonth())
+            ->whereBetween('completed_at', [now()->subMonth(), now()])
             ->with('user', 'artist')
             ->with('songs', fn ($query) => $query->where('rank', 1))
             ->withCount('songs');
