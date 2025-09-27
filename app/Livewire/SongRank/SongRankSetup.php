@@ -77,11 +77,11 @@ class SongRankSetup extends Component
 
     public function searchPlaylist()
     {
-        if ($this->playlistURL === '' || ! Str::isUrl($this->playlistURL)) {
+        if (! $this->isSpotifyPlaylistUrl()) {
             $this->js("
                 window.flash({
                     title: 'No playlist found.',
-                    message: 'We could not find a playlist for that URL. Please ensure you entered a valid URL and the playlist is public.',
+                    message: 'We could not find a playlist for that URL. Please ensure you entered a valid spotify playlist URL and the playlist is public.',
                     icon: 'error',
                 });
             ");
@@ -209,5 +209,13 @@ class SongRankSetup extends Component
             'selectedPlaylist',
             'selectedPlaylistTracks'
         ]);
+    }
+
+    private function isSpotifyPlaylistUrl(): bool
+    {
+        return 
+            $this->playlistURL !== '' &&
+            Str::isUrl($this->playlistURL) &&
+            Str::startsWith($this->playlistURL, 'https://open.spotify.com/playlist');
     }
 }

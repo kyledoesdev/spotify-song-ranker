@@ -42,7 +42,7 @@
                 @if ($artistSearchTerm === '')
                     <div class="space-y-4">
                         <h5 class="md:text-md mt-2 mb-4">
-                            Enter a playlist URL to get started.
+                            Enter a spotify playlist URL to get started.
                         </h5>
                         <div class="flex flex-col sm:flex-row items-center w-full space-y-2 sm:space-y-0 sm:space-x-2">
                             <input 
