@@ -1,38 +1,78 @@
 <div>
     <div class="bg-white shadow-md rounded-xl">
         <div class="p-2 mb-2 md:pb-4" x-auto-animate>
-            <div x-auto-animate>
-                <h5 class="md:text-md mt-2 mb-4">
-                    Search for an artist to rank to get started.
-                </h5>
-            </div>
-            <div class="flex flex-col sm:flex-row items-center w-full space-y-2 sm:space-y-0 sm:space-x-2">
-                <input 
-                    wire:key="search-input"
-                    class="w-full sm:flex-1 p-2 border border-zinc-800 rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-400" 
-                    type="text" 
-                    placeholder="{{ $randomArtist }}" 
-                    wire:model="searchTerm"
-                    wire:keydown.enter="searchArtist"
-                />
-                <div class="flex space-x-2">
-                    <button 
-                        type="button" 
-                        class="btn-primary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
-                        wire:click="searchArtist"
-                        x-data 
-                        @click="window.showLoader(); $wire.searchArtist().then(() => window.hideLoader())"
-                    >
-                        <i class="text-lg text-zinc-800 fa fa-magnifying-glass mt-1"></i>
-                    </button>
-                    <button 
-                        type="button" 
-                        class="btn-secondary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
-                        wire:click="resetSetup"
-                    >
-                        <i class="text-lg text-zinc-800 fa-solid fa-rotate-left mt-1"></i>
-                    </button>
-                </div>
+            <div class="grid grid-cols-1 {{ $artistSearchTerm === '' && $playlistURL === '' ? 'md:grid-cols-2' : 'grid-cols-1'}} gap-6 md:gap-8 items-start">
+                <!-- First Column -->
+                @if ($playlistURL === '')
+                    <div class="space-y-4" x-auto-animate>
+                        <h5 class="md:text-md mt-2 mb-4">
+                            Search for an artist to rank to get started.
+                        </h5>
+                        <div class="flex flex-col sm:flex-row items-center w-full space-y-2 sm:space-y-0 sm:space-x-2">
+                            <input 
+                                wire:key="search-input-1"
+                                class="w-full sm:flex-1 p-2 border border-zinc-800 rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-400" 
+                                type="text" 
+                                placeholder="{{ $randomArtist }}" 
+                                wire:model="artistSearchTerm"
+                                wire:keydown.enter="searchArtist"
+                            />
+                            <div class="flex space-x-2">
+                                <button 
+                                    type="button" 
+                                    class="btn-primary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
+                                    x-data 
+                                    @click="window.showLoader(); $wire.searchArtist().then(() => window.hideLoader())"
+                                >
+                                    <i class="text-lg text-zinc-800 fa fa-magnifying-glass mt-1"></i>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    class="btn-secondary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
+                                    wire:click="resetSetup"
+                                >
+                                    <i class="text-lg text-zinc-800 fa-solid fa-rotate-left mt-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Second Column -->
+                @if ($artistSearchTerm === '')
+                    <div class="space-y-4">
+                        <h5 class="md:text-md mt-2 mb-4">
+                            Enter a playlist URL to get started.
+                        </h5>
+                        <div class="flex flex-col sm:flex-row items-center w-full space-y-2 sm:space-y-0 sm:space-x-2">
+                            <input 
+                                wire:key="search-input-2"
+                                class="w-full sm:flex-1 p-2 border border-zinc-800 rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-400" 
+                                type="text" 
+                                {{-- placeholder="{{ $randomArtist }}"  --}}
+                                wire:model="playlistURL"
+                                wire:keydown.enter="searchPlaylist"
+                            />
+                            <div class="flex space-x-2">
+                                <button 
+                                    type="button" 
+                                    class="btn-primary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
+                                    x-data 
+                                    @click="window.showLoader(); $wire.searchPlaylist().then(() => window.hideLoader())"
+                                >
+                                    <i class="text-lg text-zinc-800 fa fa-magnifying-glass mt-1"></i>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    class="btn-secondary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
+                                    wire:click="resetSetup"
+                                >
+                                    <i class="text-lg text-zinc-800 fa-solid fa-rotate-left mt-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
         
@@ -72,7 +112,12 @@
             @endif
 
             <!-- Selected Artist View -->
-            @if ($selectedArtist)
+            @if ($selectedArtist || $selectedPlaylist)
+                @php
+                    $rankingCollection = empty($selectedArtist) ? $selectedPlaylist : $selectedArtist;
+                    $tracks = empty($selectedArtistTracks) ? $selectedPlaylistTracks : $selectedArtistTracks;
+                @endphp
+
                 <div 
                     class="grid grid-cols-1 md:grid-cols-2 m-2 p-2"
                     x-data="{ show: false }"
@@ -85,18 +130,21 @@
                     <div x-auto-animate>
                         <div class="grid">
                             <h5 class="md:text-2xl mb-2 transition-all duration-300">
-                                Artist: {{ $selectedArtist['name'] }}
+                                {{ ucfirst($type->value) }}: {{ $rankingCollection['name'] }}
                             </h5>
                             <div class="mb-4">
                                 <img
                                     class="rounded-4xl w-48 h-48 transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                                    src="{{ $selectedArtist['cover'] }}"
-                                    alt="{{ $selectedArtist['name'] }}"
-                                    wire:click="loadArtistSongs"
+                                    src="{{ $rankingCollection['cover'] }}"
+                                    alt="{{ $rankingCollection['name'] }}"
                                 />
                                 <div class="flex flex-col" x-auto-animate>
                                     <div class="mt-1">
-                                        <x-spotify-logo :artist="$selectedArtist['id']" />
+                                        @if ($selectedArtist)
+                                            <x-spotify-logo :artist="$rankingCollection['id']" /> 
+                                        @else
+                                            <x-spotify-logo :playlist="$rankingCollection['id']" /> 
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +182,7 @@
                                 <input
                                     type="text"
                                     class="w-full bg-zinc-100 rounded-lg p-2 transition-all duration-300 focus:ring-2 focus:ring-blue-400 focus:scale-105"
-                                    placeholder="{{ $selectedArtist['name'] . ' List' }}"
+                                    placeholder="{{ $rankingCollection['name'] . ' List' }}"
                                     wire:model.live.debounce.500ms="form.name"
                                     maxlength="30"
                                 />
@@ -163,13 +211,13 @@
                     </div>
                     <div class="w-full" x-auto-animate>
                         <h5 class="md:text-4xl mb-2 transition-all duration-300">
-                            Tracks ({{ $selectedArtistTracks ? count($selectedArtistTracks) : 0 }})
+                            Tracks ({{ $tracks ? count($tracks) : 0 }})
                         </h5>
                         
                         <!-- Songs list with auto-animate for smooth add/remove -->
                         <div class="card-scroller" x-auto-animate.200ms>
-                            @if($selectedArtistTracks)
-                                @foreach ($selectedArtistTracks as $song)
+                            @if($tracks)
+                                @foreach ($tracks as $song)
                                     <div
                                         wire:key="song-wrapper-{{ $song['id'] }}"
                                         x-data="{ show: false }"
@@ -186,6 +234,7 @@
                                             :key="'song-item-'.$song['id']"
                                             :song="$song"
                                             :canDelete="true"
+                                            :type="$type"
                                         />
                                     </div>
                                 @endforeach

@@ -6,7 +6,7 @@
                     <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8" />
                 </div>
 
-                <div class="text-sm font-medium truncate text-zinc-800 mx-2">
+                <div class="text-sm font-medium truncate text-zinc-800 mx-2 cursor-pointer">
                     {{ config('app.name') }}
                 </div>
             </a>
@@ -43,15 +43,15 @@
                         type="button"
                         class="h-10 flex items-center me-4 mx-2"
                     >
-                        <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0">
+                        <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0 cursor-pointer">
                             <img src="{{ auth()->user()->avatar }}" alt="User Actions" class="h-8 w-8" />
                         </div>
 
-                        <div class="text-sm font-medium truncate text-zinc-800 mx-2 hidden md:block">
+                        <div class="text-sm font-medium truncate text-zinc-800 mx-2 hidden md:block cursor-pointer">
                             {{ auth()->user()->name }}
                         </div>
 
-                        <i class="fa fa-solid fa-chevron-down hidden md:block ml-2 md:ml-0"></i>
+                        <i class="fa fa-solid fa-chevron-down hidden md:block ml-2 md:ml-0 cursor-pointer"></i>
                     </button>
                     <div
                         x-ref="panel"

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\RankingType;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
@@ -18,6 +19,7 @@ class Ranking extends Model
     protected $fillable = [
         'user_id',
         'artist_id',
+        'playlist_id',
         'name',
         'is_ranked',
         'is_public',
@@ -39,6 +41,11 @@ class Ranking extends Model
     public function artist(): HasOne
     {
         return $this->hasOne(Artist::class, 'id', 'artist_id');
+    }
+
+    public function playlist(): HasOne
+    {
+        return $this->hasOne(Playlist::class, 'id', 'playlist_id');
     }
 
     public function songs(): HasMany
@@ -69,6 +76,11 @@ class Ranking extends Model
         return Carbon::parse($this->attributes['completed_at'])->inUserTimezone()->format('M d, Y g:i A T');
     }
 
+    public function getTypeAttribute(): RankingType
+    {
+        return is_null($this->playlist_id) ? RankingType::ARTIST: RankingType::PLAYLIST;
+    }
+
     /* scopes */
     public function scopeForExplorePage(Builder $query, ?string $search = '', ?string $artist = '')
     {
@@ -83,7 +95,7 @@ class Ranking extends Model
             ->with('user', 'artist')
             ->with('songs', fn ($q) => $q->where('rank', 1))
             ->withCount('songs')
-            ->latest();
+            ->orderBy('completed_at', 'desc');
     }
 
     public function scopeForProfilePage(Builder $query, User $user)
@@ -97,7 +109,7 @@ class Ranking extends Model
             ->with('user', 'artist')
             ->with('songs', fn ($q) => $q->where('rank', 1))
             ->withCount('songs')
-            ->latest();
+            ->orderBy('completed_at', 'desc');
     }
 
     public function scopeForReminders(Builder $query)
@@ -117,7 +129,7 @@ class Ranking extends Model
             ->with('user', 'artist')
             ->with('songs', fn ($query) => $query->where('rank', 1))
             ->withCount('songs')
-            ->orderBy('completed_at', 'DESC');
+            ->orderBy('completed_at', 'desc');
     }
 
     /* -- Filament Admin Functions -- */

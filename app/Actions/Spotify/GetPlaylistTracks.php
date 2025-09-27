@@ -3,8 +3,8 @@
 namespace App\Actions\Spotify;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -18,48 +18,57 @@ final class GetPlaylistTracks
             return null;
         }
 
+        $offset = 0;
+        $tracks = collect();
         $playlistId = $this->pluckPlaylistId($playlistUrl);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.$user->external_token,
-            'Content-Type' => 'application/json',
-        ])->get("https://api.spotify.com/v1/playlists/{$playlistId}", [
-            'limit' => 100,
-            'offset' => 0
-        ]);
-
-        $owner = $response->json('owner');
-        $total = $response->json('tracks.total');
-        $offset = 0;
-
-        $tracks = collect();
-
-        for ($i = 0; $i < round($total / 100); $i++) {
+        try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$user->external_token,
                 'Content-Type' => 'application/json',
             ])->get("https://api.spotify.com/v1/playlists/{$playlistId}", [
                 'limit' => 100,
-                'offset' => $offset
+                'offset' => 0
             ]);
 
-            collect(collect($response->json('tracks.items'))->pluck('track'))->map(function(array $track) use ($tracks) {
-                $tracks->push([
-                    'artist' => $track['artists'][0],
-                    'track' => [
+            $total = $response->json('tracks.total');
+
+            for ($i = 0; $i < round($total / 100, 2, PHP_ROUND_HALF_UP); $i++) {
+                $subResponse = Http::withHeaders([
+                    'Authorization' => 'Bearer '.$user->external_token,
+                    'Content-Type' => 'application/json',
+                ])->get("https://api.spotify.com/v1/playlists/{$playlistId}", [
+                    'limit' => 100,
+                    'offset' => $offset
+                ]);
+
+                collect(collect($subResponse->json('tracks.items'))->pluck('track'))->map(function(array $track) use ($tracks) {
+                    $tracks->push([
                         'id' => $track['id'],
                         'name' => $track['name'],
-                        'cover' => $track['album']['images'][0]['url']
-                    ],
-                ]);
-            });
+                        'cover' => data_get($track, 'album.images.0.url'),
+                        'artist_id' => data_get($track, 'artists.0.id'),
+                        'artist_name' => data_get($track, 'artists.0.name'),
+                    ]);
+                });
 
-            $offset += 100;
+                $offset += 100;
+            }
+        } catch(Exception $e) {
+            report($e);
+
+            return null;
         }
-
-        dd($tracks->take(5));
-
-        return collect();
+        
+        return collect([
+            'id' => $response->json('id'),
+            'name' => $response->json('name'),
+            'description' => $response->json('description'),
+            'creator' => $response->json('owner'), 
+            'cover' => $response->json('images.0.url'),
+            'track_count' => $total,
+            'tracks' => $tracks,
+        ]);
     }
 
     private function pluckPlaylistId(string $playlist): string

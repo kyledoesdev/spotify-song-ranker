@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Spotify\Provider;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
@@ -32,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Event::listen(function (SocialiteWasCalled $event) {
             $event->extendSocialite('spotify', Provider::class);
+        });
+
+        Str::macro('isURL', function(string $value) {
+            return filter_var($value, FILTER_VALIDATE_URL) !== false;
         });
 
         DB::prohibitDestructiveCommands(app()->isProduction());

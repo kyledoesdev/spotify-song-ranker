@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RankingType;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Ranking\EditRanking;
 use App\Livewire\SongRank\SongRankSetup;
@@ -47,6 +48,7 @@ test('can start ranking with valid request', function () {
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
             ],
         ]))
+        ->set('type', RankingType::ARTIST)
         ->set('form.name', 'Local Natives List')
         ->set('form.is_public', true)
         ->call('beginRanking')

@@ -3,12 +3,15 @@
 namespace App\Livewire\SongRank;
 
 use App\Actions\Spotify\GetArtistSongs;
+use App\Actions\Spotify\GetPlaylistTracks;
 use App\Actions\Spotify\SearchArtists;
 use App\Actions\StoreRanking;
+use App\Enums\RankingType;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -20,11 +23,19 @@ class SongRankSetup extends Component
 
     public ?Collection $selectedArtistTracks = null;
 
-    public string $searchTerm = '';
+    public ?Collection $selectedPlaylistTracks = null;
+
+    public string $artistSearchTerm = '';
+
+    public string $playlistURL = '';
 
     public string $randomArtist = '';
 
-    public array $selectedArtist = [];
+    public RankingType $type = RankingType::ARTIST;
+
+    public ?array $selectedArtist = [];
+
+    public array $selectedPlaylist = [];
 
     public function mount()
     {
@@ -38,7 +49,7 @@ class SongRankSetup extends Component
 
     public function searchArtist()
     {
-        if ($this->searchTerm == '') {
+        if ($this->artistSearchTerm == '') {
             $this->js("
                 window.flash({
                     title: 'Please enter a valid search term.',
@@ -49,17 +60,53 @@ class SongRankSetup extends Component
             return;
         }
 
-        $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->searchTerm);
+        $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->artistSearchTerm);
+
+        $this->type = RankingType::ARTIST;
 
         if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
             $this->js("
                 window.flash({
                     title: 'No Artists found.',
-                    message: 'Could not find artists for search term: {$this->searchTerm}',
+                    message: 'Could not find artists for search term: {$this->artistSearchTerm}',
                     icon: 'error',
                 });
             ");
         }
+    }
+
+    public function searchPlaylist()
+    {
+        if ($this->playlistURL === '' || ! Str::isUrl($this->playlistURL)) {
+            $this->js("
+                window.flash({
+                    title: 'No playlist found.',
+                    message: 'We could not find a playlist for that URL. Please ensure you entered a valid URL and the playlist is public.',
+                    icon: 'error',
+                });
+            ");
+
+            $this->playlistURL = '';
+
+            return;
+        }
+
+        $this->type = RankingType::PLAYLIST;
+
+        $playlistData = (new GetPlaylistTracks)->search(auth()->user(), $this->playlistURL);
+
+        if (is_null($playlistData)) {
+            $this->js("
+                window.flash({
+                    title: 'Could not find playlist.',
+                    message: 'Something went wrong trying to find this playlist: {$this->playlistURL}.',
+                    icon: 'error',
+                });
+            ");
+        }
+
+        $this->selectedPlaylist = $playlistData->except('tracks')->toArray();
+        $this->selectedPlaylistTracks = $playlistData->only('tracks')->first();
     }
 
     public function loadArtistSongs(string $artistId)
@@ -89,26 +136,29 @@ class SongRankSetup extends Component
 
     public function filterSongs(string $key)
     {
-        $this->selectedArtistTracks = collect($this->selectedArtistTracks)->reject(function ($song) use ($key) {
-            return str_contains(strtolower($song['name']), strtolower($key));
-        })->values();
+        $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
+
+        $this->$property = collect($this->$property)
+            ->reject(fn ($song) => str_contains(strtolower($song['name']), strtolower($key)))
+            ->values();
     }
 
     #[On('song-removed')]
-    public function updateSelectedArtistTracks($id)
+    public function updateSelectedArtistTracks(string $id)
     {
-        $currentTracks = collect($this->selectedArtistTracks)->toArray();
+        $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
 
-        $filteredTracks = array_values(array_filter($currentTracks, function ($song) use ($id) {
-            return $song['id'] !== $id;
-        }));
-
-        $this->selectedArtistTracks = collect($filteredTracks);
+        $this->$property = collect($this->$property)
+            ->reject(fn($song) => $song['id'] === $id)
+            ->values();
     }
 
     public function confirmBeginRanking()
     {
-        $songCount = count($this->selectedArtistTracks);
+        $songCount = $this->type === RankingType::ARTIST
+            ? count($this->selectedArtistTracks)
+            : count($this->selectedPlaylistTracks);
+
         $message = 'Are you sure you are ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.';
 
         if ($songCount >= 50) {
@@ -128,11 +178,14 @@ class SongRankSetup extends Component
     }
 
     public function beginRanking()
-    {
-        $ranking = (new StoreRanking)->handle(auth()->user(), [
-            'artist_id' => $this->selectedArtist['id'],
-            'artist_name' => $this->selectedArtist['name'],
-            'artist_img' => $this->selectedArtist['cover'],
+    {        
+        $ranking = (new StoreRanking)->handle(auth()->user(), $this->type, $this->type === RankingType::PLAYLIST ? [
+            'playlist' => $this->selectedPlaylist,
+            'ranking_name' => $this->form->name,
+            'is_public' => (bool) $this->form->is_public,
+            'tracks' => $this->selectedPlaylistTracks,
+        ] : [
+            'artist' => $this->selectedArtist,
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
             'tracks' => $this->selectedArtistTracks,
@@ -146,12 +199,15 @@ class SongRankSetup extends Component
     public function resetSetup()
     {
         $this->reset([
-            'searchTerm',
+            'artistSearchTerm',
+            'playlistURL',
             'form.name',
             'form.is_public',
             'searchedArtists',
             'selectedArtistTracks',
             'selectedArtist',
+            'selectedPlaylist',
+            'selectedPlaylistTracks'
         ]);
     }
 }
