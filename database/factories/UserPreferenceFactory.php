@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class UserPreferenceFactory extends Factory
 {
     private bool $recieveReminderEmails = true;
+
     private bool $recieveNewsletterEmails = true;
 
     public function definition(): array

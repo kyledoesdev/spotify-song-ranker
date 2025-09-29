@@ -89,7 +89,7 @@ test('can start ranking for a playlist with valid request', function () {
             'description' => 'Playlist Description',
             'creator' => [
                 'display_name' => 'test-creator-name',
-                'id' => 'test-creator-id'
+                'id' => 'test-creator-id',
             ],
             'cover' => 'playlist-cover',
             'track_count' => 3,
@@ -100,21 +100,21 @@ test('can start ranking for a playlist with valid request', function () {
                 'name' => 'Ceilings',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
                 'artist_id' => 'local-natives-id',
-                'artist_name' => 'Local Natives'
+                'artist_name' => 'Local Natives',
             ],
             [
                 'id' => 'sun-hands-id',
                 'name' => 'Sun Hands',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
                 'artist_id' => 'local-natives-id',
-                'artist_name' => 'Local Natives'
+                'artist_name' => 'Local Natives',
             ],
             [
                 'id' => 'featherweight-id',
                 'name' => 'Featherweight',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
                 'artist_id' => 'local-natives-id',
-                'artist_name' => 'Local Natives'
+                'artist_name' => 'Local Natives',
             ],
         ]))
         ->set('type', RankingType::PLAYLIST)
@@ -137,7 +137,6 @@ test('can start ranking for a playlist with valid request', function () {
         'name' => 'Local Natives List',
     ]);
 });
-
 
 test('ranking owner can view the ranking edit page', function () {
     $user = User::factory()

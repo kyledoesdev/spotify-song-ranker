@@ -27,8 +27,6 @@ Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spo
 Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
 Route::get('/logout', [SpotifyAuthController::class, 'logout'])->name('logout');
 
-Route::view('/test', 'test');
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 

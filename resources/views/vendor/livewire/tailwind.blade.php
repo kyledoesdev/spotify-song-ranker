@@ -116,18 +116,6 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
 
             <!-- Desktop Pagination -->
             <div class="hidden sm:flex sm:flex-col">
-                <div class="mb-4">
-                    <p class="text-sm text-zinc-800 leading-5 text-center">
-                        <span>Showing</span>
-                        <span class="font-medium">{{ $paginator->firstItem() }}</span>
-                        <span>to</span>
-                        <span class="font-medium">{{ $paginator->lastItem() }}</span>
-                        <span>of</span>
-                        <span class="font-medium">{{ $paginator->total() }}</span>
-                        <span>results</span>
-                    </p>
-                </div>
-
                 <div class="w-full overflow-x-auto">
                     <ul class="flex justify-center items-center space-x-2 py-3 min-w-max px-4">
                         <!-- First Button -->
@@ -266,6 +254,18 @@ $scrollIntoViewJsSnippet = ($scrollTo !== false)
                             @endif
                         </li>
                     </ul>
+
+                    <div class="mt-4">
+                        <p class="text-sm text-zinc-800 leading-5 text-center">
+                            <span>Showing</span>
+                            <span class="font-medium">{{ $paginator->firstItem() }}</span>
+                            <span>to</span>
+                            <span class="font-medium">{{ $paginator->lastItem() }}</span>
+                            <span>of</span>
+                            <span class="font-medium">{{ $paginator->total() }}</span>
+                            <span>results</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </nav>

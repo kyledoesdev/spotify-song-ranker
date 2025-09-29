@@ -15,7 +15,7 @@ final class StoreRanking
 {
     public function handle(User $user, RankingType $type, array $attributes): Ranking
     {
-        return match($type) {
+        return match ($type) {
             RankingType::ARTIST => $this->artist($user, $attributes),
             RankingType::PLAYLIST => $this->playlist($user, $attributes),
             default => null,
@@ -73,7 +73,7 @@ final class StoreRanking
     {
         return DB::transaction(function () use ($user, $attributes) {
             $playlist = Playlist::updateOrCreate([
-                'playlist_id' => data_get($attributes, 'playlist.id')
+                'playlist_id' => data_get($attributes, 'playlist.id'),
             ], [
                 'creator_id' => data_get($attributes, 'playlist.creator.id'),
                 'creator_name' => data_get($attributes, 'playlist.creator.display_name'),
@@ -105,11 +105,11 @@ final class StoreRanking
                 ->get()
                 ->keyBy('artist_id');
 
-            /* map through the songs, assign the artist or create a record of one.  */
+            /* map through the songs, assign the artist or create a record of one. */
             $songs = collect($attributes['tracks'])->map(function ($song) use ($artists, $ranking) {
-                $artist = $artists->get($song['artist_id']) 
+                $artist = $artists->get($song['artist_id'])
                     ?? Artist::create(['artist_id' => $song['artist_id'], 'artist_name' => $song['artist_name']]);
-                
+
                 return [
                     'artist_id' => $artist->getKey(),
                     'ranking_id' => $ranking->getKey(),

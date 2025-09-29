@@ -7,9 +7,9 @@ use Livewire\Component;
 
 class SongListItem extends Component
 {
-    public array $song = [];
-
     public RankingType $type;
+
+    public array $song = [];
 
     public bool $canDelete = true;
 

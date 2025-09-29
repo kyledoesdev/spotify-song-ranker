@@ -63,7 +63,6 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /* scopes */
-
     public function scopeForRankingReminders(Builder $query)
     {
         $query->newQuery()

@@ -22,6 +22,6 @@ class RankingSortingState extends Model
 
     public function ranking(): BelongsTo
     {
-        $this->belongsTo(Ranking::class);
+        return $this->belongsTo(Ranking::class);
     }
 }

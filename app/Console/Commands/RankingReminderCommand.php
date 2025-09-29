@@ -29,5 +29,7 @@ class RankingReminderCommand extends Command
         });
 
         Log::channel('discord_other_updates')->info('Completed Ranking Reminders.');
+
+        return Command::SUCCESS;
     }
 }

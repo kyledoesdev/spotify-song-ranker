@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Artist extends Model
@@ -25,9 +26,10 @@ class Artist extends Model
         return $this->belongsTo(Ranking::class);
     }
 
-    public function scopeTopArtists($query)
+    #[Scope]
+    public function topArtists(Builder $query)
     {
-        $query
+        $query->newQuery()
             ->selectRaw('
                 count(rankings.artist_id) as artist_rankings_count,
                 artists.id,

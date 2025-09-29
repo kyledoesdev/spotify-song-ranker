@@ -6,5 +6,4 @@ enum RankingType: string
 {
     case ARTIST = 'artist';
     case PLAYLIST = 'playlist';
-    
 }

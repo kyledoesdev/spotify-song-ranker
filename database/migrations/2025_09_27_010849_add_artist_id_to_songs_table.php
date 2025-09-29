@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('artist_id')->after('ranking_id')->nullable();
         });
 
-        DB::transaction(function() {
+        DB::transaction(function () {
             Ranking::query()
                 ->withTrashed()
                 ->with('artist', 'songs')

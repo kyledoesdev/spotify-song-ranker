@@ -30,6 +30,7 @@ class SongsRelationManager extends RelationManager
                     ->rules(['required', 'integer']),
             ])
             ->filters([])
+            ->defaultSort('rank', 'asc')
             ->recordActions([
                 DeleteAction::make(),
             ])

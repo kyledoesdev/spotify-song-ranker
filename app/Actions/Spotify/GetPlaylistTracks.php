@@ -28,7 +28,7 @@ final class GetPlaylistTracks
                 'Content-Type' => 'application/json',
             ])->get("https://api.spotify.com/v1/playlists/{$playlistId}", [
                 'limit' => 100,
-                'offset' => 0
+                'offset' => 0,
             ]);
 
             $total = $response->json('tracks.total');
@@ -39,10 +39,10 @@ final class GetPlaylistTracks
                     'Content-Type' => 'application/json',
                 ])->get("https://api.spotify.com/v1/playlists/{$playlistId}", [
                     'limit' => 100,
-                    'offset' => $offset
+                    'offset' => $offset,
                 ]);
 
-                collect(collect($subResponse->json('tracks.items'))->pluck('track'))->map(function(array $track) use ($tracks) {
+                collect(collect($subResponse->json('tracks.items'))->pluck('track'))->map(function (array $track) use ($tracks) {
                     $tracks->push([
                         'id' => $track['id'],
                         'name' => $track['name'],
@@ -54,17 +54,17 @@ final class GetPlaylistTracks
 
                 $offset += 100;
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             report($e);
 
             return null;
         }
-        
+
         return collect([
             'id' => $response->json('id'),
             'name' => $response->json('name'),
             'description' => $response->json('description'),
-            'creator' => $response->json('owner'), 
+            'creator' => $response->json('owner'),
             'cover' => $response->json('images.0.url'),
             'track_count' => $total,
             'tracks' => $tracks,

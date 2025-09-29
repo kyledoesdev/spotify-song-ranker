@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class UpdateArtistImages extends Command
 {
@@ -19,12 +20,13 @@ class UpdateArtistImages extends Command
 
     public function handle()
     {
-        $authenticated = $this->authenticateForSpotify();
+        $loggedIn = $this->login();
 
-        if (! $authenticated) {
-            return 1;
+        if (! $loggedIn) {
+            return Command::FAILURE;
         }
 
+        /* Loop through every artist in chunks of 50 and attempt to update their image. */
         Artist::all()->chunk(50)->each(function ($chunk) {
             $ids = $chunk->pluck('artist_id')->implode(',');
 
@@ -56,15 +58,20 @@ class UpdateArtistImages extends Command
 
         Auth::logout();
 
-        return 0;
+        Session::invalidate();
+        Session::regenerateToken();
+
+        return Command::SUCCESS;
     }
 
-    private function authenticateForSpotify(): bool
+    private function login(): bool
     {
         try {
             $user = User::where('spotify_id', config('services.spotify.system_id'))->firstOrFail();
 
             Auth::login($user);
+
+            Session::regenerate();
 
             $success = (new RefreshToken)->handle($user);
 

@@ -13,7 +13,7 @@
             x-transition:leave="transition-opacity ease-linear duration-300"
             x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
-            class="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"
+            class="fixed inset-0 bg-black/50 z-10 lg:hidden"
             x-on:click="sidebarOpen = false"
             style="display: none;"
         ></div>
@@ -32,7 +32,7 @@
         >
             <div class="flex items-center justify-between h-16 px-4 border-b">
                 <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="flex items-center">
-                    <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8" />
+                    <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-lg" />
                     <span class="text-sm font-medium text-zinc-800 ml-2">{{ config('app.name') }}</span>
                 </a>
                 <button x-on:click="sidebarOpen = false" class="text-gray-500 hover:text-gray-700">
@@ -80,24 +80,25 @@
         </div>
 
         <!-- Desktop top navigation -->
-        <div class="hidden lg:block">
-            <div class="flex justify-between shadow-md bg-white rounded-lg py-4">
-                <div class="flex">
-                    <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="h-10 flex items-center me-4 ml-2">
+        <div class="hidden lg:block w-full">
+            <div class="flex justify-between items-center shadow-md bg-white rounded-lg py-4 px-4 w-full">
+                <div class="flex items-center">
+                    <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="h-10 flex items-center me-4">
                         <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0">
-                            <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8" />
+                            <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />
                         </div>
                         <div class="text-sm font-medium truncate text-zinc-800 mx-2 cursor-pointer">
                             {{ config('app.name') }}
                         </div>
                     </a>
 
-                    <a href="{{ route('explore') }}" class="h-10 flex items-center me-4 mr-2 bg-gray-100 rounded-lg cursor-pointer p-2">
+                    <a href="{{ route('explore') }}" class="h-10 flex items-center me-4 rounded-lg cursor-pointer p-2 {{ Route::currentRouteName() == 'explore' ? 'bg-purple-100 border-b-3 border-purple-400' : 'bg-gray-100' }}">
                         <i class="fa fa-compass mr-1 fa-lg"></i>
                         <span class="text-sm font-medium text-zinc-800 mx-1">Explore</span>
                     </a>
                 </div>
-                <div>
+                
+                <div class="flex items-center">
                     @auth
                         <div
                             x-data="{
@@ -119,23 +120,22 @@
                             x-on:keydown.escape.prevent.stop="close($refs.button)"
                             x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
                             x-id="['dropdown-button']"
-                            class="relative"
-                            style="z-index: 2;"
+                            class="relative z-100"
                         >
                             <button
                                 x-ref="button"
                                 x-on:click="toggle()"
                                 :aria-expanded="open"
                                 type="button"
-                                class="h-10 flex items-center me-4 mx-2"
+                                class="h-10 flex items-center"
                             >
                                 <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0 cursor-pointer">
                                     <img src="{{ auth()->user()->avatar }}" alt="User Actions" class="h-8 w-8" />
                                 </div>
-                                <div class="text-sm font-medium truncate text-zinc-800 mx-2 hidden md:block cursor-pointer">
+                                <div class="text-sm font-medium truncate text-zinc-800 mx-2 cursor-pointer">
                                     {{ auth()->user()->name }}
                                 </div>
-                                <i class="fa fa-solid fa-chevron-down hidden md:block ml-2 md:ml-0 cursor-pointer"></i>
+                                <i class="fa fa-solid fa-chevron-down ml-2 cursor-pointer"></i>
                             </button>
                             <div
                                 x-ref="panel"
@@ -164,8 +164,8 @@
                             </div>
                         </div>
                     @else
-                        <div class="mt-1 mx-3">
-                            <a href="{{ route('welcome') }}" class="btn-primary p-2 m-2">
+                        <div>
+                            <a href="{{ route('welcome') }}" class="btn-primary p-2">
                                 <i class="fa fa-house"></i>
                             </a>
                         </div>
@@ -175,13 +175,13 @@
         </div>
 
         <!-- Mobile top bar with hamburger -->
-        <div class="lg:hidden flex justify-between items-center shadow-md bg-white p-4">
+        <div class="lg:hidden flex justify-between items-center shadow-md bg-white p-4 rounded-lg">
             <button x-on:click="sidebarOpen = true" class="text-zinc-800">
                 <i class="fa fa-bars fa-lg"></i>
             </button>
             
             <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="flex items-center">
-                <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8" />
+                <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />
                 <span class="text-sm font-medium text-zinc-800 ml-2">{{ config('app.name') }}</span>
             </a>
 

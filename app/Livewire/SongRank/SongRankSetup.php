@@ -25,13 +25,13 @@ class SongRankSetup extends Component
 
     public ?Collection $selectedPlaylistTracks = null;
 
+    public RankingType $type = RankingType::ARTIST;
+
     public string $artistSearchTerm = '';
 
     public string $playlistURL = '';
 
     public string $randomArtist = '';
-
-    public RankingType $type = RankingType::ARTIST;
 
     public ?array $selectedArtist = [];
 
@@ -149,7 +149,7 @@ class SongRankSetup extends Component
         $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
 
         $this->$property = collect($this->$property)
-            ->reject(fn($song) => $song['id'] === $id)
+            ->reject(fn ($song) => $song['id'] === $id)
             ->values();
     }
 
@@ -178,7 +178,7 @@ class SongRankSetup extends Component
     }
 
     public function beginRanking()
-    {        
+    {
         $ranking = (new StoreRanking)->handle(auth()->user(), $this->type, $this->type === RankingType::PLAYLIST ? [
             'playlist' => $this->selectedPlaylist,
             'ranking_name' => $this->form->name,
@@ -191,7 +191,7 @@ class SongRankSetup extends Component
             'tracks' => $this->selectedArtistTracks,
         ]);
 
-        Log::channel('discord_ranking_updates')->info(auth()->user()->name.' started ranking: '.$ranking->name);
+        Log::channel('discord_ranking_updates')->info(auth()->user()->name.' started ranking: '.$ranking->name."({$this->type->value} type)");
 
         $this->redirect(route('ranking', ['id' => $ranking->getKey()]));
     }
@@ -207,13 +207,13 @@ class SongRankSetup extends Component
             'selectedArtistTracks',
             'selectedArtist',
             'selectedPlaylist',
-            'selectedPlaylistTracks'
+            'selectedPlaylistTracks',
         ]);
     }
 
     private function isSpotifyPlaylistUrl(): bool
     {
-        return 
+        return
             $this->playlistURL !== '' &&
             Str::isUrl($this->playlistURL) &&
             Str::startsWith($this->playlistURL, 'https://open.spotify.com/playlist');

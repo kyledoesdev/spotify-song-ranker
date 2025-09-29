@@ -23,10 +23,10 @@ class Newsletter extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $html = "";
+        $html = '';
 
         $rankings = $this->rankings->shuffle()->take(25);
-        
+
         foreach ($rankings as $ranking) {
             $html .= view('components.emails.ranking-card', ['ranking' => $ranking])->render();
         }
@@ -34,8 +34,8 @@ class Newsletter extends Notification
         return (new MailMessage)->view('emails.newsletter', [
             'notifiable' => $notifiable,
             'html' => $html,
-            'rankingsCount' => $this->rankings->count()
-        ])->subject("Kyle from songrank.dev - Monthly Newsletter");
+            'rankingsCount' => $this->rankings->count(),
+        ])->subject('Kyle from songrank.dev - Monthly Newsletter');
     }
 
     /**
