@@ -15,7 +15,7 @@
             <i class="fa-solid fa-angle-left"></i>
         </button>
 
-        <div class="grid grid-cols-1 lg:grid-cols-[minmax(auto,320px)_1fr_minmax(auto,320px)] min-h-screen py-4 gap-4 px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(auto,320px)_1fr_minmax(auto,320px)] min-h-screen py-4 gap-4">
             <!-- Left Sidebar - Artists -->
             <div class="
                 lg:block 
