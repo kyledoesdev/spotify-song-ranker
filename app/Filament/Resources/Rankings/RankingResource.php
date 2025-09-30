@@ -59,8 +59,7 @@ class RankingResource extends Resource
                 TextColumn::make('user.name')
                     ->label('Creator')
                     ->searchable()
-                    ->sortable()
-                    ->hidden(fn () => ! is_null($user_id)),
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
