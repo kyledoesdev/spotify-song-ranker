@@ -69,11 +69,12 @@ class RankingQueryBuilder extends Builder
     {
         return $this->addSelect([
             'has_podcast_episode' => function($q) {
-                $q->selectRaw('IF(COUNT(*) > 0, 1, 0)')
-                    ->from('songs')
-                    ->join('artists', 'songs.artist_id', '=', 'artists.id')
-                    ->whereColumn('songs.ranking_id', 'rankings.id')
-                    ->where('artists.is_podcast', true);
+                $q->selectRaw('CASE WHEN EXISTS (
+                    SELECT 1 FROM songs 
+                    INNER JOIN artists ON songs.artist_id = artists.id 
+                    WHERE songs.ranking_id = rankings.id 
+                    AND artists.is_podcast = 1
+                ) THEN 1 ELSE 0 END');
             }
         ]);
     }
