@@ -101,6 +101,7 @@ test('can start ranking for a playlist with valid request', function () {
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
                 'artist_id' => 'local-natives-id',
                 'artist_name' => 'Local Natives',
+                'is_podcast' => false,
             ],
             [
                 'id' => 'sun-hands-id',
@@ -108,6 +109,7 @@ test('can start ranking for a playlist with valid request', function () {
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
                 'artist_id' => 'local-natives-id',
                 'artist_name' => 'Local Natives',
+                'is_podcast' => false,
             ],
             [
                 'id' => 'featherweight-id',
@@ -115,6 +117,7 @@ test('can start ranking for a playlist with valid request', function () {
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
                 'artist_id' => 'local-natives-id',
                 'artist_name' => 'Local Natives',
+                'is_podcast' => false,
             ],
         ]))
         ->set('type', RankingType::PLAYLIST)
