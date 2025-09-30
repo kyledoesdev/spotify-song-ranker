@@ -30,6 +30,8 @@ jobs:
         touch database/database.sqlite
     - name: Run Vite Build Scripts
       run: npm i && npm run build && rm -rf node_modules/*
+    - name: "Install Playwright for Pest 4 Tests"
+      run: npm install playwright && npx playwright install
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
