@@ -31,6 +31,10 @@ final class GetPlaylistTracks
                 'offset' => 0,
             ]);
 
+            if ($response->status() === 400) {
+                return null;
+            }
+
             $total = $response->json('tracks.total');
 
             for ($i = 0; $i < round($total / 100, 2, PHP_ROUND_HALF_UP); $i++) {

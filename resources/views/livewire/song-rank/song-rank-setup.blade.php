@@ -134,7 +134,7 @@
                             </h5>
                             <div class="mb-4">
                                 <img
-                                    class="rounded-4xl w-48 h-48 transform transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                                    class="rounded-4xl w-48 h-48"
                                     src="{{ $rankingCollection['cover'] }}"
                                     alt="{{ $rankingCollection['name'] }}"
                                 />

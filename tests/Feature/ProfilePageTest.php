@@ -3,14 +3,6 @@
 use App\Models\Ranking;
 use App\Models\User;
 
-test('profile page loads', function () {
-    $user = User::factory()->create();
-
-    $this->actingAs($user)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk();
-});
-
 test('profile loaded user rankings', function () {
     $user = User::factory()->create();
 

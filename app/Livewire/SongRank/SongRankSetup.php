@@ -77,6 +77,7 @@ class SongRankSetup extends Component
 
     public function searchPlaylist()
     {
+        /* ensure playlist url is valid */
         if (! $this->isSpotifyPlaylistUrl()) {
             $this->js("
                 window.flash({
@@ -95,6 +96,7 @@ class SongRankSetup extends Component
 
         $playlistData = (new GetPlaylistTracks)->search(auth()->user(), $this->playlistURL);
 
+        /* ensure playlist has tracks */
         if (is_null($playlistData)) {
             $this->js("
                 window.flash({
@@ -103,6 +105,10 @@ class SongRankSetup extends Component
                     icon: 'error',
                 });
             ");
+
+            $this->playlistURL = '';
+
+            return;
         }
 
         $this->selectedPlaylist = $playlistData->except('tracks')->toArray();

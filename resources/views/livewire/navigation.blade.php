@@ -66,7 +66,7 @@
             @auth
                 <div class="border-t px-4 py-4">
                     <div class="flex items-center mb-4">
-                        <img src="{{ auth()->user()->avatar }}" alt="User Avatar" class="h-10 w-10 rounded-full" />
+                        <img src="{{ auth()->user()->avatar }}" alt="User Avatar" class="h-10 w-10 rounded-2xl" />
                         <div class="ml-3">
                             <p class="text-sm font-medium text-zinc-800">{{ auth()->user()->name }}</p>
                         </div>
@@ -129,7 +129,7 @@
                                 type="button"
                                 class="h-10 flex items-center"
                             >
-                                <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0 cursor-pointer">
+                                <div class="flex items-center justify-center h-8 rounded-2xl overflow-hidden shrink-0 cursor-pointer">
                                     <img src="{{ auth()->user()->avatar }}" alt="User Actions" class="h-8 w-8" />
                                 </div>
                                 <div class="text-sm font-medium truncate text-zinc-800 mx-2 cursor-pointer">
@@ -176,9 +176,11 @@
 
         <!-- Mobile top bar with hamburger -->
         <div class="lg:hidden flex justify-between items-center shadow-md bg-white p-4 rounded-lg">
-            <button x-on:click="sidebarOpen = true" class="text-zinc-800">
-                <i class="fa fa-bars fa-lg"></i>
-            </button>
+            @auth
+                <button x-on:click="sidebarOpen = true" class="text-zinc-800">
+                    <i class="fa fa-bars fa-lg"></i>
+                </button>
+            @endauth
             
             <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="flex items-center">
                 <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />

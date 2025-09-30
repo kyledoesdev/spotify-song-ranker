@@ -56,7 +56,7 @@ final class StoreRanking
                     'spotify_song_id' => $song['id'],
                     'uuid' => Str::uuid(),
                     'title' => $song['name'] ?? 'Track deleted from spotify servers.',
-                    'cover' => $song['cover'],
+                    'cover' => $song['cover'] ?? 'https://i.imgur.com/MBDmIUg.png',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -116,7 +116,7 @@ final class StoreRanking
                     'spotify_song_id' => $song['id'],
                     'uuid' => Str::uuid(),
                     'title' => $song['name'] ?? 'Track deleted from spotify servers.',
-                    'cover' => $song['cover'],
+                    'cover' => $song['cover'] ?? 'https://i.imgur.com/MBDmIUg.png',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

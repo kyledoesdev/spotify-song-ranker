@@ -38,7 +38,7 @@ class RankingQueryBuilder extends Builder
             ->with('user', 'artist')
             ->with('songs', fn ($q) => $q->where('rank', 1))
             ->withCount('songs')
-            ->orderBy('completed_at', 'desc');
+            ->orderByRaw('completed_at IS NULL DESC, completed_at DESC');
     }
 
     public function forReminders(): static

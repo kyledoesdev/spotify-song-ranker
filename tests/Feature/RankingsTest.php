@@ -138,6 +138,28 @@ test('can start ranking for a playlist with valid request', function () {
     ]);
 });
 
+test('can not start playlist ranking with invalid playlist url', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(SongRankSetup::class)
+        ->set('playlistURL', 'abcdxyz')
+        ->call('searchPlaylist')
+        ->assertSet('selectedPlaylist', [])
+        ->assertSet('selectedPlaylistTracks', null);
+});
+
+test('can start playlist ranking with valid playlist url', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(SongRankSetup::class)
+        ->set('playlistURL', 'https://open.spotify.com/playlist/1l9ToABW4nh8EdGfq3Qvei')
+        ->call('searchPlaylist')
+        ->assertSet('type', RankingType::PLAYLIST);
+});
+
+
 test('ranking owner can view the ranking edit page', function () {
     $user = User::factory()
         ->has(Ranking::factory()->count(1))
