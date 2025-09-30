@@ -4,12 +4,13 @@ namespace App\Notifications;
 
 use App\Exports\RankingsExport;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 
-class DownloadDataNotification extends Notification
+class DownloadDataNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
