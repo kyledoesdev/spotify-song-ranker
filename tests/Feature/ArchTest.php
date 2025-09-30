@@ -12,7 +12,7 @@ it('loads all pages with no smoke', function() {
 
     $this->actingAs($user);
 
-    $ranking = Ranking::factory()->create(['user_id' => $user]);
+    $ranking = Ranking::factory()->create(['user_id' => $user->getKey()]);
 
     visit([
         '/',
