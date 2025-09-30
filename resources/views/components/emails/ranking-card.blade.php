@@ -29,12 +29,12 @@
                 
                 @if($ranking->songs && $ranking->songs->isNotEmpty())
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>⭐ #1 Song:</strong> {{ Str::limit($ranking->songs[0]->title, 30) }}
+                    <strong>⭐ #1 {{ $ranking->has_podcast_episode ? 'Record' : 'Song' }}:</strong> {{ Str::limit($ranking->songs[0]->title, 30) }}
                 </div>
                 @endif
                 
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>#️⃣ Songs:</strong> {{ $ranking->songs_count }} songs ranked
+                    <strong>#️⃣ {{ $ranking->has_podcast_episode ? 'Records' : 'Songs' }}:</strong> {{ $ranking->songs_count }} {{ $ranking->has_podcast_episode ? 'records' : 'songs' }} ranked
                 </div>
                 
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">

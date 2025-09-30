@@ -21,6 +21,9 @@ class PreferencesRelationManager extends RelationManager
                 Toggle::make('recieve_reminder_emails')
                     ->boolean()
                     ->required(),
+                Toggle::make('recieve_newsletter_emails')
+                    ->boolean()
+                    ->required(),
             ]);
     }
 
@@ -32,6 +35,7 @@ class PreferencesRelationManager extends RelationManager
                 TextColumn::make('id')
                     ->label('ID'),
                 ToggleColumn::make('recieve_reminder_emails'),
+                ToggleColumn::make('recieve_newsletter_emails'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -3,10 +3,6 @@
 use App\Models\Ranking;
 use App\Models\User;
 
-test('explore page loads', function () {
-    $this->get(route('explore'))->assertOk();
-});
-
 test('can explore public completed rankings on explore page', function () {
     $user = User::factory()->create();
 

@@ -2,10 +2,13 @@
 
 namespace App\Livewire\SongRank;
 
+use App\Enums\RankingType;
 use Livewire\Component;
 
 class SongListItem extends Component
 {
+    public RankingType $type;
+
     public array $song = [];
 
     public bool $canDelete = true;
@@ -17,6 +20,6 @@ class SongListItem extends Component
 
     public function removeSong(string $songId)
     {
-        $this->dispatch('song-removed', id: $songId);
+        $this->dispatch('song-removed', id: $songId, type: $this->type);
     }
 }

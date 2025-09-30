@@ -35,7 +35,7 @@
                         @if ($showEmbeds)
                             <div class="w-full overflow-hidden">
                                 <iframe
-                                    src="https://open.spotify.com/embed/track/{{ $currentSong1['spotify_song_id'] }}"
+                                    src="https://open.spotify.com/embed/{{ $currentSong1['is_podcast'] ? 'episode' : 'track' }}/{{ $currentSong1['spotify_song_id'] }}"
                                     class="w-full max-w-full"
                                     style="min-height: 232px;"
                                     frameborder="0" 
@@ -74,7 +74,7 @@
                         @if ($showEmbeds)
                             <div class="w-full overflow-hidden">
                                 <iframe
-                                    src="https://open.spotify.com/embed/track/{{ $currentSong2['spotify_song_id'] }}"
+                                    src="https://open.spotify.com/embed/{{ $currentSong2['is_podcast'] ? 'episode' : 'track' }}/{{ $currentSong2['spotify_song_id'] }}"
                                     class="w-full max-w-full"
                                     style="min-height: 232px;"
                                     frameborder="0" 

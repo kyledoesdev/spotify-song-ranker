@@ -5,6 +5,8 @@
         $link = "https://open.spotify.com/artist/" . $artist;
     } elseif (isset($song)) {
         $link = "https://open.spotify.com/track/" . $song;
+    } elseif (isset($playlist)) {
+        $link = "https://open.spotify.com/playlist/" . $playlist;
     }
 @endphp
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RankingType;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Ranking\EditRanking;
 use App\Livewire\SongRank\SongRankSetup;
@@ -11,7 +12,7 @@ use Livewire\Livewire;
 
 beforeEach(fn () => Artist::factory()->create());
 
-test('can start ranking with valid request', function () {
+test('can start ranking for an artist with valid request', function () {
     $user = User::factory()->create();
 
     $this->assertDatabaseMissing('artists', [
@@ -47,6 +48,7 @@ test('can start ranking with valid request', function () {
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
             ],
         ]))
+        ->set('type', RankingType::ARTIST)
         ->set('form.name', 'Local Natives List')
         ->set('form.is_public', true)
         ->call('beginRanking')
@@ -61,6 +63,105 @@ test('can start ranking with valid request', function () {
         'name' => 'Local Natives List',
     ]);
 });
+
+test('can start ranking for a playlist with valid request', function () {
+    $user = User::factory()->create();
+
+    $this->assertDatabaseMissing('playlists', [
+        'playlist_id' => 'test-playlist-id',
+        'creator_id' => 'test-creator-id',
+        'creator_name' => 'test-creator-name',
+        'name' => 'Playlist Name',
+        'description' => 'Playlist Description',
+        'cover' => 'playlist-cover',
+        'track_count' => 3,
+    ]);
+
+    $this->assertDatabaseMissing('rankings', [
+        'name' => 'Local Natives List',
+    ]);
+
+    Livewire::actingAs($user)
+        ->test(SongRankSetup::class)
+        ->set('selectedPlaylist', [
+            'id' => 'test-playlist-id',
+            'name' => 'Playlist Name',
+            'description' => 'Playlist Description',
+            'creator' => [
+                'display_name' => 'test-creator-name',
+                'id' => 'test-creator-id',
+            ],
+            'cover' => 'playlist-cover',
+            'track_count' => 3,
+        ])
+        ->set('selectedPlaylistTracks', collect([
+            [
+                'id' => 'ceilings-id',
+                'name' => 'Ceilings',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
+                'artist_id' => 'local-natives-id',
+                'artist_name' => 'Local Natives',
+                'is_podcast' => false,
+            ],
+            [
+                'id' => 'sun-hands-id',
+                'name' => 'Sun Hands',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
+                'artist_id' => 'local-natives-id',
+                'artist_name' => 'Local Natives',
+                'is_podcast' => false,
+            ],
+            [
+                'id' => 'featherweight-id',
+                'name' => 'Featherweight',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
+                'artist_id' => 'local-natives-id',
+                'artist_name' => 'Local Natives',
+                'is_podcast' => false,
+            ],
+        ]))
+        ->set('type', RankingType::PLAYLIST)
+        ->set('form.name', 'Local Natives List')
+        ->set('form.is_public', true)
+        ->call('beginRanking')
+        ->assertHasNoErrors();
+
+    $this->assertDatabaseHas('playlists', [
+        'playlist_id' => 'test-playlist-id',
+        'creator_id' => 'test-creator-id',
+        'creator_name' => 'test-creator-name',
+        'name' => 'Playlist Name',
+        'description' => 'Playlist Description',
+        'cover' => 'playlist-cover',
+        'track_count' => 3,
+    ]);
+
+    $this->assertDatabaseHas('rankings', [
+        'name' => 'Local Natives List',
+    ]);
+});
+
+test('can not start playlist ranking with invalid playlist url', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(SongRankSetup::class)
+        ->set('playlistURL', 'abcdxyz')
+        ->call('searchPlaylist')
+        ->assertSet('selectedPlaylist', [])
+        ->assertSet('selectedPlaylistTracks', null);
+});
+
+test('can start playlist ranking with valid playlist url', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test(SongRankSetup::class)
+        ->set('playlistURL', 'https://open.spotify.com/playlist/1l9ToABW4nh8EdGfq3Qvei')
+        ->call('searchPlaylist')
+        ->assertSet('type', RankingType::PLAYLIST);
+});
+
 
 test('ranking owner can view the ranking edit page', function () {
     $user = User::factory()

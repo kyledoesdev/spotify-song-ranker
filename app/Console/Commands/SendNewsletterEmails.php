@@ -30,7 +30,7 @@ class SendNewsletterEmails extends Command
             ->whereHas('preferences', fn (Builder $query): Builder => $query->where('recieve_newsletter_emails', true))
             ->get();
 
-        Log::channel('discord_other_updates')->info("Sending {$users->count()} users the monthly newsletter of {$rankings->count()}.");
+        Log::channel('discord_other_updates')->info("Sending {$users->count()} users the monthly newsletter of {$rankings->count()} rankings.");
 
         Notification::send($users, new Newsletter($rankings));
 

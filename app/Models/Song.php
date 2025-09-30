@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Song extends Model
 {
@@ -20,5 +22,15 @@ class Song extends Model
         parent::boot();
 
         static::addGlobalScope('default_order', fn (Builder $query) => $query->orderBy('rank', 'asc'));
+    }
+
+    public function ranking(): BelongsTo
+    {
+        return $this->belongsTo(Ranking::class);
+    }
+
+    public function artist(): HasOne
+    {
+        return $this->hasOne(Artist::class, 'id', 'artist_id');
     }
 }
