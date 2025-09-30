@@ -8,9 +8,11 @@ arch('System: Uses no debug methods')->expect(['dd', 'dump', 'die', 'ray'])->not
 
 
 it('loads all pages with no smoke', function() {
-    $this->actingAs(User::factory()->create());
+    $user = User::factory()->create();
 
-    $ranking = Ranking::factory()->create();
+    $this->actingAs($user);
+
+    $ranking = Ranking::factory()->create(['user_id' => $user]);
 
     visit([
         '/',
