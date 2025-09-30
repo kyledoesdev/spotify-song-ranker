@@ -30,6 +30,8 @@ class SongRankProcess extends Component
 
     public function mount(): void
     {
+        $this->ranking->loadMissing('songs', 'songs.artist');
+
         if (! $this->ranking->is_ranked) {
             $this->initializeSorting();
         }
@@ -180,8 +182,15 @@ class SongRankProcess extends Component
                 ->whereIn('id', [$merge['left_ids'][0], $merge['right_ids'][0]])
                 ->keyBy('id');
 
-            $this->currentSong1 = $songs[$merge['left_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']);
-            $this->currentSong2 = $songs[$merge['right_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']);
+            $this->currentSong1 = [
+                ...$songs[$merge['left_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']),
+                'is_podcast' => $songs[$merge['left_ids'][0]]->artist->is_podcast
+            ];
+
+            $this->currentSong2 = [
+                ...$songs[$merge['right_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']),
+                'is_podcast' => $songs[$merge['right_ids'][0]]->artist->is_podcast
+            ];
         } else {
             $result = [...$merge['result_ids'], ...$merge['left_ids'], ...$merge['right_ids']];
             $key = "{$merge['start']}-{$merge['end']}";

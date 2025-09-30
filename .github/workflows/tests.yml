@@ -28,10 +28,12 @@ jobs:
       run: |
         mkdir -p database
         touch database/database.sqlite
+    - name: Install Node Dependencies
+      run: npm ci
+    - name: "Install Playwright Browsers"
+      run: npx playwright install --with-deps
     - name: Run Vite Build Scripts
-      run: npm i && npm run build && rm -rf node_modules/*
-    - name: "Install Playwright for Pest 4 Tests"
-      run: npm install playwright && npx playwright install
+      run: npm run build
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite

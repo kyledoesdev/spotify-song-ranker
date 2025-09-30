@@ -12,6 +12,7 @@ class Artist extends Model
         'artist_id',
         'artist_name',
         'artist_img',
+        'is_podcast',
     ];
 
     public static function boot()
@@ -19,6 +20,13 @@ class Artist extends Model
         parent::boot();
 
         static::addGlobalScope('default_order', fn (Builder $query) => $query->orderBy('artist_name', 'asc'));
+    }
+
+    public function casts(): array
+    {
+        return [
+            'is_podcast' => 'boolean',
+        ];
     }
 
     public function ranking(): BelongsTo

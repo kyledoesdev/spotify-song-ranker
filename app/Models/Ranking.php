@@ -27,6 +27,7 @@ class Ranking extends Model
     {
         return [
             'is_ranked' => 'boolean',
+            'has_podcast_episode' => 'boolean',
         ];
     }
 

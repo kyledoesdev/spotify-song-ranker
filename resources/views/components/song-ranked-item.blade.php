@@ -18,7 +18,7 @@
                 </h5>
                 <div class="flex items-center mx-2">
                     <a 
-                        href="https://open.spotify.com/track/{{ $song->spotify_song_id }}"
+                        href="https://open.spotify.com/{{ $song->artist->is_podcast ? 'episode' : 'track' }}/{{ $song->spotify_song_id }}"
                         target="_blank"
                         class="inline-flex items-center gap-2"
                         style="border-bottom: 2px solid #06D6A0; padding-bottom: 2px;"

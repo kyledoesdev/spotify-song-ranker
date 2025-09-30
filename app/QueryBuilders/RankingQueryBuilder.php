@@ -24,6 +24,7 @@ class RankingQueryBuilder extends Builder
             ->when(isset($filters['playlist']), fn (Builder $query) => $query
                 ->whereHas('playlist', fn (Builder $query) => $query->where('id', $filters['playlist']))
             )
+            ->withHasPodcastEpisode()
             ->with('user', 'artist', 'playlist')
             ->with('songs', fn ($query) => $query->where('rank', 1))
             ->withCount('songs')
@@ -35,6 +36,7 @@ class RankingQueryBuilder extends Builder
         return $this->newQuery()
             ->where('user_id', $user ? $user->getKey() : auth()->id())
             ->when($user && $user->getKey() !== auth()->id(), fn (Builder $query) => $query->public()->completed())
+            ->withHasPodcastEpisode()
             ->with('user', 'artist')
             ->with('songs', fn ($q) => $q->where('rank', 1))
             ->withCount('songs')
@@ -56,10 +58,24 @@ class RankingQueryBuilder extends Builder
             ->public()
             ->completed()
             ->whereBetween('completed_at', [now()->subMonth(), now()])
+            ->withHasPodcastEpisode()
             ->with('user', 'artist')
             ->with('songs', fn (Builder $query) => $query->where('rank', 1))
             ->withCount('songs')
             ->orderBy('completed_at', 'desc');
+    }
+
+    public function withHasPodcastEpisode()
+    {
+        return $this->addSelect([
+            'has_podcast_episode' => function($q) {
+                $q->selectRaw('IF(COUNT(*) > 0, 1, 0)')
+                    ->from('songs')
+                    ->join('artists', 'songs.artist_id', '=', 'artists.id')
+                    ->whereColumn('songs.ranking_id', 'rankings.id')
+                    ->where('artists.is_podcast', true);
+            }
+        ]);
     }
 
     public function public(): static

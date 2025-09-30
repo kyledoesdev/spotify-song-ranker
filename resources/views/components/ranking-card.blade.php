@@ -66,7 +66,7 @@
                         <i class="fa fa-solid fa-hashtag text-xs md:text-base"></i>
                     </div>
                     <div class="p-0">
-                        <span class="text-xs md:text-base">{{ $ranking->songs_count }} songs {{ $ranking->is_ranked ? ' ranked.' : ' in process.' }}</span>
+                        <span class="text-xs md:text-base">{{ $ranking->songs_count }} {{ $ranking->has_podcast_episode == 1 ? 'records' : 'songs' }} {{ $ranking->is_ranked ? ' ranked.' : ' in process.' }}</span>
                     </div>
                 </div>
                 

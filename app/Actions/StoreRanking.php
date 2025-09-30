@@ -108,7 +108,13 @@ final class StoreRanking
             /* map through the songs, assign the artist or create a record of one. */
             $songs = collect($attributes['tracks'])->map(function ($song) use ($artists, $ranking) {
                 $artist = $artists->get($song['artist_id'])
-                    ?? Artist::create(['artist_id' => $song['artist_id'], 'artist_name' => $song['artist_name']]);
+                    ?? Artist::updateOrcreate([
+                        'artist_id' => $song['artist_id'],
+                    ], [
+                        'artist_id' => $song['artist_id'],
+                        'artist_name' => $song['artist_name'],
+                        'is_podcast' => $song['is_podcast']
+                    ]);
 
                 return [
                     'artist_id' => $artist->getKey(),
