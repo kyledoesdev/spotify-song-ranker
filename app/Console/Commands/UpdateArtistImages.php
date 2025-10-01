@@ -44,14 +44,14 @@ class UpdateArtistImages extends Command
             if (count($artists)) {
                 $artists = collect($artists->map(fn ($artist) => [
                     'artist_id' => $artist->id,
-                    'artist_img' => $artist->images[0]->url,
+                    'artist_img' => data_get($artist, 'images.0.url'),
                 ]));
 
                 foreach ($artists as $artist) {
                     Artist::query()
                         ->where('artist_id', $artist['artist_id'])
                         ->first()
-                        ->update(['artist_img' => $artist['artist_img']]);
+                        ?->update(['artist_img' => $artist['artist_img']]);
                 }
             }
         });
