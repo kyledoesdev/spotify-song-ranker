@@ -41,12 +41,12 @@ final class GetPlaylistTracks
                 $subResponse = Http::withHeaders([
                     'Authorization' => 'Bearer '.$user->external_token,
                     'Content-Type' => 'application/json',
-                ])->get("https://api.spotify.com/v1/playlists/{$playlistId}", [
+                ])->get("https://api.spotify.com/v1/playlists/{$playlistId}/tracks", [
                     'limit' => 100,
                     'offset' => $offset,
                 ]);
 
-                collect(collect($subResponse->json('tracks.items'))->pluck('track'))->map(function (array $track) use ($tracks) {
+                collect(collect($subResponse->json('items'))->pluck('track'))->map(function (array $track) use ($tracks) {
                     $tracks->push([
                         'id' => $track['id'],
                         'name' => $track['name'],
