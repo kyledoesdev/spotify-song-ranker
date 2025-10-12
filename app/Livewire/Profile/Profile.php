@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Profile;
 
+use App\Exports\SongExport;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class Profile extends Component
 {
@@ -53,5 +56,14 @@ class Profile extends Component
                 title: 'Ranking Deleted!',
             });
         ");
+    }
+
+    public function download(int $rankingId): BinaryFileResponse
+    {
+        $ranking = Ranking::findOrFail($rankingId);
+
+        abort_unless(auth()->check() && $ranking->user_id == auth()->id(), 403);
+
+        return Excel::download(new SongExport($ranking->songs, $ranking->name), $ranking->name . '.csv', \Maatwebsite\Excel\Excel::CSV);
     }
 }

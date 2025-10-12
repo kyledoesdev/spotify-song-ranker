@@ -79,6 +79,11 @@ class Ranking extends Model
         return is_null($this->playlist_id) ? RankingType::ARTIST : RankingType::PLAYLIST;
     }
 
+    public function isPlaylistType(): bool
+    {
+        return $this->type === RankingType::PLAYLIST;
+    }
+
     public function canBeSeen(): bool
     {
         if ($this->user_id == auth()->id()) {

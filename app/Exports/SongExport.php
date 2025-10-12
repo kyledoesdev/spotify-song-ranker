@@ -10,7 +10,10 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 
 class SongExport implements FromCollection, WithHeadings, WithMapping, WithTitle
 {
-    public function __construct(private Collection $songs, private string $rankingName) {}
+    public function __construct(
+        private Collection $songs,
+        private string $rankingName
+    ) {}
 
     public function collection()
     {
