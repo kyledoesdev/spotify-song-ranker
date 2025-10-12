@@ -121,7 +121,7 @@
             @if ($ranking->is_ranked)
                 <button 
                     class="text-gray-500 hover:text-purple-600 transition-colors p-1 text-sm cursor-pointer mt-1"
-                    @click="window.showLoader(); $wire.download({{ $ranking->getKey() }}).then(() => window.hideLoader())"
+                    wire:click="download"
                     title="Download"
                 >
                     <i class="fa fa-file-csv text-sm lg:text-lg"></i>
