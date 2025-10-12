@@ -3,11 +3,11 @@
         <tr>
             <td width="120" style="vertical-align: top; padding-right: 16px;">
                 <img 
-                    src="{{ $ranking->artist->artist_img }}"
+                    src="{{ $ranking->isPlaylistType() ? $ranking->playlist->cover : $ranking->artist->artist_img }}"
                     width="120" 
                     height="120" 
                     style="border-radius: 8px; border: 1px solid #27272a; display: block;"
-                    alt="{{ $ranking->artist->artist_name }}"
+                    alt="{{ $ranking->isPlaylistType() ? $ranking->playlist->name : $ranking->artist->artist_name }}"
                 >
                 <div style="margin-top: 8px;">
                     <a 
@@ -23,9 +23,15 @@
                     {{ Str::limit($ranking->name, 40) }}
                 </h3>
                 
+                @if ($ranking->isPlaylistType())
+                <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
+                    <strong>🎵 Playlist:</strong> {{ $ranking->playlist->name }}
+                </div>
+                @else
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
                     <strong>🎵 Artist:</strong> {{ $ranking->artist->artist_name }}
                 </div>
+                @endif
                 
                 @if($ranking->songs && $ranking->songs->isNotEmpty())
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
