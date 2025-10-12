@@ -184,12 +184,12 @@ class SongRankProcess extends Component
 
             $this->currentSong1 = [
                 ...$songs[$merge['left_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']),
-                'is_podcast' => $songs[$merge['left_ids'][0]]->artist->is_podcast
+                'is_podcast' => $songs[$merge['left_ids'][0]]->artist->is_podcast,
             ];
 
             $this->currentSong2 = [
                 ...$songs[$merge['right_ids'][0]]->only(['id', 'title', 'cover', 'spotify_song_id']),
-                'is_podcast' => $songs[$merge['right_ids'][0]]->artist->is_podcast
+                'is_podcast' => $songs[$merge['right_ids'][0]]->artist->is_podcast,
             ];
         } else {
             $result = [...$merge['result_ids'], ...$merge['left_ids'], ...$merge['right_ids']];

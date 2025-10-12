@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Rankings;
 
 use App\Enums\RankingType;
 use App\Models\Artist;
@@ -113,7 +113,7 @@ final class StoreRanking
                     ], [
                         'artist_id' => $song['artist_id'],
                         'artist_name' => $song['artist_name'],
-                        'is_podcast' => $song['is_podcast']
+                        'is_podcast' => $song['is_podcast'],
                     ]);
 
                 return [

@@ -3,8 +3,8 @@
 
     <div class="{{ $this->rankings->count() > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-auto pt-2' : 'grid grid-cols-1 gap-4 overflow-x-auto pt-2' }}">
         @forelse ($this->rankings as $ranking)
-            <x-ranking-card
-                :key="$ranking->getKey()"
+            <livewire:ranking.card
+                :key="'ranking-card-'.$ranking->getKey()"
                 :ranking="$ranking"
             />
         @empty

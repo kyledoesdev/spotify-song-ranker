@@ -14,7 +14,7 @@
         <div class="flex flex-1">
             <div class="min-w-0 pt-1 flex-1">
                 <h5 class="mx-2 mt-1 mb-0.5 text-xs sm:text-base break-words" title="{{ $song->title }}">
-                    @if($ranking->type === RankingType::PLAYLIST) <span class="font-bold">{{ $song->artist->artist_name }}</span> - @endif {{ $song->title }}
+                    @if ($ranking->isPlaylistType()) <span class="font-bold">{{ $song->artist->artist_name }}</span> - @endif {{ $song->title }}
                 </h5>
                 <div class="flex items-center mx-2">
                     <a 

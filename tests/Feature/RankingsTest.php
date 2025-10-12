@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\RankingType;
-use App\Livewire\Profile\Profile;
+use App\Livewire\Ranking\Card as ProfileRankingCard;
 use App\Livewire\Ranking\EditRanking;
 use App\Livewire\SongRank\SongRankSetup;
 use App\Models\Artist;
@@ -162,7 +162,6 @@ test('can start playlist ranking with valid playlist url', function () {
         ->assertSet('type', RankingType::PLAYLIST);
 });
 
-
 test('ranking owner can view the ranking edit page', function () {
     $user = User::factory()
         ->has(Ranking::factory()->count(1))
@@ -226,14 +225,10 @@ test('ranking owner can delete their ranking', function () {
     expect($ranking->deleted_at)->toBeNull();
     expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(10);
 
-    $this->actingAs($user)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk();
-
     Livewire::actingAs($user)
-        ->test(Profile::class, ['id' => $user->spotify_id])
-        ->call('destroy', $ranking->getKey())
-        ->assertHasNoErrors();
+        ->test(ProfileRankingCard::class, ['ranking' => $ranking])
+        ->call('destroy')
+        ->assertDispatched('rankings-updated');
 
     expect(Ranking::withTrashed()->find($ranking->getKey())->deleted_at)->not->toBeNull();
     expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(0);
@@ -251,8 +246,8 @@ test('ranking non-owner can not delete someone elses rankings', function () {
     expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(10);
 
     Livewire::actingAs($otherUser)
-        ->test(Profile::class, ['id' => $user->spotify_id])
-        ->call('destroy', $ranking->getKey())
+        ->test(ProfileRankingCard::class, ['ranking' => $ranking])
+        ->call('destroy')
         ->assertForbidden();
 
     expect($ranking->fresh()->deleted_at)->toBeNull();

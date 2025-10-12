@@ -20,3 +20,8 @@ function title(): string
 
     return $title;
 }
+
+function safeName(string $string): string
+{
+    return Str::of($string)->ascii()->replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-')->trim()->toString();
+}

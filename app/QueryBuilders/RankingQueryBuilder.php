@@ -68,14 +68,14 @@ class RankingQueryBuilder extends Builder
     public function withHasPodcastEpisode()
     {
         return $this->addSelect([
-            'has_podcast_episode' => function($q) {
+            'has_podcast_episode' => function ($q) {
                 $q->selectRaw('CASE WHEN EXISTS (
                     SELECT 1 FROM songs 
                     INNER JOIN artists ON songs.artist_id = artists.id 
                     WHERE songs.ranking_id = rankings.id 
                     AND artists.is_podcast = 1
                 ) THEN 1 ELSE 0 END');
-            }
+            },
         ]);
     }
 

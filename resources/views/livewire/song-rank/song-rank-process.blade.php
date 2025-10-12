@@ -61,7 +61,7 @@
                             <button 
                                 class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer"
                                 wire:click="chooseSong({{ $currentSong1['id'] }})"
-                                wire:key="song1-{{ $currentSong1['id'] }}"
+                                :key="'song1-'.$currentSong1['id']"
                             >
                                 {{ $currentSong1['title'] }}
                             </button>
@@ -100,7 +100,7 @@
                             <button 
                                 class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer"
                                 wire:click="chooseSong({{ $currentSong2['id'] }})"
-                                wire:key="song2-{{ $currentSong2['id'] }}"
+                                :key="'song2-'.$currentSong2['id']"
                             >
                                 {{ $currentSong2['title'] }}
                             </button>

@@ -6,7 +6,6 @@ use App\Models\User;
 arch('System: Uses PHP preset')->preset()->php();
 arch('System: Uses no debug methods')->expect(['dd', 'dump', 'die', 'ray'])->not->toBeUsed();
 
-
 /* failing in CI - fix me later */
 
 /* it('loads all pages with no smoke', function() {
