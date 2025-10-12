@@ -107,7 +107,6 @@
                     message: 'Are you sure you want to delete this ranking?',
                     confirmText: 'Delete',
                     componentId: '{{ $this->getId() }}',
-                    entityId: {{ $ranking->getKey() }},
                     action: 'destroy',
                     styles: {
                         'confirm-btn': 'btn-danger m-2 p-2 text-white'
