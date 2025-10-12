@@ -2,10 +2,10 @@
 
 namespace App\Livewire\SongRank;
 
+use App\Actions\Rankings\StoreRanking;
 use App\Actions\Spotify\GetArtistSongs;
 use App\Actions\Spotify\GetPlaylistTracks;
 use App\Actions\Spotify\SearchArtists;
-use App\Actions\StoreRanking;
 use App\Enums\RankingType;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;

@@ -8,7 +8,6 @@ use App\Notifications\DownloadDataNotification;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
-
 test('user can enable ranking reminder emails', function () {
     $user = User::factory()->create();
     $user->preferences->update(['recieve_reminder_emails' => false]);

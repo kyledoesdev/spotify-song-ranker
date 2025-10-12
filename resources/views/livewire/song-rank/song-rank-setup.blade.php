@@ -83,7 +83,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-6 gap-2 md:gap-0" x-auto-animate>
                     @foreach ($searchedArtists as $artist)
                         <div 
-                            wire:key="artist-{{ $artist['id'] }}"
+                            :key="'artist-'.$artist['id']"
                             class="m-2 p-2"
                             x-data="{ show: false }"
                             x-init="setTimeout(() => show = true, {{ $loop->index * 50 }})"

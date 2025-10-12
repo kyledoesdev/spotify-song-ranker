@@ -53,7 +53,7 @@ final class GetPlaylistTracks
                         'cover' => data_get($track, 'album.images.0.url'),
                         'artist_id' => data_get($track, 'artists.0.id'),
                         'artist_name' => data_get($track, 'artists.0.name') ?? data_get($track, 'artists.0.type'),
-                        'is_podcast' => data_get($track, 'artists.0.type') !== 'artist'
+                        'is_podcast' => data_get($track, 'artists.0.type') !== 'artist',
                     ]);
                 });
 

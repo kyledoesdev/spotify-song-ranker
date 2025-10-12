@@ -1,8 +1,7 @@
 
-@use('App\Enums\RankingType')
-
 <div 
     class="bg-white shadow-md rounded-lg cursor-pointer hover:shadow-lg transition-shadow relative p-2"
+    :key="'card-'.$ranking->getKey()"
 >
     <div class="m-2" style="min-width: 35vw;" onclick="window.location.href='{{ route('ranking', ['id' => $ranking->getKey() ]) }}'">
         <div class="flex space-x-6">
@@ -33,7 +32,7 @@
                     </div>
                     <div class="p-0">
                         <span class="text-xs md:text-base">
-                            {{ $ranking->isPlaylistType() ? $ranking->playlist->name : $ranking->artist->artist_name }}
+                            {{ $ranking->isPlaylistType() ? $ranking->playlist->name : $ranking->artist->artist_name}}
                         </span>
                     </div>
                 </div> 
@@ -44,7 +43,7 @@
                         <i class="fa fa-regular fa-star text-xs md:text-base"></i>
                     </div>
                     <div class="p-0">
-                        @if($ranking->is_ranked)
+                        @if ($ranking->is_ranked)
                             <span class="text-xs md:text-base">{{ Str::limit($ranking->songs[0]->title ?? '', 25) }}</span>
                         @else
                             N/A
@@ -62,7 +61,7 @@
                     </div>
                 </div>
                 
-                @if(Route::currentRouteName() != 'profile')
+                @if (Route::currentRouteName() != 'profile')
                     <div class="flex">
                         <div class="mr-1">
                             <i class="fa fa-regular fa-user text-xs md:text-base"></i>
@@ -91,7 +90,7 @@
     </div>
 
     @if (auth()->id() === $ranking->user_id && Route::currentRouteName() === 'profile')
-        <div class="absolute top-2 right-2 flex flex-col space-y-1 mr-1 mt-1">
+        <div class="absolute top-2 right-2 flex flex-col space-y-1 mr-1 mt-1" :key="'ranking-quick-actions-'.$ranking->getKey()">
             <a 
                 class="text-gray-500 hover:text-green-600 transition-colors p-1 text-sm cursor-pointer"
                 href="{{ route('rank.edit', ['id' => $ranking->getKey() ]) }}"
@@ -114,7 +113,7 @@
                         'confirm-btn': 'btn-danger m-2 p-2 text-white'
                     }
                 })"
-                title="Delete"
+                title="Delete Ranking"
             >
                 <i class="fa fa-trash text-sm md:text-lg"></i>
             </button>

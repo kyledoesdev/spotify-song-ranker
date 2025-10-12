@@ -54,7 +54,7 @@
                                 @endphp
 
                                 <li 
-                                    wire:key="artist-{{ $artist->getKey() }}"
+                                    :key="'artist-'.$artist->getKey()"
                                     class="p-2 hover:bg-gray-100 rounded-md cursor-pointer {{ $this->artist == $artist->getKey() ? 'bg-purple-100 border-l-4 border-purple-500' : '' }}"
                                     wire:click="filterByArtist({{ $artist->getKey() }})"
                                 >
@@ -152,10 +152,10 @@
                         @foreach ($this->rankings as $index => $ranking)
                             <div 
                                 class="rounded-md cursor-pointer p-1 transform transition-all duration-300 hover:scale-101" 
-                                wire:key="ranking-{{ $ranking->getKey() }}"
+                                :key="'ranking-'.$ranking->getKey()"
                                 data-ranking-card
                             >
-                                <x-ranking-card :ranking="$ranking" />
+                                <livewire:ranking.card :ranking="$ranking" :key="$ranking->getKey()" />
                             </div>
                         @endforeach
                     </div>
@@ -209,7 +209,7 @@
                                     @endphp
 
                                     <li 
-                                        wire:key="playlist-{{ $playlist->getKey() }}"
+                                        :key="'playlist-'.$playlist->getKey()"
                                         class="p-2 hover:bg-gray-100 rounded-md cursor-pointer {{ $this->playlist == $playlist->getKey() ? 'bg-purple-100 border-l-4 border-purple-500' : '' }}"
                                         wire:click="filterByPlaylist({{ $playlist->getKey() }})"
                                     >
