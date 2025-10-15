@@ -3,6 +3,7 @@
 namespace App\Livewire\Welcome;
 
 use App\Models\Ranking;
+use App\Models\Song;
 use App\Models\User;
 use Livewire\Component;
 
@@ -16,12 +17,10 @@ class Welcome extends Component
                 ->where('is_ranked', true)
                 ->where('is_public', true)
                 ->count() / 25) * 25,
-            'artistsCount' => round(Ranking::query()
-                ->where('is_ranked', true)
-                ->where('is_public', true)
-                ->whereHas('artist')
+            'artistsCount' => round(Song::query()
+                ->whereHas('ranking', fn($q) => $q->where('is_ranked', true))
                 ->distinct('artist_id')
-                ->count('artist_id') / 25) * 25,
+                ->count() / 25) * 25,
         ]);
     }
 }

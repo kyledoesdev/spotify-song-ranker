@@ -38,7 +38,7 @@ class RankingQueryBuilder extends Builder
             ->when($user && $user->getKey() !== auth()->id(), fn (Builder $query) => $query->public()->completed())
             ->withHasPodcastEpisode()
             ->with('user', 'artist')
-            ->with('songs', fn ($q) => $q->where('rank', 1))
+            ->with('songs', fn ($query) => $query->with('artist'))
             ->withCount('songs')
             ->orderByRaw('completed_at IS NULL DESC, completed_at DESC');
     }

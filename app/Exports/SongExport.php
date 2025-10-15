@@ -23,6 +23,7 @@ class SongExport implements FromCollection, WithHeadings, WithMapping, WithTitle
     public function map($song): array
     {
         return [
+            $song->artist ? $song->artist->artist_name : 'N/A',
             $song->rank,
             $song->title,
         ];
@@ -31,6 +32,7 @@ class SongExport implements FromCollection, WithHeadings, WithMapping, WithTitle
     public function headings(): array
     {
         return [
+            'Artist',
             'Rank',
             'Title',
         ];

@@ -217,7 +217,7 @@ test('ranking non-owner can not update ranking name and visibility', function ()
 
 test('ranking owner can delete their ranking', function () {
     $user = User::factory()
-        ->has(Ranking::factory()->has(Song::factory()->count(10)))
+        ->has(Ranking::factory())
         ->create();
 
     $ranking = $user->rankings->first();
@@ -236,7 +236,7 @@ test('ranking owner can delete their ranking', function () {
 
 test('ranking non-owner can not delete someone elses rankings', function () {
     $user = User::factory()
-        ->has(Ranking::factory()->has(Song::factory()->count(10)))
+        ->has(Ranking::factory())
         ->create();
 
     $otherUser = User::factory()->create();
