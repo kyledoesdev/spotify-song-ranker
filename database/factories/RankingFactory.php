@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Artist;
+use App\Models\Ranking;
+use App\Models\Song;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,5 +20,17 @@ class RankingFactory extends Factory
             'is_public' => false,
             'completed_at' => null,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Ranking $ranking) {
+            for ($rank = 1; $rank <= 10; $rank++) {
+                Song::factory()->create([
+                    'ranking_id' => $ranking->getKey(),
+                    'rank' => $rank
+                ]);
+            }
+        });
     }
 }
