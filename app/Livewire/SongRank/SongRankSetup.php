@@ -101,7 +101,7 @@ class SongRankSetup extends Component
             $this->js("
                 window.flash({
                     title: 'Could not find playlist.',
-                    message: 'Something went wrong trying to find this playlist: {$this->playlistURL}.',
+                    message: 'Playlists can have a max of 500 songs. Something went wrong trying to find this playlist: {$this->playlistURL}.',
                     icon: 'error',
                 });
             ");

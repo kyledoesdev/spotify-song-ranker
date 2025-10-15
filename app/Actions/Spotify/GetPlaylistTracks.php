@@ -37,6 +37,10 @@ final class GetPlaylistTracks
 
             $total = $response->json('tracks.total');
 
+            if ($total > 500) {
+                return null;
+            }
+
             for ($i = 0; $i < round($total / 100, 2, PHP_ROUND_HALF_UP); $i++) {
                 $subResponse = Http::withHeaders([
                     'Authorization' => 'Bearer '.$user->external_token,
