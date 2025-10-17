@@ -24,7 +24,7 @@
         @foreach ($rankings as $ranking)
             <tr>
                 <td>{{ $ranking->name }}</td>
-                <td>{{ $ranking->artist ? $ranking->artist->artist_name : ($ranking->playlist ? $ranking->playlist->name) }}</td>
+                <td>{{ $ranking->artist?->artist_name ?? $ranking->playlist?->name }}</td>
                 <td>{{ $ranking->songs_count }}</td>
                 <td>{{ $ranking->created_at->diffForHumans() }}</td>
             </tr>
