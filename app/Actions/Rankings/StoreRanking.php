@@ -9,6 +9,7 @@ use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 final class StoreRanking
@@ -107,8 +108,12 @@ final class StoreRanking
 
             /* map through the songs, assign the artist or create a record of one. */
             $songs = collect($attributes['tracks'])->map(function ($song) use ($artists, $ranking) {
+                if (is_null($song['artist_id'])) {
+                    Log::channel('discord_other_updates')->error('Artist Id not set on Song: ' . $song['name'] . ' ' . $song['artist_name']);
+                }
+
                 $artist = $artists->get($song['artist_id'])
-                    ?? Artist::updateOrcreate([
+                    ?? Artist::updateOrCreate([
                         'artist_id' => $song['artist_id'],
                     ], [
                         'artist_id' => $song['artist_id'],

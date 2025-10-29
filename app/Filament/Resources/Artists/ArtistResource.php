@@ -27,19 +27,22 @@ class ArtistResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('artist_img')
+                    ->label('')
                     ->circular(),
+                TextColumn::make('artist_id')
+                    ->label('Artist ID')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('artist_name')
-                    ->label('Artist')
+                    ->label('Artist Name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([])
             ->recordActions([])
