@@ -215,7 +215,7 @@
                         </h5>
                         
                         <!-- Songs list with auto-animate for smooth add/remove -->
-                        <div class="card-scroller" x-auto-animate.200ms>
+                        <div class="card-scroller">
                             @if($tracks)
                                 @foreach ($tracks as $song)
                                     <div
@@ -231,9 +231,9 @@
                                         x-transition:leave-end="opacity-0 transform -translate-x-4"
                                     >
                                         <livewire:song-rank.song-list-item
-                                            :key="'song-item-'.$song['id']"
+                                            :key="'song-item-'.$song['id'].'-'.count($tracks)"
                                             :song="$song"
-                                            :canDelete="true"
+                                            :canDelete="count($tracks) > 2"
                                             :type="$type"
                                         />
                                     </div>

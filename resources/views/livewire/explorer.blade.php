@@ -171,7 +171,7 @@
             </div>
 
             <!-- Right Sidebar - Playlists -->
-            <div class="
+            {{-- <div class="
                 lg:block 
                 fixed lg:static 
                 inset-0 lg:inset-auto 
@@ -236,7 +236,7 @@
 
                 <!-- Overlay click area (mobile only) -->
                 <div class="lg:hidden absolute inset-0 -z-10" wire:click="togglePlaylistSidebar"></div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>
