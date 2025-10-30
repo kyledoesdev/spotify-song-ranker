@@ -120,7 +120,34 @@
 
                 <div 
                     class="grid grid-cols-1 md:grid-cols-2 m-2 p-2"
-                    x-data="{ show: false }"
+                    x-data="{ 
+                        show: false,
+                        removedUuids: [],
+                        visibleCount: 0,
+                        updateCount() {
+                            const total = {{ count($tracks ?? []) }};
+                            this.visibleCount = total - this.removedUuids.length;
+                        }
+                    }"
+                    x-init="
+                        show = true;
+                        removedUuids = @js($removedTrackUuids ?? []);
+                        updateCount();
+                    "
+                    @tracks-batch-removed.window="
+                        $event.detail.uuids.forEach(uuid => {
+                            if (!removedUuids.includes(uuid)) {
+                                removedUuids.push(uuid);
+                            }
+                        });
+                        updateCount();
+                    "
+                    @song-removed.window="
+                        if (!removedUuids.includes($event.detail.uuid)) {
+                            removedUuids.push($event.detail.uuid);
+                        }
+                        updateCount();
+                    "
                     x-init="show = true"
                     x-show="show"
                     x-transition:enter="transition ease-out duration-500"
@@ -211,7 +238,7 @@
                     </div>
                     <div class="w-full" x-auto-animate>
                         <h5 class="md:text-4xl mb-2 transition-all duration-300">
-                            Tracks ({{ $tracks ? count($tracks) : 0 }})
+                            Tracks (<span x-text="visibleCount"></span>)
                         </h5>
                         
                         <!-- Songs list with auto-animate for smooth add/remove -->
@@ -219,10 +246,11 @@
                             @if($tracks)
                                 @foreach ($tracks as $song)
                                     <div
-                                        wire:key="song-wrapper-{{ $song['id'] }}"
+                                        wire:key="song-wrapper-{{ $song['uuid'] }}"
+                                        data-track-uuid="{{ $song['uuid'] }}"
                                         x-data="{ show: false }"
                                         x-init="setTimeout(() => show = true, {{ min($loop->index * 30, 300) }})"
-                                        x-show="show"
+                                        x-show="show && !$data.removedUuids?.includes('{{ $song['uuid'] }}')"
                                         x-transition:enter="transition ease-out duration-300"
                                         x-transition:enter-start="opacity-0 transform translate-x-4"
                                         x-transition:enter-end="opacity-100 transform translate-x-0"
@@ -231,9 +259,8 @@
                                         x-transition:leave-end="opacity-0 transform -translate-x-4"
                                     >
                                         <livewire:song-rank.song-list-item
-                                            :key="'song-item-'.$song['id'].'-'.count($tracks)"
+                                            wire:key="song-item-{{ $song['uuid'] }}"
                                             :song="$song"
-                                            :canDelete="count($tracks) > 2"
                                             :type="$type"
                                         />
                                     </div>

@@ -58,6 +58,7 @@ final class GetPlaylistTracks
                         'artist_id' => data_get($track, 'artists.0.id'),
                         'artist_name' => data_get($track, 'artists.0.name') ?? data_get($track, 'artists.0.type'),
                         'is_podcast' => data_get($track, 'artists.0.type') !== 'artist',
+                        'uuid' => (string) Str::uuid()
                     ]);
                 });
 

@@ -1,5 +1,8 @@
 <div
-    x-data="{ removing: false }"
+    x-data="{ 
+        removing: false,
+        uuid: '{{ $song['uuid'] }}'
+    }"
     x-show="!removing"
     x-transition:leave="transition ease-in duration-300"
     x-transition:leave-start="opacity-100 transform scale-100"
@@ -22,18 +25,19 @@
                 <div class="flex items-center mx-2">
                     <x-spotify-logo :song="$song['id']" />
 
-                    @if ($canDelete)
-                        <button 
-                            type="button" 
-                            class="text-gray-500 hover:text-red-600 transition-all duration-200 p-1 text-sm ml-2 cursor-pointer transform hover:scale-110" 
-                            x-on:click="removing = true; setTimeout(() => { $wire.removeSong('{{ $song['id'] }}') }, 300)"
-                            wire:loading.attr="disabled"
-                            wire:loading.class="opacity-50"
-                            title="Remove song"
-                        >
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    @endif
+                    <button 
+                        type="button" 
+                        class="text-gray-500 hover:text-red-600 transition-all duration-200 p-1 text-sm ml-2 cursor-pointer transform hover:scale-110" 
+                        x-on:click="
+                            removing = true;
+                            $dispatch('song-removed', { uuid: uuid, type: '{{ $type->value }}' });
+                        "
+                        :disabled="removing"
+                        x-bind:class="{ 'opacity-50 cursor-not-allowed': removing }"
+                        title="Remove song"
+                    >
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
                 </div>
             </div>
         </div>

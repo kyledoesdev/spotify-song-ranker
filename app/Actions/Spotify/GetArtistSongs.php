@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 final class GetArtistSongs
 {
@@ -63,6 +64,7 @@ final class GetArtistSongs
                                 'id' => $song['id'],
                                 'name' => $song['name'],
                                 'cover' => $album['images'][0]['url'],
+                                'uuid' => (string) Str::uuid(),
                             ]);
                         });
                     });
