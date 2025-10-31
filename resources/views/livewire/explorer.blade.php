@@ -100,55 +100,13 @@
                 </div>
 
                 @if ($this->rankings->count())
-                    <div 
-                        class="flex flex-col space-y-4"
-                        x-data="{ 
-                            previousRankingIds: [],
-                            init() {
-                                this.captureRankingIds();
-                                this.animateCards();
-                                Livewire.hook('morph.updated', (component) => {
-                                    this.$nextTick(() => {
-                                        const currentIds = this.getCurrentRankingIds();
-                                        if (JSON.stringify(currentIds) !== JSON.stringify(this.previousRankingIds)) {
-                                            this.animateCards();
-                                            this.previousRankingIds = currentIds;
-                                        }
-                                    });
-                                });
-                            },
-                            getCurrentRankingIds() {
-                                return Array.from(this.$el.querySelectorAll('[data-ranking-card]'))
-                                    .map(card => card.getAttribute('wire:key'));
-                            },
-                            captureRankingIds() {
-                                this.previousRankingIds = this.getCurrentRankingIds();
-                            },
-                            animateCards() {
-                                const cards = this.$el.querySelectorAll('[data-ranking-card]');
-                                cards.forEach((card) => {
-                                    card.style.opacity = '0';
-                                    card.style.transform = 'translateY(20px) scale(0.98)';
-                                    card.style.transition = 'none';
-                                });
-                                
-                                setTimeout(() => {
-                                    cards.forEach((card) => {
-                                        card.style.transition = 'all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                                        card.style.opacity = '1';
-                                        card.style.transform = 'translateY(0) scale(1)';
-                                    });
-                                }, 50);
-                            }
-                        }"
-                    >
-                        @foreach ($this->rankings as $index => $ranking)
+                    <div class="flex flex-col space-y-4">
+                        @foreach ($this->rankings as $ranking)
                             <div 
-                                class="rounded-md cursor-pointer p-1 transform transition-all duration-300 hover:scale-101" 
-                                :key="'ranking-'.$ranking->getKey()"
-                                data-ranking-card
+                                class="rounded-md cursor-pointer p-1 transform transition-all duration-300 hover:scale-101"
+                                wire:key="ranking-{{ $ranking->getKey() }}"
                             >
-                                <livewire:ranking.card :ranking="$ranking" :key="$ranking->getKey()" />
+                                <livewire:ranking.card :ranking="$ranking" wire:key="card-{{ $ranking->getKey() }}" />
                             </div>
                         @endforeach
                     </div>
