@@ -8,13 +8,6 @@
             <i class="fa-solid fa-angle-right"></i>
         </button>
 
-        <button 
-            class="lg:hidden fixed right-0 top-1/2 -translate-y-1/2 bg-white border p-2 rounded-l-md z-50 shadow-lg"
-            wire:click="togglePlaylistSidebar"
-        >
-            <i class="fa-solid fa-angle-left"></i>
-        </button>
-
         <div class="grid grid-cols-1 lg:grid-cols-[minmax(auto,320px)_1fr_minmax(auto,320px)] min-h-screen py-4 gap-4">
             <!-- Left Sidebar - Artists -->
             <div class="
@@ -169,74 +162,6 @@
                     </div>
                 @endif
             </div>
-
-            <!-- Right Sidebar - Playlists -->
-            {{-- <div class="
-                lg:block 
-                fixed lg:static 
-                inset-0 lg:inset-auto 
-                z-40 lg:z-auto 
-                bg-black/50 lg:bg-transparent
-                transition-all duration-300 ease-in-out
-                {{ $isPlaylistSideBarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none lg:opacity-100 lg:pointer-events-auto' }}
-            ">
-                <div class="
-                    w-80 lg:w-full lg:max-w-80 
-                    h-full lg:h-auto 
-                    bg-white 
-                    shadow-md 
-                    rounded-lg 
-                    overflow-y-auto
-                    ml-auto lg:ml-0
-                    transform transition-transform duration-300 ease-in-out
-                    {{ $isPlaylistSideBarOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0' }}
-                ">
-                    <div class="p-4">
-                        <h3 class="text-lg text-center k-line font-semibold mb-3">
-                            Top Ranked Playlists
-                        </h3>
-
-                        @if (count($playlists))
-                            <ul class="space-y-2">
-                                @foreach ($playlists as $index => $playlist)
-                                    @php
-                                        $color = 'w-8 h-8 rounded-full flex items-center justify-center ' . match($index + 1) {
-                                            1 => 'bg-amber-400',
-                                            2 => 'bg-slate-300',
-                                            3 => 'bg-yellow-700',
-                                            default => 'bg-green-200'
-                                        };
-                                    @endphp
-
-                                    <li 
-                                        :key="'playlist-'.$playlist->getKey()"
-                                        class="p-2 hover:bg-gray-100 rounded-md cursor-pointer {{ $this->playlist == $playlist->getKey() ? 'bg-purple-100 border-l-4 border-purple-500' : '' }}"
-                                        wire:click="filterByPlaylist({{ $playlist->getKey() }})"
-                                    >
-                                        <div class="flex items-center space-x-2">
-                                            <div class="{{ $color }}">
-                                                {{ $index + 1 }}
-                                            </div>
-                                            <div class="flex-1">
-                                                <div class="font-medium text-sm">{{ Str::limit($playlist->name, 25) }}</div>
-                                                <div class="text-xs text-gray-500">
-                                                    <i class="fa fa-user mr-1"></i>
-                                                    {{ $playlist->creator_name }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @else
-                            <span class="text-xs flex justify-center">No playlist rankings yet</span>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Overlay click area (mobile only) -->
-                <div class="lg:hidden absolute inset-0 -z-10" wire:click="togglePlaylistSidebar"></div>
-            </div> --}}
         </div>
     </div>
 </div>
