@@ -51,6 +51,10 @@ class SongRankSetup extends Component
 
     public function searchArtist()
     {
+        $this->selectedArtist = null;
+        $this->selectedArtistTracks = null;
+        $this->removedTrackUuids = [];
+
         if ($this->artistSearchTerm == '') {
             $this->js("
                 window.flash({
@@ -63,7 +67,6 @@ class SongRankSetup extends Component
         }
 
         $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->artistSearchTerm);
-
         $this->type = RankingType::ARTIST;
 
         if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
@@ -119,7 +122,7 @@ class SongRankSetup extends Component
 
     public function loadArtistSongs(string $artistId)
     {
-        $this->removedTrackUuids = []; 
+        $this->removedTrackUuids = [];
 
         $this->selectedArtist = collect($this->searchedArtists)->firstWhere('id', $artistId);
 
@@ -147,7 +150,7 @@ class SongRankSetup extends Component
     public function getFilteredTracks()
     {
         $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
-        
+
         return collect($this->$property)
             ->reject(fn ($song) => in_array($song['uuid'], $this->removedTrackUuids))
             ->values();
