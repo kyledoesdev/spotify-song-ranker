@@ -40,6 +40,6 @@ class Card extends Component
         /* yeah, this isn't what you should do here but ima do it anyway */
         $this->skipRender();
 
-        return Excel::download(new SongExport($this->ranking->songs, $this->ranking->name), safeName($this->ranking->name).'.csv', \Maatwebsite\Excel\Excel::CSV);
+        return Excel::download(new SongExport($this->ranking->songs, $this->ranking->name), toSafeFilename($this->ranking->name).'.csv', \Maatwebsite\Excel\Excel::CSV);
     }
 }

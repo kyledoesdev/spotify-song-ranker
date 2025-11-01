@@ -6,6 +6,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 final class GetArtistSongs
 {
@@ -61,8 +62,9 @@ final class GetArtistSongs
                         $albumSongs->each(function ($song) use ($album, $songs) {
                             $songs->push([
                                 'id' => $song['id'],
-                                'name' => $song['name'],
-                                'cover' => $album['images'][0]['url'],
+                                'name' => (string) $song['name'],
+                                'uuid' => (string) Str::uuid(),
+                                'cover' => data_get($album, 'images.0.url'), 
                             ]);
                         });
                     });

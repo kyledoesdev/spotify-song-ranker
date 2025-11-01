@@ -28,7 +28,7 @@ class RankingFactory extends Factory
             for ($rank = 1; $rank <= 10; $rank++) {
                 Song::factory()->create([
                     'ranking_id' => $ranking->getKey(),
-                    'rank' => $rank
+                    'rank' => $rank,
                 ]);
             }
         });

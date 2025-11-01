@@ -18,7 +18,7 @@ class Welcome extends Component
                 ->where('is_public', true)
                 ->count() / 25) * 25,
             'artistsCount' => round(Song::query()
-                ->whereHas('ranking', fn($q) => $q->where('is_ranked', true))
+                ->whereHas('ranking', fn ($q) => $q->where('is_ranked', true))
                 ->distinct('artist_id')
                 ->count() / 25) * 25,
         ]);

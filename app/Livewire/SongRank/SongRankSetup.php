@@ -37,6 +37,8 @@ class SongRankSetup extends Component
 
     public array $selectedPlaylist = [];
 
+    public array $removedTrackUuids = [];
+
     public function mount()
     {
         $this->randomArtist = Artist::inRandomOrder()->first()->artist_name;
@@ -49,6 +51,10 @@ class SongRankSetup extends Component
 
     public function searchArtist()
     {
+        $this->selectedArtist = null;
+        $this->selectedArtistTracks = null;
+        $this->removedTrackUuids = [];
+
         if ($this->artistSearchTerm == '') {
             $this->js("
                 window.flash({
@@ -61,7 +67,6 @@ class SongRankSetup extends Component
         }
 
         $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->artistSearchTerm);
-
         $this->type = RankingType::ARTIST;
 
         if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
@@ -77,6 +82,10 @@ class SongRankSetup extends Component
 
     public function searchPlaylist()
     {
+        $this->selectedPlaylistTracks = null;
+        $this->selectedPlaylist = [];
+        $this->removedTrackUuids = [];
+
         /* ensure playlist url is valid */
         if (! $this->isSpotifyPlaylistUrl()) {
             $this->js("
@@ -117,6 +126,8 @@ class SongRankSetup extends Component
 
     public function loadArtistSongs(string $artistId)
     {
+        $this->removedTrackUuids = [];
+
         $this->selectedArtist = collect($this->searchedArtists)->firstWhere('id', $artistId);
 
         $this->searchedArtists = null;
@@ -140,30 +151,51 @@ class SongRankSetup extends Component
         $this->selectedArtistTracks = $tracks;
     }
 
+    public function getFilteredTracks()
+    {
+        $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
+
+        return collect($this->$property)
+            ->reject(fn ($song) => in_array($song['uuid'], $this->removedTrackUuids))
+            ->values();
+    }
+
     public function filterSongs(string $key)
     {
         $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
 
-        $this->$property = collect($this->$property)
-            ->reject(fn ($song) => str_contains(strtolower($song['name']), strtolower($key)))
-            ->values();
+        $filteredUuids = collect($this->$property)
+            ->filter(fn ($song) => str_contains(strtolower($song['name']), strtolower($key)))
+            ->pluck('uuid')
+            ->toArray();
+
+        $this->removedTrackUuids = array_merge($this->removedTrackUuids, $filteredUuids);
+
+        $this->dispatch('tracks-batch-removed', uuids: $filteredUuids);
     }
 
     #[On('song-removed')]
-    public function updateSelectedArtistTracks(string $id)
+    public function updateSelectedArtistTracks(string $uuid)
     {
-        $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
-
-        $this->$property = collect($this->$property)
-            ->reject(fn ($song) => $song['id'] === $id)
-            ->values();
+        $this->removedTrackUuids[] = $uuid;
     }
 
     public function confirmBeginRanking()
     {
-        $songCount = $this->type === RankingType::ARTIST
-            ? count($this->selectedArtistTracks)
-            : count($this->selectedPlaylistTracks);
+        $tracks = $this->getFilteredTracks();
+        $songCount = count($tracks);
+
+        if ($songCount < 2) {
+            $this->js("
+                window.flash({
+                    title: 'Not enough tracks.',
+                    message: 'You need at least 2 tracks to create a ranking.',
+                    icon: 'error',
+                });
+            ");
+
+            return;
+        }
 
         $message = 'Are you sure you are ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.';
 
@@ -185,16 +217,18 @@ class SongRankSetup extends Component
 
     public function beginRanking()
     {
+        $tracks = $this->getFilteredTracks();
+
         $ranking = (new StoreRanking)->handle(auth()->user(), $this->type, $this->type === RankingType::PLAYLIST ? [
             'playlist' => $this->selectedPlaylist,
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
-            'tracks' => $this->selectedPlaylistTracks,
+            'tracks' => $tracks,
         ] : [
             'artist' => $this->selectedArtist,
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
-            'tracks' => $this->selectedArtistTracks,
+            'tracks' => $tracks,
         ]);
 
         Log::channel('discord_ranking_updates')->info(auth()->user()->name.' started ranking: '.$ranking->name."({$this->type->value} type)");
@@ -214,6 +248,7 @@ class SongRankSetup extends Component
             'selectedArtist',
             'selectedPlaylist',
             'selectedPlaylistTracks',
+            'removedTrackUuids',
         ]);
     }
 

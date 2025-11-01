@@ -44,7 +44,7 @@
                     </div>
                     <div class="p-0">
                         @if ($ranking->is_ranked)
-                            <span class="text-xs md:text-base">{{ Str::limit($ranking->songs->first()->title, 25) }}</span>
+                            <span class="text-xs md:text-base">{{ Str::limit($ranking->songs->first()?->title, 25) }}</span>
                         @else
                             N/A
                         @endif

@@ -8,6 +8,7 @@ use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 
 beforeEach(fn () => Artist::factory()->create());
@@ -36,16 +37,19 @@ test('can start ranking for an artist with valid request', function () {
                 'id' => 'ceilings-id',
                 'name' => 'Ceilings',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
+                'uuid' => (string) Str::uuid()
             ],
             [
                 'id' => 'sun-hands-id',
                 'name' => 'Sun Hands',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
+                'uuid' => (string) Str::uuid()
             ],
             [
                 'id' => 'featherweight-id',
                 'name' => 'Featherweight',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
+                'uuid' => (string) Str::uuid()
             ],
         ]))
         ->set('type', RankingType::ARTIST)
@@ -99,6 +103,7 @@ test('can start ranking for a playlist with valid request', function () {
                 'id' => 'ceilings-id',
                 'name' => 'Ceilings',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
+                'uuid' => (string) Str::uuid(),
                 'artist_id' => 'local-natives-id',
                 'artist_name' => 'Local Natives',
                 'is_podcast' => false,
@@ -107,6 +112,7 @@ test('can start ranking for a playlist with valid request', function () {
                 'id' => 'sun-hands-id',
                 'name' => 'Sun Hands',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
+                'uuid' => (string) Str::uuid(),
                 'artist_id' => 'local-natives-id',
                 'artist_name' => 'Local Natives',
                 'is_podcast' => false,
@@ -115,6 +121,7 @@ test('can start ranking for a playlist with valid request', function () {
                 'id' => 'featherweight-id',
                 'name' => 'Featherweight',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
+                'uuid' => (string) Str::uuid(),
                 'artist_id' => 'local-natives-id',
                 'artist_name' => 'Local Natives',
                 'is_podcast' => false,
