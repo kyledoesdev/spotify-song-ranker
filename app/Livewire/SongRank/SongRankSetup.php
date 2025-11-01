@@ -82,6 +82,10 @@ class SongRankSetup extends Component
 
     public function searchPlaylist()
     {
+        $this->selectedPlaylistTracks = null;
+        $this->selectedPlaylist = [];
+        $this->removedTrackUuids = [];
+
         /* ensure playlist url is valid */
         if (! $this->isSpotifyPlaylistUrl()) {
             $this->js("
