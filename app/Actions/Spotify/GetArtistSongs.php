@@ -62,9 +62,9 @@ final class GetArtistSongs
                         $albumSongs->each(function ($song) use ($album, $songs) {
                             $songs->push([
                                 'id' => $song['id'],
-                                'name' => $song['name'],
-                                'cover' => $album['images'][0]['url'],
+                                'name' => (string) $song['name'],
                                 'uuid' => (string) Str::uuid(),
+                                'cover' => data_get($album, 'images.0.url'), 
                             ]);
                         });
                     });

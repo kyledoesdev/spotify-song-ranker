@@ -103,7 +103,7 @@
                                 @click="window.showLoader(); $wire.loadArtistSongs('{{ $artist['id'] }}').then(() => window.hideLoader())"
                             >
                             <h5 class="mt-1 transition-all duration-300">{{ $artist['name'] }}</h5>
-                            <div x-auto-animate>
+                            <div>
                                 <x-spotify-logo :artist="$artist['id']" />
                             </div>
                         </div>

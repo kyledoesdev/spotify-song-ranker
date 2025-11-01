@@ -47,7 +47,6 @@ class RankingQueryBuilder extends Builder
     {
         return $this->newQuery()
             ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at')
-            ->private()
             ->with('artist')
             ->withCount('songs');
     }
