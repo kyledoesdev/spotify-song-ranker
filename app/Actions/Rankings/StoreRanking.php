@@ -8,6 +8,7 @@ use App\Models\Playlist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -108,21 +109,14 @@ final class StoreRanking
 
             /* map through the songs, assign the artist or create a record of one. */
             $songs = collect($attributes['tracks'])->map(function ($song) use ($artists, $ranking) {
-                if (is_null($song['artist_id'])) {
-                    Log::channel('discord_other_updates')->error('Artist Id not set on Song: '.$song['name'].' '.$song['artist_name']);
+                $artist = $this->resolveSongArtist($artists, $song);
+
+                if (is_null($artist)) {
+                    Log::channel('discord_other_updates')->error('Artist Id not set on Song: '.$song['artist_name'].' '.$song['name']);
                 }
 
-                $artist = $artists->get($song['artist_id'])
-                    ?? Artist::updateOrCreate([
-                        'artist_id' => $song['artist_id'],
-                    ], [
-                        'artist_id' => $song['artist_id'],
-                        'artist_name' => $song['artist_name'],
-                        'is_podcast' => $song['is_podcast'],
-                    ]);
-
                 return [
-                    'artist_id' => $artist->getKey(),
+                    'artist_id' => $artist ? $artist->getKey() : null,
                     'ranking_id' => $ranking->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => $song['uuid'],
@@ -138,5 +132,22 @@ final class StoreRanking
 
             return $ranking;
         });
+    }
+
+    private function resolveSongArtist(Collection $artists, array $song): ?Artist
+    {
+        $artist = $artists->get($song['artist_id']);
+
+        if (is_null($artist)) {
+            return Artist::updateOrCreate([
+                'artist_id' => $song['artist_id'],
+            ], [
+                'artist_id' => $song['artist_id'],
+                'artist_name' => $song['artist_name'],
+                'is_podcast' => $song['is_podcast'],
+            ]);
+        }
+
+        return $artist;
     }
 }
