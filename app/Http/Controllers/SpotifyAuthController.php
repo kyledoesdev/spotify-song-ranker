@@ -58,9 +58,6 @@ class SpotifyAuthController extends Controller
 
         if ($user->wasRecentlyCreated) {
             $user->preferences()->create();
-            Log::channel('discord_user_updates')->warning("New User: $user->name ($user->email) just logged in!!");
-        } else {
-            Log::channel('discord_user_updates')->warning("$user->name ($user->email) just logged in!!");
         }
 
         Session::regenerate();

@@ -26,4 +26,9 @@ trait StatsAfterEvents
             'name' => static::statsClass(),
         ]);
     }
+
+    public static function statsClass(): string
+    {
+        return static::class;
+    }
 }
