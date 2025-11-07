@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Models\Ranking;
 use App\Models\Song;
+use App\Stats\RankingCompletedStat;
 use Illuminate\Support\Facades\DB;
 
 final class CompleteSongRankProcess
@@ -38,6 +39,8 @@ final class CompleteSongRankProcess
             })->toArray();
 
             Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
+
+            RankingCompletedStat::increase();
         });
     }
 }

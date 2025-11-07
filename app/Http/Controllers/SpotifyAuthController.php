@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Stats\LoginStat;
+use App\Stats\LogoutStat;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -61,9 +63,11 @@ class SpotifyAuthController extends Controller
             Log::channel('discord_user_updates')->warning("$user->name ($user->email) just logged in!!");
         }
 
-        Auth::login($user);
-
         Session::regenerate();
+
+        Auth::login($user);
+        
+        defer(fn() => LoginStat::increase());
 
         return redirect(route('dashboard'));
     }
@@ -74,6 +78,8 @@ class SpotifyAuthController extends Controller
 
         Session::invalidate();
         Session::regenerateToken();
+
+        defer(fn() => LogoutStat::increase());
 
         return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
     }

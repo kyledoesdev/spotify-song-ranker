@@ -10,4 +10,9 @@ class Model extends EloquentModel
 {
     use HasFactory;
     use SoftDeletes;
+
+    public static function statsClass(): string
+    {
+        return static::class;
+    }
 }
