@@ -64,7 +64,7 @@ class SpotifyAuthController extends Controller
 
         Auth::login($user);
         
-        defer(fn() => LoginStat::increase());
+        LoginStat::increase();
 
         return redirect(route('dashboard'));
     }
@@ -76,7 +76,7 @@ class SpotifyAuthController extends Controller
         Session::invalidate();
         Session::regenerateToken();
 
-        defer(fn() => LogoutStat::increase());
+        LogoutStat::increase();
 
         return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
     }
