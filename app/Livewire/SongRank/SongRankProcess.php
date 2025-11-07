@@ -264,8 +264,6 @@ class SongRankProcess extends Component
             'finalSongIds' => $finalSongIds,
         ]);
 
-        Log::channel('discord_ranking_updates')->info("{$this->ranking->user->name} completed a ranking: {$this->ranking->name}");
-
         $this->redirect(route('ranking', ['id' => $this->ranking->getKey()]), navigate: true);
     }
 

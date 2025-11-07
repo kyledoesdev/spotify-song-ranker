@@ -24,6 +24,13 @@ Schedule::command('artists:update-images')
         Log::channel('discord_other_updates')->info('Something went wrong updating artist images.');
     });
 
+Schedule::command('daily-digest:send')
+    ->timezone('America/New_York')
+    ->dailyAt('23:00') /* daily at 11pm */
+    ->onFailure(function () {
+        Log::channel('discord_other_updates')->info('Something went wrong sending daily digest update.');
+    });
+
 Schedule::command('newsletter:send')
     ->timezone('America/New_York')
     ->monthlyOn(15, '3:00')

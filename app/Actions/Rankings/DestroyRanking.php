@@ -15,7 +15,5 @@ final class DestroyRanking
             $ranking->songs()->delete();
             $ranking->delete();
         });
-
-        Log::channel('discord_ranking_updates')->info($user->name.' deleted ranking: '.$ranking->name);
     }
 }

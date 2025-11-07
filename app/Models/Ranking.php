@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\StatsAfterEvents;
 use App\Enums\RankingType;
 use App\QueryBuilders\RankingQueryBuilder;
 use Carbon\Carbon;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[UseEloquentBuilder(RankingQueryBuilder::class)]
 class Ranking extends Model
 {
+    use StatsAfterEvents;
+
     protected $fillable = [
         'user_id',
         'artist_id',

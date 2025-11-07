@@ -40,9 +40,6 @@ class Settings extends Component
 
         $user = auth()->user();
 
-        // Log the account deletion
-        Log::channel('discord_user_updates')->emergency("{$user->email} is deleting their account... ID: {$userId}");
-
         // Log them out
         Auth::logout();
 
