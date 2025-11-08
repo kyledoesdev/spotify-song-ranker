@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Widgets\Concerns\HasDateFilters;
 use App\Models\Ranking;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
@@ -9,32 +10,38 @@ use Flowframe\Trend\TrendValue;
 
 class RankingsCreatedWidget extends ChartWidget
 {
+    use HasDateFilters;
+
     protected ?string $heading = 'Rankings Stats';
 
+    public ?string $filter = 'year';
+    
     protected function getData(): array
     {
+        $trendConfig = $this->getTrendConfig($this->filter ?? 'year');
+
         $created = Trend::model(Ranking::class)
             ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
+                start: $trendConfig['start'],
+                end: $trendConfig['end'],
             )
-            ->perMonth()
+            ->{$trendConfig['period']}()
             ->count();
 
         $deleted = Trend::query(Ranking::onlyTrashed())
             ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
+                start: $trendConfig['start'],
+                end: $trendConfig['end'],
             )
-            ->perMonth()
+            ->{$trendConfig['period']}()
             ->count();
 
         $completed = Trend::query(Ranking::query()->whereNotNull('completed_at'))
             ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
+                start: $trendConfig['start'],
+                end: $trendConfig['end'],
             )
-            ->perMonth()
+            ->{$trendConfig['period']}()
             ->count();
 
         return [
@@ -55,12 +62,22 @@ class RankingsCreatedWidget extends ChartWidget
                     'borderColor' => '#c084fc'
                 ],
             ],
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'labels' => $trendConfig['labels'],
         ];
     }
 
     protected function getType(): string
     {
         return 'line';
+    }
+
+    protected function getFilters(): ?array
+    {
+        return [
+            'day' => 'Past Day',
+            'week' => 'Past Week',
+            'month' => 'Past Month',
+            'year' => 'Past Year',
+        ];
     }
 }

@@ -61,7 +61,7 @@ class Ranking extends Model
 
     public function getCompletedAtAttribute(): string
     {
-        if ($this->attributes['completed_at'] == null) {
+        if (is_null($this->attributes['completed_at'])) {
             return 'In Progress';
         }
 
@@ -70,7 +70,7 @@ class Ranking extends Model
 
     public function getFormattedCompletedAtAttribute(): string
     {
-        if ($this->attributes['completed_at'] == null) {
+        if (is_null($this->attributes['completed_at'])) {
             return 'In Progress';
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Widgets\Concerns\HasDateFilters;
 use App\Models\User;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
@@ -9,24 +10,30 @@ use Flowframe\Trend\TrendValue;
 
 class NewUsersWidget extends ChartWidget
 {
+    use HasDateFilters;
+
     protected ?string $heading = 'New Users Widget';
+    
+    public ?string $filter = 'year';
 
     protected function getData(): array
     {
+        $trendConfig = $this->getTrendConfig($this->filter ?? 'year');
+
         $newUsers = Trend::model(User::class)
             ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
+                start: $trendConfig['start'],
+                end: $trendConfig['end'],
             )
-            ->perMonth()
+            ->{$trendConfig['period']}()
             ->count();
 
         $deletedUsers = Trend::query(User::onlyTrashed())
             ->between(
-                start: now()->startOfYear(),
-                end: now()->endOfYear(),
+                start: $trendConfig['start'],
+                end: $trendConfig['end'],
             )
-            ->perMonth()
+            ->{$trendConfig['period']}()
             ->count();
 
         return [
@@ -42,12 +49,22 @@ class NewUsersWidget extends ChartWidget
                     'borderColor' => '#f87171'
                 ],
             ],
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'labels' => $trendConfig['labels'],
         ];
     }
 
     protected function getType(): string
     {
         return 'line';
+    }
+
+    protected function getFilters(): ?array
+    {
+        return [
+            'day' => 'Past Day',
+            'week' => 'Past Week',
+            'month' => 'Past Month',
+            'year' => 'Past Year',
+        ];
     }
 }
