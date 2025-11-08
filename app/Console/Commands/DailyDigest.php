@@ -19,6 +19,8 @@ class DailyDigest extends Command
 
     public function __construct()
     {
+        parent::__construct();
+
         $this->now = now()->tz('America/New_York');
     }
 
