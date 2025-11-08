@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Ranking;
 use App\Models\User;
 use App\Stats\LoginStat;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -14,9 +15,18 @@ class DailyDigest extends Command
 
     protected $description = 'Send a discord message with Daily Stats';
 
+    private Carbon $now;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->now = now()->tz('America/New_York');
+    }
+
     public function handle()
     {
-        $message = "Daily Digest " . now()->toFormattedDayDateString() . ". \n";
+        $message = "Daily Digest " . $this->now->toFormattedDayDateString() . ". \n";
 
         $message .= "New Users: {$this->getNewUsers()}. \n";
         $message .= "Logins Today: {$this->getLogins()}. \n";
@@ -25,20 +35,22 @@ class DailyDigest extends Command
         $message .= "Rankings Completed: {$this->getCompletedRankings()}. \n";
 
         Log::channel('discord_other_updates')->info($message);
+
+        return Command::SUCCESS;
     }
 
     private function getNewUsers(): int
     {
         return User::query()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', [$this->now->startOfDay(), $this->now->endOfDay()])
             ->count();
     }
 
     private function getLogins(): int
     {
         return LoginStat::query()
-            ->start(now()->startOfDay())
-            ->end(now()->endOfDay())
+            ->start($this->now->startOfDay())
+            ->end($this->now->endOfDay())
             ->get()
             ->sum('increments');
     }
@@ -46,7 +58,7 @@ class DailyDigest extends Command
     private function getNewRankings(): int
     {
         return Ranking::query()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('created_at', [$this->now->startOfDay(), $this->now->endOfDay()])
             ->count();
     }
 
@@ -54,15 +66,14 @@ class DailyDigest extends Command
     {
         return Ranking::query()
             ->onlyTrashed()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->whereBetween('deleted_at', [$this->now->startOfDay(), $this->now->endOfDay()])
             ->count();
     }
 
     private function getCompletedRankings(): int
     {
         return Ranking::query()
-            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
-            ->whereNotNull('completed_at')
+            ->whereBetween('completed_at', [$this->now->startOfDay(), $this->now->endOfDay()])
             ->count();
     }
 }

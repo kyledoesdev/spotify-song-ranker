@@ -42,6 +42,8 @@ class User extends Authenticatable implements FilamentUser
         'external_token',
         'external_refresh_token',
         'ip_address',
+        'user_agent',
+        'user_platform',
         'user_packet',
         'password',
     ];

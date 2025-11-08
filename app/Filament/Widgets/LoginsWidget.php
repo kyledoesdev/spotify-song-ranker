@@ -11,22 +11,24 @@ class LoginsWidget extends StatsOverviewWidget
 {
     protected function getStats(): array
     {
+        $now = now()->tz(auth()->user()->timezone);
+
         return [
             Stat::make('Logins Today', LoginStat::query()
-                ->start(now()->startOfDay())
-                ->end(now()->endOfDay())
+                ->start($now->startOfDay())
+                ->end($now->endOfDay())
                 ->get()
                 ->sum('increments')
             ),
             Stat::make('Logins Last Week', LoginStat::query()
-                ->start(now()->subMonth()->startOfMonth())
-                ->end(now()->subMonth()->endOfMonth())
+                ->start($now->subMonth()->startOfMonth())
+                ->end($now->subMonth()->endOfMonth())
                 ->get()
                 ->sum('increments')
             ),
             Stat::make('Logins Last Month', LoginStat::query()
-                ->start(now()->subWeek()->startOfWeek())
-                ->end(now()->subWeek()->endOfWeek())
+                ->start($now->subWeek()->startOfWeek())
+                ->end($now->subWeek()->endOfWeek())
                 ->get()
                 ->sum('increments')
             ),
