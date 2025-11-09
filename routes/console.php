@@ -26,7 +26,7 @@ Schedule::command('artists:update-images')
 
 Schedule::command('daily-digest:send')
     ->timezone('America/New_York')
-    ->dailyAt('23:00') /* daily at 11pm */
+    ->dailyAt('00:00') /* daily at 12an */
     ->onFailure(function () {
         Log::channel('discord_other_updates')->info('Something went wrong sending daily digest update.');
     });
