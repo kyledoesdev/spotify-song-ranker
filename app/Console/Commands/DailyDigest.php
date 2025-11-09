@@ -15,18 +15,20 @@ class DailyDigest extends Command
 
     protected $description = 'Send a discord message with Daily Stats';
 
-    private Carbon $now;
+    private Carbon $start;
+    private Carbon $end;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->now = now()->tz('America/New_York');
+        $this->start = now()->subDays(1)->startOfDay();
+        $this->end = now()->subDays(1)->endOfDay();
     }
 
     public function handle()
-    {
-        $message = "Daily Digest " . $this->now->toFormattedDayDateString() . ". \n";
+    { 
+        $message = "Daily Digest {$this->start->format('m/d/Y h:i:s A T')} - {$this->end->format('m/d/Y h:i:s A T')}. \n";
 
         $message .= "New Users: {$this->getNewUsers()}. \n";
         $message .= "Logins Today: {$this->getLogins()}. \n";
@@ -42,15 +44,15 @@ class DailyDigest extends Command
     private function getNewUsers(): int
     {
         return User::query()
-            ->whereBetween('created_at', [$this->now->startOfDay(), $this->now->endOfDay()])
+            ->whereBetween('created_at', [$this->start, $this->end])
             ->count();
     }
 
     private function getLogins(): int
     {
         return LoginStat::query()
-            ->start($this->now->startOfDay())
-            ->end($this->now->endOfDay())
+            ->start($this->start)
+            ->end($this->end)
             ->get()
             ->sum('increments');
     }
@@ -58,7 +60,7 @@ class DailyDigest extends Command
     private function getNewRankings(): int
     {
         return Ranking::query()
-            ->whereBetween('created_at', [$this->now->startOfDay(), $this->now->endOfDay()])
+            ->whereBetween('created_at', [$this->start, $this->end])
             ->count();
     }
 
@@ -66,14 +68,14 @@ class DailyDigest extends Command
     {
         return Ranking::query()
             ->onlyTrashed()
-            ->whereBetween('deleted_at', [$this->now->startOfDay(), $this->now->endOfDay()])
+            ->whereBetween('deleted_at', [$this->start, $this->end])
             ->count();
     }
 
     private function getCompletedRankings(): int
     {
         return Ranking::query()
-            ->whereBetween('completed_at', [$this->now->startOfDay(), $this->now->endOfDay()])
+            ->whereBetween('completed_at', [$this->start, $this->end])
             ->count();
     }
 }
