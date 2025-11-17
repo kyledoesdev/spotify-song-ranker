@@ -59,7 +59,7 @@ class RankingQueryBuilder extends Builder
             ->whereBetween('completed_at', [now()->subMonth(), now()])
             ->withHasPodcastEpisode()
             ->with('user', 'artist')
-            ->with('songs', fn (Builder $query) => $query->where('rank', 1))
+            ->with('songs', fn ($query) => $query->where('rank', 1))
             ->withCount('songs')
             ->orderBy('completed_at', 'desc');
     }
