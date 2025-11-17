@@ -38,16 +38,4 @@ class Newsletter extends Notification implements ShouldQueue
             'rankingsCount' => $this->rankings->count(),
         ])->subject('Kyle from songrank.dev - Monthly Newsletter');
     }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
-    }
 }

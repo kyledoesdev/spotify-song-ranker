@@ -11,7 +11,10 @@
                 >
                 <div style="margin-top: 8px;">
                     <a 
-                        href="{{ route('ranking', $ranking->getKey()) }}"
+                        href="{{ $ranking->isPlaylistType()
+                            ? 'https://open.spotify.com/playlist/'. $ranking->playlist->playlist_id
+                            : 'https://open.spotify.com/artist/'. $ranking->artist->artist_id
+                        }}"
                         style="display: inline-flex; align-items: center; gap: 4px; border-bottom: 2px solid #06D6A0; padding-bottom: 2px; text-decoration: none; color: #06D6A0; font-size: 12px;"
                     >
                         🎵 Spotify
@@ -40,7 +43,7 @@
                 @endif
                 
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>#️⃣ {{ $ranking->has_podcast_episode ? 'Records' : 'Songs' }}:</strong> {{ $ranking->songs_count }} {{ $ranking->has_podcast_episode ? 'records' : 'songs' }} ranked
+                    <strong>#️⃣ {{ $ranking->has_podcast_episode ? 'Records' : 'Songs' }}:</strong> {{ count($ranking->songs) }} {{ $ranking->has_podcast_episode ? 'records' : 'songs' }} ranked
                 </div>
                 
                 <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
@@ -51,7 +54,7 @@
                 </div>
                 
                 <div style="margin-bottom: 12px; font-size: 14px; color: #6b7280;">
-                    <strong>🕒 Completed:</strong> {{ Carbon\Carbon::parse($ranking->completed_at)->diffForHumans() }}
+                    <strong>🕒 Completed:</strong> {{ Carbon\Carbon::parse($ranking->completed_at)->toFormattedDateString() }}
                 </div>
                 
                 <a 

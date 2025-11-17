@@ -12,7 +12,7 @@
         </div>
         <div style="text-align: center; margin-bottom: 32px;">
             <h1 style="font-size: 24px; font-weight: bold; color: #111827; margin: 0 0 8px 0;">{{ now()->subMonth()->format('F') }} - {{ now()->format('F Y') }} Newsletter</h1>
-            <p style="color: #6b7280; margin: 0; font-size: 16px;">Discover what artists the community has been ranking this month! Check out 25 of the rankings completed this past month from fellow music lovers.</p>
+            <p style="color: #6b7280; margin: 0; font-size: 16px;">Discover what artists & playlists the community has been ranking this month! Check out a selection of the rankings completed this past month from fellow music lovers.</p>
         </div>
         
         <div style="background-color: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px; margin: 24px 0; text-align: center;">
