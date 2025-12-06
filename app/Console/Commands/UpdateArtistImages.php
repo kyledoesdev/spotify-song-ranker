@@ -39,7 +39,8 @@ class UpdateArtistImages extends Command
                 ]
             );
 
-            $artists = collect(collect(json_decode($response->getBody()))->get('artists'));
+            $artists = collect(collect(json_decode($response->getBody()))->get('artists'))
+                ->filter(fn ($artist) => $artist !== null);
 
             if (count($artists)) {
                 $artists = collect($artists->map(fn ($artist) => [
