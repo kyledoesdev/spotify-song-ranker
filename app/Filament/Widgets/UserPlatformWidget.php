@@ -8,8 +8,10 @@ use Filament\Widgets\ChartWidget;
 class UserPlatformWidget extends ChartWidget
 {
     protected ?string $heading = 'User Platforms';
+
     protected ?string $maxHeight = '300px';
-    protected static ?int $sort = 3;
+
+    protected static ?int $sort = 5;
 
     protected function getData(): array
     {

@@ -9,10 +9,12 @@ use Illuminate\Support\Collection;
 class UserGeographyWidget extends ChartWidget
 {
     protected ?string $heading = 'User Geography';
+
     protected ?string $maxHeight = '300px';
-    protected static ?int $sort = 2;
 
     public ?string $filter = 'continent';
+
+    protected static ?int $sort = 4;
 
     protected function getFilters(): ?array
     {

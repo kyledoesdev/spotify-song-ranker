@@ -15,6 +15,8 @@ class RankingsCreatedWidget extends ChartWidget
     protected ?string $heading = 'Rankings Stats';
 
     public ?string $filter = 'year';
+
+    protected static ?int $sort = 3;
     
     protected function getData(): array
     {

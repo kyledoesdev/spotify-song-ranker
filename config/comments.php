@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use Spatie\Comments\Models\Comment;
+use App\Models\Comment;
 use Spatie\Comments\Models\Reaction;
 use Spatie\Comments\Support\CommentSanitizer;
 use Spatie\Comments\Actions\RejectCommentAction;

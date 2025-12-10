@@ -3,34 +3,26 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Widgets\Concerns\HasDateFilters;
-use App\Models\User;
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
+use Spatie\Comments\Models\Comment;
 
-class NewUsersWidget extends ChartWidget
+class CommentsCreatedWidget extends ChartWidget
 {
     use HasDateFilters;
 
-    protected ?string $heading = 'New Users Widget';
-    
+    protected ?string $heading = 'Comment Stats';
+
     public ?string $filter = 'year';
 
-    protected static ?int $sort = 2;
-
+    protected static ?int $sort = 6;
+    
     protected function getData(): array
     {
         $trendConfig = $this->getTrendConfig($this->filter ?? 'year');
 
-        $newUsers = Trend::model(User::class)
-            ->between(
-                start: $trendConfig['start'],
-                end: $trendConfig['end'],
-            )
-            ->{$trendConfig['period']}()
-            ->count();
-
-        $deletedUsers = Trend::query(User::onlyTrashed())
+        $created = Trend::model(Comment::class)
             ->between(
                 start: $trendConfig['start'],
                 end: $trendConfig['end'],
@@ -41,14 +33,9 @@ class NewUsersWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'New Users',
-                    'data' => $newUsers->map(fn (TrendValue $value) => $value->aggregate),
-                    'borderColor' => '#93c5fd'
-                ],
-                [
-                    'label' => 'Deleted Users',
-                    'data' => $deletedUsers->map(fn (TrendValue $value) => $value->aggregate),
-                    'borderColor' => '#f87171'
+                    'label' => 'Comments Created',
+                    'data' => $created->map(fn (TrendValue $value) => $value->aggregate),
+                    'borderColor' => '#c084fc'
                 ],
             ],
             'labels' => $trendConfig['labels'],
