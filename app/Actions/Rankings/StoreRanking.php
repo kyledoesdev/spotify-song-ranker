@@ -26,8 +26,6 @@ final class StoreRanking
 
     private function artist(User $user, array $attributes): Ranking
     {
-        dd($attributes);
-
         return DB::transaction(function () use ($user, $attributes) {
             /* update or create the artist */
             $artist = Artist::updateOrCreate([

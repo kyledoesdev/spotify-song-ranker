@@ -260,3 +260,39 @@ test('ranking non-owner can not delete someone elses rankings', function () {
     expect($ranking->fresh()->deleted_at)->toBeNull();
     expect(Song::where('ranking_id', $ranking->getKey())->count())->toBe(10);
 });
+
+test('completed ranking with comments enabled shows comments component', function () {
+    $user = User::factory()->create();
+    
+    $ranking = Ranking::factory()
+        ->has(Song::factory()->count(5))
+        ->create([
+            'user_id' => $user->getKey(),
+            'is_public' => true,
+            'comments_enabled' => true,
+            'is_ranked' => true
+        ]);
+
+    $this->actingAs($user)
+        ->get(route('ranking', ['id' => $ranking->getKey()]))
+        ->assertOk()
+        ->assertSeeLivewire('comments');
+});
+
+test('completed ranking with comments disabled does not show comments component', function () {
+    $user = User::factory()->create();
+    
+    $ranking = Ranking::factory()
+        ->has(Song::factory()->count(5))
+        ->create([
+            'user_id' => $user->getKey(),
+            'is_public' => true,
+            'comments_enabled' => false,
+            'is_ranked' => true
+        ]);
+
+    $this->actingAs($user)
+        ->get(route('ranking', ['id' => $ranking->getKey()]))
+        ->assertOk()
+        ->assertDontSeeLivewire('comments');
+});

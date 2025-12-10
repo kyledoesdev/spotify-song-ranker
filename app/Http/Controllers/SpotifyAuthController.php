@@ -42,7 +42,7 @@ class SpotifyAuthController extends Controller
             session()->flash('success', "Welcome back {$spotifyUser->name}.. we've been expecting you.. To revive your rankings - reach out via the support bubble in the bottom right.");
         }
 
-        if ($spotifyUser->name != $currentUser = User::firstWhere('spotify_id', $spotifyUser->id)->name) {
+        if ($spotifyUser->name != $currentUser = User::firstWhere('spotify_id', $spotifyUser->id)?->name) {
             UpdateUsernameInComments::dispatch($currentUser);
         }
 
