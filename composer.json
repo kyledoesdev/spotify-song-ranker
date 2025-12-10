@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
+        "blaspsoft/blasp": "^3.1",
         "bugsnag/bugsnag-laravel": "^2.27",
         "doctrine/dbal": "^4.0",
         "filament/filament": "4.0",

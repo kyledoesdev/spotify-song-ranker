@@ -7,6 +7,7 @@ use Spatie\Comments\Support\CommentSanitizer;
 use Spatie\Comments\Actions\RejectCommentAction;
 use Spatie\Comments\Actions\ApproveCommentAction;
 use Spatie\Comments\Actions\ProcessCommentAction;
+use App\Actions\Comments\FilterCommentProfanityAction;
 use Spatie\Comments\Models\CommentNotificationSubscription;
 use Spatie\Comments\CommentTransformers\MentionsTransformer;
 use Spatie\Comments\Notifications\PendingCommentNotification;
@@ -36,6 +37,7 @@ return [
     'comment_transformers' => [
         MarkdownToHtmlTransformer::class,
         MentionsTransformer::class,
+        FilterCommentProfanityAction::class
     ],
 
     /*
