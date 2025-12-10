@@ -9,6 +9,8 @@
     --font-sans: 'Inter', 'Popins', sans-serif; /* 'Fredoka',  */
 }
 
+@import '../../vendor/spatie/laravel-comments-livewire/resources/dist/comments.css';
+
 /* Import component styles */
 @import './components/buttons.css';
 @import './components/loader.css';

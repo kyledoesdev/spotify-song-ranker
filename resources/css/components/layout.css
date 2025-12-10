@@ -27,4 +27,14 @@
         max-height: 80vh;
         overflow-y: auto;
     }
+
+    .comments-reaction-picker-reactions {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (min-width: 480px) {
+        .comments-reaction-picker-reactions {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
 }

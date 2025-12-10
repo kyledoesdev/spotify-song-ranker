@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Rankings;
 use App\Filament\Resources\Rankings\Pages\EditRanking;
 use App\Filament\Resources\Rankings\Pages\ListRankings;
 use App\Filament\Resources\Rankings\Pages\ViewRanking;
+use App\Filament\Resources\Rankings\RelationManagers\CommentsRelationManager;
 use App\Filament\Resources\Rankings\RelationManagers\SongsRelationManager;
 use App\Models\Ranking;
 use BackedEnum;
@@ -50,7 +51,6 @@ class RankingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query) => $query->withCount('songs'))
             ->columns([
                 TextColumn::make('id')
                     ->label('ID')
@@ -173,6 +173,7 @@ class RankingResource extends Resource
     {
         return [
             SongsRelationManager::class,
+            CommentsRelationManager::class
         ];
     }
 

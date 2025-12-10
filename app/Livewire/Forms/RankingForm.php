@@ -12,4 +12,10 @@ class RankingForm extends Form
 
     #[Validate('required')]
     public $is_public = true;
+
+    #[Validate('required')]
+    public $comments_enabled = true;
+
+    #[Validate('required')]
+    public $comments_replies_enabled = true;
 }

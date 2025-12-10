@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Ranking;
 use App\Models\Song;
+use App\Models\Ranking;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder

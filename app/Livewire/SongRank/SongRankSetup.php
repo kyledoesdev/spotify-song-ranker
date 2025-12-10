@@ -223,11 +223,15 @@ class SongRankSetup extends Component
             'playlist' => $this->selectedPlaylist,
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
+            'comments_enabled' => (bool) $this->form->comments_enabled,
+            'comments_replies_enabled' => (bool) $this->form->comments_replies_enabled,
             'tracks' => $tracks,
         ] : [
             'artist' => $this->selectedArtist,
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
+            'comments_enabled' => (bool) $this->form->comments_enabled,
+            'comments_replies_enabled' => (bool) $this->form->comments_replies_enabled,
             'tracks' => $tracks,
         ]);
 
@@ -241,6 +245,8 @@ class SongRankSetup extends Component
             'playlistURL',
             'form.name',
             'form.is_public',
+            'form.comments_enabled',
+            'form.comments_replies_enabled',
             'searchedArtists',
             'selectedArtistTracks',
             'selectedArtist',
@@ -248,6 +254,13 @@ class SongRankSetup extends Component
             'selectedPlaylistTracks',
             'removedTrackUuids',
         ]);
+    }
+
+    public function updatedFormCommentsEnabled($value): void
+    {
+        if (!$value || $value === '0') {
+            $this->form->comments_replies_enabled = '0';
+        }
     }
 
     private function isSpotifyPlaylistUrl(): bool

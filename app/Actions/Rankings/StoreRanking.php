@@ -26,6 +26,8 @@ final class StoreRanking
 
     private function artist(User $user, array $attributes): Ranking
     {
+        dd($attributes);
+
         return DB::transaction(function () use ($user, $attributes) {
             /* update or create the artist */
             $artist = Artist::updateOrCreate([
@@ -46,6 +48,8 @@ final class StoreRanking
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,
+                'comments_enabled' => $attributes['comments_enabled'] ?? false,
+                'comments_replies_enabled' => $attributes['comments_replies_enabled'] ?? false,
             ]);
 
             /* create the relation to the ranking's sorted state */
@@ -96,6 +100,8 @@ final class StoreRanking
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,
+                'comments_enabled' => $attributes['comments_enabled'] ?? false,
+                'comments_replies_enabled' => $attributes['comments_enabled'] ?? false,
             ]);
 
             /* create the relation to the ranking's sorted state */
