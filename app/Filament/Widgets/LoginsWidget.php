@@ -9,6 +9,8 @@ use Carbon\Carbon;
 
 class LoginsWidget extends StatsOverviewWidget
 {
+    protected static ?int $sort = 1;
+
     protected function getStats(): array
     {
         $timezone = auth()->user()->timezone;

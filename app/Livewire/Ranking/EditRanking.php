@@ -34,6 +34,8 @@ class EditRanking extends Component
         $this->form->fill([
             'name' => $this->ranking->name,
             'is_public' => $this->ranking->is_public ? '1' : '0',
+            'comments_enabled' => $this->ranking->comments_enabled ? '1' : '0',
+            'comments_replies_enabled' => $this->ranking->comments_replies_enabled ? '1' : '0',
         ]);
     }
 
@@ -49,6 +51,8 @@ class EditRanking extends Component
         $this->ranking->update([
             'name' => $this->form->name,
             'is_public' => $this->form->is_public === '1' || $this->form->is_public === true,
+            'comments_enabled' => $this->form->comments_enabled === '1' || $this->form->comments_enabled === true,
+            'comments_replies_enabled' => $this->form->comments_replies_enabled === '1' || $this->form->comments_replies_enabled === true,
         ]);
 
         $this->js("window.flash({

@@ -119,7 +119,7 @@
                 @endphp
 
                 <div 
-                    class="grid grid-cols-1 md:grid-cols-3 gap-8 m-2 p-2"
+                    class="grid grid-cols-1 md:grid-cols-3 gap-8 m-2 p-2 pt-4"
                     x-data="{ 
                         show: false,
                         removedUuids: [],
@@ -174,6 +174,31 @@
                                         <select
                                             class="w-full bg-zinc-100 rounded-lg bg-white p-2 focus:ring-2 focus:ring-blue-400"
                                             wire:model.live.debounce.500ms="form.is_public"
+                                            required
+                                        >
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="my-2" x-auto-animate>
+                                        <label>Enable Comments</label>
+                                        <select
+                                            class="w-full bg-zinc-100 rounded-lg bg-white p-2 focus:ring-2 focus:ring-blue-400"
+                                            wire:model.live.debounce.500ms="form.comments_enabled"
+                                            required
+                                        >
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="my-2" x-auto-animate>
+                                        <label>Enable Comment Replies</label>
+                                        <select
+                                            class="w-full bg-zinc-100 rounded-lg bg-white p-2 focus:ring-2 focus:ring-blue-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            wire:model.live.debounce.500ms="form.comments_replies_enabled"
+                                            @disabled(!$form->comments_enabled || $form->comments_enabled === '0')
                                             required
                                         >
                                             <option value="1">Yes</option>

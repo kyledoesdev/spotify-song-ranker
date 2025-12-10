@@ -46,6 +46,8 @@ final class StoreRanking
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,
+                'comments_enabled' => $attributes['comments_enabled'] ?? false,
+                'comments_replies_enabled' => $attributes['comments_replies_enabled'] ?? false,
             ]);
 
             /* create the relation to the ranking's sorted state */
@@ -96,6 +98,8 @@ final class StoreRanking
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,
+                'comments_enabled' => $attributes['comments_enabled'] ?? false,
+                'comments_replies_enabled' => $attributes['comments_enabled'] ?? false,
             ]);
 
             /* create the relation to the ranking's sorted state */

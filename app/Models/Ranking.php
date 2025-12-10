@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Spatie\Comments\Models\Concerns\HasComments;
 
 #[UseEloquentBuilder(RankingQueryBuilder::class)]
 class Ranking extends Model
 {
+    use HasComments;
     use StatsAfterEvents;
 
     protected $fillable = [
@@ -23,6 +25,8 @@ class Ranking extends Model
         'name',
         'is_ranked',
         'is_public',
+        'comments_enabled',
+        'comment_replies_enabled',
         'completed_at',
     ];
 
@@ -31,6 +35,8 @@ class Ranking extends Model
         return [
             'is_ranked' => 'boolean',
             'has_podcast_episode' => 'boolean',
+            'comments_enabled' => 'boolean',
+            'comment_replies_enabled' => 'boolean'
         ];
     }
 
@@ -94,5 +100,23 @@ class Ranking extends Model
         }
 
         return $this->is_public && $this->is_ranked;
+    }
+
+    /*
+    * This string will be used in notifications on what a new comment
+    * was made.
+    */
+    public function commentableName(): string
+    {
+        return $this->name;
+    }
+
+    /*
+    * This URL will be used in notifications to let the user know
+    * where the comment itself can be read.
+    */
+    public function commentUrl(): string
+    {
+        return route('ranking', ['id' => $this->getKey()]);
     }
 }

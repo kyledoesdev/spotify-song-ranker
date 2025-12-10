@@ -44,6 +44,30 @@
                     <option value="0">No</option>
                 </select>
             </div>
+
+            <div class="mb-4">
+                <label class="block mb-2 transition-all duration-300">Comments Enabled?</label>
+                <select
+                    class="w-full bg-zinc-100 rounded-lg p-2"
+                    wire:model.live.debounce.500ms="form.comments_enabled"
+                    required
+                >
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block mb-2 transition-all duration-300">Comment Replies Enabled?</label>
+                <select
+                    class="w-full bg-zinc-100 rounded-lg p-2"
+                    wire:model.live.debounce.500ms="form.comments_replies_enabled"
+                    required
+                >
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
         </div>
     </div>
 </div>

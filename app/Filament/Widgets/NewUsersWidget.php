@@ -16,6 +16,8 @@ class NewUsersWidget extends ChartWidget
     
     public ?string $filter = 'year';
 
+    protected static ?int $sort = 2;
+
     protected function getData(): array
     {
         $trendConfig = $this->getTrendConfig($this->filter ?? 'year');

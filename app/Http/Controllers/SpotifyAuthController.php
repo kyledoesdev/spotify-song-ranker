@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Stats\LoginStat;
 use App\Stats\LogoutStat;
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Jobs\UpdateUsernameInComments;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
+use GuzzleHttp\Exception\ClientException;
 use Laravel\Socialite\Two\InvalidStateException;
 
 class SpotifyAuthController extends Controller
@@ -24,31 +25,35 @@ class SpotifyAuthController extends Controller
     public function processLogin()
     {
         try {
-            $user = Socialite::driver('spotify')->user();
+            $spotifyUser = Socialite::driver('spotify')->user();
         } catch (InvalidStateException|ClientException) {
             return redirect(route('welcome'))->withErrors(['error' => 'There was an issue with your spotify authorization token. Please try logging in again.']);
         }
 
         $deletedUser = User::query()
             ->withTrashed()
-            ->where('spotify_id', $user->id)
+            ->where('spotify_id', $spotifyUser->id)
             ->whereNotNull('deleted_at')
             ->first();
 
         if (! is_null($deletedUser)) {
-            Log::channel('discord_user_updates')->warning($user->name.' is back from the dead!!!!');
+            Log::channel('discord_user_updates')->warning($spotifyUser->name.' is back from the dead!!!!');
             $deletedUser->restore();
-            session()->flash('success', "Welcome back {$user->name}.. we've been expecting you.. To revive your rankings - reach out via the support bubble in the bottom right.");
+            session()->flash('success', "Welcome back {$spotifyUser->name}.. we've been expecting you.. To revive your rankings - reach out via the support bubble in the bottom right.");
         }
 
-        $user = User::withTrashed()->updateOrCreate([
-            'spotify_id' => $user->id,
+        if ($spotifyUser->name != $currentUser = User::firstWhere('spotify_id', $spotifyUser->id)?->name) {
+            UpdateUsernameInComments::dispatch($currentUser);
+        }
+
+        $songrankUser = User::withTrashed()->updateOrCreate([
+            'spotify_id' => $spotifyUser->id,
         ], [
-            'name' => $user->name,
-            'email' => $user->email,
-            'avatar' => $user->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$user->name}",
-            'external_token' => $user->token,
-            'external_refresh_token' => $user->refreshToken,
+            'name' => $spotifyUser->name,
+            'email' => $spotifyUser->email,
+            'avatar' => $spotifyUser->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$spotifyUser->name}",
+            'external_token' => $spotifyUser->token,
+            'external_refresh_token' => $spotifyUser->refreshToken,
             'timezone' => timezone(),
             'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
@@ -56,13 +61,13 @@ class SpotifyAuthController extends Controller
             'user_packet' => zuck(),
         ]);
 
-        if ($user->wasRecentlyCreated) {
-            $user->preferences()->create();
+        if ($songrankUser->wasRecentlyCreated) {
+            $songrankUser->preferences()->create();
         }
 
         Session::regenerate();
 
-        Auth::login($user);
+        Auth::login($songrankUser);
         
         LoginStat::increase();
 

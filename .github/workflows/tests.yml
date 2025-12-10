@@ -26,6 +26,12 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Configure Spatie Composer Auth
+        run: composer config http-basic.satis.spatie.be ${{ secrets.SPATIE_LICENSE_EMAIL }} ${{ secrets.SPATIE_LICENSE_KEY }}
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
       - name: Install Node Dependencies
         run: npm install
 
@@ -34,9 +40,6 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-
-      - name: Install Dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Copy Environment File
         run: cp .env.example .env

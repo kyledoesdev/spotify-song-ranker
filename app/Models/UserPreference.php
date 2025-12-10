@@ -10,6 +10,7 @@ class UserPreference extends Model
         'user_id',
         'recieve_reminder_emails',
         'recieve_newsletter_emails',
+        'enabled_comment_mentions',
     ];
 
     protected function casts(): array
@@ -17,6 +18,7 @@ class UserPreference extends Model
         return [
             'recieve_reminder_emails' => 'boolean',
             'recieve_newsletter_emails' => 'boolean',
+            'enabled_comment_mentions' => 'boolean'
         ];
     }
 

@@ -41,6 +41,25 @@
                     </ol>
                 </div>
             </div>
+
+            @if ($ranking->comments_enabled)
+                <div class="mx-4 pb-8">
+                    @if ($ranking->comments_replies_enabled)
+                        <livewire:comments 
+                            :model="$ranking"
+                            newest-first
+                            no-comments-text="No comments yet - you could be the first!"
+                        />
+                    @else
+                        <livewire:comments 
+                            :model="$ranking"
+                            newest-first
+                            no-replies
+                            no-comments-text="No comments yet - you could be the first!"
+                        />
+                    @endif
+                </div>
+            @endif
         </div>
     @else
         <livewire:song-rank.song-rank-process
