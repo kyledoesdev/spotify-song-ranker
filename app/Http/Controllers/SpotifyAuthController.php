@@ -51,7 +51,6 @@ class SpotifyAuthController extends Controller
             'spotify_id' => $spotifyUser->id,
         ], [
             'name' => $spotifyUser->name,
-            'email' => $spotifyUser->email ?? "{$spotifyUser->id}@songrank.dev", /* some spotify users dont have emails (5 as of 12/30/25) */
             'avatar' => $spotifyUser->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$spotifyUser->name}",
             'external_token' => $spotifyUser->token,
             'external_refresh_token' => $spotifyUser->refreshToken,
@@ -61,6 +60,9 @@ class SpotifyAuthController extends Controller
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
             'user_packet' => zuck(),
         ]);
+
+        $songrankUser->email ??= $spotifyUser->email ?? "{$spotifyUser->id}@songrank.dev";
+        $songrankUser->save();
 
         if ($songrankUser->wasRecentlyCreated) {
             $songrankUser->preferences()->create();
