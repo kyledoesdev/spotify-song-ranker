@@ -8,14 +8,15 @@ use Illuminate\Support\Str;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\DatePicker;
+use Filament\Schemas\Components\Utilities\Set;
 
 trait HasDateFilters
 {
     public function getTrendConfig(): array
     {
-        $filter = $this->filterFormData['filter'] ?? 'year';
-        $customStart = $this->filterFormData['customStart'] ?? null;
-        $customEnd = $this->filterFormData['customEnd'] ?? null;
+        $filter = $this->filters['filter'] ?? 'year';
+        $customStart = $this->filters['customStart'] ?? null;
+        $customEnd = $this->filters['customEnd'] ?? null;
 
         if ($customStart && $customEnd) {
             return $this->getCustomRangeConfig($customStart, $customEnd);
@@ -42,7 +43,7 @@ trait HasDateFilters
                 'period' => 'perDay',
                 'labels' => $this->getDaysOfMonthLabels(),
             ],
-            'year' => [
+            default => [
                 'start' => $now->copy()->startOfYear(),
                 'end' => $now->copy()->endOfYear(),
                 'period' => 'perMonth',
@@ -111,7 +112,13 @@ trait HasDateFilters
                     'month' => 'This Month',
                     'year' => 'This Year',
                 ])
-                ->default('year'),
+                ->default('year')
+                ->live()
+                ->afterStateUpdated(function (Set $set) {
+                    $this->filters['customStart']  = null;
+                    $this->filters['customEnd'] = null;
+                    $this->dispatch('$refresh');
+                }),
             Grid::make(2)->schema([
                 DatePicker::make('customStart')
                     ->label('From')
