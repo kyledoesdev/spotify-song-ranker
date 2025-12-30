@@ -2,10 +2,25 @@
 
 namespace App\Filament\Widgets\Concerns;
 
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use Illuminate\Support\Str;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
+use Filament\Forms\Components\DatePicker;
+
 trait HasDateFilters
 {
-    public function getTrendConfig(string $filter): array
+    public function getTrendConfig(): array
     {
+        $filter = $this->filterFormData['filter'] ?? 'year';
+        $customStart = $this->filterFormData['customStart'] ?? null;
+        $customEnd = $this->filterFormData['customEnd'] ?? null;
+
+        if ($customStart && $customEnd) {
+            return $this->getCustomRangeConfig($customStart, $customEnd);
+        }
+
         $now = now()->tz(auth()->user()->timezone);
 
         return match($filter) {
@@ -25,7 +40,7 @@ trait HasDateFilters
                 'start' => $now->copy()->startOfMonth(),
                 'end' => $now->copy()->endOfMonth(),
                 'period' => 'perDay',
-                'labels' => $this->getDaysOfMonthLabels($now),
+                'labels' => $this->getDaysOfMonthLabels(),
             ],
             'year' => [
                 'start' => $now->copy()->startOfYear(),
@@ -36,27 +51,89 @@ trait HasDateFilters
         };
     }
 
-    private function getHourLabels(): array
+    private function getCustomRangeConfig(string $customStart, string $customEnd): array
     {
-        $labels = [];
+        $tz = auth()->user()->timezone;
+        $start = Carbon::parse($customStart, $tz)->startOfDay();
+        $end = Carbon::parse($customEnd, $tz)->endOfDay();
+        $days = $start->diffInDays($end);
 
-        for ($i = 0; $i < 24; $i++) {
-            $labels[] = str_pad($i, 2, '0', STR_PAD_LEFT) . ':00';
+        if ($days <= 1) {
+            return [
+                'start' => $start,
+                'end' => $end,
+                'period' => 'perHour',
+                'labels' => $this->getHourLabels(),
+            ];
         }
 
-        return $labels;
+        if ($days <= 31) {
+            return [
+                'start' => $start,
+                'end' => $end,
+                'period' => 'perDay',
+                'labels' => $this->getDateRangeLabels($start, $end, 'j'),
+            ];
+        }
+
+        if ($days <= 365) {
+            return [
+                'start' => $start,
+                'end' => $end,
+                'period' => 'perWeek',
+                'labels' => $this->getDateRangeLabels($start, $end, 'M j', '1 week'),
+            ];
+        }
+
+        return [
+            'start' => $start,
+            'end' => $end,
+            'period' => 'perMonth',
+            'labels' => $this->getDateRangeLabels($start, $end, 'M Y', '1 month'),
+        ];
+    }
+
+    private function getDateRangeLabels(Carbon $start, Carbon $end, string $format, string $interval = '1 day'): array
+    {
+        return collect(CarbonPeriod::create($start, $interval, $end))
+            ->map(fn(Carbon $date) => $date->format($format))
+            ->toArray();
+    }
+
+    protected function getDateFiltersSchema(): array
+    {
+        return [
+            Select::make('filter')
+                ->label('Quick Filter')
+                ->options([
+                    'day' => 'Today',
+                    'week' => 'This Week',
+                    'month' => 'This Month',
+                    'year' => 'This Year',
+                ])
+                ->default('year'),
+            Grid::make(2)->schema([
+                DatePicker::make('customStart')
+                    ->label('From')
+                    ->maxDate(now()),
+                DatePicker::make('customEnd')
+                    ->label('To')
+                    ->maxDate(now()),
+            ]),
+        ];
+    }
+
+    private function getHourLabels(): array
+    {
+        return collect(range(0, 23))
+            ->map(fn($hour) => Str::padLeft($hour, 2, '0') . ':00')
+            ->toArray();
     }
 
     private function getDaysOfMonthLabels(): array
     {
-        $daysInMonth = now()->tz(auth()->user()->timezone)->daysInMonth;
-
-        $labels = [];
-
-        for ($i = 1; $i <= $daysInMonth; $i++) {
-            $labels[] = (string) $i;
-        }
-
-        return $labels;
+        return collect(range(1, now()->tz(auth()->user()->timezone)->daysInMonth))
+            ->map(fn($day) => (string) $day)
+            ->toArray();
     }
 }

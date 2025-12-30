@@ -41,7 +41,7 @@ final class GetPlaylistTracks
                 return null;
             }
 
-            for ($i = 0; $i < round($total / 100, 2, PHP_ROUND_HALF_UP); $i++) {
+            for ($i = 0; $i < ceil($total / 100); $i++) {
                 $subResponse = Http::withHeaders([
                     'Authorization' => 'Bearer '.$user->external_token,
                     'Content-Type' => 'application/json',
@@ -50,19 +50,42 @@ final class GetPlaylistTracks
                     'offset' => $offset,
                 ]);
 
-                collect(collect($subResponse->json('items'))->pluck('track'))->map(function (array $track) use ($tracks) {
-                    $tracks->push([
-                        'id' => $track['id'],
-                        'name' => (string) $track['name'],
-                        'uuid' => (string) Str::uuid(),
-                        'cover' => data_get($track, 'album.images.0.url'),
-                        'artist_id' => data_get($track, 'artists.0.id'),
-                        'artist_name' => data_get($track, 'artists.0.name') ?? data_get($track, 'artists.0.type'),
-                        'is_podcast' => data_get($track, 'artists.0.type') !== 'artist',
-                    ]);
-                });
+                $deletedTracks = [];
 
-                $offset += 100;
+                for ($i = 0; $i < ceil($total / 100); $i++) {
+                    $subResponse = Http::withHeaders([
+                        'Authorization' => 'Bearer '.$user->external_token,
+                        'Content-Type' => 'application/json',
+                    ])->get("https://api.spotify.com/v1/playlists/{$playlistId}/tracks", [
+                        'limit' => 100,
+                        'offset' => $offset,
+                    ]);
+
+                    collect($subResponse->json('items'))
+                        ->pluck('track')
+                        ->filter()
+                        ->each(function (array $track) use ($tracks, &$deletedTracks) {
+                            if (empty(data_get($track, 'artists.0.id'))) {
+                                $artistName = data_get($track, 'artists.0.name') ?? 'Unknown';
+                                $trackName = $track['name'] ?? 'Unknown';
+
+                                $deletedTracks[] = !is_null($artistName) ? ($artistName . ' - ' . $trackName) : $trackName;
+                                return;
+                            }
+
+                            $tracks->push([
+                                'id' => $track['id'],
+                                'name' => (string) $track['name'],
+                                'uuid' => (string) Str::uuid(),
+                                'cover' => data_get($track, 'album.images.0.url'),
+                                'artist_id' => data_get($track, 'artists.0.id'),
+                                'artist_name' => data_get($track, 'artists.0.name') ?? data_get($track, 'artists.0.type'),
+                                'is_podcast' => data_get($track, 'artists.0.type') !== 'artist',
+                            ]);
+                        });
+
+                    $offset += 100;
+                }
             }
         } catch (Exception $e) {
             report($e);
@@ -78,6 +101,7 @@ final class GetPlaylistTracks
             'cover' => $response->json('images.0.url'),
             'track_count' => $total,
             'tracks' => $tracks,
+            'deleted_tracks' => ! empty($deletedTracks) ? $deletedTracks : null,
         ]);
     }
 
