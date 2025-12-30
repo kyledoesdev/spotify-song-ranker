@@ -51,7 +51,7 @@ class SpotifyAuthController extends Controller
             'spotify_id' => $spotifyUser->id,
         ], [
             'name' => $spotifyUser->name,
-            'email' => $spotifyUser->email,
+            'email' => $spotifyUser->email ?? "{$spotifyUser->id}@songrank.dev", /* some spotify users dont have emails (5 as of 12/30/25) */
             'avatar' => $spotifyUser->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$spotifyUser->name}",
             'external_token' => $spotifyUser->token,
             'external_refresh_token' => $spotifyUser->refreshToken,
@@ -87,6 +87,7 @@ class SpotifyAuthController extends Controller
         return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
     }
 
+    /* TODO - this is shit */
     private function getUserTimezone()
     {
         $tz = timezone();

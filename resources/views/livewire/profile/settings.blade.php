@@ -1,11 +1,31 @@
 <div>
-    <div class="mt-2 bg-white shadow-lg p-4 md:p-6 rounded-xl">
-        <div class="mb-4">
-            <h5 class="font-bold mb-2">Settings</h5>
-            <p class="text-xs">Customize your experience and manage your account</p>
+    <div class="mt-2 bg-white shadow-lg p-4 md:p-6 rounded-xl">        
+        <!-- Profile Card Section -->
+        <div class="bg-white rounded-xl p-6 shadow-md border border-slate-100">
+            <div class="flex items-center space-x-6">
+                <div class="flex-shrink-0">
+                    <img
+                        src="{{ auth()->user()->avatar }}"
+                        alt="{{ auth()->user()->name }}"
+                        class="w-16 h-16 rounded-full object-cover border-2 border-slate-200"
+                    >
+                </div>
+                
+                <div class="flex-grow">
+                    <h4 class="text-lg font-semibold text-slate-900">{{ auth()->user()->name }}</h4>
+                    <div class="flex items-center gap-1">
+                        <p class="text-sm text-slate-600">
+                            <span>{{ auth()->user()->email }}</span>
+                        </p>
+                        <x-tooltip 
+                            text="Your email address is configured via Spotify. If incorrect, please reach out via the support bubble to have it fixed." 
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
             <!-- Email Preferences Section -->
             <div class="bg-white rounded-xl p-6 shadow-md transition-all duration-300">
                 <div class="flex items-center mb-6">
@@ -54,6 +74,19 @@
                 </div>
                 
                 <div class="space-y-4">
+                    <div class="group">
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Email Address</label>
+                        <input
+                            type="email"
+                            value="{{ auth()->user()->email }}"
+                            disabled
+                            class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-600 cursor-not-allowed"
+                        >
+                        <p class="text-xs text-slate-500 mt-2"></p>
+                    </div>
+                </div>
+                
+                <div class="space-y-4 mt-6">
                     <div class="group">
                         <button
                             class="btn-primary w-full text-sm py-4 px-6 flex items-center justify-center space-x-2"

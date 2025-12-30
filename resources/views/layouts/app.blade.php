@@ -33,7 +33,7 @@
             <div class="container mx-auto p-4">
                 @include('layouts.partials.messages')
                 
-                {{-- todo this sucks --}}
+                {{-- TODO - this sucks --}}
                 @if (! in_array(Route::currentRouteName(), ['welcome', 'about', 'terms']))
                     <livewire:navigation />
                 @endif

@@ -77,7 +77,7 @@ class UpdateArtistImages extends Command
             $success = (new RefreshToken)->handle($user);
 
             return $success;
-        } catch (Exception $e) {
+        } catch (Exception) {
             Log::channel('discord_other_updates')->error('Could not authenticate with spotify for updating artist images.');
 
             return false;
