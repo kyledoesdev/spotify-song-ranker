@@ -3,7 +3,9 @@
 namespace App\Filament\Widgets;
 
 use App\Filament\Widgets\Concerns\HasDateFilters;
+use Filament\Schemas\Schema;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 use Spatie\Comments\Models\Comment;
@@ -11,22 +13,23 @@ use Spatie\Comments\Models\Comment;
 class CommentsCreatedWidget extends ChartWidget
 {
     use HasDateFilters;
+    use HasFiltersSchema;
 
     protected ?string $heading = 'Comment Stats';
 
-    public ?string $filter = 'year';
-
     protected static ?int $sort = 6;
-    
+
+    public function filtersSchema(Schema $schema): Schema
+    {
+        return $schema->components($this->getDateFiltersSchema());
+    }
+
     protected function getData(): array
     {
-        $trendConfig = $this->getTrendConfig($this->filter ?? 'year');
+        $trendConfig = $this->getTrendConfig();
 
         $created = Trend::model(Comment::class)
-            ->between(
-                start: $trendConfig['start'],
-                end: $trendConfig['end'],
-            )
+            ->between(start: $trendConfig['start'], end: $trendConfig['end'])
             ->{$trendConfig['period']}()
             ->count();
 
@@ -34,8 +37,8 @@ class CommentsCreatedWidget extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Comments Created',
-                    'data' => $created->map(fn (TrendValue $value) => $value->aggregate),
-                    'borderColor' => '#c084fc'
+                    'data' => $created->map(fn(TrendValue $value) => $value->aggregate),
+                    'borderColor' => '#c084fc',
                 ],
             ],
             'labels' => $trendConfig['labels'],
@@ -45,15 +48,5 @@ class CommentsCreatedWidget extends ChartWidget
     protected function getType(): string
     {
         return 'line';
-    }
-
-    protected function getFilters(): ?array
-    {
-        return [
-            'day' => 'Past Day',
-            'week' => 'Past Week',
-            'month' => 'Past Month',
-            'year' => 'Past Year',
-        ];
     }
 }

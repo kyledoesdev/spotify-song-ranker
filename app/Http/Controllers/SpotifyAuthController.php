@@ -55,7 +55,7 @@ class SpotifyAuthController extends Controller
             'avatar' => $spotifyUser->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$spotifyUser->name}",
             'external_token' => $spotifyUser->token,
             'external_refresh_token' => $spotifyUser->refreshToken,
-            'timezone' => timezone(),
+            'timezone' => $this->getUserTimezone(),
             'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
@@ -85,5 +85,16 @@ class SpotifyAuthController extends Controller
         LogoutStat::increase();
 
         return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
+    }
+
+    private function getUserTimezone()
+    {
+        $tz = timezone();
+
+        if ($tz == 'Europe/Kiev') {
+            return 'Europe/Kyiv';
+        }
+
+        return $tz;
     }
 }

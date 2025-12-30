@@ -22,11 +22,7 @@
         </div>
     </div>
     
-    <livewire:welcome.stats 
-        :users="$users"
-        :rankings="$rankings"
-        :artists="$artistsCount"
-    />
+    <livewire:welcome.stats />
     
     <div class="flex justify-center gap-4 mt-4">
         <a class="btn-secondary m-2 p-2" href="/explore">

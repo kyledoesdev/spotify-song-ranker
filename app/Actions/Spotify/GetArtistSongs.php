@@ -31,7 +31,7 @@ final class GetArtistSongs
             $songs = collect();
             $offset = 0;
 
-            for ($i = 0; $i < round($totalAlbumCount / 50, 2, PHP_ROUND_HALF_UP); $i++) {
+            for ($i = 0; $i < ceil($totalAlbumCount / 50); $i++) {
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer '.$user->external_token,
                     'Content-Type' => 'application/json',

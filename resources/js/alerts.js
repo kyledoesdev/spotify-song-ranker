@@ -43,11 +43,15 @@ export default class LivewireSweetAlert {
         return result.isConfirmed;
     }
 
-    flash({ title, message, icon = 'success' }) {
+    flash({ title, message, submessage = null, icon = 'success' }) {
+        const html = submessage
+            ? `<p>${message}</p><p class="text-sm text-gray-500 mt-2 whitespace-pre-line">${submessage}</p>`
+            : `<p>${message}</p>`;
+
         return this.swal().fire({
-            title: title,
-            text: message,
-            icon: icon
+            title,
+            html,
+            icon
         });
     }
 
@@ -66,6 +70,7 @@ export default class LivewireSweetAlert {
             customClass: {
                 confirmButton: styles['confirm-btn'],
                 cancelButton: styles['cancel-btn'],
+                htmlContainer: 'max-h-[500px] overflow-y-auto',
             },
             buttonsStyling: false
         });

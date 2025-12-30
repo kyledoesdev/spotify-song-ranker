@@ -10,7 +10,6 @@ use App\Enums\RankingType;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -56,12 +55,7 @@ class SongRankSetup extends Component
         $this->removedTrackUuids = [];
 
         if ($this->artistSearchTerm == '') {
-            $this->js("
-                window.flash({
-                    title: 'Please enter a valid search term.',
-                    icon: 'error',
-                });
-            ");
+            $this->invalidSearchTerm();
 
             return;
         }
@@ -70,13 +64,7 @@ class SongRankSetup extends Component
         $this->type = RankingType::ARTIST;
 
         if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
-            $this->js("
-                window.flash({
-                    title: 'No Artists found.',
-                    message: 'Could not find artists for search term: {$this->artistSearchTerm}',
-                    icon: 'error',
-                });
-            ");
+            $this->noArtistFound();
         }
     }
 
@@ -88,15 +76,7 @@ class SongRankSetup extends Component
 
         /* ensure playlist url is valid */
         if (! $this->isSpotifyPlaylistUrl()) {
-            $this->js("
-                window.flash({
-                    title: 'No playlist found.',
-                    message: 'We could not find a playlist for that URL. Please ensure you entered a valid spotify playlist URL and the playlist is public.',
-                    icon: 'error',
-                });
-            ");
-
-            $this->playlistURL = '';
+            $this->invalidPlaylistURL();
 
             return;
         }
@@ -107,21 +87,21 @@ class SongRankSetup extends Component
 
         /* ensure playlist has tracks */
         if (is_null($playlistData)) {
-            $this->js("
-                window.flash({
-                    title: 'Could not find playlist.',
-                    message: 'Playlists can have a max of 500 songs. Something went wrong trying to find this playlist: {$this->playlistURL}.',
-                    icon: 'error',
-                });
-            ");
-
-            $this->playlistURL = '';
+            $this->playlistNotFound();
 
             return;
         }
 
         $this->selectedPlaylist = $playlistData->except('tracks')->toArray();
         $this->selectedPlaylistTracks = $playlistData->only('tracks')->first();
+
+        if (! empty($playlistData['deleted_tracks'])) {
+            $names = collect($playlistData['deleted_tracks'])
+                ->map(fn ($name) => "• {$name}")
+                ->implode(PHP_EOL);
+
+            $this->acknowledgeDeletedTracks($names);
+        }
     }
 
     public function loadArtistSongs(string $artistId)
@@ -134,16 +114,8 @@ class SongRankSetup extends Component
 
         $tracks = (new GetArtistSongs)->handle(auth()->user(), $artistId);
 
-        if (count($tracks) <= 1 || is_null($tracks)) {
-            $this->js("
-                window.flash({
-                    title: 'Not enough tracks to rank.',
-                    message: 'The artist: {$this->selectedArtist['name']} does not have enough tracks to rank.',
-                    icon: 'error',
-                });
-            ");
-
-            $this->resetSetup();
+        if (count($tracks) < 2 || is_null($tracks)) {
+            $this->notEnoughTracks();
 
             return;
         }
@@ -184,18 +156,6 @@ class SongRankSetup extends Component
     {
         $tracks = $this->getFilteredTracks();
         $songCount = count($tracks);
-
-        if ($songCount < 2) {
-            $this->js("
-                window.flash({
-                    title: 'Not enough tracks.',
-                    message: 'You need at least 2 tracks to create a ranking.',
-                    icon: 'error',
-                });
-            ");
-
-            return;
-        }
 
         $message = 'Are you sure you are ready to begin? After starting the ranking process, you WILL NOT be able to remove or edit the songs in the ranking.';
 
@@ -269,5 +229,79 @@ class SongRankSetup extends Component
             $this->playlistURL !== '' &&
             Str::isUrl($this->playlistURL) &&
             Str::startsWith($this->playlistURL, 'https://open.spotify.com/playlist');
+    }
+
+    //TODO - move to a repo / service / library
+
+    private function invalidSearchTerm(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'Please enter a valid search term.',
+                icon: 'error',
+            });
+        ");
+    }
+
+    private function noArtistFound(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'No Artists found.',
+                message: 'Could not find artists for search term: {$this->artistSearchTerm}',
+                icon: 'error',
+            });
+        ");
+    }
+
+    private function invalidPlaylistURL(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'No playlist found.',
+                message: 'We could not find a playlist for that URL. Please ensure you entered a valid spotify playlist URL and the playlist is public.',
+                icon: 'error',
+            });
+        ");
+
+        $this->playlistURL = '';
+    }
+
+    private function playlistNotFound(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'Could not find playlist.',
+                message: 'Playlists can have a max of 500 songs. Something went wrong trying to find this playlist: {$this->playlistURL}.',
+                icon: 'error',
+            });
+        ");
+
+        $this->playlistURL = '';
+    }
+
+    private function acknowledgeDeletedTracks(string $names): void
+    {
+        $this->js("
+            window.flash({
+                title: 'Some tracks could not be found',
+                message: 'The following tracks were removed from Spotify and could not be added to this ranking. You can proceed with the other tracks. Sorry 🤷',
+                submessage: `{$names}`,
+                icon: 'error',
+            });
+        ");
+    }
+
+    private function notEnoughTracks(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'Not enough tracks to rank.',
+                message: 'The artist: {$this->selectedArtist['name']} does not have enough tracks to rank.',
+                icon: 'error',
+            });
+        ");
+
+        $this->resetSetup();
     }
 }
