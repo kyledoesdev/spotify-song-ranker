@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Stats\LoginStat;
-use App\Stats\LogoutStat;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use App\Jobs\UpdateUsernameInComments;
-use Illuminate\Support\Facades\Session;
-use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Kyledoesdev\Essentials\Stats\LoginStat;
+use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
 class SpotifyAuthController extends Controller
@@ -83,8 +82,6 @@ class SpotifyAuthController extends Controller
 
         Session::invalidate();
         Session::regenerateToken();
-
-        LogoutStat::increase();
 
         return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
     }

@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Concerns\StatsAfterEvents;
+use Kyledoesdev\Essentials\Concerns\HasStatsAfterEvents;
 use Spatie\Comments\Models\Comment as SpatieComment;
 
 class Comment extends SpatieComment
 {
-    use StatsAfterEvents;
+    use HasStatsAfterEvents;
 }
