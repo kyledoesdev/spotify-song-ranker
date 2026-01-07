@@ -2,10 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use Filament\Widgets\StatsOverviewWidget\Stat;
-use Filament\Widgets\StatsOverviewWidget;
-use App\Stats\LoginStat;
 use Carbon\Carbon;
+use Filament\Widgets\StatsOverviewWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Kyledoesdev\Essentials\Stats\LoginStat;
 
 class LoginsWidget extends StatsOverviewWidget
 {
