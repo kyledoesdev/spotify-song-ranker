@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Concerns\StatsAfterEvents;
-use App\Stats\UserStat;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Builder;
@@ -13,15 +11,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Kyledoesdev\Essentials\Concerns\HasStatsAfterEvents;
 use Spatie\Comments\Models\Concerns\InteractsWithComments;
 use Spatie\Comments\Models\Concerns\Interfaces\CanComment;
 
 class User extends Authenticatable implements FilamentUser, CanComment
 {
     use HasFactory;
+    use HasStatsAfterEvents;
     use InteractsWithComments;
     use Notifiable;
-    use StatsAfterEvents;
     use SoftDeletes;
 
     protected $fillable = [

@@ -35,10 +35,6 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('spotify', Provider::class);
         });
 
-        Str::macro('isURL', function (string $value) {
-            return filter_var($value, FILTER_VALIDATE_URL) !== false;
-        });
-
         DB::prohibitDestructiveCommands(app()->isProduction());
 
         Model::automaticallyEagerLoadRelationships();
