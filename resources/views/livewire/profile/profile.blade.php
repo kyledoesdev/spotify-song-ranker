@@ -8,7 +8,7 @@
                 :ranking="$ranking"
             />
         @empty
-            <div class="col-span-full text-center py-8 text-gray-500">
+            <div class="col-span-full text-center py-8 text-gray-500 rounded-lg shadow-md bg-white">
                 <p class="text-lg">No rankings found.</p>
                 <p class="text-sm mt-2">Create your first ranking to get started!</p>
             </div>

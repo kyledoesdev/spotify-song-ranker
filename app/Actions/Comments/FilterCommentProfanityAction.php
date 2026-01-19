@@ -3,8 +3,8 @@
 namespace App\Actions\Comments;
 
 use Blaspsoft\Blasp\Facades\Blasp;
-use Spatie\Comments\Models\Comment;
 use Spatie\Comments\CommentTransformers\CommentTransformer;
+use Spatie\Comments\Models\Comment;
 
 final class FilterCommentProfanityAction implements CommentTransformer
 {

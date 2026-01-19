@@ -28,6 +28,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'support-bubble',
         ]);
     })
-    ->withSchedule(function (Schedule $schedule) {})
-    ->withExceptions(function (Exceptions $exceptions) {})
+    ->withSchedule(function (Schedule $schedule) {
+        
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->reportable(function (TypeError $e) {
+            if (str_contains($e->getMessage(), 'Filament\Notifications\Collection::fromLivewire')) {
+                return false;
+            }
+        });
+    })
     ->create();

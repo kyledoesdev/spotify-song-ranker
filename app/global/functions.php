@@ -20,8 +20,3 @@ function title(): string
 
     return $title;
 }
-
-function toSafeFilename(string $string): string
-{
-    return Str::of($string)->ascii()->replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-')->trim()->toString();
-}

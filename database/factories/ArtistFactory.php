@@ -11,7 +11,7 @@ class ArtistFactory extends Factory
         return [
             'artist_id' => str()->random(16),
             'artist_name' => fake()->userName(),
-            'artist_img' => fake()->imageUrl(200, 200, 'artist', true),
+            'artist_img' => "https://www.gravatar.com/avatar/unknown?d=mp",
         ];
     }
 }

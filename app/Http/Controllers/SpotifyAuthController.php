@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UpdateUsernameInComments;
 use App\Models\User;
 use App\Stats\LoginStat;
 use App\Stats\LogoutStat;
-use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
-use App\Jobs\UpdateUsernameInComments;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Laravel\Socialite\Facades\Socialite;
-use GuzzleHttp\Exception\ClientException;
 use Laravel\Socialite\Two\InvalidStateException;
 
 class SpotifyAuthController extends Controller
@@ -54,7 +54,7 @@ class SpotifyAuthController extends Controller
             'avatar' => $spotifyUser->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$spotifyUser->name}",
             'external_token' => $spotifyUser->token,
             'external_refresh_token' => $spotifyUser->refreshToken,
-            'timezone' => $this->getUserTimezone(),
+            'timezone' => timezone(),
             'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
@@ -87,17 +87,5 @@ class SpotifyAuthController extends Controller
         LogoutStat::increase();
 
         return redirect(route('welcome'))->with('success', "You've logged out. See ya next time!");
-    }
-
-    /* TODO - this is shit */
-    private function getUserTimezone()
-    {
-        $tz = timezone();
-
-        if ($tz == 'Europe/Kiev') {
-            return 'Europe/Kyiv';
-        }
-
-        return $tz;
     }
 }

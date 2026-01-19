@@ -48,7 +48,7 @@
                             Explore
                         </a>
                     @endif
-                    @if (Route::currentRouteName() != 'profile')
+                    @if (Route::currentRouteName() != 'profile' || (Route::currentRouteName() == 'profile' && Route::current()->parameter('id') != auth()->user()?->spotify_id))
                         <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center px-3 py-2 text-sm font-medium text-zinc-800 rounded-md hover:bg-gray-100">
                             <i class="fa fa-user mr-3"></i>
                             Profile
@@ -145,7 +145,7 @@
                                 style="display: none;"
                                 class="absolute right-0 mt-2 w-40 rounded-md bg-white shadow-md"
                             >
-                                @if (Route::currentRouteName() != 'profile')
+                                @if (Route::currentRouteName() != 'profile' || (Route::currentRouteName() == 'profile' && Route::current()->parameter('id') != auth()->user()?->spotify_id))
                                     <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-sm hover:bg-gray-50 disabled:text-gray-500">
                                         <i class="fa fa-solid fa-user"></i>
                                         Profile

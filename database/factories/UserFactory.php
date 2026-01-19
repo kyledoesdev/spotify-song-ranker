@@ -14,7 +14,7 @@ class UserFactory extends Factory
             'spotify_id' => 'spotify-id-'.str()->random(32),
             'name' => fake()->username(),
             'email' => fake()->unique()->safeEmail(),
-            'avatar' => fake()->imageUrl(200, 200, 'avatar', true),
+            'avatar' => "https://www.gravatar.com/avatar/unknown?d=mp",
             'timezone' => fake()->timezone(),
             'ip_address' => fake()->localIpv4(),
             'external_token' => str()->random(32),
