@@ -77,7 +77,7 @@ class SongRankProcess extends Component
 
     protected function continueSort(): void
     {
-        $state = $this->sortingState->fresh()->sorting_state;
+        $state = $this->sortingState->sorting_state;
 
         if ($state['current_merge']) {
             $this->processMerge();
@@ -99,7 +99,6 @@ class SongRankProcess extends Component
             }
         }
 
-        // Check for completion
         if (empty($state['stack']) && ! $state['current_merge']) {
             $finalKey = '0-'.(count($this->ranking->songs) - 1);
 
@@ -155,7 +154,7 @@ class SongRankProcess extends Component
 
     protected function processMerge(): void
     {
-        $state = $this->sortingState->fresh()->sorting_state;
+        $state = $this->sortingState->sorting_state;
         $merge = $state['current_merge'] ?? null;
 
         if (is_null($merge)) {
@@ -173,8 +172,6 @@ class SongRankProcess extends Component
 
             $state['current_merge'] = $merge;
             $this->sortingState->update(['sorting_state' => $state]);
-            $state = $this->sortingState->fresh()->sorting_state;
-            $merge = $state['current_merge'];
         }
 
         if (filled($merge['left_ids']) && filled($merge['right_ids'])) {
@@ -212,7 +209,7 @@ class SongRankProcess extends Component
         $this->isProcessing = true;
 
         try {
-            $state = $this->sortingState->fresh()->sorting_state;
+            $state = $this->sortingState->sorting_state;
             $merge = $state['current_merge'] ?? null;
 
             if (is_null($merge)) {

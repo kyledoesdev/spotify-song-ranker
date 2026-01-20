@@ -1,0 +1,75 @@
+/* Text */
+
+@utility text-primary {
+    @apply text-purple-400 hover:text-purple-500 text-zinc-800 mx-1;
+}
+
+@utility text-secondary {
+    @apply text-green-300 hover:text-green-400 mx-1;
+}
+
+@utility text-helper {
+    @apply text-blue-300 hover:text-blue-400 mx-1;
+}
+
+@utility text-danger {
+    @apply text-red-400 hover:text-red-500 text-zinc-800 mx-1;
+}
+
+/* Backgrounds */
+
+@utility bg-primary {
+    @apply bg-purple-400; 
+}
+
+@utility bg-secondary {
+    @apply bg-green-300;
+}
+
+@utility bg-helper {
+    @apply bg-blue-300;
+}
+
+@utility bg-danger {
+    @apply bg-red-400;
+}
+
+/* Buttons */
+@utility btn-primary {
+    @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-secondary {
+    @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-helper {
+    @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-danger {
+    @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
+}
+
+@utility btn-animated {
+    @apply rounded-xl shadow-md bg-linear-to-r from-purple-400 to-green-300 hover:from-purple-500 hover:to-green-400;
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s linear infinite;
+}
+
+/* Borders */
+@utility border-primary {
+    @apply border-purple-500; 
+}
+
+@utility border-secondary {
+    @apply border-green-400;
+}
+
+@utility border-helper {
+    @apply border-blue-400;
+}
+
+@utility border-danger {
+    @apply border-red-400;
+}
