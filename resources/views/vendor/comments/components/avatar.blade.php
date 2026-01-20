@@ -18,8 +18,11 @@
     }
 @endphp
 
-<img
-    class="comments-avatar"
-    src="{{ $avatar }}"
-    alt="{{ trim("{$commentatorProperties?->name} avatar") }}"
->
+<a href="{{ $commentatorProperties->spotify_id ? route('profile', ['id' => $commentatorProperties?->spotify_id]) : null }}">
+    <img
+        class="comments-avatar"
+        src="{{ $avatar }}" 
+        alt="{{ trim("{$commentatorProperties?->name} avatar") }}"
+        style="cursor: pointer;"
+    >
+</a>

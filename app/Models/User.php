@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Kyledoesdev\Essentials\Concerns\HasStatsAfterEvents;
 use Spatie\Comments\Models\Concerns\InteractsWithComments;
 use Spatie\Comments\Models\Concerns\Interfaces\CanComment;
+use Spatie\Comments\Support\CommentatorProperties;
 
 class User extends Authenticatable implements FilamentUser, CanComment
 {
@@ -80,5 +81,14 @@ class User extends Authenticatable implements FilamentUser, CanComment
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->is_dev;
+    }
+
+    /* Overrides vars available in comment components */
+    public function commentatorProperties(): CommentatorProperties
+    {
+        return CommentatorProperties::email($this->email)
+            ->name($this->name)
+            ->avatar($this->avatar)
+            ->add('spotify_id', $this->spotify_id);
     }
 }

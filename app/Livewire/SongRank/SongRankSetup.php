@@ -2,7 +2,8 @@
 
 namespace App\Livewire\SongRank;
 
-use App\Actions\Rankings\StoreRanking;
+use App\Actions\Rankings\StoreArtistRanking;
+use App\Actions\Rankings\StorePlaylistRanking;
 use App\Actions\Spotify\GetArtistSongs;
 use App\Actions\Spotify\GetPlaylistTracks;
 use App\Actions\Spotify\SearchArtists;
@@ -179,21 +180,17 @@ class SongRankSetup extends Component
     {
         $tracks = $this->getFilteredTracks();
 
-        $ranking = (new StoreRanking)->handle(auth()->user(), $this->type, $this->type === RankingType::PLAYLIST ? [
-            'playlist' => $this->selectedPlaylist,
+        $attributes = [
             'ranking_name' => $this->form->name,
             'is_public' => (bool) $this->form->is_public,
             'comments_enabled' => (bool) $this->form->comments_enabled,
             'comments_replies_enabled' => (bool) $this->form->comments_replies_enabled,
             'tracks' => $tracks,
-        ] : [
-            'artist' => $this->selectedArtist,
-            'ranking_name' => $this->form->name,
-            'is_public' => (bool) $this->form->is_public,
-            'comments_enabled' => (bool) $this->form->comments_enabled,
-            'comments_replies_enabled' => (bool) $this->form->comments_replies_enabled,
-            'tracks' => $tracks,
-        ]);
+        ];
+
+        $ranking = $this->type === RankingType::PLAYLIST
+            ? (new StorePlaylistRanking)->handle(auth()->user(), array_merge($attributes, ['playlist' => $this->selectedPlaylist]))
+            : (new StoreArtistRanking)->handle(auth()->user(), array_merge($attributes, ['artist' => $this->selectedArtist]));
 
         $this->redirect(route('ranking', ['id' => $ranking->getKey()]));
     }
