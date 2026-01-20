@@ -4,10 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\Ranking;
 use App\Models\User;
-use App\Stats\LoginStat;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Kyledoesdev\Essentials\Stats\LoginStat;
 
 class DailyDigest extends Command
 {

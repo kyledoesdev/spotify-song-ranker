@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Concerns\StatsAfterEvents;
 use App\Enums\RankingType;
 use App\QueryBuilders\RankingQueryBuilder;
 use Carbon\Carbon;
@@ -10,13 +9,14 @@ use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Kyledoesdev\Essentials\Concerns\HasStatsAfterEvents;
 use Spatie\Comments\Models\Concerns\HasComments;
 
 #[UseEloquentBuilder(RankingQueryBuilder::class)]
 class Ranking extends Model
 {
     use HasComments;
-    use StatsAfterEvents;
+    use HasStatsAfterEvents;
 
     protected $fillable = [
         'user_id',
