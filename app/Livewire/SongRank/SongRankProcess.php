@@ -43,7 +43,7 @@ class SongRankProcess extends Component
             $this->startNewSorting();
         }
 
-        $this->updateProgress();
+        $this->updateProgressBar();
         $this->continueSort();
     }
 
@@ -234,7 +234,7 @@ class SongRankProcess extends Component
                 $this->sortingState->update(['sorting_state' => $state]);
             });
 
-            $this->updateProgress();
+            $this->updateProgressBar();
             $this->processMerge();
 
         } catch (Exception $e) {
@@ -244,7 +244,7 @@ class SongRankProcess extends Component
         }
     }
 
-    protected function updateProgress(): void
+    protected function updateProgressBar(): void
     {
         $total = $this->sortingState->aprox_comparisons;
         $completed = $this->sortingState->completed_comparisons;
