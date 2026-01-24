@@ -7,7 +7,7 @@ use App\Models\RankingSortingState;
 use Illuminate\Database\Eloquent\Collection;
 use Livewire\Component;
 
-class SongRankStatsModal extends Component
+class SongRankProgressModal extends Component
 {
     public Ranking $ranking;
 
@@ -24,6 +24,6 @@ class SongRankStatsModal extends Component
 
     public function render()
     {
-        return view('livewire.song-rank.song-rank-stats-modal');
+        return view('livewire.song-rank.song-rank-progress-modal');
     }
 }

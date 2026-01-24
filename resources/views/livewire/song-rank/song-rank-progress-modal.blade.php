@@ -75,17 +75,17 @@
                         </nav>
                     </div>
 
-                    <div class="overflow-y-auto" style="height: 85vh; max-height: calc(85vh - 120px);">
+                    <div class="overflow-y-auto" style="max-height: calc(85vh - 120px);">
                         <div x-show="activeTab === 'order'" x-cloak>
-                            <livewire:song-rank.tabs.current-order
+                            <livewire:song-rank.progress-tabs.current-order
                                 :ranking="$ranking"
                                 :songs="$ranking->songs" 
                                 :sorting-state="$sortingState"
-                                :key="'order-' . $refreshKey"
+                                :key="'order-' . $refreshKey" {{-- todo - hate this --}}
                             />
                         </div>
                         <div x-show="activeTab === 'tracks'" x-cloak>
-                            <livewire:song-rank.tabs.tracks-list 
+                            <livewire:song-rank.progress-tabs.tracks-list 
                                 :ranking="$ranking"
                             />
                         </div>

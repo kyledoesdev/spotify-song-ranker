@@ -130,7 +130,7 @@
                 </span>
                 
                 <div class="flex flex-wrap items-center gap-3 order-1 sm:order-1">
-                    <livewire:song-rank.song-rank-stats-modal
+                    <livewire:song-rank.song-rank-progress-modal
                         :ranking="$ranking"
                         :songs="$ranking->songs" 
                         :sorting-state="$sortingState"

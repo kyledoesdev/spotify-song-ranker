@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\SongRank\Tabs;
+namespace App\Livewire\SongRank\ProgressTabs;
 
 use App\Models\Ranking;
 use App\Models\RankingSortingState;
@@ -76,6 +76,6 @@ class CurrentOrder extends Component
 
     public function render()
     {
-        return view('livewire.song-rank.tabs.current-order', $this->getData());
+        return view('livewire.song-rank.progress-tabs.current-order', $this->getData());
     }
 }
