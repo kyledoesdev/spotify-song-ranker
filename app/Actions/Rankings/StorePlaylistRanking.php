@@ -7,16 +7,11 @@ use App\Models\Playlist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 final class StorePlaylistRanking
 {
-    /**
-     * Execute the action.
-     */
     public function handle(User $user, array $attributes): Ranking
     {
         return DB::transaction(function () use ($user, $attributes) {
@@ -31,12 +26,10 @@ final class StorePlaylistRanking
                 'track_count' => data_get($attributes, 'playlist.track_count'),
             ]);
 
-            /* update or create the artist */
             $name = $attributes['ranking_name'] === '' || is_null($attributes['ranking_name'])
                 ? $playlist->name.' List'
                 : $attributes['ranking_name'];
 
-            /* create a new ranking */
             $ranking = Ranking::create([
                 'playlist_id' => $playlist->getKey(),
                 'user_id' => $user->getKey(),
@@ -46,56 +39,46 @@ final class StorePlaylistRanking
                 'comments_replies_enabled' => $attributes['comments_enabled'] ?? false,
             ]);
 
-            /* create the relation to the ranking's sorted state */
             $ranking->sortingState()->create();
 
-            /* get the artists for each track if we already have them */
+            $tracks = collect($attributes['tracks']);
+
+            // Upsert all unique artists in one query
+            $uniqueArtists = $tracks
+                ->unique('artist_id')
+                ->map(fn ($track) => [
+                    'artist_id' => $track['artist_id'],
+                    'artist_name' => $track['artist_name'],
+                    'is_podcast' => $track['is_podcast'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])
+                ->values()
+                ->toArray();
+
+            Artist::upsert($uniqueArtists, ['artist_id'], ['artist_name', 'is_podcast', 'updated_at']);
+
+            // Fetch all artists we need in one query
             $artists = Artist::query()
-                ->whereIn('artist_id', collect($attributes['tracks'])->pluck('artist_id')->unique())
+                ->whereIn('artist_id', $tracks->pluck('artist_id')->unique())
                 ->get()
                 ->keyBy('artist_id');
 
-            /* map through the songs, assign the artist or create a record of one. */
-            $songs = collect($attributes['tracks'])->map(function ($song) use ($artists, $ranking) {
-                $artist = $this->resolveSongArtist($artists, $song);
+            // Map songs with artist IDs
+            $songs = $tracks->map(fn ($track) => [
+                'artist_id' => $artists->get($track['artist_id'])?->getKey(),
+                'ranking_id' => $ranking->getKey(),
+                'spotify_song_id' => $track['id'],
+                'uuid' => $track['uuid'],
+                'title' => $track['name'] ?? 'Track deleted from spotify servers.',
+                'cover' => $track['cover'] ?? 'https://i.imgur.com/MBDmIUg.png',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ])->toArray();
 
-                if (is_null($artist)) {
-                    Log::channel('discord_other_updates')->error('Artist Id not set on Song: '.$song['artist_name'].' '.$song['name']);
-                }
-
-                return [
-                    'artist_id' => $artist ? $artist->getKey() : null,
-                    'ranking_id' => $ranking->getKey(),
-                    'spotify_song_id' => $song['id'],
-                    'uuid' => $song['uuid'],
-                    'title' => $song['name'] ?? 'Track deleted from spotify servers.',
-                    'cover' => $song['cover'] ?? 'https://i.imgur.com/MBDmIUg.png',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            })->toArray();
-
-            /* batch insert the song records */
             Song::insert($songs);
 
             return $ranking;
         });
-    }
-
-    private function resolveSongArtist(Collection $artists, array $song): ?Artist
-    {
-        $artist = $artists->get($song['artist_id']);
-
-        if (is_null($artist)) {
-            return Artist::updateOrCreate([
-                'artist_id' => $song['artist_id'],
-            ], [
-                'artist_id' => $song['artist_id'],
-                'artist_name' => $song['artist_name'],
-                'is_podcast' => $song['is_podcast'],
-            ]);
-        }
-
-        return $artist;
     }
 }

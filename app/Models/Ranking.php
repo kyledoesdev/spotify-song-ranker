@@ -34,6 +34,7 @@ class Ranking extends Model
     {
         return [
             'is_ranked' => 'boolean',
+            'is_public' => 'boolean',
             'has_podcast_episode' => 'boolean',
             'comments_enabled' => 'boolean',
             'comment_replies_enabled' => 'boolean'
