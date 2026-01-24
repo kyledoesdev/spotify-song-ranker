@@ -59,11 +59,16 @@
                         <div class="mt-4 flex flex-col items-center">
                             <hr class="w-full my-3">
                             <button 
-                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer"
+                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px]"
                                 wire:click="chooseSong({{ $currentSong1['id'] }})"
-                                :key="'song1-'.$currentSong1['id']"
+                                wire:loading.attr="disabled"
+                                wire:target="chooseSong"
+                                wire:key="song1-{{ $currentSong1['id'] }}"
                             >
-                                {{ $currentSong1['title'] }}
+                                <span wire:loading.remove wire:target="chooseSong">{{ $currentSong1['title'] }}</span>
+                                <span wire:loading wire:target="chooseSong" class="inline-flex items-center gap-2">
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -98,11 +103,16 @@
                         <div class="mt-4 flex flex-col items-center">
                             <hr class="w-full my-3">
                             <button 
-                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer"
+                                class="border-2 border-zinc-800 rounded-lg hover:bg-zinc-100 text-zinc-800 px-6 py-2 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px]"
                                 wire:click="chooseSong({{ $currentSong2['id'] }})"
-                                :key="'song2-'.$currentSong2['id']"
+                                wire:loading.attr="disabled"
+                                wire:target="chooseSong"
+                                wire:key="song2-{{ $currentSong2['id'] }}"
                             >
-                                {{ $currentSong2['title'] }}
+                                <span wire:loading.remove wire:target="chooseSong">{{ $currentSong2['title'] }}</span>
+                                <span wire:loading wire:target="chooseSong" class="inline-flex items-center gap-2">
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -112,22 +122,30 @@
 
         <hr class="my-4" />
         
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 space-y-3 sm:space-y-0">
-            <span class="text-sm sm:text-base flex items-center">
-                Get Cozy, this may take you a while. Enjoy the process, don't rush.
-                <i class="fa-solid fa-mug-saucer ml-2"></i>
-            </span>
-            <div class="flex items-center">
-                <label class="flex items-center cursor-pointer select-none">
-                    <input 
-                        type="checkbox" 
-                        wire:model.live="showEmbeds"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
-                    >
-                    <span class="ml-2 text-sm sm:text-base text-gray-700">Toggle Spotify Players</span>
-                </label>
+        <div class="px-4 py-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <span class="hidden md:flex md:items-center text-gray-600">
+                    <i class="fa-solid fa-mug-saucer mr-2"></i>
+                    Get Cozy, this may take a while. Enjoy the process!
+                </span>
+                
+                <div class="flex flex-wrap items-center gap-3 order-1 sm:order-1">
+                    <livewire:song-rank.song-rank-progress-modal
+                        :ranking="$ranking"
+                        :songs="$ranking->songs" 
+                        :sorting-state="$sortingState"
+                    />
+                    
+                    <label class="flex items-center cursor-pointer select-none bg-gray-100 hover:bg-gray-200 transition-colors rounded-md px-3 py-1.5">
+                        <input 
+                            type="checkbox" 
+                            wire:model.live="showEmbeds"
+                            class="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded-sm focus:ring-blue-500"
+                        >
+                        <span class="ml-2 text-sm text-gray-700 whitespace-nowrap">Spotify Players</span>
+                    </label>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
