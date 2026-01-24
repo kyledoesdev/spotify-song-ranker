@@ -28,17 +28,19 @@ final class CompleteSongRankProcess
                 $song = $ranking->songs->firstWhere('id', $id);
 
                 return [
+                    'id' => $song->getKey(),
                     'ranking_id' => $ranking->getKey(),
                     'spotify_song_id' => $song->spotify_song_id,
                     'uuid' => $song->uuid,
                     'title' => $song->title,
                     'cover' => $song->cover,
                     'rank' => $index + 1,
+                    'created_at' => $song->created_at,
                     'updated_at' => now(),
                 ];
             })->toArray();
 
-            Song::upsert($data, ['ranking_id', 'spotify_song_id'], ['title', 'cover', 'rank', 'updated_at']);
+            Song::upsert($data, ['id'], ['rank', 'updated_at']);
 
             RankingCompletedStat::increase();
         });

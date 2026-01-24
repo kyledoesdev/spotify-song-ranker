@@ -77,6 +77,7 @@ class SongRankProcess extends Component
 
     protected function continueSort(): void
     {
+        $this->sortingState->refresh();
         $state = $this->sortingState->sorting_state;
 
         if ($state['current_merge']) {
