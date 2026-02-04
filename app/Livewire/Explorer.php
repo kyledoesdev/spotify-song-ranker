@@ -39,7 +39,7 @@ class Explorer extends Component
                 'artist' => $this->artist,
                 'playlist' => $this->playlist,
             ])
-            ->limit($this->perPage)
+            ->when(! $this->isFiltered, fn ($query) => $query->limit($this->perPage))
             ->get();
     }
 
