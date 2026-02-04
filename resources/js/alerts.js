@@ -44,9 +44,10 @@ export default class LivewireSweetAlert {
     }
 
     flash({ title, message, submessage = null, icon = 'success' }) {
-        const html = submessage
-            ? `<p>${message}</p><p class="text-sm text-gray-500 mt-2 whitespace-pre-line">${submessage}</p>`
-            : `<p>${message}</p>`;
+        const html = [
+            message ? `<p>${message}</p>` : '',
+            submessage ? `<p class="text-sm text-gray-500 mt-2 whitespace-pre-line">${submessage}</p>` : '',
+        ].filter(Boolean).join('');
 
         return this.swal().fire({
             title,
