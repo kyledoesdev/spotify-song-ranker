@@ -68,7 +68,8 @@ class UserResource extends Resource
                     ->searchable(),
                 TextColumn::make('ip_address')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('rankings_count')
                     ->sortable()
                     ->label('Rankings')

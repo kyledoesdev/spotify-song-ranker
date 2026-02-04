@@ -98,7 +98,7 @@ class PlaylistResource extends Resource
                     ->searchable(),
                 TextColumn::make('rankings_count')
                     ->label('Rankings')
-                    ->searchable(),
+                    ->sortable(),
             ])
             ->filters([])
             ->recordActions([
