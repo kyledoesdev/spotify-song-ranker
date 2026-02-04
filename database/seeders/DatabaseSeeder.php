@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Song;
 use App\Models\Ranking;
+use App\Models\Song;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Ranking::factory()
-            ->count(10)
+            ->count(1000)
             ->create([
                 'is_public' => true,
                 'is_ranked' => true,
