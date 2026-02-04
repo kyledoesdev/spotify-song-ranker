@@ -47,7 +47,7 @@
                                 @endphp
 
                                 <li 
-                                    :key="'artist-'.$artist->getKey()"
+                                    wire:key="artist-{{ $artist->getKey() }}"
                                     class="p-2 hover:bg-gray-100 rounded-md cursor-pointer {{ $this->artist == $artist->getKey() ? 'bg-purple-100 border-l-4 border-purple-500' : '' }}"
                                     wire:click="filterByArtist({{ $artist->getKey() }})"
                                 >
@@ -88,6 +88,7 @@
                             >
                                 <i class="text-lg fa fa-magnifying-glass mt-1"></i>
                             </button>
+
                             <button 
                                 type="button" 
                                 class="btn-secondary px-2 py-1 cursor-pointer transform transition-all duration-300 hover:scale-110 active:scale-95" 
@@ -99,24 +100,33 @@
                     </div>
                 </div>
 
+                {{-- wire:intersect triggers loadMore on scroll, incrementing $perPage so the --}}
+                {{-- full list re-renders with more results. Filters reset $perPage to 10. --}}
                 @if ($this->rankings->count())
                     <div class="flex flex-col space-y-4">
                         @foreach ($this->rankings as $ranking)
                             <div 
                                 class="rounded-md cursor-pointer p-1 transform transition-all duration-300 hover:scale-101"
                                 wire:key="ranking-{{ $ranking->getKey() }}"
+                                wire:transition
                             >
-                                <livewire:ranking.card :ranking="$ranking" wire:key="card-{{ $ranking->getKey() }}" />
+                                <x-ranking-card :ranking="$ranking" />
                             </div>
                         @endforeach
                     </div>
 
-                    <div class="mt-4">
-                        {{ $this->rankings->links() }}
-                    </div>
+                    @if ($this->hasMorePages && ! $this->isFiltered)
+                        <div wire:intersect="loadMore" class="mt-4 flex justify-center">
+                            <div class="animate-pulse space-y-4 w-full">
+                                @foreach (range(1, 4) as $_)
+                                    <x-ranking-card-placeholder wire:transition />
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 @else
                     <div class="flex justify-center">
-                        <span>Loading Rankings...</span>
+                        <span>No rankings found.</span>
                     </div>
                 @endif
             </div>

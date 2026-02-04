@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\SpotifyAuthController;
-use App\Http\Middleware\IsDeveloper;
 use App\Livewire\About;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Explorer;
@@ -12,27 +11,28 @@ use App\Livewire\Ranking\Ranking;
 use App\Livewire\Terms;
 use App\Livewire\Welcome\Welcome;
 use Illuminate\Support\Facades\Route;
+use Kyledoesdev\Essentials\Middleware\IsDeveloper;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
-Route::get('/', Welcome::class)->name('welcome');
-Route::get('/about', About::class)->name('about');
+Route::livewire('/', Welcome::class)->name('welcome');
+Route::livewire('/about', About::class)->name('about');
 // Route::get('/terms', Terms::class)->name('terms');
 
-Route::get('/explore', Explorer::class)->name('explore');
+Route::livewire('/explore', Explorer::class)->name('explore');
 
-Route::get('/rank/{id}', Ranking::class)->name('ranking');
-Route::get('/profile/{id}', Profile::class)->name('profile');
+Route::livewire('/rank/{id}', Ranking::class)->name('ranking');
+Route::livewire('/profile/{id}', Profile::class)->name('profile');
 
 Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spotify.login');
 Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
 Route::get('/logout', [SpotifyAuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::livewire('/dashboard', Dashboard::class)->name('dashboard');
 
-    Route::get('/rank/{id}/edit', EditRanking::class)->name('rank.edit');
+    Route::livewire('/rank/{id}/edit', EditRanking::class)->name('rank.edit');
 
-    Route::get('/settings', Settings::class)->name('settings');
+    Route::livewire('/settings', Settings::class)->name('settings');
 
     Route::supportBubble();
 

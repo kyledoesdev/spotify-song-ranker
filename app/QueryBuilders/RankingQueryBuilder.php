@@ -12,17 +12,25 @@ class RankingQueryBuilder extends Builder
         return $this->newQuery()
             ->public()
             ->completed()
-            ->when(isset($filters['search']), function (Builder $query) use ($filters) {
+            ->when($filters['search'] ?? null, function (Builder $query, string $search) {
                 $query->where(fn (Builder $query) => $query
-                    ->whereHas('artist', fn (Builder $query) => $query->where('artist_name', 'LIKE', "%{$filters['search']}%"))
-                    ->orWhereHas('playlist', fn (Builder $query) => $query->where('name', 'LIKE', "%{$filters['search']}%"))
+                    ->whereIn('artist_id', fn ($q) => $q
+                        ->select('id')
+                        ->from('artists')
+                        ->where('artist_name', 'LIKE', "%{$search}%")
+                    )
+                    ->orWhereIn('playlist_id', fn ($q) => $q
+                        ->select('id')
+                        ->from('playlists')
+                        ->where('name', 'LIKE', "%{$search}%")
+                    )
                 );
             })
-            ->when(isset($filters['artist']), fn (Builder $query) => $query
-                ->whereHas('artist', fn (Builder $query) => $query->where('id', $filters['artist']))
+            ->when($filters['artist'] ?? null, fn (Builder $query, string $artist) => $query
+                ->where('artist_id', $artist)
             )
-            ->when(isset($filters['playlist']), fn (Builder $query) => $query
-                ->whereHas('playlist', fn (Builder $query) => $query->where('id', $filters['playlist']))
+            ->when($filters['playlist'] ?? null, fn (Builder $query, string $playlist) => $query
+                ->where('playlist_id', $playlist)
             )
             ->withHasPodcastEpisode()
             ->with('user', 'artist', 'playlist')
