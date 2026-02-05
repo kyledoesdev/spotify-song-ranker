@@ -16,19 +16,19 @@ class LoginsWidget extends StatsOverviewWidget
         $timezone = auth()->user()->timezone;
         
         return [
-            Stat::make('Logins Today', LoginStat::query()
+            Stat::make('Daily Active Users', LoginStat::query()
                 ->start(now()->tz($timezone)->startOfDay())
                 ->end(now()->tz($timezone)->endOfDay())
                 ->get()
                 ->sum('increments')
             ),
-            Stat::make('Logins Last Week', LoginStat::query()
+            Stat::make('Weekly Active Users', LoginStat::query()
                 ->start(now()->tz($timezone)->subWeek()->startOfWeek())
                 ->end(now()->tz($timezone)->subWeek()->endOfWeek())
                 ->get()
                 ->sum('increments')
             ),
-            Stat::make('Logins Last Month', LoginStat::query()
+            Stat::make('Monthly Active Users', LoginStat::query()
                 ->start(now()->tz($timezone)->subMonth()->startOfMonth())
                 ->end(now()->tz($timezone)->subMonth()->endOfMonth())
                 ->get()
