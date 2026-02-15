@@ -18,7 +18,10 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/.claude
 .DS_Store
+.mcp.json
+boost.json
 /public/js/filament
 /public/css/filament
 /public/build/filament

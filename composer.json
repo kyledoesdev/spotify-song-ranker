@@ -31,6 +31,7 @@
         "fakerphp/faker": "^1.23",
         "filament/upgrade": "^5.0",
         "glhd/laravel-dumper": "^3.0",
+        "laravel/boost": "^2.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",

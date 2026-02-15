@@ -17,12 +17,15 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class TermsResource extends Resource
 {
     protected static ?string $model = Terms::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Briefcase;
+
+    protected static string|UnitEnum|null $navigationGroup = 'System';
 
     public static function form(Schema $schema): Schema
     {
@@ -62,5 +65,10 @@ class TermsResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return short_number(static::getModel()::count());
     }
 }

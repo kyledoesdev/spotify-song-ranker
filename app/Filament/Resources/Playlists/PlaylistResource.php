@@ -17,12 +17,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use UnitEnum;
 
 class PlaylistResource extends Resource
 {
     protected static ?string $model = Playlist::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::RectangleGroup;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -124,6 +127,6 @@ class PlaylistResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Playlist::count();
+        return short_number(Playlist::count());
     }
 }

@@ -12,6 +12,7 @@
             <!-- Links -->
             <div class="flex justify-center text-white items-center lg:flex-row space-x-4">
                 <a href="{{ route('about') }}" class="hover:text-gray-400">About</a>
+                <a href="{{ route('faq') }}" class="hover:text-gray-400">FAQ</a>
                 {{-- <a href="{{ route('terms') }}" class="hover:text-gray-400">Terms</a> --}}
             </div>
 

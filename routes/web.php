@@ -4,6 +4,7 @@ use App\Http\Controllers\SpotifyAuthController;
 use App\Livewire\About;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Explorer;
+use App\Livewire\Faq;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\Settings;
 use App\Livewire\Ranking\EditRanking;
@@ -18,6 +19,7 @@ Route::livewire('/', Welcome::class)->name('welcome');
 Route::livewire('/about', About::class)->name('about');
 // Route::get('/terms', Terms::class)->name('terms');
 
+Route::livewire('/faq', Faq::class)->name('faq');
 Route::livewire('/explore', Explorer::class)->name('explore');
 
 Route::livewire('/rank/{id}', Ranking::class)->name('ranking');
