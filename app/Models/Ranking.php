@@ -109,7 +109,9 @@ class Ranking extends Model
 
         $justCompleted = $completedAt && Carbon::parse($completedAt)->isAfter(now()->subMinutes(10));
 
-        return $justCompleted || (auth()->check() && rand(1, 2) == 1);
+        $popupChance = ApplicationDashboard::first()?->popup_chance ?? 8;
+
+        return $justCompleted || (auth()->check() && rand(1, $popupChance) === 1);
     }
 
     /*
