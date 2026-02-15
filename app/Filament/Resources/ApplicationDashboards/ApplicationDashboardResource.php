@@ -4,21 +4,26 @@ namespace App\Filament\Resources\ApplicationDashboards;
 
 use App\Filament\Resources\ApplicationDashboards\Pages\ManageApplicationDashboards;
 use App\Models\ApplicationDashboard;
+use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ApplicationDashboardResource extends Resource
 {
     protected static ?string $model = ApplicationDashboard::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rocket-launch';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRocketLaunch;
 
     protected static ?string $navigationLabel = 'App Settings';
+
+    protected static string|UnitEnum|null $navigationGroup = 'System';
 
     public static function form(Schema $schema): Schema
     {
@@ -70,5 +75,10 @@ class ApplicationDashboardResource extends Resource
         return [
             'index' => ManageApplicationDashboards::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return short_number(static::getModel()::count());
     }
 }

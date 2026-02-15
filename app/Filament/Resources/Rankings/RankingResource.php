@@ -23,13 +23,15 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class RankingResource extends Resource
 {
     protected static ?string $model = Ranking::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ListBullet;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
 
     public static function form(Schema $schema): Schema
     {
@@ -173,7 +175,7 @@ class RankingResource extends Resource
     {
         return [
             SongsRelationManager::class,
-            CommentsRelationManager::class
+            CommentsRelationManager::class,
         ];
     }
 
@@ -188,9 +190,11 @@ class RankingResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return Ranking::query()
-            ->where('is_ranked', true)
-            ->where('is_public', true)
-            ->count();
+        return short_number(
+            Ranking::query()
+                ->where('is_ranked', true)
+                ->where('is_public', true)
+                ->count()
+        );
     }
 }

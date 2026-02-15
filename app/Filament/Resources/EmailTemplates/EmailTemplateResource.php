@@ -15,14 +15,18 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class EmailTemplateResource extends Resource
 {
     protected static ?string $model = EmailTemplate::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-paper-airplane';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPaperAirplane;
+
+    protected static string|UnitEnum|null $navigationGroup = 'System';
 
     public static function form(Schema $schema): Schema
     {
@@ -75,5 +79,10 @@ class EmailTemplateResource extends Resource
         return [
             'index' => ManageEmailTemplates::route('/'),
         ];
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        return short_number(static::getModel()::count());
     }
 }

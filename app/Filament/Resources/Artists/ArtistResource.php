@@ -7,15 +7,19 @@ use App\Models\Artist;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class ArtistResource extends Resource
 {
     protected static ?string $model = Artist::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-musical-note';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMusicalNote;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
 
     public static function form(Schema $schema): Schema
     {
@@ -58,6 +62,6 @@ class ArtistResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return short_number(static::getModel()::count());
     }
 }
