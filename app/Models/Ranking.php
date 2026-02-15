@@ -37,7 +37,7 @@ class Ranking extends Model
             'is_public' => 'boolean',
             'has_podcast_episode' => 'boolean',
             'comments_enabled' => 'boolean',
-            'comment_replies_enabled' => 'boolean'
+            'comment_replies_enabled' => 'boolean',
         ];
     }
 
@@ -101,6 +101,15 @@ class Ranking extends Model
         }
 
         return $this->is_public && $this->is_ranked;
+    }
+
+    public function shouldShowSupportPopup(): bool
+    {
+        $completedAt = $this->attributes['completed_at'];
+
+        $justCompleted = $completedAt && Carbon::parse($completedAt)->isAfter(now()->subMinutes(10));
+
+        return $justCompleted || (auth()->check() && rand(1, 2) == 1);
     }
 
     /*

@@ -9,6 +9,7 @@ use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\Settings;
 use App\Livewire\Ranking\EditRanking;
 use App\Livewire\Ranking\Ranking;
+use App\Livewire\Support;
 use App\Livewire\Terms;
 use App\Livewire\Welcome\Welcome;
 use Illuminate\Support\Facades\Route;
@@ -17,9 +18,10 @@ use Spatie\Health\Http\Controllers\HealthCheckResultsController;
 
 Route::livewire('/', Welcome::class)->name('welcome');
 Route::livewire('/about', About::class)->name('about');
-// Route::get('/terms', Terms::class)->name('terms');
-
+Route::livewire('/terms', Terms::class)->name('terms');
 Route::livewire('/faq', Faq::class)->name('faq');
+Route::livewire('/support', Support::class)->name('support');
+
 Route::livewire('/explore', Explorer::class)->name('explore');
 
 Route::livewire('/rank/{id}', Ranking::class)->name('ranking');

@@ -1,5 +1,5 @@
-<div class="flex justify-center mt-4">
-    <div class="bg-white rounded-lg p-6 w-full max-w-3xl">
+<div class="flex mt-4">
+    <div class="bg-white rounded-lg p-6 w-full">
         <h1 class="text-2xl font-bold mb-4 text-center">Frequently Asked Questions</h1>
 
         @forelse ($this->faqs as $faq)

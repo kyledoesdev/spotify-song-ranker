@@ -22,7 +22,7 @@ function title(): string
     $title = config('app.name').' - ';
 
     match (Route::currentRouteName()) {
-        'ranking' => $title .= session()->get('ranking_name'),
+        'ranking' => $title .= 'Ranking',
         'profile' => $title .= session()->get('profile_name').' Profile',
         default => $title .= Str::title(Str::lower(Str::replace('.', ' ', Route::currentRouteName())))
     };
