@@ -44,6 +44,11 @@ class ApplicationDashboardResource extends Resource
                 Textarea::make('seo_terms')
                     ->helperText('Comma-separated SEO keywords rendered in the meta keywords tag.')
                     ->columnSpanFull(),
+                TextInput::make('popup_chance')
+                    ->numeric()
+                    ->required()
+                    ->default(8)
+                    ->helperText('1-in-N chance the support popup is shown (e.g. 8 = 12.5% chance).'),
             ]);
     }
 
@@ -63,6 +68,8 @@ class ApplicationDashboardResource extends Resource
                     ->searchable(),
                 TextColumn::make('seo_terms')
                     ->limit(40),
+                TextColumn::make('popup_chance')
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
