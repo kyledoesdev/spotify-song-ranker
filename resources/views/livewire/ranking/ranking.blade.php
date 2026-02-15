@@ -1,4 +1,15 @@
 <div>
+    @if ($this->ranking->shouldShowSupportPopup())
+        <div x-data x-init="
+            setTimeout(() => {
+                window.flashSupport({
+                    title: 'Enjoying Song Rank?',
+                    message: 'Please consider supporting songrank to keep it free for everyone!'
+                });
+            }, 3000)
+        "></div>
+    @endif
+
     @if ($ranking->is_ranked)
         <div class="pl-4 pr-4 bg-white shadow-lg rounded-lg mt-4">
             <div class="flex justify-between items-center">

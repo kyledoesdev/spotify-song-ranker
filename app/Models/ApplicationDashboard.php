@@ -9,7 +9,9 @@ class ApplicationDashboard extends Model
     protected $fillable = [
         'name',
         'about_page',
+        'support_page',
         'version',
         'slideshow_speed',
+        'seo_terms',
     ];
 }

@@ -8,8 +8,10 @@ export default class LivewireSweetAlert {
             'redirect-btn': 'btn-primary m-2 p-2 cursor-pointer shadow-md',
         };
 
+        window.Swal = Swal;
         window.confirm = this.confirm.bind(this);
         window.flash = this.flash.bind(this);
+        window.flashSupport = this.flashSupport.bind(this);
     }
 
     async confirm({ title, message, confirmText, componentId = null, entityId = null, action = null, styles = {}}) {
@@ -62,6 +64,22 @@ export default class LivewireSweetAlert {
             icon: icon,
             html: '<a class="' + this.flash_styles['redirect-btn'] + '" href="' + redirectLink + '">' + buttonText + '</a>',
             showConfirmButton: false
+        });
+    }
+
+    flashSupport({title, message, icon = 'info'}) {
+        return this.swal().fire({
+            title: title,
+            icon: icon,
+            html: `
+                <p>${message}</p>
+                <div class="flex justify-center items-center gap-2 mt-4">
+                    <a class="${this.flash_styles['redirect-btn']}" href="/support">Support Song Rank</a>
+                    <button class="${this.flash_styles['cancel-btn']}" onclick="Swal.close()">Dismiss</button>
+                </div>
+            `,
+            showConfirmButton: false,
+            width: '32em',
         });
     }
 

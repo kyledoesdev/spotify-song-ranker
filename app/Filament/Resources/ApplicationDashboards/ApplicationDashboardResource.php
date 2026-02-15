@@ -7,6 +7,7 @@ use App\Models\ApplicationDashboard;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -33,12 +34,16 @@ class ApplicationDashboardResource extends Resource
                     ->required()
                     ->maxLength(255),
                 RichEditor::make('about_page')->columnSpanFull(),
+                RichEditor::make('support_page')->columnSpanFull(),
                 TextInput::make('version')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('slideshow_speed')
                     ->required()
                     ->maxLength(255),
+                Textarea::make('seo_terms')
+                    ->helperText('Comma-separated SEO keywords rendered in the meta keywords tag.')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -50,10 +55,14 @@ class ApplicationDashboardResource extends Resource
                     ->searchable(),
                 TextColumn::make('about_page')
                     ->limit(25),
+                TextColumn::make('support_page')
+                    ->limit(25),
                 TextColumn::make('version')
                     ->searchable(),
                 TextColumn::make('slideshow_speed')
                     ->searchable(),
+                TextColumn::make('seo_terms')
+                    ->limit(40),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),

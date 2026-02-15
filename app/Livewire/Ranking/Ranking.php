@@ -27,8 +27,6 @@ class Ranking extends Component
         if (! $this->ranking->canBeSeen()) {
             abort(404);
         }
-
-        session()->put(['ranking_name' => $this->ranking->name]);
     }
 
     public function render()
@@ -36,6 +34,6 @@ class Ranking extends Component
         return view('livewire.ranking.ranking', [
             'ranking' => $this->ranking,
             'sortingState' => $this->ranking->sortingState,
-        ]);
+        ])->title(config('app.name').' - '.$this->ranking->name);
     }
 }

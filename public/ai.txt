@@ -1,0 +1,12 @@
+# AI Policy for songrank.dev
+# Learn more: https://site-policy.ai
+
+User-agent: *
+Allow: /
+
+# About
+Name: Song Rank
+Description: A web application that ranks songs via a merge-sort algorithm. Users authenticate with Spotify, select an artist or playlist, then make pairwise song comparisons until a full ranking is produced.
+URL: https://songrank.dev
+URL: https://song-rank.com
+Contact: https://songrank.dev/support
