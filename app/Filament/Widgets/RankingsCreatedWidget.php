@@ -19,6 +19,8 @@ class RankingsCreatedWidget extends ChartWidget
 
     protected static ?int $sort = 3;
 
+    protected bool $hasDeferredFilters = true;
+
     public function filtersSchema(Schema $schema): Schema
     {
         return $schema->components($this->getDateFiltersSchema());
@@ -47,17 +49,17 @@ class RankingsCreatedWidget extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'Rankings Created',
-                    'data' => $created->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $created->map(fn (TrendValue $value) => $value->aggregate),
                     'borderColor' => '#86efac',
                 ],
                 [
                     'label' => 'Rankings Deleted',
-                    'data' => $deleted->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $deleted->map(fn (TrendValue $value) => $value->aggregate),
                     'borderColor' => '#f87171',
                 ],
                 [
                     'label' => 'Rankings Completed',
-                    'data' => $completed->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $completed->map(fn (TrendValue $value) => $value->aggregate),
                     'borderColor' => '#c084fc',
                 ],
             ],
