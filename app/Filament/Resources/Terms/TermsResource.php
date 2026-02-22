@@ -7,7 +7,6 @@ use App\Filament\Resources\Terms\Pages\EditTerms;
 use App\Filament\Resources\Terms\Pages\ListTerms;
 use App\Filament\Resources\Terms\Pages\ViewTerms;
 use App\Filament\Resources\Terms\Schemas\TermsForm;
-use App\Filament\Resources\Terms\Schemas\TermsInfolist;
 use App\Filament\Resources\Terms\Tables\TermsTable;
 use App\Models\Terms;
 use BackedEnum;
@@ -30,11 +29,6 @@ class TermsResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return TermsForm::configure($schema);
-    }
-
-    public static function infolist(Schema $schema): Schema
-    {
-        return TermsInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

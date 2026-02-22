@@ -24,9 +24,7 @@ class Explorer extends Component
     public function render()
     {
         return view('livewire.explorer', [
-            'artists' => cache()->remember('explore:top-artists', 300, fn () =>
-                Artist::query()->topArtists()->limit(10)->get()
-            ),
+            'artists' => cache()->remember('explore:top-artists', now()->addHour(), fn () => Artist::query()->topArtists()->get()),
         ]);
     }
 

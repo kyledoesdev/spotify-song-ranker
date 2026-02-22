@@ -6,9 +6,9 @@ use App\Actions\Spotify\RefreshToken;
 use App\Models\Artist;
 use App\Models\User;
 use Exception;
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -27,33 +27,23 @@ class UpdateArtistImages extends Command
         }
 
         /* Loop through every artist in chunks of 50 and attempt to update their image. */
-        Artist::all()->chunk(50)->each(function ($chunk) {
+        Artist::query()->chunk(50, function ($chunk) {
             $ids = $chunk->pluck('artist_id')->implode(',');
 
-            $response = (new Client)->request(
-                'GET',
-                "https://api.spotify.com/v1/artists?ids={$ids}", [
-                    'headers' => [
-                        'Authorization' => 'Bearer '.auth()->user()->external_token,
-                    ],
-                ]
-            );
+            $response = Http::withToken(auth()->user()->external_token)
+                ->get("https://api.spotify.com/v1/artists?ids={$ids}");
 
-            $artists = collect(collect(json_decode($response->getBody()))->get('artists'))
-                ->filter(fn ($artist) => $artist !== null);
-
-            if (count($artists)) {
-                $artists = collect($artists->map(fn ($artist) => [
-                    'artist_id' => $artist->id,
+            $upserts = collect($response->json('artists'))
+                ->filter()
+                ->map(fn ($artist) => [
+                    'artist_id' => $artist['id'],
+                    'artist_name' => $artist['name'],
                     'artist_img' => data_get($artist, 'images.0.url'),
-                ]));
+                ])
+                ->all();
 
-                foreach ($artists as $artist) {
-                    Artist::query()
-                        ->where('artist_id', $artist['artist_id'])
-                        ->first()
-                        ?->update(['artist_img' => $artist['artist_img']]);
-                }
+            if ($upserts) {
+                Artist::query()->upsert($upserts, ['artist_id'], ['artist_name', 'artist_img']);
             }
         });
 

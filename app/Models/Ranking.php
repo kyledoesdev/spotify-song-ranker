@@ -41,6 +41,8 @@ class Ranking extends Model
         ];
     }
 
+    /* Relationships */
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -65,6 +67,8 @@ class Ranking extends Model
     {
         return $this->hasOne(RankingSortingState::class, 'ranking_id', 'id');
     }
+
+    /* Attributes */
 
     public function getCompletedAtAttribute(): string
     {
@@ -94,6 +98,13 @@ class Ranking extends Model
         return $this->type === RankingType::PLAYLIST;
     }
 
+    /* Helpers */
+
+    public static function publicRankedCount(): int
+    {
+        return round(static::query()->completed()->public()->count() / 25) * 25;
+    }
+
     public function canBeSeen(): bool
     {
         if ($this->user_id == auth()->id()) {
@@ -114,19 +125,13 @@ class Ranking extends Model
         return $justCompleted || (auth()->check() && rand(1, $popupChance) === 1);
     }
 
-    /*
-    * This string will be used in notifications on what a new comment
-    * was made.
-    */
+    /* contracts */
+
     public function commentableName(): string
     {
         return $this->name;
     }
 
-    /*
-    * This URL will be used in notifications to let the user know
-    * where the comment itself can be read.
-    */
     public function commentUrl(): string
     {
         return route('ranking', ['id' => $this->getKey()]);

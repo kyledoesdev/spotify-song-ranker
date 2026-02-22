@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 
 class PreferencesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Preferences';
+    protected static string $relationship = 'preferences';
 
     public function form(Schema $schema): Schema
     {

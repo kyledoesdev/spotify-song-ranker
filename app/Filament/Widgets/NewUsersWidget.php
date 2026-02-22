@@ -19,6 +19,8 @@ class NewUsersWidget extends ChartWidget
 
     protected static ?int $sort = 2;
 
+    protected bool $hasDeferredFilters = true;
+
     public function filtersSchema(Schema $schema): Schema
     {
         return $schema->components($this->getDateFiltersSchema());
@@ -42,12 +44,12 @@ class NewUsersWidget extends ChartWidget
             'datasets' => [
                 [
                     'label' => 'New Users',
-                    'data' => $newUsers->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $newUsers->map(fn (TrendValue $value) => $value->aggregate),
                     'borderColor' => '#93c5fd',
                 ],
                 [
                     'label' => 'Deleted Users',
-                    'data' => $deletedUsers->map(fn(TrendValue $value) => $value->aggregate),
+                    'data' => $deletedUsers->map(fn (TrendValue $value) => $value->aggregate),
                     'borderColor' => '#f87171',
                 ],
             ],

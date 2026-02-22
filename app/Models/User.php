@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -16,7 +15,7 @@ use Spatie\Comments\Models\Concerns\InteractsWithComments;
 use Spatie\Comments\Models\Concerns\Interfaces\CanComment;
 use Spatie\Comments\Support\CommentatorProperties;
 
-class User extends Authenticatable implements FilamentUser, CanComment
+class User extends Authenticatable implements CanComment, FilamentUser
 {
     use HasFactory;
     use HasStatsAfterEvents;
@@ -66,16 +65,6 @@ class User extends Authenticatable implements FilamentUser, CanComment
     public function preferences(): HasOne
     {
         return $this->hasOne(UserPreference::class);
-    }
-
-    /* scopes */
-    public function scopeForRankingReminders(Builder $query)
-    {
-        $query->newQuery()
-            ->select('id', 'name', 'email')
-            ->whereHas('rankings', fn ($q) => $q->forReminders())
-            ->with('rankings', fn ($q) => $q->forReminders())
-            ->with('preferences');
     }
 
     public function canAccessPanel(Panel $panel): bool
