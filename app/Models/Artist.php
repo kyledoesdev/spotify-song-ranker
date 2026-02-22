@@ -35,23 +35,23 @@ class Artist extends Model
     }
 
     #[Scope]
-    public function topArtists(Builder $query)
+    public function topArtists(Builder $query, int $limit = 10)
     {
-        $query->newQuery()
-            ->selectRaw('
-                count(rankings.artist_id) as artist_rankings_count,
-                artists.id,
-                artists.artist_name,
-                artists.artist_img
-            ')
-            ->join('rankings', function ($join) {
-                $join->on('rankings.artist_id', '=', 'artists.id')
-                    ->whereNull('rankings.deleted_at')
-                    ->where('rankings.is_ranked', true)
-                    ->where('rankings.is_public', true);
-            })
-            ->groupBy('rankings.artist_id')
-            ->orderBy('artist_rankings_count', 'desc')
-            ->orderBy('artists.artist_name', 'asc');
+        $query->selectRaw('
+            count(rankings.artist_id) as artist_rankings_count,
+            artists.id,
+            artists.artist_name,
+            artists.artist_img
+        ')
+        ->join('rankings', function ($join) {
+            $join->on('rankings.artist_id', '=', 'artists.id')
+                ->whereNull('rankings.deleted_at')
+                ->where('rankings.is_ranked', true)
+                ->where('rankings.is_public', true);
+        })
+        ->groupBy('rankings.artist_id')
+        ->orderBy('artist_rankings_count', 'desc')
+        ->orderBy('artists.artist_name', 'asc')
+        ->limit($limit);
     }
 }

@@ -11,15 +11,19 @@ class ArtistSlideshow extends Component
 {
     public Collection $artists;
 
-    public function mount()
+    public function mount(): void
     {
-        $this->artists = Artist::query()->topArtists()->limit(100)->get();
+        $this->artists = cache()->remember(
+            'welcome:top-artists',
+            now()->addDay(),
+            fn () => Artist::query()->topArtists(100)->get()
+        ) ?? collect();
     }
 
     public function render()
     {
         return view('livewire.welcome.artist-slideshow', [
-            'speed' => ApplicationDashboard::first()->slideshow_speed,
+            'speed' => ApplicationDashboard::first()?->slideshow_speed,
         ]);
     }
 }
