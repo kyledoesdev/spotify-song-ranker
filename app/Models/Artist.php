@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Artist extends Model
 {
@@ -34,6 +35,11 @@ class Artist extends Model
         return $this->belongsTo(Ranking::class);
     }
 
+    public function rankings(): HasMany
+    {
+        return $this->hasMany(Ranking::class);
+    }
+
     #[Scope]
     public function topArtists(Builder $query, int $limit = 10)
     {
@@ -43,15 +49,15 @@ class Artist extends Model
             artists.artist_name,
             artists.artist_img
         ')
-        ->join('rankings', function ($join) {
-            $join->on('rankings.artist_id', '=', 'artists.id')
-                ->whereNull('rankings.deleted_at')
-                ->where('rankings.is_ranked', true)
-                ->where('rankings.is_public', true);
-        })
-        ->groupBy('rankings.artist_id')
-        ->orderBy('artist_rankings_count', 'desc')
-        ->orderBy('artists.artist_name', 'asc')
-        ->limit($limit);
+            ->join('rankings', function ($join) {
+                $join->on('rankings.artist_id', '=', 'artists.id')
+                    ->whereNull('rankings.deleted_at')
+                    ->where('rankings.is_ranked', true)
+                    ->where('rankings.is_public', true);
+            })
+            ->groupBy('rankings.artist_id')
+            ->orderBy('artist_rankings_count', 'desc')
+            ->orderBy('artists.artist_name', 'asc')
+            ->limit($limit);
     }
 }

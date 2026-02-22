@@ -12,7 +12,7 @@ use Filament\Tables\Table;
 
 class SongsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Songs';
+    protected static string $relationship = 'songs';
 
     public function form(Schema $schema): Schema
     {

@@ -28,14 +28,22 @@ return Application::configure(basePath: dirname(__DIR__))
             'support-bubble',
         ]);
     })
-    ->withSchedule(function (Schedule $schedule) {
-        
-    })
+    ->withSchedule(function (Schedule $schedule) {})
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->reportable(function (TypeError $e) {
-            if (str_contains($e->getMessage(), 'Filament\Notifications\Collection::fromLivewire')) {
-                return false;
+        $exceptions->dontReportWhen(function (Throwable $e) {
+            $botSpam = [
+                'Filament\Notifications\Collection::fromLivewire',
+                'Cannot assign array to property Filament\Notifications\Livewire\Notifications::$isFilamentNotificationsComponent',
+                'An action tried to resolve without a name',
+            ];
+
+            foreach ($botSpam as $message) {
+                if (str_contains($e->getMessage(), $message)) {
+                    return true;
+                }
             }
+
+            return false;
         });
     })
     ->create();
