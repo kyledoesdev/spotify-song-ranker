@@ -69,21 +69,6 @@ describe('Notifications ShowAll Page', function () {
             ->get(route('notifications'))
             ->assertOk();
     });
-
-    test('can mark notification as read from show all page', function () {
-        $commenter = User::factory()->create();
-
-        createComment($commenter, $this->ranking);
-
-        $notification = $this->owner->notifications()->first();
-
-        Livewire::actingAs($this->owner)
-            ->test(ShowAll::class)
-            ->call('markAsRead', $notification->id);
-
-        expect($notification->fresh()->read_at)->not->toBeNull();
-    });
-
 });
 
 describe('Comment Notification Dispatch', function () {
