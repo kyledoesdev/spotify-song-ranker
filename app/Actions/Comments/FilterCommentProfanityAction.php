@@ -13,7 +13,7 @@ final class FilterCommentProfanityAction implements CommentTransformer
      */
     public function handle(Comment $comment): void
     {
-        $comment->text = Blasp::allLanguages()
+        $comment->text = Blasp::language('english')
             ->maskWith('*')
             ->check($comment->original_text)
             ->getCleanString();

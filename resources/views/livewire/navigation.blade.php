@@ -100,6 +100,8 @@
                 
                 <div class="flex items-center">
                     @auth
+                        <livewire:notifications.bell />
+
                         <div
                             x-data="{
                                 open: false,
@@ -188,9 +190,12 @@
             </a>
 
             @auth
-                <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}">
-                    <img src="{{ auth()->user()->avatar }}" alt="User Avatar" class="h-8 w-8 rounded-full" />
-                </a>
+                <div class="flex items-center gap-3">
+                    <livewire:notifications.bell />
+                    <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}">
+                        <img src="{{ auth()->user()->avatar }}" alt="User Avatar" class="h-8 w-8 rounded-full" />
+                    </a>
+                </div>
             @else
                 <a href="{{ route('welcome') }}" class="btn-primary p-2">
                     <i class="fa fa-house"></i>

@@ -5,6 +5,7 @@ use App\Livewire\About;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Explorer;
 use App\Livewire\Faq;
+use App\Livewire\Notifications\ShowAll as Notifications;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\Settings;
 use App\Livewire\Ranking\EditRanking;
@@ -37,6 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::livewire('/rank/{id}/edit', EditRanking::class)->name('rank.edit');
 
     Route::livewire('/settings', Settings::class)->name('settings');
+
+    Route::livewire('/notifications', Notifications::class)->name('notifications');
 
     Route::supportBubble();
 

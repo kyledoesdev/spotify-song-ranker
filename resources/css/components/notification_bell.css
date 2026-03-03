@@ -1,0 +1,19 @@
+@utility notification-bell-button {
+    @apply flex items-center justify-center h-10 w-10 rounded-lg cursor-pointer relative mr-2 hover:bg-gray-100;
+}
+
+@utility notification-bell-badge {
+    @apply absolute top-0.5 right-0.5 flex items-center justify-center min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-red-500 text-white text-[0.625rem] font-bold leading-none;
+}
+
+@utility notification-bell-popover {
+    @apply fixed left-1/2 -translate-x-1/2 top-16 w-[calc(100vw-2rem)] rounded-xl bg-white shadow-lg border border-gray-100 z-50 overflow-hidden lg:absolute lg:left-auto lg:translate-x-0 lg:top-auto lg:right-0 lg:mt-2 lg:w-[22rem];
+}
+
+@utility notification-bell-list {
+    @apply max-h-96 overflow-y-auto;
+}
+
+@utility notification-bell-item {
+    @apply px-4 py-3 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors;
+}
