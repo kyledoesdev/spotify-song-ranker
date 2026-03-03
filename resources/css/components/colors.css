@@ -36,19 +36,19 @@
 
 /* Buttons */
 @utility btn-primary {
-    @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
+    @apply rounded-md shadow-md bg-purple-400 hover:bg-purple-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility btn-secondary {
-    @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer;
+    @apply rounded-md shadow-md bg-green-300 hover:bg-green-400 mx-1 my-2 py-1 px-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility btn-helper {
-    @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer;
+    @apply rounded-md shadow-md bg-blue-300 hover:bg-blue-400 mx-1 my-2 py-1 px-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility btn-danger {
-    @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer;
+    @apply rounded-md shadow-md bg-red-400 hover:bg-red-500 text-zinc-800 mx-1 my-2 py-1 px-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility btn-animated {
