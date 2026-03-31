@@ -32,7 +32,7 @@
         >
             <div class="flex items-center justify-between h-16 px-4 border-b">
                 <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="flex items-center">
-                    <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-lg" />
+                    <img src="/images/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-lg" />
                     <span class="text-sm font-medium text-zinc-800 ml-2">{{ config('app.name') }}</span>
                 </a>
                 <button x-on:click="sidebarOpen = false" class="text-gray-500 hover:text-gray-700">
@@ -85,7 +85,7 @@
                 <div class="flex items-center">
                     <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="h-10 flex items-center me-4">
                         <div class="flex items-center justify-center h-8 rounded-sm overflow-hidden shrink-0">
-                            <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />
+                            <img src="/images/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />
                         </div>
                         <div class="text-sm font-medium truncate text-zinc-800 mx-2 cursor-pointer">
                             {{ config('app.name') }}
@@ -185,7 +185,7 @@
             @endauth
             
             <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="flex items-center">
-                <img src="/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />
+                <img src="/images/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />
                 <span class="text-sm font-medium text-zinc-800 ml-2">{{ config('app.name') }}</span>
             </a>
 
