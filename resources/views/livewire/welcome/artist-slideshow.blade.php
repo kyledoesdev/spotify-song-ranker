@@ -2,17 +2,35 @@
      x-data="{
         mobileSize: 112,
         desktopSize: 152,
-        get itemWidth() { return window.innerWidth >= 768 ? this.desktopSize : this.mobileSize },
+        gap: 12,
+        pixelsPerSecond: 50,
+        get itemWidth() { return (window.innerWidth >= 768 ? this.desktopSize : this.mobileSize) + this.gap },
         count: {{ count($this->artists) }},
-        get totalWidth() { return this.count * this.itemWidth }
+        get totalWidth() { return this.count * this.itemWidth },
+        get duration() { return this.totalWidth / this.pixelsPerSecond }
      }"
-     x-resize="$el.style.setProperty('--slideshow-width', totalWidth + 'px')"
-     x-init="$el.style.setProperty('--slideshow-width', totalWidth + 'px')"
+     x-resize="
+        $el.style.setProperty('--slideshow-width', (totalWidth * 2) + 'px');
+        $el.style.setProperty('--slideshow-duration', duration + 's');
+     "
+     x-init="
+        $el.style.setProperty('--slideshow-width', (totalWidth * 2) + 'px');
+        $el.style.setProperty('--slideshow-duration', duration + 's');
+     "
 >
     {{-- Top row: slides left --}}
     <div class="relative overflow-hidden">
         <div class="flex gap-3"
-             style="animation: artistSlideLeft {{ $speed }}s linear infinite; width: var(--slideshow-width); will-change: transform;">
+             style="animation: artistSlideLeft var(--slideshow-duration) linear infinite; width: var(--slideshow-width); will-change: transform;">
+            @foreach($this->artists as $artist)
+                <div class="flex-shrink-0 w-[100px] md:w-[140px]">
+                    <img
+                        src="{{ $artist['artist_img'] }}"
+                        alt="{{ $artist['artist_name'] }}"
+                        class="w-[100px] h-[100px] md:w-[140px] md:h-[140px] object-cover rounded-xl shadow-md"
+                    >
+                </div>
+            @endforeach
             @foreach($this->artists as $artist)
                 <div class="flex-shrink-0 w-[100px] md:w-[140px]">
                     <img
@@ -30,7 +48,16 @@
     {{-- Bottom row: slides right (reversed collection) --}}
     <div class="relative overflow-hidden">
         <div class="flex gap-3"
-             style="animation: artistSlideRight {{ $speed }}s linear infinite; width: var(--slideshow-width); will-change: transform;">
+             style="animation: artistSlideRight var(--slideshow-duration) linear infinite; width: var(--slideshow-width); will-change: transform;">
+            @foreach($this->artists->reverse() as $artist)
+                <div class="flex-shrink-0 w-[100px] md:w-[140px]">
+                    <img
+                        src="{{ $artist['artist_img'] }}"
+                        alt="{{ $artist['artist_name'] }}"
+                        class="w-[100px] h-[100px] md:w-[140px] md:h-[140px] object-cover rounded-xl shadow-md"
+                    >
+                </div>
+            @endforeach
             @foreach($this->artists->reverse() as $artist)
                 <div class="flex-shrink-0 w-[100px] md:w-[140px]">
                     <img

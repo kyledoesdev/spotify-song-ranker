@@ -25,13 +25,13 @@
         }
 
         100% {
-            transform: translateX(-25%);
+            transform: translateX(-50%);
         }
     }
 
     @keyframes artistSlideRight {
         0% {
-            transform: translateX(-25%);
+            transform: translateX(-50%);
         }
 
         100% {
