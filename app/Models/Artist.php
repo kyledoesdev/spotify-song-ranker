@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Artist extends Model
@@ -28,11 +27,6 @@ class Artist extends Model
         return [
             'is_podcast' => 'boolean',
         ];
-    }
-
-    public function ranking(): BelongsTo
-    {
-        return $this->belongsTo(Ranking::class);
     }
 
     public function rankings(): HasMany

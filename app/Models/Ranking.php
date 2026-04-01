@@ -48,14 +48,14 @@ class Ranking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function artist(): HasOne
+    public function artist(): BelongsTo
     {
-        return $this->hasOne(Artist::class, 'id', 'artist_id');
+        return $this->belongsTo(Artist::class);
     }
 
-    public function playlist(): HasOne
+    public function playlist(): BelongsTo
     {
-        return $this->hasOne(Playlist::class, 'id', 'playlist_id');
+        return $this->belongsTo(Playlist::class);
     }
 
     public function songs(): HasMany
