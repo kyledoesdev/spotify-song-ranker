@@ -1,5 +1,5 @@
 <div>
-    <x-welcome.hero />
+    <x-welcome.hero :content="$content" />
 
     <section>
         <div class="flex justify-center">
@@ -11,10 +11,10 @@
         <livewire:welcome.stats />
     </section>
 
-    <x-welcome.how-it-works />
-    <x-welcome.everything-you-can-rank />
-    <x-welcome.community />
+    <x-welcome.how-it-works :content="$content" />
+    <x-welcome.everything-you-can-rank :content="$content" />
+    <x-welcome.community :content="$content" />
     {{-- <x-welcome.testimonials /> --}}
-    <x-welcome.about-developer />
-    <x-welcome.call-to-action />
+    <x-welcome.about-developer :content="$content" />
+    <x-welcome.call-to-action :content="$content" />
 </div>
