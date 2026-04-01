@@ -4,6 +4,7 @@
                 rgba(207, 120, 224, 1) 25%,
                 rgba(100, 249, 179, 1));
         background-size: 400% 400%;
+        background-attachment: fixed;
         animation: gradientAnimation 20s linear infinite;
     }
 
@@ -36,5 +37,35 @@
         100% {
             transform: translateX(0);
         }
+    }
+
+    @keyframes artistSlideUp {
+        0% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(-50%);
+        }
+    }
+
+    @keyframes artistSlideDown {
+        0% {
+            transform: translateY(-50%);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    .artist-slide-up {
+        animation: artistSlideUp linear infinite;
+        will-change: transform;
+    }
+
+    .artist-slide-down {
+        animation: artistSlideDown linear infinite;
+        will-change: transform;
     }
 }

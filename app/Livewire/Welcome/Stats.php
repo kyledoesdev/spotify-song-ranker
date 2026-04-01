@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Welcome;
 
+use App\Models\Playlist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
@@ -24,12 +25,18 @@ class Stats extends Component
         return cache()->remember('welcome:stats:artists', now()->addDay(), fn () => Song::rankedArtistCount());
     }
 
+    public static function getPlaylistCount(): int
+    {
+        return cache()->remember('welcome:stats:playlists', now()->addDay(), fn () => Playlist::count());
+    }
+
     public function render()
     {
         return view('livewire.welcome.stats', [
             'users' => self::getUserCount(),
             'rankings' => self::getRankingCount(),
             'artists' => self::getArtistCount(),
+            'playlists' => self::getPlaylistCount(),
         ]);
     }
 }

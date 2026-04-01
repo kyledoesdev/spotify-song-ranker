@@ -14,7 +14,7 @@
         <h5>webring:</h5>
         <div class="flex">
             <a href="https://insect.christmas" target="_blank">
-                <img class="mx-1" src="/insect.gif" />
+                <img class="mx-1" src="/images/insect.gif" />
             </a>
             <a class="portfolio-webring" href="https://kyledoes.dev" target="_blank">
                 <span class="text-dark" style="font-size: 12px;">my portfolio</span>
