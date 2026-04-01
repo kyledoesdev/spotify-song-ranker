@@ -67,7 +67,7 @@ class Playlist extends Model
     public static function rankedPlaylistCount(): int
     {
         return round(static::query()
-            ->whereHas('ranking', fn (Builder $query) => $query->completed()->whereNull('playlist_id'))
+            ->whereHas('rankings', fn (Builder $query) => $query->completed()->whereNull('playlist_id'))
             ->distinct('playlist_id')
             ->count() / 25) * 25;
     }
