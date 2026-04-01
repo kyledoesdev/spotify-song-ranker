@@ -27,7 +27,7 @@ class Stats extends Component
 
     public static function getPlaylistCount(): int
     {
-        return cache()->remember('welcome:stats:playlists', now()->addDay(), fn () => Playlist::count());
+        return cache()->remember('welcome:stats:playlists', now()->addDay(), fn () => Playlist::rankedPlaylistCount());
     }
 
     public function render()
