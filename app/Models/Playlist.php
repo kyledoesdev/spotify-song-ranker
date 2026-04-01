@@ -64,7 +64,7 @@ class Playlist extends Model
             ->orderBy('playlists.name', 'asc');
     }
 
-    public function rankedPlaylistCount(): int
+    public static function rankedPlaylistCount(): int
     {
         return round(static::query()
             ->whereHas('ranking', fn (Builder $query) => $query->completed()->whereNull('playlist_id'))
