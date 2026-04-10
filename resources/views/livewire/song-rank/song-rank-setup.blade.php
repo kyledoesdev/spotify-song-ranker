@@ -5,7 +5,7 @@
         <div class="p-2 mb-2" x-auto-animate>
             <div class="space-y-4 md:space-y-0">
                 <h5 class="md:text-md mt-2 mb-4 md:text-left">
-                    Choose a ranking type and get started. Then, enter in an artist name, or a playlist or show URL.
+                    Choose a ranking type to get started. Enter in an artist name, or the playlist or show URL.
                 </h5>
 
                 <div class="flex flex-col md:flex-row md:items-center md:gap-4">
