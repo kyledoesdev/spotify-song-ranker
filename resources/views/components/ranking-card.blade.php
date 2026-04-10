@@ -43,7 +43,7 @@
                 {{-- Track Count --}}
                 <span class="inline-flex items-center gap-1.5 text-xs bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-lg">
                     <i class="fa-solid fa-hashtag text-zinc-400"></i>
-                    {{ $ranking->songs_count }} {{ $ranking->type->itemLabel($ranking->songs_count) }}
+                    {{ $ranking->songs_count }} {{ $ranking->type->itemLabel() }}
                 </span>
 
                 {{-- Status (only show if incomplete) --}}

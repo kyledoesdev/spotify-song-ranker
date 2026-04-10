@@ -35,11 +35,11 @@ enum RankingType: string
         };
     }
 
-    public function itemLabel(int $count = 2): string
+    public function itemLabel(): string
     {
         return match ($this) {
-            self::SHOW => $count === 1 ? 'episode' : 'episodes',
-            default => $count === 1 ? 'track' : 'tracks',
+            self::SHOW => 'episodes',
+            default => 'tracks',
         };
     }
 }

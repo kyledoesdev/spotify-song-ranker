@@ -53,7 +53,7 @@
                     @endif
 
                     <span style="display: inline-block; font-size: 12px; background-color: #f4f4f5; color: #52525b; padding: 4px 10px; border-radius: 8px; margin-right: 6px; margin-bottom: 4px;">
-                        # {{ count($ranking->songs) }} {{ $ranking->type->itemLabel(count($ranking->songs)) }}
+                        # {{ count($ranking->songs) }} {{ $ranking->type->itemLabel() }}
                     </span>
 
                     @unless ($ranking->is_ranked)
