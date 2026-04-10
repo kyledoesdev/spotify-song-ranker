@@ -1,65 +1,79 @@
-<div style="background-color: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-radius: 0.5rem; margin: 1rem 0; padding: 1rem; border: 1px solid #e5e7eb;">
+@php
+    $badgeColors = match($ranking->type) {
+        \App\Enums\RankingType::ARTIST => ['bg' => '#f3e8ff', 'text' => '#7e22ce'],
+        \App\Enums\RankingType::PLAYLIST => ['bg' => '#dcfce7', 'text' => '#15803d'],
+        \App\Enums\RankingType::SHOW => ['bg' => '#dbeafe', 'text' => '#1d4ed8'],
+    };
+@endphp
+
+<div style="background-color: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-radius: 12px; margin: 1rem 0; padding: 16px; border: 1px solid #e5e7eb;">
     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
         <tr>
-            <td width="120" style="vertical-align: top; padding-right: 16px;">
-                <img 
-                    src="{{ $ranking->isPlaylistType() ? $ranking->playlist->cover : $ranking->artist->artist_img }}"
-                    width="120" 
-                    height="120" 
-                    style="border-radius: 8px; border: 1px solid #27272a; display: block;"
-                    alt="{{ $ranking->isPlaylistType() ? $ranking->playlist->name : $ranking->artist->artist_name }}"
+            {{-- Cover + Spotify Logo --}}
+            <td width="112" style="vertical-align: top; padding-right: 16px;">
+                <img
+                    src="{{ $ranking->source?->cover() }}"
+                    width="112"
+                    height="112"
+                    style="border-radius: 12px; border: 1px solid #e4e4e7; display: block; object-fit: cover;"
+                    alt="{{ $ranking->source?->name() }}"
                 >
                 <div style="margin-top: 8px;">
-                    <a 
-                        href="{{ $ranking->isPlaylistType()
-                            ? 'https://open.spotify.com/playlist/'. $ranking->playlist->playlist_id
-                            : 'https://open.spotify.com/artist/'. $ranking->artist->artist_id
-                        }}"
+                    <a
+                        href="{{ $ranking->source?->spotifyUrl() }}"
+                        target="_blank"
                         style="display: inline-flex; align-items: center; gap: 4px; border-bottom: 2px solid #06D6A0; padding-bottom: 2px; text-decoration: none; color: #06D6A0; font-size: 12px;"
                     >
-                        🎵 Spotify
+                        🎵 Spotify ↗
                     </a>
                 </div>
             </td>
+
+            {{-- Content --}}
             <td style="vertical-align: top;">
-                <h3 style="margin: 0 0 12px 0; font-size: 18px; font-weight: bold; color: #1f2937;">
-                    {{ Str::limit($ranking->name, 40) }}
-                </h3>
-                
-                @if ($ranking->isPlaylistType())
-                <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>🎵 Playlist:</strong> {{ $ranking->playlist->name }}
+                {{-- Title + Badge --}}
+                <div style="margin-bottom: 4px;">
+                    <span style="font-size: 18px; font-weight: bold; color: #1f2937;">{{ Str::limit($ranking->name, 35) }}</span>
+                    <span style="display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 9999px; background-color: {{ $badgeColors['bg'] }}; color: {{ $badgeColors['text'] }}; margin-left: 6px; vertical-align: middle;">
+                        {{ $ranking->type->label() }}
+                    </span>
                 </div>
-                @else
-                <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>🎵 Artist:</strong> {{ $ranking->artist->artist_name }}
+
+                {{-- Source Name --}}
+                <div style="font-size: 14px; color: #71717a; margin-bottom: 12px;">
+                    {{ $ranking->source?->name() }}
                 </div>
-                @endif
-                
-                @if($ranking->songs && $ranking->songs->isNotEmpty())
-                <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>⭐ #1 {{ $ranking->has_podcast_episode ? 'Record' : 'Song' }}:</strong> {{ Str::limit($ranking->songs[0]->title, 30) }}
+
+                {{-- Stats Pills --}}
+                <div style="margin-bottom: 12px;">
+                    @if($ranking->songs && $ranking->songs->isNotEmpty())
+                        <span style="display: inline-block; font-size: 12px; background-color: #f4f4f5; color: #52525b; padding: 4px 10px; border-radius: 8px; margin-right: 6px; margin-bottom: 4px;">
+                            ⭐ {{ Str::limit($ranking->songs[0]->title, 20) }}
+                        </span>
+                    @endif
+
+                    <span style="display: inline-block; font-size: 12px; background-color: #f4f4f5; color: #52525b; padding: 4px 10px; border-radius: 8px; margin-right: 6px; margin-bottom: 4px;">
+                        # {{ count($ranking->songs) }} {{ $ranking->type->itemLabel() }}
+                    </span>
+
+                    @unless ($ranking->is_ranked)
+                        <span style="display: inline-block; font-size: 12px; background-color: #fffbeb; color: #a16207; padding: 4px 10px; border-radius: 8px; margin-bottom: 4px;">
+                            In Progress
+                        </span>
+                    @endunless
                 </div>
-                @endif
-                
-                <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>#️⃣ {{ $ranking->has_podcast_episode ? 'Records' : 'Songs' }}:</strong> {{ count($ranking->songs) }} {{ $ranking->has_podcast_episode ? 'records' : 'songs' }} ranked
+
+                {{-- Footer: User + Time --}}
+                <div style="font-size: 12px; color: #a1a1aa; margin-bottom: 12px;">
+                    👤 <a href="{{ route('profile', ['id' => $ranking->user->spotify_id]) }}" target="_blank" style="color: #a1a1aa; text-decoration: none;">{{ $ranking->user->name }}</a>
+                    &nbsp;|&nbsp;
+                    🕒 {{ Carbon\Carbon::parse($ranking->completed_at)->toFormattedDateString() }}
                 </div>
-                
-                <div style="margin-bottom: 8px; font-size: 14px; color: #6b7280;">
-                    <strong>👤 Created by:</strong>
-                    <a href="{{ route('profile', ['id' => $ranking->user->spotify_id]) }}" target="_blank">
-                        {{ $ranking->user->name }}
-                    </a>
-                </div>
-                
-                <div style="margin-bottom: 12px; font-size: 14px; color: #6b7280;">
-                    <strong>🕒 Completed:</strong> {{ Carbon\Carbon::parse($ranking->completed_at)->toFormattedDateString() }}
-                </div>
-                
-                <a 
+
+                {{-- CTA Button --}}
+                <a
                     href="{{ route('ranking', $ranking->getKey()) }}"
-                    style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 14px;"
+                    style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 500;"
                 >
                     View Ranking →
                 </a>

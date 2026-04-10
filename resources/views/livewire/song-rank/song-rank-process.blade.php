@@ -136,14 +136,16 @@
                         :sorting-state="$sortingState"
                     />
                     
-                    <label class="flex items-center cursor-pointer select-none bg-gray-100 hover:bg-gray-200 transition-colors rounded-md px-3 py-1.5">
-                        <input 
-                            type="checkbox" 
-                            wire:model.live="showEmbeds"
-                            class="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded-sm focus:ring-blue-500"
-                        >
-                        <span class="ml-2 text-sm text-gray-700 whitespace-nowrap">Spotify Players</span>
-                    </label>
+                    @unless ($ranking->isShowType())
+                        <label class="flex items-center cursor-pointer select-none bg-gray-100 hover:bg-gray-200 transition-colors rounded-md px-3 py-1.5">
+                            <input
+                                type="checkbox"
+                                wire:model.live="showEmbeds"
+                                class="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded-sm focus:ring-blue-500"
+                            >
+                            <span class="ml-2 text-sm text-gray-700 whitespace-nowrap">Spotify Players</span>
+                        </label>
+                    @endunless
                 </div>
             </div>
         </div>

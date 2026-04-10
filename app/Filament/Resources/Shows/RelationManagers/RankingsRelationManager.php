@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Artists\RelationManagers;
+namespace App\Filament\Resources\Shows\RelationManagers;
 
 use App\Filament\Resources\Rankings\RankingResource;
 use App\Filament\Resources\Rankings\Tables\RankingTable;
@@ -16,7 +16,7 @@ class RankingsRelationManager extends RelationManager
     {
         return RankingTable::configure($table)
             ->recordTitleAttribute('name')
-            ->modifyQueryUsing(fn ($query) => $query->whereNull('playlist_id')->whereNull('show_id'))
+            ->modifyQueryUsing(fn ($query) => $query->whereNotNull('show_id'))
             ->recordActions([
                 ViewAction::make()
                     ->url(fn ($record) => RankingResource::getUrl('view', ['record' => $record])),
