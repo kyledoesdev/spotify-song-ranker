@@ -31,6 +31,7 @@ class SongRankProcess extends Component
     public function mount(): void
     {
         $this->ranking->loadMissing('songs', 'songs.artist');
+        $this->showEmbeds = ! $this->ranking->isShowType();
 
         if (! $this->ranking->is_ranked) {
             $this->initializeSorting();

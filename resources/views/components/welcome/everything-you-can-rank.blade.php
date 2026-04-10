@@ -28,19 +28,9 @@
                 </div>
             </div>
 
-            <div class="bg-gray-900/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-xl flex gap-6 items-start hover:bg-gray-900/40 transition-all">
+            <div class="md:col-span-2 md:max-w-lg md:mx-auto bg-gray-900/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-xl flex gap-6 items-start hover:bg-gray-900/40 transition-all">
                 <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                    <i class="fa-solid fa-book-open text-xl text-blue-300"></i>
-                </div>
-                <div>
-                    <h3 class="text-lg font-bold text-white mb-1">{{ $content->firstWhere('slug', 'rank-types-audiobooks-title')->text }}</h3>
-                    <p class="text-gray-300/80">{{ $content->firstWhere('slug', 'rank-types-audiobooks-text')->text }}</p>
-                </div>
-            </div>
-
-            <div class="bg-gray-900/30 backdrop-blur-sm rounded-2xl p-8 border border-white/10 shadow-xl flex gap-6 items-start hover:bg-gray-900/40 transition-all">
-                <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                    <i class="fa-solid fa-podcast text-xl text-amber-300"></i>
+                    <i class="fa-solid fa-podcast text-xl text-blue-300"></i>
                 </div>
                 <div>
                     <h3 class="text-lg font-bold text-white mb-1">{{ $content->firstWhere('slug', 'rank-types-podcasts-title')->text }}</h3>

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Contracts\Rankable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Playlist extends Model
+class Playlist extends Model implements Rankable
 {
     protected $fillable = [
         'playlist_id',
@@ -39,6 +40,26 @@ class Playlist extends Model
     public function getDescriptionAttribute($value): ?string
     {
         return html_entity_decode($value);
+    }
+
+    public function cover(): ?string
+    {
+        return $this->cover;
+    }
+
+    public function name(): string
+    {
+        return $this->attributes['name'];
+    }
+
+    public function spotifyId(): string
+    {
+        return $this->playlist_id;
+    }
+
+    public function spotifyUrl(): string
+    {
+        return "https://open.spotify.com/playlist/{$this->playlist_id}";
     }
 
     #[Scope]

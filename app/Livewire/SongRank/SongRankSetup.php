@@ -4,8 +4,10 @@ namespace App\Livewire\SongRank;
 
 use App\Actions\Rankings\StoreArtistRanking;
 use App\Actions\Rankings\StorePlaylistRanking;
+use App\Actions\Rankings\StoreShowRanking;
 use App\Actions\Spotify\GetArtistSongs;
 use App\Actions\Spotify\GetPlaylistTracks;
+use App\Actions\Spotify\GetShowEpisodes;
 use App\Actions\Spotify\SearchArtists;
 use App\Enums\RankingType;
 use App\Livewire\Forms\RankingForm;
@@ -25,17 +27,19 @@ class SongRankSetup extends Component
 
     public ?Collection $selectedPlaylistTracks = null;
 
+    public ?Collection $selectedShowTracks = null;
+
     public RankingType $type = RankingType::ARTIST;
 
-    public string $artistSearchTerm = '';
-
-    public string $playlistURL = '';
+    public string $searchTerm = '';
 
     public string $randomArtist = '';
 
     public ?array $selectedArtist = [];
 
     public array $selectedPlaylist = [];
+
+    public array $selectedShow = [];
 
     public array $removedTrackUuids = [];
 
@@ -49,20 +53,28 @@ class SongRankSetup extends Component
         return view('livewire.song-rank.song-rank-setup');
     }
 
+    public function search()
+    {
+        match ($this->type) {
+            RankingType::ARTIST => $this->searchArtist(),
+            RankingType::PLAYLIST => $this->searchPlaylist(),
+            RankingType::SHOW => $this->searchShow(),
+        };
+    }
+
     public function searchArtist()
     {
         $this->selectedArtist = null;
         $this->selectedArtistTracks = null;
         $this->removedTrackUuids = [];
 
-        if ($this->artistSearchTerm == '') {
+        if ($this->searchTerm == '') {
             $this->invalidSearchTerm();
 
             return;
         }
 
-        $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->artistSearchTerm);
-        $this->type = RankingType::ARTIST;
+        $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->searchTerm);
 
         if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
             $this->noArtistFound();
@@ -75,18 +87,14 @@ class SongRankSetup extends Component
         $this->selectedPlaylist = [];
         $this->removedTrackUuids = [];
 
-        /* ensure playlist url is valid */
         if (! $this->isSpotifyPlaylistUrl()) {
             $this->invalidPlaylistURL();
 
             return;
         }
 
-        $this->type = RankingType::PLAYLIST;
+        $playlistData = (new GetPlaylistTracks)->search(auth()->user(), $this->searchTerm);
 
-        $playlistData = (new GetPlaylistTracks)->search(auth()->user(), $this->playlistURL);
-
-        /* ensure playlist has tracks */
         if (is_null($playlistData)) {
             $this->playlistNotFound();
 
@@ -103,6 +111,30 @@ class SongRankSetup extends Component
 
             $this->acknowledgeDeletedTracks($names);
         }
+    }
+
+    public function searchShow()
+    {
+        $this->selectedShowTracks = null;
+        $this->selectedShow = [];
+        $this->removedTrackUuids = [];
+
+        if (! $this->isSpotifyShowUrl()) {
+            $this->invalidShowURL();
+
+            return;
+        }
+
+        $showData = (new GetShowEpisodes)->search(auth()->user(), $this->searchTerm);
+
+        if (is_null($showData)) {
+            $this->showNotFound();
+
+            return;
+        }
+
+        $this->selectedShow = $showData->except('tracks')->toArray();
+        $this->selectedShowTracks = $showData->only('tracks')->first();
     }
 
     public function loadArtistSongs(string $artistId)
@@ -126,7 +158,11 @@ class SongRankSetup extends Component
 
     public function getFilteredTracks()
     {
-        $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
+        $property = match ($this->type) {
+            RankingType::ARTIST => 'selectedArtistTracks',
+            RankingType::PLAYLIST => 'selectedPlaylistTracks',
+            RankingType::SHOW => 'selectedShowTracks',
+        };
 
         return collect($this->$property)
             ->reject(fn ($song) => in_array($song['uuid'], $this->removedTrackUuids))
@@ -135,7 +171,11 @@ class SongRankSetup extends Component
 
     public function filterSongs(string $key)
     {
-        $property = $this->type === RankingType::ARTIST ? 'selectedArtistTracks' : 'selectedPlaylistTracks';
+        $property = match ($this->type) {
+            RankingType::ARTIST => 'selectedArtistTracks',
+            RankingType::PLAYLIST => 'selectedPlaylistTracks',
+            RankingType::SHOW => 'selectedShowTracks',
+        };
 
         $filteredUuids = collect($this->$property)
             ->filter(fn ($song) => str_contains(strtolower($song['name']), strtolower($key)))
@@ -188,9 +228,11 @@ class SongRankSetup extends Component
             'tracks' => $tracks,
         ];
 
-        $ranking = $this->type === RankingType::PLAYLIST
-            ? (new StorePlaylistRanking)->handle(auth()->user(), array_merge($attributes, ['playlist' => $this->selectedPlaylist]))
-            : (new StoreArtistRanking)->handle(auth()->user(), array_merge($attributes, ['artist' => $this->selectedArtist]));
+        $ranking = match ($this->type) {
+            RankingType::ARTIST => (new StoreArtistRanking)->handle(auth()->user(), array_merge($attributes, ['artist' => $this->selectedArtist])),
+            RankingType::PLAYLIST => (new StorePlaylistRanking)->handle(auth()->user(), array_merge($attributes, ['playlist' => $this->selectedPlaylist])),
+            RankingType::SHOW => (new StoreShowRanking)->handle(auth()->user(), array_merge($attributes, ['show' => $this->selectedShow])),
+        };
 
         $this->redirect(route('ranking', ['id' => $ranking->getKey()]));
     }
@@ -198,8 +240,7 @@ class SongRankSetup extends Component
     public function resetSetup()
     {
         $this->reset([
-            'artistSearchTerm',
-            'playlistURL',
+            'searchTerm',
             'form.name',
             'form.is_public',
             'form.comments_enabled',
@@ -209,13 +250,15 @@ class SongRankSetup extends Component
             'selectedArtist',
             'selectedPlaylist',
             'selectedPlaylistTracks',
+            'selectedShow',
+            'selectedShowTracks',
             'removedTrackUuids',
         ]);
     }
 
     public function updatedFormCommentsEnabled($value): void
     {
-        if (!$value || $value === '0') {
+        if (! $value || $value === '0') {
             $this->form->comments_replies_enabled = '0';
         }
     }
@@ -223,12 +266,20 @@ class SongRankSetup extends Component
     private function isSpotifyPlaylistUrl(): bool
     {
         return
-            $this->playlistURL !== '' &&
-            Str::isUrl($this->playlistURL) &&
-            Str::startsWith($this->playlistURL, 'https://open.spotify.com/playlist');
+            $this->searchTerm !== '' &&
+            Str::isUrl($this->searchTerm) &&
+            Str::startsWith($this->searchTerm, 'https://open.spotify.com/playlist');
     }
 
-    //TODO - move to a repo / service / library
+    private function isSpotifyShowUrl(): bool
+    {
+        return
+            $this->searchTerm !== '' &&
+            Str::isUrl($this->searchTerm) &&
+            Str::startsWith($this->searchTerm, 'https://open.spotify.com/show');
+    }
+
+    // TODO - move to a repo / service / library
 
     private function invalidSearchTerm(): void
     {
@@ -245,7 +296,7 @@ class SongRankSetup extends Component
         $this->js("
             window.flash({
                 title: 'No Artists found.',
-                message: 'Could not find artists for search term: {$this->artistSearchTerm}',
+                message: 'Could not find artists for search term: {$this->searchTerm}',
                 icon: 'error',
             });
         ");
@@ -261,7 +312,7 @@ class SongRankSetup extends Component
             });
         ");
 
-        $this->playlistURL = '';
+        $this->searchTerm = '';
     }
 
     private function playlistNotFound(): void
@@ -269,12 +320,38 @@ class SongRankSetup extends Component
         $this->js("
             window.flash({
                 title: 'Could not find playlist.',
-                message: 'Playlists can have a max of 500 songs. Something went wrong trying to find this playlist: {$this->playlistURL}.',
+                message: 'Playlists can have a max of 500 songs. Something went wrong trying to find this playlist: {$this->searchTerm}.',
                 icon: 'error',
             });
         ");
 
-        $this->playlistURL = '';
+        $this->searchTerm = '';
+    }
+
+    private function invalidShowURL(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'Invalid URL.',
+                message: 'Please enter a valid Spotify show URL (e.g. https://open.spotify.com/show/...).',
+                icon: 'error',
+            });
+        ");
+
+        $this->searchTerm = '';
+    }
+
+    private function showNotFound(): void
+    {
+        $this->js("
+            window.flash({
+                title: 'Could not find show.',
+                message: 'Shows can have a max of 500 episodes. Something went wrong trying to find this show: {$this->searchTerm}.',
+                icon: 'error',
+            });
+        ");
+
+        $this->searchTerm = '';
     }
 
     private function acknowledgeDeletedTracks(string $names): void

@@ -101,6 +101,22 @@ class RankingResource extends Resource
                             ->label('Tracks Ranked')
                             ->state(fn (Ranking $ranking) => $ranking->songs()->count()),
                     ]),
+
+                Section::make('Show Details')
+                    ->schema([
+                        IconEntry::make('show_id')
+                            ->label('Has Show?')
+                            ->state(fn (Ranking $ranking) => ! is_null($ranking->show_id))
+                            ->boolean(),
+                        TextEntry::make('show.name')
+                            ->label('Show Name'),
+                        TextEntry::make('show.publisher')
+                            ->label('Publisher'),
+                        TextEntry::make('show.description')
+                            ->label('Description'),
+                        TextEntry::make('show.episode_count')
+                            ->label('Total Episodes'),
+                    ]),
             ]);
     }
 

@@ -36,19 +36,19 @@ describe('Ranking Creation', function () {
                     'id' => 'ceilings-id',
                     'name' => 'Ceilings',
                     'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
-                    'uuid' => str()->uuid()->toString()
+                    'uuid' => str()->uuid()->toString(),
                 ],
                 [
                     'id' => 'sun-hands-id',
                     'name' => 'Sun Hands',
                     'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
-                    'uuid' => str()->uuid()->toString()
+                    'uuid' => str()->uuid()->toString(),
                 ],
                 [
                     'id' => 'featherweight-id',
                     'name' => 'Featherweight',
                     'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
-                    'uuid' => str()->uuid()->toString()
+                    'uuid' => str()->uuid()->toString(),
                 ],
             ]))
             ->set('type', RankingType::ARTIST)
@@ -141,7 +141,7 @@ describe('Ranking Creation', function () {
     test('cannot search for a playlist with an invalid URL', function () {
         Livewire::actingAs(User::first())
             ->test(SongRankSetup::class)
-            ->set('playlistURL', 'abcdxyz')
+            ->set('searchTerm', 'abcdxyz')
             ->call('searchPlaylist')
             ->assertSet('selectedPlaylist', [])
             ->assertSet('selectedPlaylistTracks', null);
@@ -150,7 +150,8 @@ describe('Ranking Creation', function () {
     test('can search for a playlist with a valid URL', function () {
         Livewire::actingAs(User::first())
             ->test(SongRankSetup::class)
-            ->set('playlistURL', 'https://open.spotify.com/playlist/1l9ToABW4nh8EdGfq3Qvei')
+            ->set('type', RankingType::PLAYLIST)
+            ->set('searchTerm', 'https://open.spotify.com/playlist/1l9ToABW4nh8EdGfq3Qvei')
             ->call('searchPlaylist')
             ->assertSet('type', RankingType::PLAYLIST);
     });
@@ -158,7 +159,7 @@ describe('Ranking Creation', function () {
     test('cannot search for an artist with an empty search term', function () {
         Livewire::actingAs(User::first())
             ->test(SongRankSetup::class)
-            ->set('artistSearchTerm', '')
+            ->set('searchTerm', '')
             ->call('searchArtist')
             ->assertSet('searchedArtists', null)
             ->assertSet('selectedArtistTracks', null);

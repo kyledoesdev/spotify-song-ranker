@@ -1,88 +1,76 @@
 @props(['ranking'])
 
-<div class="bg-white shadow-md rounded-lg cursor-pointer hover:shadow-lg transition-shadow relative p-2">
-    <div class="m-2" style="min-width: 35vw;" onclick="window.location.href='{{ route('ranking', ['id' => $ranking->getKey() ]) }}'">
-        <div class="flex space-x-6">
-            <div>
-                <img 
-                    src="{{ $ranking->isPlaylistType() ? $ranking->playlist->cover : $ranking->artist->artist_img }}"
-                    class="rounded-lg border border-zinc-800 mb-2"
-                    width="120" 
-                    height="120" 
-                    alt="{{ $ranking->user->name }}"
-                >
-                <div class="relative z-10">
-                    @if ($ranking->isPlaylistType())
-                        <x-spotify-logo :playlist="$ranking->playlist->playlist_id" />
-                    @else
-                        <x-spotify-logo :artist="$ranking->artist->artist_id" />    
-                    @endif
-                </div>
+<div class="bg-white shadow-md rounded-xl cursor-pointer hover:shadow-lg transition-all duration-300 p-4" onclick="window.location.href='{{ route('ranking', ['id' => $ranking->getKey()]) }}'">
+    <div class="flex gap-5">
+        {{-- Cover + Spotify Logo --}}
+        <div class="shrink-0">
+            <img
+                src="{{ $ranking->source?->cover() }}"
+                class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border border-zinc-200 object-cover shadow-sm"
+                alt="{{ $ranking->source?->name() }}"
+            >
+            <div class="mt-2 relative z-10">
+                <x-spotify-logo :url="$ranking->source?->spotifyUrl()" />
             </div>
-            <div class="space-y-1">
-                <h5 class="mb-2" title="{{ $ranking->name }}">
-                    <span class="text-base md:text-lg font-bold k-line">{{ Str::limit($ranking->name, 30) }}</span>
+        </div>
+
+        {{-- Content --}}
+        <div class="flex-1 min-w-0">
+            {{-- Title + Badge --}}
+            <div class="flex items-center gap-2 flex-wrap mb-1">
+                <h5 class="text-base md:text-lg font-bold truncate" title="{{ $ranking->name }}">
+                    {{ Str::limit($ranking->name, 30) }}
                 </h5>
-                
-                <div class="flex">
-                    <div class="mr-2">
-                        <i class="fa fa-solid fa-music text-xs md:text-base"></i>
-                    </div>
-                    <div class="p-0">
-                        <span class="text-xs md:text-base">
-                            {{ $ranking->isPlaylistType() ? $ranking->playlist->name : $ranking->artist->artist_name}}
-                        </span>
-                    </div>
-                </div> 
-                
+                <span class="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-{{ $ranking->type->color() }}-100 text-{{ $ranking->type->color() }}-700 whitespace-nowrap">
+                    <i class="fa-solid {{ $ranking->type->icon() }}"></i>
+                    {{ $ranking->type->label() }}
+                </span>
+            </div>
+
+            {{-- Source Name --}}
+            <p class="text-sm text-zinc-500 mb-3 truncate">
+                {{ $ranking->source?->name() }}
+            </p>
+
+            {{-- Stats Pills --}}
+            <div class="flex flex-wrap gap-2 mb-3">
                 {{-- Top Song --}}
-                <div class="flex">
-                    <div class="mr-1">
-                        <i class="fa fa-regular fa-star text-xs md:text-base"></i>
-                    </div>
-                    <div class="p-0">
-                        @if ($ranking->is_ranked)
-                            <span class="text-xs md:text-base">{{ Str::limit($ranking->songs->first()?->title, 25) }}</span>
-                        @else
-                            N/A
-                        @endif
-                    </div>
-                </div>
-                
-                {{-- Song Count --}}
-                <div class="flex">
-                    <div class="mr-1">
-                        <i class="fa fa-solid fa-hashtag text-xs md:text-base"></i>
-                    </div>
-                    <div class="p-0">
-                        <span class="text-xs md:text-base">{{ $ranking->songs_count }} {{ $ranking->has_podcast_episode == 1 ? 'records' : 'songs' }} {{ $ranking->is_ranked ? ' ranked.' : ' in process.' }}</span>
-                    </div>
-                </div>
-                
+                <span class="inline-flex items-center gap-1.5 text-xs bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-lg">
+                    <i class="fa-regular fa-star text-amber-500"></i>
+                    {{ $ranking->is_ranked ? Str::limit($ranking->songs->first()?->title, 20) : 'N/A' }}
+                </span>
+
+                {{-- Track Count --}}
+                <span class="inline-flex items-center gap-1.5 text-xs bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-lg">
+                    <i class="fa-solid fa-hashtag text-zinc-400"></i>
+                    {{ $ranking->songs_count }} {{ $ranking->type->itemLabel($ranking->songs_count) }}
+                </span>
+
+                {{-- Status (only show if incomplete) --}}
+                @unless ($ranking->is_ranked)
+                    <span class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-lg bg-amber-50 text-amber-700">
+                        <i class="fa-solid fa-spinner"></i>
+                        In Progress
+                    </span>
+                @endunless
+            </div>
+
+            {{-- Footer: User + Time --}}
+            <div class="flex items-center gap-3 text-xs text-zinc-400">
                 @if (Route::currentRouteName() != 'profile')
-                    <div class="flex">
-                        <div class="mr-1">
-                            <i class="fa fa-regular fa-user text-xs md:text-base"></i>
-                        </div>
-                        <div class="p-0 relative z-10">
-                            <a href="{{ route('profile', ['id' => $ranking->user->spotify_id]) }}" class="inline-block">
-                                <span class="text-xs md:text-base">{{ $ranking->user->name }} 
-                                    <i class="fa fa-arrow-up-right-from-square mx-1 text-blue-500 text-xs md:text-base"></i>
-                                </span>
-                            </a>
-                        </div>
+                    <div class="relative z-10">
+                        <a href="{{ route('profile', ['id' => $ranking->user->spotify_id]) }}" class="inline-flex items-center gap-1 hover:text-zinc-600 transition-colors">
+                            <i class="fa-regular fa-user"></i>
+                            {{ $ranking->user->name }}
+                            <i class="fa fa-arrow-up-right-from-square text-blue-500"></i>
+                        </a>
                     </div>
+                    <span class="text-zinc-300">|</span>
                 @endif
-                
-                {{-- Ranking Completed At --}}
-                <div class="flex">
-                    <div class="mr-2">
-                        <i class="fa fa-regular fa-clock text-xs md:text-base"></i>
-                    </div>
-                    <div class="p-0" title="{{ $ranking->formatted_completed_at }}">
-                        <span class="text-xs md:text-base">{{ $ranking->completed_at }}</span>
-                    </div>
-                </div>
+                <span title="{{ $ranking->formatted_completed_at }}">
+                    <i class="fa-regular fa-clock mr-0.5"></i>
+                    {{ $ranking->completed_at }}
+                </span>
             </div>
         </div>
     </div>

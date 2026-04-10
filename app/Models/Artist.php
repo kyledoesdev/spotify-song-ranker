@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Contracts\Rankable;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Artist extends Model
+class Artist extends Model implements Rankable
 {
     protected $fillable = [
         'artist_id',
@@ -34,6 +35,26 @@ class Artist extends Model
         return $this->hasMany(Ranking::class);
     }
 
+    public function cover(): ?string
+    {
+        return $this->artist_img;
+    }
+
+    public function name(): string
+    {
+        return $this->artist_name;
+    }
+
+    public function spotifyId(): string
+    {
+        return $this->artist_id;
+    }
+
+    public function spotifyUrl(): string
+    {
+        return "https://open.spotify.com/artist/{$this->artist_id}";
+    }
+
     #[Scope]
     public function topArtists(Builder $query, int $limit = 10)
     {
@@ -43,16 +64,16 @@ class Artist extends Model
             artists.artist_name,
             artists.artist_img
         ')
-        ->join('rankings', function ($join) {
-            $join->on('rankings.artist_id', '=', 'artists.id')
-                ->whereNull('rankings.deleted_at')
-                ->where('rankings.is_ranked', true)
-                ->where('rankings.is_public', true);
-        })
-        ->whereNotNull('artists.artist_img')
-        ->groupBy('rankings.artist_id')
-        ->orderBy('artist_rankings_count', 'desc')
-        ->orderBy('artists.artist_name', 'asc')
-        ->limit($limit);
+            ->join('rankings', function ($join) {
+                $join->on('rankings.artist_id', '=', 'artists.id')
+                    ->whereNull('rankings.deleted_at')
+                    ->where('rankings.is_ranked', true)
+                    ->where('rankings.is_public', true);
+            })
+            ->whereNotNull('artists.artist_img')
+            ->groupBy('rankings.artist_id')
+            ->orderBy('artist_rankings_count', 'desc')
+            ->orderBy('artists.artist_name', 'asc')
+            ->limit($limit);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\Rankable;
 use App\Enums\RankingType;
 use App\QueryBuilders\RankingQueryBuilder;
 use Carbon\Carbon;
@@ -22,6 +23,7 @@ class Ranking extends Model
         'user_id',
         'artist_id',
         'playlist_id',
+        'show_id',
         'name',
         'is_ranked',
         'is_public',
@@ -58,6 +60,11 @@ class Ranking extends Model
         return $this->belongsTo(Playlist::class);
     }
 
+    public function show(): BelongsTo
+    {
+        return $this->belongsTo(Show::class);
+    }
+
     public function songs(): HasMany
     {
         return $this->hasMany(Song::class);
@@ -90,12 +97,30 @@ class Ranking extends Model
 
     public function getTypeAttribute(): RankingType
     {
-        return is_null($this->playlist_id) ? RankingType::ARTIST : RankingType::PLAYLIST;
+        return match (true) {
+            ! is_null($this->show_id) => RankingType::SHOW,
+            ! is_null($this->playlist_id) => RankingType::PLAYLIST,
+            default => RankingType::ARTIST,
+        };
     }
 
     public function isPlaylistType(): bool
     {
         return $this->type === RankingType::PLAYLIST;
+    }
+
+    public function isShowType(): bool
+    {
+        return $this->type === RankingType::SHOW;
+    }
+
+    public function getSourceAttribute(): Rankable
+    {
+        return match ($this->type) {
+            RankingType::SHOW => $this->show,
+            RankingType::PLAYLIST => $this->playlist,
+            RankingType::ARTIST => $this->artist,
+        };
     }
 
     /* Helpers */
