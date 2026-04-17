@@ -23,11 +23,7 @@ class SongRankSetup extends Component
 
     public ?Collection $searchedArtists = null;
 
-    public ?Collection $selectedArtistTracks = null;
-
-    public ?Collection $selectedPlaylistTracks = null;
-
-    public ?Collection $selectedShowTracks = null;
+    public ?Collection $selectedTracks = null;
 
     public RankingType $type = RankingType::ARTIST;
 
@@ -65,7 +61,7 @@ class SongRankSetup extends Component
     public function searchArtist()
     {
         $this->selectedArtist = null;
-        $this->selectedArtistTracks = null;
+        $this->selectedTracks = null;
         $this->removedTrackUuids = [];
 
         if ($this->searchTerm == '') {
@@ -83,7 +79,7 @@ class SongRankSetup extends Component
 
     public function searchPlaylist()
     {
-        $this->selectedPlaylistTracks = null;
+        $this->selectedTracks = null;
         $this->selectedPlaylist = [];
         $this->removedTrackUuids = [];
 
@@ -102,7 +98,7 @@ class SongRankSetup extends Component
         }
 
         $this->selectedPlaylist = $playlistData->except('tracks')->toArray();
-        $this->selectedPlaylistTracks = $playlistData->only('tracks')->first();
+        $this->selectedTracks = $playlistData->only('tracks')->first();
 
         if (! empty($playlistData['deleted_tracks'])) {
             $names = collect($playlistData['deleted_tracks'])
@@ -115,7 +111,7 @@ class SongRankSetup extends Component
 
     public function searchShow()
     {
-        $this->selectedShowTracks = null;
+        $this->selectedTracks = null;
         $this->selectedShow = [];
         $this->removedTrackUuids = [];
 
@@ -134,7 +130,7 @@ class SongRankSetup extends Component
         }
 
         $this->selectedShow = $showData->except('tracks')->toArray();
-        $this->selectedShowTracks = $showData->only('tracks')->first();
+        $this->selectedTracks = $showData->only('tracks')->first();
     }
 
     public function loadArtistSongs(string $artistId)
@@ -153,31 +149,19 @@ class SongRankSetup extends Component
             return;
         }
 
-        $this->selectedArtistTracks = $tracks;
+        $this->selectedTracks = $tracks;
     }
 
     public function getFilteredTracks()
     {
-        $property = match ($this->type) {
-            RankingType::ARTIST => 'selectedArtistTracks',
-            RankingType::PLAYLIST => 'selectedPlaylistTracks',
-            RankingType::SHOW => 'selectedShowTracks',
-        };
-
-        return collect($this->$property)
+        return collect($this->selectedTracks)
             ->reject(fn ($song) => in_array($song['uuid'], $this->removedTrackUuids))
             ->values();
     }
 
     public function filterSongs(string $key)
     {
-        $property = match ($this->type) {
-            RankingType::ARTIST => 'selectedArtistTracks',
-            RankingType::PLAYLIST => 'selectedPlaylistTracks',
-            RankingType::SHOW => 'selectedShowTracks',
-        };
-
-        $filteredUuids = collect($this->$property)
+        $filteredUuids = collect($this->selectedTracks)
             ->filter(fn ($song) => str_contains(strtolower($song['name']), strtolower($key)))
             ->pluck('uuid')
             ->toArray();
@@ -246,14 +230,36 @@ class SongRankSetup extends Component
             'form.comments_enabled',
             'form.comments_replies_enabled',
             'searchedArtists',
-            'selectedArtistTracks',
+            'selectedTracks',
             'selectedArtist',
             'selectedPlaylist',
-            'selectedPlaylistTracks',
             'selectedShow',
-            'selectedShowTracks',
             'removedTrackUuids',
         ]);
+    }
+
+    public function isTypeLocked(): bool
+    {
+        return ! empty($this->selectedArtist)
+            || ! empty($this->selectedPlaylist)
+            || ! empty($this->selectedShow);
+    }
+
+    public function updatedType(RankingType $value): void
+    {
+        if ($this->isTypeLocked()) {
+            $this->type = match (true) {
+                ! empty($this->selectedArtist) => RankingType::ARTIST,
+                ! empty($this->selectedPlaylist) => RankingType::PLAYLIST,
+                default => RankingType::SHOW,
+            };
+
+            return;
+        }
+
+        $newType = $value;
+        $this->resetSetup();
+        $this->type = $newType;
     }
 
     public function updatedFormCommentsEnabled($value): void

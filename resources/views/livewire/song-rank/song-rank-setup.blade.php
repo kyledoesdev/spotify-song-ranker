@@ -10,15 +10,23 @@
 
                 <div class="flex flex-col md:flex-row md:items-center md:gap-4">
                     {{-- Icon Tab Selector --}}
+                    @php
+                        $typeLocked = $this->isTypeLocked();
+                        $tabClasses = fn (RankingType $tab) => match (true) {
+                            $type === $tab => 'border-' . $tab->color() . '-500 bg-' . $tab->color() . '-100 text-' . $tab->color() . '-700 shadow-md cursor-pointer',
+                            $typeLocked => 'border-zinc-200 bg-zinc-100 text-zinc-300 cursor-not-allowed opacity-50',
+                            default => 'border-zinc-300 bg-white text-zinc-500 hover:border-zinc-400 cursor-pointer',
+                        };
+                    @endphp
                     <div class="flex flex-wrap gap-2 mb-4 md:mb-0 md:shrink-0">
                         @foreach ([RankingType::ARTIST, RankingType::PLAYLIST, RankingType::SHOW] as $tab)
                             <button
                                 type="button"
-                                wire:click="$set('type', '{{ $tab->value }}')"
-                                class="flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all duration-300 cursor-pointer
-                                    {{ $type === $tab
-                                        ? 'border-' . $tab->color() . '-500 bg-' . $tab->color() . '-100 text-' . $tab->color() . '-700 shadow-md'
-                                        : 'border-zinc-300 bg-white text-zinc-500 hover:border-zinc-400' }}"
+                                @if (! $typeLocked || $type === $tab)
+                                    wire:click="$set('type', '{{ $tab->value }}')"
+                                @endif
+                                @disabled($typeLocked && $type !== $tab)
+                                class="flex items-center gap-2 px-4 py-2 rounded-full border-2 transition-all duration-300 {{ $tabClasses($tab) }}"
                             >
                                 <i class="fa-solid {{ $tab->icon() }}"></i>
                                 <span class="font-medium text-sm">{{ $tab->label() }}</span>
@@ -105,11 +113,7 @@
                         !empty($selectedPlaylist) => $selectedPlaylist,
                         default => $selectedShow,
                     };
-                    $tracks = match(true) {
-                        !empty($selectedArtistTracks) => $selectedArtistTracks,
-                        !empty($selectedPlaylistTracks) => $selectedPlaylistTracks,
-                        default => $selectedShowTracks,
-                    };
+                    $tracks = $selectedTracks;
                 @endphp
 
                 <div
