@@ -12,7 +12,7 @@
     <head>
         <!-- Show custom set title or default title() helper -->
         <title>{{ $title ?? title() }}</title>
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('images/branding/favicon.ico') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
