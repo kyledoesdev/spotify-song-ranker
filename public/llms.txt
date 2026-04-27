@@ -1,13 +1,13 @@
 # Song Rank - songrank.dev
 
-> Rank your favorite songs using a merge-sort algorithm powered by Spotify.
+> Rank your favorite artists, custom playlists and shows/podcast episodes
 
-Song Rank is a free web application that lets users authenticate with Spotify, select an artist or playlist, and rank songs through pairwise comparisons. The merge-sort algorithm produces a complete ranking that can be shared publicly.
+Song Rank is a free web application that lets users authenticate with Spotify, select an artist, playlist or show, and rank the tracks/episodes through pairwise comparisons. The merge-sort algorithm produces a complete ranking that can be shared publicly.
 
 ## Features
 
 - Spotify OAuth authentication
-- Artist and playlist song ranking
+- Artist playlist & show ranking
 - Merge-sort pairwise comparison algorithm
 - Resumable ranking sessions
 - Public ranking sharing and exploration
