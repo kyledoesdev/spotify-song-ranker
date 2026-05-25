@@ -13,7 +13,7 @@
         "postcss": "^8.4.45",
         "sass": "^1.56.1",
         "tailwindcss": "^4.1.11",
-        "vite": "^6.3.5"
+        "vite": "^6.4.2"
     },
     "dependencies": {
         "@formkit/auto-animate": "^0.8.1",
