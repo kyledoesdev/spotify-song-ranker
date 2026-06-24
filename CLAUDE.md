@@ -56,7 +56,7 @@ The primary UI layer. Each page is a Livewire component in `app/Livewire/`:
 - `Profile/Profile`, `Profile/Settings` — User profile and preferences
 
 ### Custom Query Builders
-`app/QueryBuilders/RankingQueryBuilder.php` provides scoped queries: `forExplorePage()`, `forProfilePage()`, `forReminders()`.
+`app/QueryBuilders/RankingQueryBuilder.php` provides scoped queries: `forExplorePage()`, `forProfilePage()`, `forNewsletter()`.
 
 ### Key Models and Relationships
 - `User` → has many `Ranking`, has one `UserPreference`

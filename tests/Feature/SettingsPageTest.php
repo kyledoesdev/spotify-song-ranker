@@ -8,28 +8,6 @@ use App\Notifications\DownloadDataNotification;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
-test('user can enable ranking reminder emails', function () {
-    $user = User::factory()->create();
-    $user->preferences->update(['recieve_reminder_emails' => false]);
-
-    Livewire::actingAs($user)
-        ->test(Settings::class)
-        ->call('updateSetting', 'recieve_reminder_emails', true);
-
-    expect($user->fresh()->preferences->recieve_reminder_emails)->toBeTrue();
-});
-
-test('user can disable ranking reminder emails', function () {
-    $user = User::factory()->create();
-    $user->preferences->update(['recieve_reminder_emails' => true]);
-
-    Livewire::actingAs($user)
-        ->test(Settings::class)
-        ->call('updateSetting', 'recieve_reminder_emails', false);
-
-    expect($user->fresh()->preferences->recieve_reminder_emails)->toBeFalse();
-});
-
 test('user can enable newsletter emails', function () {
     $user = User::factory()->create();
     $user->preferences->update(['recieve_newsletter_emails' => false]);
