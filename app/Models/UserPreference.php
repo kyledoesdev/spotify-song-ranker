@@ -8,7 +8,6 @@ class UserPreference extends Model
 {
     protected $fillable = [
         'user_id',
-        'recieve_reminder_emails',
         'recieve_newsletter_emails',
         'enabled_comment_mentions',
     ];
@@ -16,9 +15,8 @@ class UserPreference extends Model
     protected function casts(): array
     {
         return [
-            'recieve_reminder_emails' => 'boolean',
             'recieve_newsletter_emails' => 'boolean',
-            'enabled_comment_mentions' => 'boolean'
+            'enabled_comment_mentions' => 'boolean',
         ];
     }
 

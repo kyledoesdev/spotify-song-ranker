@@ -59,14 +59,6 @@ class RankingQueryBuilder extends Builder
             ->orderByRaw('completed_at IS NULL DESC, completed_at DESC');
     }
 
-    public function forReminders(): static
-    {
-        return $this->newQuery()
-            ->select('id', 'user_id', 'artist_id', 'name', 'is_ranked', 'created_at')
-            ->with('artist')
-            ->withCount('songs');
-    }
-
     public function forNewsletter(): static
     {
         return $this->newQuery()

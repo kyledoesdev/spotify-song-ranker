@@ -34,22 +34,6 @@
                 
                 <div class="space-y-6">
                     <div class="group">
-                        <label class="block text-sm font-medium text-slate-700 mb-2">Ranking Reminder Emails</label>
-                        <div class="relative">
-                            <select
-                                class="w-full appearance-none bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200"
-                                wire:change="updateSetting('recieve_reminder_emails', $event.target.value === 'true')"
-                            >
-                                <option value="true" {{ auth()->user()->preferences->recieve_reminder_emails ? 'selected' : '' }}>Yes, keep me reminded</option>
-                                <option value="false" {{ !auth()->user()->preferences->recieve_reminder_emails ? 'selected' : '' }}>No, I'll remember myself</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                                <i class="fa fa-chevron-down text-slate-400 text-sm"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="group">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Newsletter Emails</label>
                         <div class="relative">
                             <select

@@ -18,9 +18,6 @@ class PreferencesRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Toggle::make('recieve_reminder_emails')
-                    ->boolean()
-                    ->required(),
                 Toggle::make('recieve_newsletter_emails')
                     ->boolean()
                     ->required(),
@@ -30,11 +27,10 @@ class PreferencesRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('recieve_reminder_emails')
+            ->recordTitleAttribute('recieve_newsletter_emails')
             ->columns([
                 TextColumn::make('id')
                     ->label('ID'),
-                ToggleColumn::make('recieve_reminder_emails'),
                 ToggleColumn::make('recieve_newsletter_emails'),
                 TextColumn::make('created_at')
                     ->dateTime()

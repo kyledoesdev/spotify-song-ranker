@@ -20,7 +20,7 @@ class SendEmailJob implements ShouldQueue
     public function handle(): void
     {
         $users = User::query()
-            ->whereHas('preferences', fn (Builder $query): Builder => $query->where('recieve_reminder_emails', true))
+            ->whereHas('preferences', fn (Builder $query): Builder => $query->where('recieve_newsletter_emails', true))
             ->get();
 
         foreach ($users as $user) {
