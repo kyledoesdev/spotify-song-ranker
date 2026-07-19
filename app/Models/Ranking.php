@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Auth;
 use Kyledoesdev\Essentials\Concerns\HasStatsAfterEvents;
 use Spatie\Comments\Models\Concerns\HasComments;
 
@@ -28,7 +29,7 @@ class Ranking extends Model
         'is_ranked',
         'is_public',
         'comments_enabled',
-        'comment_replies_enabled',
+        'comments_replies_enabled',
         'completed_at',
     ];
 
@@ -39,7 +40,7 @@ class Ranking extends Model
             'is_public' => 'boolean',
             'has_podcast_episode' => 'boolean',
             'comments_enabled' => 'boolean',
-            'comment_replies_enabled' => 'boolean',
+            'comments_replies_enabled' => 'boolean',
         ];
     }
 
@@ -125,14 +126,9 @@ class Ranking extends Model
 
     /* Helpers */
 
-    public static function publicRankedCount(): int
-    {
-        return round(static::query()->completed()->public()->count() / 25) * 25;
-    }
-
     public function canBeSeen(): bool
     {
-        if ($this->user_id == auth()->id()) {
+        if ($this->user_id == Auth::id()) {
             return true;
         }
 
@@ -147,7 +143,7 @@ class Ranking extends Model
 
         $popupChance = ApplicationDashboard::first()?->popup_chance ?? 8;
 
-        return $justCompleted || (auth()->check() && rand(1, $popupChance) === 1);
+        return $justCompleted || (Auth::check() && rand(1, $popupChance) === 1);
     }
 
     /* contracts */

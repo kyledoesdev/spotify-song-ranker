@@ -20,7 +20,7 @@ class Settings extends Component
 
     public function updateSetting(string $name, mixed $value)
     {
-        auth()->user()->preferences()->update([
+        Auth::user()->preferences()->update([
             $name => $value,
         ]);
 
@@ -36,9 +36,9 @@ class Settings extends Component
     public function destroy($userId)
     {
         // Security check
-        abort_unless(auth()->check() && $userId == auth()->id(), 403);
+        abort_unless(Auth::check() && $userId == Auth::id(), 403);
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         // Log them out
         Auth::logout();
@@ -59,11 +59,11 @@ class Settings extends Component
     public function download()
     {
         $rankings = Ranking::query()
-            ->where('user_id', auth()->id())
+            ->where('user_id', Auth::id())
             ->with('songs', 'artist')
             ->get();
 
-        $user = auth()->user();
+        $user = Auth::user();
 
         dispatch(fn () => Notification::send($user, new DownloadDataNotification($rankings)));
 

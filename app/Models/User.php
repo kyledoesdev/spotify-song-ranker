@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\UserQueryBuilder;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -16,9 +19,12 @@ use Spatie\Comments\Models\Concerns\InteractsWithComments;
 use Spatie\Comments\Models\Concerns\Interfaces\CanComment;
 use Spatie\Comments\Support\CommentatorProperties;
 
+#[UseEloquentBuilder(UserQueryBuilder::class)]
 class User extends Authenticatable implements CanComment, FilamentUser
 {
+    /** @use HasFactory<UserFactory> */
     use HasFactory;
+
     use HasStatsAfterEvents;
     use InteractsWithComments;
     use Notifiable;

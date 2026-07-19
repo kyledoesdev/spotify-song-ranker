@@ -3,62 +3,61 @@
 use App\Models\Ranking;
 use App\Models\User;
 
-test('profile loaded user rankings', function () {
-    $user = User::factory()->create();
+use function Pest\Laravel\actingAs;
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => true,
-        'is_ranked' => true,
-        'completed_at' => now(),
-    ]);
+describe('profile page', function () {
+    test('shows the users completed public rankings', function () {
+        $user = User::factory()->createOne();
 
-    $this->actingAs($user)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk()
-        ->assertSee($user->rankings->first()->name);
-});
+        $ranking = publicCompletedRanking(['user_id' => $user->getKey()]);
 
-test('profile shows unfinished rankings to profile owner only', function () {
-    $user = User::factory()->create();
-    $otherUser = User::factory()->create();
+        actingAs($user)
+            ->get(route('profile', ['id' => $user->spotify_id]))
+            ->assertOk()
+            ->assertSee($ranking->name);
+    });
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => true,
-        'is_ranked' => false,
-        'completed_at' => null,
-    ]);
+    test('shows unfinished rankings to the profile owner only', function () {
+        $user = User::factory()->createOne();
+        $otherUser = User::factory()->createOne();
 
-    $this->actingAs($user)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk()
-        ->assertSee($user->rankings->first()->name);
+        $ranking = Ranking::factory()->create([
+            'user_id' => $user->getKey(),
+            'is_public' => true,
+            'is_ranked' => false,
+            'completed_at' => null,
+        ]);
 
-    $this->actingAs($otherUser)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);
-});
+        actingAs($user)
+            ->get(route('profile', ['id' => $user->spotify_id]))
+            ->assertOk()
+            ->assertSee($ranking->name);
 
-test('profile shows private rankings to profile owner only', function () {
-    $user = User::factory()->create();
-    $otherUser = User::factory()->create();
+        actingAs($otherUser)
+            ->get(route('profile', ['id' => $user->spotify_id]))
+            ->assertOk()
+            ->assertDontSee($ranking->name);
+    });
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => false,
-        'is_ranked' => true,
-        'completed_at' => now(),
-    ]);
+    test('shows private rankings to the profile owner only', function () {
+        $user = User::factory()->createOne();
+        $otherUser = User::factory()->createOne();
 
-    $this->actingAs($user)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk()
-        ->assertSee($user->rankings->first()->name);
+        $ranking = Ranking::factory()->create([
+            'user_id' => $user->getKey(),
+            'is_public' => false,
+            'is_ranked' => true,
+            'completed_at' => now(),
+        ]);
 
-    $this->actingAs($otherUser)
-        ->get(route('profile', ['id' => $user->spotify_id]))
-        ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);
+        actingAs($user)
+            ->get(route('profile', ['id' => $user->spotify_id]))
+            ->assertOk()
+            ->assertSee($ranking->name);
+
+        actingAs($otherUser)
+            ->get(route('profile', ['id' => $user->spotify_id]))
+            ->assertOk()
+            ->assertDontSee($ranking->name);
+    });
 });

@@ -12,22 +12,22 @@ class Stats extends Component
 {
     public static function getUserCount(): int
     {
-        return cache()->remember('welcome:stats:users', now()->addDay(), fn () => round(User::count() / 50) * 50);
+        return cache()->remember('welcome:stats:users', now()->addDay(), fn () => User::query()->roundedUserCount());
     }
 
     public static function getRankingCount(): int
     {
-        return cache()->remember('welcome:stats:rankings', now()->addDay(), fn () => Ranking::publicRankedCount());
+        return cache()->remember('welcome:stats:rankings', now()->addDay(), fn () => Ranking::query()->publicRankedCount());
     }
 
     public static function getArtistCount(): int
     {
-        return cache()->remember('welcome:stats:artists', now()->addDay(), fn () => Song::rankedArtistCount());
+        return cache()->remember('welcome:stats:artists', now()->addDay(), fn () => Song::query()->rankedArtistCount());
     }
 
     public static function getPlaylistCount(): int
     {
-        return cache()->remember('welcome:stats:playlists', now()->addDay(), fn () => Playlist::rankedPlaylistCount());
+        return cache()->remember('welcome:stats:playlists', now()->addDay(), fn () => Playlist::query()->rankedPlaylistCount());
     }
 
     public function render()

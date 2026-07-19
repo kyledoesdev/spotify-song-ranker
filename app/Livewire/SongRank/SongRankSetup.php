@@ -13,6 +13,7 @@ use App\Enums\RankingType;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Artist;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -70,7 +71,7 @@ class SongRankSetup extends Component
             return;
         }
 
-        $this->searchedArtists = (new SearchArtists)->handle(auth()->user(), $this->searchTerm);
+        $this->searchedArtists = (new SearchArtists)->handle(Auth::user(), $this->searchTerm);
 
         if (is_null($this->searchedArtists) || ($this->searchedArtists && $this->searchedArtists->isEmpty())) {
             $this->noArtistFound();
@@ -89,7 +90,7 @@ class SongRankSetup extends Component
             return;
         }
 
-        $playlistData = (new GetPlaylistTracks)->search(auth()->user(), $this->searchTerm);
+        $playlistData = (new GetPlaylistTracks)->search(Auth::user(), $this->searchTerm);
 
         if (is_null($playlistData)) {
             $this->playlistNotFound();
@@ -121,7 +122,7 @@ class SongRankSetup extends Component
             return;
         }
 
-        $showData = (new GetShowEpisodes)->search(auth()->user(), $this->searchTerm);
+        $showData = (new GetShowEpisodes)->search(Auth::user(), $this->searchTerm);
 
         if (is_null($showData)) {
             $this->showNotFound();
@@ -141,7 +142,7 @@ class SongRankSetup extends Component
 
         $this->searchedArtists = null;
 
-        $tracks = (new GetArtistSongs)->handle(auth()->user(), $artistId);
+        $tracks = (new GetArtistSongs)->handle(Auth::user(), $artistId);
 
         if (count($tracks) < 2 || is_null($tracks)) {
             $this->notEnoughTracks();
@@ -213,9 +214,9 @@ class SongRankSetup extends Component
         ];
 
         $ranking = match ($this->type) {
-            RankingType::ARTIST => (new StoreArtistRanking)->handle(auth()->user(), array_merge($attributes, ['artist' => $this->selectedArtist])),
-            RankingType::PLAYLIST => (new StorePlaylistRanking)->handle(auth()->user(), array_merge($attributes, ['playlist' => $this->selectedPlaylist])),
-            RankingType::SHOW => (new StoreShowRanking)->handle(auth()->user(), array_merge($attributes, ['show' => $this->selectedShow])),
+            RankingType::ARTIST => (new StoreArtistRanking)->handle(Auth::user(), array_merge($attributes, ['artist' => $this->selectedArtist])),
+            RankingType::PLAYLIST => (new StorePlaylistRanking)->handle(Auth::user(), array_merge($attributes, ['playlist' => $this->selectedPlaylist])),
+            RankingType::SHOW => (new StoreShowRanking)->handle(Auth::user(), array_merge($attributes, ['show' => $this->selectedShow])),
         };
 
         $this->redirect(route('ranking', ['id' => $ranking->getKey()]));

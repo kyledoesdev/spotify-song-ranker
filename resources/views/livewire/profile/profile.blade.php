@@ -1,4 +1,4 @@
-<div class="mt-4">
+<div class="w-full max-w-6xl mx-auto mt-4">
     <x-profile-card :user="$user" />
 
     <div class="{{ $this->rankings->count() > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-4 overflow-x-auto pt-2' : 'grid grid-cols-1 gap-4 overflow-x-auto pt-2' }}">

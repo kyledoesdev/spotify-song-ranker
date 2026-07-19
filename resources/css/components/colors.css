@@ -16,10 +16,26 @@
     @apply text-red-400 hover:text-red-500 text-zinc-800 mx-1;
 }
 
+@utility text-primary-icon {
+    @apply text-purple-500;
+}
+
 /* Backgrounds */
 
 @utility bg-primary {
-    @apply bg-purple-400; 
+    @apply bg-purple-400;
+}
+
+@utility bg-primary-soft {
+    @apply bg-purple-50;
+}
+
+@utility bg-primary-muted {
+    @apply bg-purple-100;
+}
+
+@utility bg-primary-accent {
+    @apply bg-purple-200;
 }
 
 @utility bg-secondary {
@@ -57,9 +73,26 @@
     animation: gradientAnimation 20s linear infinite;
 }
 
+/* Medals */
+@utility medal-gold {
+    @apply bg-amber-400 text-zinc-800;
+}
+
+@utility medal-silver {
+    @apply bg-slate-300 text-zinc-800;
+}
+
+@utility medal-bronze {
+    @apply bg-yellow-700 text-white;
+}
+
 /* Borders */
 @utility border-primary {
-    @apply border-purple-500; 
+    @apply border-purple-500;
+}
+
+@utility border-primary-soft {
+    @apply border-purple-200;
 }
 
 @utility border-secondary {

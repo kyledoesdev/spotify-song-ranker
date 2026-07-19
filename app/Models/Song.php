@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\SongQueryBuilder;
+use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+#[UseEloquentBuilder(SongQueryBuilder::class)]
 class Song extends Model
 {
     protected $fillable = [
@@ -32,13 +35,5 @@ class Song extends Model
     public function artist(): HasOne
     {
         return $this->hasOne(Artist::class, 'id', 'artist_id');
-    }
-
-    public static function rankedArtistCount(): int
-    {
-        return round(static::query()
-            ->whereHas('ranking', fn (Builder $query) => $query->completed()->whereNull('playlist_id')->whereNull('show_id'))
-            ->distinct('artist_id')
-            ->count() / 25) * 25;
     }
 }

@@ -30,7 +30,7 @@ class UpdateArtistImages extends Command
         Artist::query()->chunk(50, function ($chunk) {
             $ids = $chunk->pluck('artist_id')->implode(',');
 
-            $response = Http::withToken(auth()->user()->external_token)
+            $response = Http::withToken(Auth::user()->external_token)
                 ->get("https://api.spotify.com/v1/artists?ids={$ids}");
 
             $upserts = collect($response->json('artists'))

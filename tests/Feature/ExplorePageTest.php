@@ -1,66 +1,165 @@
 <?php
 
+use App\Actions\CompleteSongRankProcess;
+use App\Livewire\Explorer;
+use App\Models\Artist;
+use App\Models\Playlist;
 use App\Models\Ranking;
-use App\Models\User;
+use App\Models\RankingSortingState;
+use App\Models\Show;
+use Livewire\Livewire;
 
-test('can explore public completed rankings on explore page', function () {
-    $user = User::factory()->create();
+use function Pest\Laravel\get;
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => true,
-        'is_ranked' => true,
-        'completed_at' => now(),
-    ]);
+describe('ranking visibility', function () {
+    test('public completed rankings are visible', function () {
+        $ranking = publicCompletedRanking();
 
-    $this->actingAs($user)
-        ->get(route('explore'))
-        ->assertOk()
-        ->assertSee($user->rankings->first()->name);
+        get(route('explore'))
+            ->assertOk()
+            ->assertSee($ranking->name);
+    });
+
+    test('public uncompleted rankings are hidden', function () {
+        $ranking = Ranking::factory()->create([
+            'is_public' => true,
+            'is_ranked' => false,
+            'completed_at' => null,
+        ]);
+
+        get(route('explore'))
+            ->assertOk()
+            ->assertDontSee($ranking->name);
+    });
+
+    test('private completed rankings are hidden', function () {
+        $ranking = Ranking::factory()->create([
+            'is_public' => false,
+            'is_ranked' => true,
+            'completed_at' => now(),
+        ]);
+
+        get(route('explore'))
+            ->assertOk()
+            ->assertDontSee($ranking->name);
+    });
+
+    test('private uncompleted rankings are hidden', function () {
+        $ranking = Ranking::factory()->create([
+            'is_public' => false,
+            'is_ranked' => false,
+            'completed_at' => null,
+        ]);
+
+        get(route('explore'))
+            ->assertOk()
+            ->assertDontSee($ranking->name);
+    });
 });
 
-test('can not explore public uncompleted rankings on explore page', function () {
-    $user = User::factory()->create();
+describe('explorable rankings counter', function () {
+    test('shows a live count of explorable rankings', function () {
+        publicCompletedRanking();
+        publicCompletedRanking();
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => true,
-        'is_ranked' => false,
-        'completed_at' => null,
-    ]);
+        Ranking::factory()->create([
+            'is_public' => false,
+            'is_ranked' => true,
+            'completed_at' => now(),
+        ]);
 
-    $this->actingAs($user)
-        ->get(route('explore'))->assertOk()
-        ->assertDontSee($user->rankings->first()->name);
+        Ranking::factory()->create([
+            'is_public' => true,
+            'is_ranked' => false,
+            'completed_at' => null,
+        ]);
+
+        get(route('explore'))
+            ->assertOk()
+            ->assertSee('2 completed rankings to explore');
+    });
+
+    test('completing a ranking busts the counter cache', function () {
+        cache()->put('explore:total-rankings', 99);
+
+        $ranking = Ranking::factory()->create([
+            'is_public' => true,
+            'is_ranked' => false,
+            'completed_at' => null,
+        ]);
+
+        RankingSortingState::create(['ranking_id' => $ranking->getKey()]);
+
+        (new CompleteSongRankProcess)->handle($ranking, [
+            'finalSongIds' => $ranking->songs()->pluck('id')->all(),
+        ]);
+
+        expect(cache()->has('explore:total-rankings'))->toBeFalse();
+    });
 });
 
-test('can not explore private completed rankings on explore page', function () {
-    $user = User::factory()->create();
+describe('searching', function () {
+    test('can search rankings by artist name', function () {
+        $match = Artist::factory()->create(['artist_name' => 'Matching Artist']);
+        $other = Artist::factory()->create(['artist_name' => 'Other Artist']);
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => false,
-        'is_ranked' => true,
-        'completed_at' => now(),
-    ]);
+        $matchingRanking = publicCompletedRanking([
+            'artist_id' => $match->getKey(),
+            'name' => 'Matching Ranking',
+        ]);
 
-    $this->actingAs($user)
-        ->get(route('explore'))
-        ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);
-});
+        $otherRanking = publicCompletedRanking([
+            'artist_id' => $other->getKey(),
+            'name' => 'Other Ranking',
+        ]);
 
-test('can not explore private uncompleted rankings on explore page', function () {
-    $user = User::factory()->create();
+        Livewire::test(Explorer::class)
+            ->set('search', 'Matching Artist')
+            ->call('performSearch')
+            ->assertSee($matchingRanking->name)
+            ->assertDontSee($otherRanking->name);
+    });
 
-    $ranking = Ranking::factory()->create([
-        'user_id' => $user->getKey(),
-        'is_public' => false,
-        'is_ranked' => false,
-        'completed_at' => null,
-    ]);
+    test('can search rankings by playlist name', function () {
+        $playlist = Playlist::factory()->create(['name' => 'Chill Vibes Playlist']);
 
-    $this->actingAs($user)->get(route('explore'))
-        ->assertOk()
-        ->assertDontSee($user->rankings->first()->name);
+        $matchingRanking = publicCompletedRanking([
+            'artist_id' => null,
+            'playlist_id' => $playlist->getKey(),
+            'name' => 'Matching Playlist Ranking',
+        ]);
+
+        $otherRanking = publicCompletedRanking(['name' => 'Other Ranking']);
+
+        Livewire::test(Explorer::class)
+            ->set('search', 'Chill Vibes')
+            ->call('performSearch')
+            ->assertSee($matchingRanking->name)
+            ->assertDontSee($otherRanking->name);
+    });
+
+    test('can search rankings by show name', function () {
+        $show = Show::create([
+            'show_id' => str()->random(16),
+            'publisher' => 'Podcast Publisher',
+            'name' => 'True Crime Weekly',
+            'description' => 'A weekly true crime show.',
+            'cover' => 'https://example.com/cover.jpg',
+            'episode_count' => 100,
+        ]);
+
+        $matchingRanking = publicCompletedRanking([
+            'artist_id' => null,
+            'show_id' => $show->getKey(),
+            'name' => 'Matching Show Ranking',
+        ]);
+
+        $otherRanking = publicCompletedRanking(['name' => 'Other Ranking']);
+
+        Livewire::test(Explorer::class)
+            ->set('search', 'True Crime Weekly')
+            ->call('performSearch')
+            ->assertSee($matchingRanking->name)
+            ->assertDontSee($otherRanking->name);
+    });
 });

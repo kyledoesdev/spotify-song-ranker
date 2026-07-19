@@ -9,6 +9,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Set;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 trait HasDateFilters
@@ -152,7 +153,7 @@ trait HasDateFilters
 
     private function userTimezone(): string
     {
-        return auth()->user()->timezone;
+        return Auth::user()->timezone;
     }
 
     private function dateRangeLabels(Carbon $start, Carbon $end, string $format, string $interval = '1 day'): array

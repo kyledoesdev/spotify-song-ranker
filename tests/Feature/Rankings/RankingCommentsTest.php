@@ -1,47 +1,60 @@
 <?php
 
-use App\Models\Artist;
-use App\Models\Ranking;
-use App\Models\Song;
 use App\Models\User;
 
-beforeEach(function () {
-    Artist::factory()->create();
-    User::factory()->create();
-});
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\get;
 
-test('displays comments component when comments are enabled', function () {
-    $user = User::factory()->create();
+describe('ranking comments', function () {
+    test('displays comments component when comments are enabled', function () {
+        $user = User::factory()->createOne();
 
-    $ranking = Ranking::factory()
-        ->has(Song::factory()->count(5))
-        ->create([
+        $ranking = publicCompletedRanking([
             'user_id' => $user->getKey(),
-            'is_public' => true,
             'comments_enabled' => true,
-            'is_ranked' => true,
         ]);
 
-    $this->actingAs($user)
-        ->get(route('ranking', ['id' => $ranking->getKey()]))
-        ->assertOk()
-        ->assertSeeLivewire('comments');
+        actingAs($user)
+            ->get(route('ranking', ['id' => $ranking->getKey()]))
+            ->assertOk()
+            ->assertSeeLivewire('comments');
+    });
+
+    test('hides comments component when comments are disabled', function () {
+        $user = User::factory()->createOne();
+
+        $ranking = publicCompletedRanking([
+            'user_id' => $user->getKey(),
+            'comments_enabled' => false,
+        ]);
+
+        actingAs($user)
+            ->get(route('ranking', ['id' => $ranking->getKey()]))
+            ->assertOk()
+            ->assertDontSeeLivewire('comments');
+    });
 });
 
-test('hides comments component when comments are disabled', function () {
-    $user = User::factory()->create();
-
-    $ranking = Ranking::factory()
-        ->has(Song::factory()->count(5))
-        ->create([
-            'user_id' => $user->getKey(),
-            'is_public' => true,
-            'comments_enabled' => false,
-            'is_ranked' => true,
+describe('ranking comment replies', function () {
+    test('allows replies when comment replies are enabled', function () {
+        $ranking = publicCompletedRanking([
+            'comments_enabled' => true,
+            'comments_replies_enabled' => true,
         ]);
 
-    $this->actingAs($user)
-        ->get(route('ranking', ['id' => $ranking->getKey()]))
-        ->assertOk()
-        ->assertDontSeeLivewire('comments');
+        get(route('ranking', ['id' => $ranking->getKey()]))
+            ->assertOk()
+            ->assertSee('&quot;showReplies&quot;:true', false);
+    });
+
+    test('disables replies when comment replies are disabled', function () {
+        $ranking = publicCompletedRanking([
+            'comments_enabled' => true,
+            'comments_replies_enabled' => false,
+        ]);
+
+        get(route('ranking', ['id' => $ranking->getKey()]))
+            ->assertOk()
+            ->assertSee('&quot;showReplies&quot;:false', false);
+    });
 });

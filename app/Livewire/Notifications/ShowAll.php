@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Notifications;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,7 +15,7 @@ class ShowAll extends Component
     public function render()
     {
         return view('livewire.notifications.show-all', [
-            'notifications' => auth()->user()->notifications()->paginate(10),
+            'notifications' => Auth::user()->notifications()->paginate(10),
         ]);
     }
 }

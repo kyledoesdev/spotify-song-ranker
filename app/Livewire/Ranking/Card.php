@@ -5,6 +5,7 @@ namespace App\Livewire\Ranking;
 use App\Actions\Rankings\DestroyRanking;
 use App\Exports\SongExport;
 use App\Models\Ranking;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -20,9 +21,9 @@ class Card extends Component
 
     public function destroy()
     {
-        abort_unless(auth()->check() && $this->ranking->user_id == auth()->id(), 403);
+        abort_unless(Auth::check() && $this->ranking->user_id == Auth::id(), 403);
 
-        (new DestroyRanking)->handle(auth()->user(), $this->ranking);
+        (new DestroyRanking)->handle(Auth::user(), $this->ranking);
 
         $this->dispatch('rankings-updated');
 
@@ -35,7 +36,7 @@ class Card extends Component
 
     public function download(): BinaryFileResponse
     {
-        abort_unless(auth()->check() && $this->ranking->user_id == auth()->id(), 403);
+        abort_unless(Auth::check() && $this->ranking->user_id == Auth::id(), 403);
 
         /* yeah, this isn't what you should do here but ima do it anyway */
         $this->skipRender();

@@ -33,6 +33,38 @@
 
             <hr>
 
+            @if (auth()->id() !== $ranking->user_id)
+                <div class="mx-2 md:mx-4 mt-4 bg-primary-soft border border-primary-soft rounded-lg p-3 flex items-center gap-3">
+                    @if ($ranking->user->avatar)
+                        <img
+                            src="{{ $ranking->user->avatar }}"
+                            alt="{{ $ranking->user->name }}"
+                            class="h-10 w-10 rounded-full object-cover shrink-0"
+                        >
+                    @else
+                        <div class="h-10 w-10 rounded-full bg-primary-muted flex items-center justify-center shrink-0">
+                            <i class="fa-regular fa-user text-primary-icon"></i>
+                        </div>
+                    @endif
+
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-medium text-zinc-800 truncate">
+                            Ranked by
+                            <a href="{{ route('profile', ['id' => $ranking->user->spotify_id]) }}" class="text-primary hover:underline">
+                                {{ $ranking->user->name }}
+                                <i class="fa fa-arrow-up-right-from-square text-blue-500 text-xs"></i>
+                            </a>
+                        </p>
+                        <p class="text-xs text-zinc-500 truncate" title="{{ $ranking->formatted_completed_at }}">
+                            {{ $ranking->songs->count() }} {{ $ranking->type->itemLabel() }}
+                            <span class="text-zinc-300 mx-1">|</span>
+                            <i class="fa-regular fa-clock mr-0.5"></i>
+                            {{ $ranking->completed_at }}
+                        </p>
+                    </div>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-2 md:px-4 overflow-x-hidden">
                 <div class="md:col-span-2 w-full m-2" style="max-height: 600px; overflow-y: auto;">
                     <ol>

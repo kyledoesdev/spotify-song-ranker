@@ -4,6 +4,7 @@ namespace App\Livewire\Ranking;
 
 use App\Livewire\Forms\RankingForm;
 use App\Models\Ranking;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
@@ -20,14 +21,14 @@ class EditRanking extends Component
             ->find($id);
 
         if (is_null($this->ranking)) {
-            $email = auth()->check() ? auth()->user()->email : request()->ip();
+            $email = Auth::check() ? Auth::user()->email : request()->ip();
 
             Log::channel('discord_other_updates')->info("Ranking not found: Id Given: {$id} :: User Email: {$email}");
 
             abort(404);
         }
 
-        if ($this->ranking->user_id != auth()->id()) {
+        if ($this->ranking->user_id != Auth::id()) {
             abort(403, 'You are not allowed to edit this ranking.');
         }
 
@@ -54,6 +55,8 @@ class EditRanking extends Component
             'comments_enabled' => $this->form->comments_enabled === '1' || $this->form->comments_enabled === true,
             'comments_replies_enabled' => $this->form->comments_replies_enabled === '1' || $this->form->comments_replies_enabled === true,
         ]);
+
+        cache()->forget('explore:total-rankings');
 
         $this->js("window.flash({
             title: 'Ranking Updated!',

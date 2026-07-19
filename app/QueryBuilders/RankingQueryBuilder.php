@@ -4,15 +4,16 @@ namespace App\QueryBuilders;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class RankingQueryBuilder extends Builder
 {
-    public function forExplorePage(array $filters): static
+    public function forExplorePage(?string $search = null): static
     {
         return $this->newQuery()
             ->public()
             ->completed()
-            ->when($filters['search'] ?? null, function (Builder $query, string $search) {
+            ->when($search, function (Builder $query, string $search) {
                 $query->where(fn (Builder $query) => $query
                     ->whereIn('artist_id', fn ($q) => $q
                         ->select('id')
@@ -31,15 +32,6 @@ class RankingQueryBuilder extends Builder
                     )
                 );
             })
-            ->when($filters['artist'] ?? null, fn (Builder $query, string $artist) => $query
-                ->where('artist_id', $artist)
-            )
-            ->when($filters['playlist'] ?? null, fn (Builder $query, string $playlist) => $query
-                ->where('playlist_id', $playlist)
-            )
-            ->when($filters['show'] ?? null, fn (Builder $query, string $show) => $query
-                ->where('show_id', $show)
-            )
             ->withHasPodcastEpisode()
             ->with('user', 'artist', 'playlist', 'show')
             ->with('songs', fn ($query) => $query->where('rank', 1))
@@ -50,8 +42,8 @@ class RankingQueryBuilder extends Builder
     public function forProfilePage(User $user): static
     {
         return $this->newQuery()
-            ->where('user_id', $user ? $user->getKey() : auth()->id())
-            ->when($user && $user->getKey() !== auth()->id(), fn (Builder $query) => $query->public()->completed())
+            ->where('user_id', $user ? $user->getKey() : Auth::id())
+            ->when($user && $user->getKey() !== Auth::id(), fn (Builder $query) => $query->public()->completed())
             ->withHasPodcastEpisode()
             ->with('user', 'artist', 'playlist', 'show')
             ->with('songs', fn ($query) => $query->with('artist'))
@@ -72,6 +64,29 @@ class RankingQueryBuilder extends Builder
             ->orderBy('completed_at', 'desc');
     }
 
+    public function mostSongs(int $limit = 10): static
+    {
+        return $this->newQuery()
+            ->public()
+            ->completed()
+            ->has('songs', '<=', 500)
+            ->withCount('songs')
+            ->with('user', 'artist', 'playlist', 'show')
+            ->orderByDesc('songs_count')
+            ->orderBy('name')
+            ->limit($limit);
+    }
+
+    public function publicRankedCount(): int
+    {
+        return (int) (round($this->newQuery()->completed()->public()->count() / 25) * 25);
+    }
+
+    public function explorableCount(): int
+    {
+        return $this->newQuery()->public()->completed()->count();
+    }
+
     public function withHasPodcastEpisode()
     {
         return $this->addSelect([
@@ -89,11 +104,6 @@ class RankingQueryBuilder extends Builder
     public function public(): static
     {
         return $this->where('is_public', true);
-    }
-
-    public function private(): static
-    {
-        return $this->where('is_public', false);
     }
 
     public function completed(): static
