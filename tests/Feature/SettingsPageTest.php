@@ -8,84 +8,89 @@ use App\Notifications\DownloadDataNotification;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
-test('user can enable newsletter emails', function () {
-    $user = User::factory()->create();
-    $user->preferences->update(['recieve_newsletter_emails' => false]);
+use function Pest\Laravel\assertGuest;
 
-    Livewire::actingAs($user)
-        ->test(Settings::class)
-        ->call('updateSetting', 'recieve_newsletter_emails', true);
+describe('newsletter preferences', function () {
+    test('user can enable newsletter emails', function () {
+        $user = User::factory()->createOne();
+        $user->preferences->update(['recieve_newsletter_emails' => false]);
 
-    expect($user->fresh()->preferences->recieve_newsletter_emails)->toBeTrue();
+        Livewire::actingAs($user)
+            ->test(Settings::class)
+            ->call('updateSetting', 'recieve_newsletter_emails', true);
+
+        expect($user->fresh()->preferences->recieve_newsletter_emails)->toBeTrue();
+    });
+
+    test('user can disable newsletter emails', function () {
+        $user = User::factory()->createOne();
+        $user->preferences->update(['recieve_newsletter_emails' => true]);
+
+        Livewire::actingAs($user)
+            ->test(Settings::class)
+            ->call('updateSetting', 'recieve_newsletter_emails', false);
+
+        expect($user->fresh()->preferences->recieve_newsletter_emails)->toBeFalse();
+    });
 });
 
-test('user can disable newsletter emails', function () {
-    $user = User::factory()->create();
-    $user->preferences->update(['recieve_newsletter_emails' => true]);
+describe('account deletion', function () {
+    test('user receives download notification when deleting account with rankings', function () {
+        Notification::fake();
 
-    Livewire::actingAs($user)
-        ->test(Settings::class)
-        ->call('updateSetting', 'recieve_newsletter_emails', false);
+        $user = User::factory()->createOne();
+        Ranking::factory()->count(3)->create(['user_id' => $user->getKey()]);
 
-    expect($user->fresh()->preferences->recieve_newsletter_emails)->toBeFalse();
-});
+        DeleteUserJob::dispatch($user);
 
-test('user receives download notification when deleting account with rankings', function () {
-    Notification::fake();
+        Notification::assertSentTo($user, DownloadDataNotification::class);
+    });
 
-    $user = User::factory()->create();
-    Ranking::factory()->count(3)->create(['user_id' => $user->id]);
+    test('user does not receive download notification when deleting account without rankings', function () {
+        Notification::fake();
 
-    DeleteUserJob::dispatch($user);
+        $user = User::factory()->createOne();
 
-    Notification::assertSentTo($user, DownloadDataNotification::class);
-});
+        DeleteUserJob::dispatch($user);
 
-test('user does not receive download notification when deleting account without rankings', function () {
-    Notification::fake();
+        Notification::assertNotSentTo($user, DownloadDataNotification::class);
+    });
 
-    $user = User::factory()->create();
+    test('user can delete their account', function () {
+        Notification::fake();
 
-    DeleteUserJob::dispatch($user);
+        $user = User::factory()->createOne();
 
-    Notification::assertNotSentTo($user, DownloadDataNotification::class);
-});
+        Livewire::actingAs($user)
+            ->test(Settings::class)
+            ->call('destroy', $user->getKey())
+            ->assertRedirect('/');
 
-test('user can delete their account', function () {
-    Notification::fake();
+        expect(User::find($user->getKey()))->toBeNull();
+        assertGuest();
+    });
 
-    $user = User::factory()->create();
+    test('account deletion also deletes their rankings', function () {
+        Notification::fake();
 
-    Livewire::actingAs($user)
-        ->test(Settings::class)
-        ->call('destroy', $user->id)
-        ->assertRedirect('/');
+        $user = User::factory()->createOne();
+        $rankingIds = Ranking::factory()->count(3)->create(['user_id' => $user->getKey()])->pluck('id');
 
-    expect(User::find($user->id))->toBeNull();
-    $this->assertGuest();
-});
+        DeleteUserJob::dispatchSync($user);
 
-test('user account deletion also deletes their rankings', function () {
-    Notification::fake();
+        expect(User::find($user->getKey()))->toBeNull();
+        expect(Ranking::whereIn('id', $rankingIds)->count())->toBe(0);
+    });
 
-    $user = User::factory()->create();
-    $rankings = Ranking::factory()->count(3)->create(['user_id' => $user->id]);
-    $rankingIds = $rankings->pluck('id');
+    test('user cannot delete another users account', function () {
+        $user = User::factory()->createOne();
+        $otherUser = User::factory()->createOne();
 
-    DeleteUserJob::dispatchSync($user);
+        Livewire::actingAs($user)
+            ->test(Settings::class)
+            ->call('destroy', $otherUser->getKey())
+            ->assertForbidden();
 
-    expect(User::find($user->id))->toBeNull();
-    expect(Ranking::whereIn('id', $rankingIds)->count())->toBe(0);
-});
-
-test('user cannot delete another users account', function () {
-    $user = User::factory()->create();
-    $otherUser = User::factory()->create();
-
-    Livewire::actingAs($user)
-        ->test(Settings::class)
-        ->call('destroy', $otherUser->id)
-        ->assertForbidden();
-
-    expect(User::find($otherUser->id))->not->toBeNull();
+        expect(User::find($otherUser->getKey()))->not->toBeNull();
+    });
 });

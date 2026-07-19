@@ -4,9 +4,13 @@ namespace Database\Factories;
 
 use App\Models\Artist;
 use App\Models\Ranking;
+use App\Models\Song;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+/**
+ * @extends Factory<Song>
+ */
 class SongFactory extends Factory
 {
     public function definition(): array

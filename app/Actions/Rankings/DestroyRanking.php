@@ -5,7 +5,6 @@ namespace App\Actions\Rankings;
 use App\Models\Ranking;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 final class DestroyRanking
 {
@@ -15,5 +14,7 @@ final class DestroyRanking
             $ranking->songs()->delete();
             $ranking->delete();
         });
+
+        cache()->forget('explore:total-rankings');
     }
 }

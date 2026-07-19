@@ -1,5 +1,5 @@
-<div 
-    class="bg-white shadow-md rounded-lg cursor-pointer hover:shadow-lg transition-shadow relative p-2"
+<div
+    class="relative"
     :key="'card-'.$ranking->getKey()"
 >
     <x-ranking-card :ranking="$ranking" />

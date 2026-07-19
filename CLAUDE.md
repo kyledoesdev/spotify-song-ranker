@@ -20,6 +20,18 @@ songrank.dev — a Laravel 12 application that ranks songs via a merge-sort algo
 - Tests use SQLite in-memory database (configured in `phpunit.xml`)
 - Only Feature tests are active; Unit test suite is commented out
 
+#### Test File Structure
+Every Pest test file follows this order, top to bottom:
+1. **Imports** — model/class `use` statements, then `use function Pest\Laravel\...` function imports
+2. **`beforeEach()`** — shared arrangement (only when needed)
+3. **`describe()` blocks** — every test lives inside a describe group
+4. **Helper functions** — file-specific helpers at the bottom
+
+Additional conventions:
+- Use `Pest\Laravel` functions (`get()`, `actingAs()`, `assertGuest()`, ...) instead of `$this->get()` etc. — Intelephense cannot resolve `$this` inside Pest closures
+- Avoid `$this->property` state in `beforeEach()` for the same reason; prefer helper functions
+- Cross-file helpers (e.g. `publicCompletedRanking()`) live in `tests/Pest.php`; helper function names are global, so they must be unique across the suite
+
 ### Code Formatting
 - `./vendor/bin/pint` — Run Laravel Pint (PHP code formatter, PSR-12 + Laravel conventions)
 
@@ -249,6 +261,9 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Use `php artisan make:` commands to create new files (i.e. migrations, controllers, models, etc.). You can list available Artisan commands using the `list-artisan-commands` tool.
 - If you're creating a generic PHP class, use `php artisan make:class`.
 - Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
+- Use the Laravel Str facade functions over PHP string functions
+- When it makes sense, use Laravel Collection over traditional arrays
+- Use Collections and collection chains over foreach loops for data processing.
 
 ## Database
 
@@ -256,7 +271,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - Use Eloquent models and relationships before suggesting raw database queries.
 - Avoid `DB::`; prefer `Model::query()`. Generate code that leverages Laravel's ORM capabilities rather than bypassing them.
 - Generate code that prevents N+1 query problems by using eager loading.
-- Use Laravel's query builder for very complex database operations.
+- Use Laravel's query builder for very complex database operations. Explain why you did so.
 
 ### Model Creation
 

@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Ranking;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -11,24 +15,9 @@
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+pest()->extend(TestCase::class)
+    ->use(RefreshDatabase::class)
     ->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +30,11 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function publicCompletedRanking(array $attributes = []): Ranking
 {
-    // ..
+    return Ranking::factory()->create(array_merge([
+        'is_public' => true,
+        'is_ranked' => true,
+        'completed_at' => now(),
+    ], $attributes));
 }

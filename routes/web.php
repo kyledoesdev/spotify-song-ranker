@@ -5,6 +5,7 @@ use App\Livewire\About;
 use App\Livewire\Dashboard\Dashboard;
 use App\Livewire\Explorer;
 use App\Livewire\Faq;
+use App\Livewire\Leaderboards;
 use App\Livewire\Notifications\ShowAll as Notifications;
 use App\Livewire\Profile\Profile;
 use App\Livewire\Profile\Settings;
@@ -24,6 +25,7 @@ Route::livewire('/faq', Faq::class)->name('faq');
 Route::livewire('/support', Support::class)->name('support');
 
 Route::livewire('/explore', Explorer::class)->name('explore');
+Route::livewire('/leaderboards', Leaderboards::class)->name('leaderboards');
 
 Route::livewire('/rank/{id}', Ranking::class)->name('ranking');
 Route::livewire('/profile/{id}', Profile::class)->name('profile');

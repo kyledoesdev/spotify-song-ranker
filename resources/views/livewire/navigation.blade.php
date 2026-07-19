@@ -41,19 +41,25 @@
             </div>
 
             <nav class="flex-1 px-4 py-4 space-y-2">
+                @if (Route::currentRouteName() !== 'explore')
+                    <a href="{{ route('explore') }}" class="flex items-center px-3 py-2 text-sm font-medium text-zinc-800 rounded-md hover:bg-gray-100">
+                        <i class="fa fa-compass mr-3"></i>
+                        Explore
+                    </a>
+                @endif
+                @if (Route::currentRouteName() !== 'leaderboards')
+                    <a href="{{ route('leaderboards') }}" class="flex items-center px-3 py-2 text-sm font-medium text-zinc-800 rounded-md hover:bg-gray-100">
+                        <i class="fa fa-trophy mr-3"></i>
+                        Leaderboards
+                    </a>
+                @endif
                 @auth
-                    @if (Route::currentRouteName() !== 'explore')
-                        <a href="{{ route('explore') }}" class="flex items-center px-3 py-2 text-sm font-medium text-zinc-800 rounded-md hover:bg-gray-100">
-                            <i class="fa fa-compass mr-3"></i>
-                            Explore
-                        </a>
-                    @endif
-                    @if (Route::currentRouteName() != 'profile' || (Route::currentRouteName() == 'profile' && Route::current()->parameter('id') != auth()->user()?->spotify_id))
+                    {{-- @if (Route::currentRouteName() != 'profile' || (Route::currentRouteName() == 'profile' && Route::current()->parameter('id') != auth()->user()?->spotify_id))
                         <a href="{{ route('profile', ['id' => auth()->user()->spotify_id ]) }}" class="flex items-center px-3 py-2 text-sm font-medium text-zinc-800 rounded-md hover:bg-gray-100">
                             <i class="fa fa-user mr-3"></i>
                             Profile
                         </a>
-                    @endif
+                    @endif --}}
                     @if (Route::currentRouteName() != 'settings')
                         <a href="{{ route('settings') }}" class="flex items-center px-3 py-2 text-sm font-medium text-zinc-800 rounded-md hover:bg-gray-100">
                             <i class="fa fa-cog mr-3"></i>
@@ -93,8 +99,13 @@
                     </a>
 
                     <a href="{{ route('explore') }}" class="h-10 flex items-center me-4 rounded-lg cursor-pointer p-2 {{ Route::currentRouteName() == 'explore' ? 'bg-purple-100 border-b-3 border-purple-400' : 'bg-gray-100' }}">
-                        <i class="fa fa-compass mr-1 fa-lg"></i>
-                        <span class="text-sm font-medium text-zinc-800 mx-1">Explore</span>
+                        <i class="fa fa-compass mr-1"></i>
+                        <span class="text-xs font-medium text-zinc-800 mx-1">Explore</span>
+                    </a>
+
+                    <a href="{{ route('leaderboards') }}" class="h-10 flex items-center me-4 rounded-lg cursor-pointer p-2 {{ Route::currentRouteName() == 'leaderboards' ? 'bg-purple-100 border-b-3 border-purple-400' : 'bg-gray-100' }}">
+                        <i class="fa fa-trophy mr-1"></i>
+                        <span class="text-xs font-medium text-zinc-800 mx-1">Leaderboards</span>
                     </a>
                 </div>
                 
@@ -178,11 +189,9 @@
 
         <!-- Mobile top bar with hamburger -->
         <div class="lg:hidden flex justify-between items-center shadow-md bg-white p-4 rounded-lg">
-            @auth
-                <button x-on:click="sidebarOpen = true" class="text-zinc-800">
-                    <i class="fa fa-bars fa-lg"></i>
-                </button>
-            @endauth
+            <button x-on:click="sidebarOpen = true" class="text-zinc-800">
+                <i class="fa fa-bars fa-lg"></i>
+            </button>
             
             <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="flex items-center">
                 <img src="/images/logo.png" alt="Song Rank Logo" class="h-8 w-8 rounded-2xl" />

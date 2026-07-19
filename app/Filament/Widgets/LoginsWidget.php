@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Auth;
 use Kyledoesdev\Essentials\Stats\LoginStat;
 
 class LoginsWidget extends StatsOverviewWidget
@@ -16,7 +17,7 @@ class LoginsWidget extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $timezone = auth()->user()->timezone;
+        $timezone = Auth::user()->timezone;
         $now = now()->tz($timezone);
 
         $totalUsers = User::query()->count();

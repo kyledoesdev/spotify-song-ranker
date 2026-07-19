@@ -36,7 +36,7 @@ final class StorePlaylistRanking
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,
                 'comments_enabled' => $attributes['comments_enabled'] ?? false,
-                'comments_replies_enabled' => $attributes['comments_enabled'] ?? false,
+                'comments_replies_enabled' => $attributes['comments_replies_enabled'] ?? false,
             ]);
 
             $ranking->sortingState()->create();

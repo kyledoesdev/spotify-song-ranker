@@ -44,5 +44,7 @@ final class CompleteSongRankProcess
 
             RankingCompletedStat::increase();
         });
+
+        cache()->forget('explore:total-rankings');
     }
 }

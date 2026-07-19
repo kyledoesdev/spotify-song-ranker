@@ -6,6 +6,9 @@ use App\Models\User;
 use App\Models\UserPreference;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<User>
+ */
 class UserFactory extends Factory
 {
     public function definition(): array
@@ -14,7 +17,7 @@ class UserFactory extends Factory
             'spotify_id' => 'spotify-id-'.str()->random(32),
             'name' => fake()->username(),
             'email' => fake()->unique()->safeEmail(),
-            'avatar' => "https://www.gravatar.com/avatar/unknown?d=mp",
+            'avatar' => 'https://www.gravatar.com/avatar/unknown?d=mp',
             'timezone' => fake()->timezone(),
             'ip_address' => fake()->localIpv4(),
             'external_token' => str()->random(32),

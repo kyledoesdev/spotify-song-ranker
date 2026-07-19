@@ -2,12 +2,16 @@
 
 use App\Models\ApplicationDashboard;
 
-test('support page loads successfully', function () {
-    ApplicationDashboard::create([
-        'name' => 'Song Rank',
-        'version' => '2.0',
-        'support_page' => '<p>Support Song Rank</p>',
-    ]);
+use function Pest\Laravel\get;
 
-    $this->get(route('support'))->assertOk();
+describe('support page', function () {
+    test('loads successfully', function () {
+        ApplicationDashboard::create([
+            'name' => 'Song Rank',
+            'version' => '2.0',
+            'support_page' => '<p>Support Song Rank</p>',
+        ]);
+
+        get(route('support'))->assertOk();
+    });
 });

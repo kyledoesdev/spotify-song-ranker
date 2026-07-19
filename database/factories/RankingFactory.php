@@ -8,6 +8,9 @@ use App\Models\Song;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Ranking>
+ */
 class RankingFactory extends Factory
 {
     public function definition(): array

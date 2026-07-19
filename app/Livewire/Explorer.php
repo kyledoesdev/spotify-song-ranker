@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Models\Artist;
 use App\Models\Ranking;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -11,20 +10,12 @@ class Explorer extends Component
 {
     public ?string $search = null;
 
-    public ?string $artist = null;
-
-    public ?string $playlist = null;
-
-    public bool $isSideBarOpen = false;
-
-    public bool $isPlaylistSideBarOpen = false;
-
-    public int $perPage = 6;
+    public int $perPage = 12;
 
     public function render()
     {
         return view('livewire.explorer', [
-            'artists' => cache()->remember('explore:top-artists', now()->addHour(), fn () => Artist::query()->topArtists()->get()),
+            'totalRankings' => cache()->remember('explore:total-rankings', now()->addDay(), fn () => Ranking::query()->explorableCount()),
         ]);
     }
 
@@ -32,11 +23,7 @@ class Explorer extends Component
     public function rankings()
     {
         return Ranking::query()
-            ->forExplorePage([
-                'search' => $this->search,
-                'artist' => $this->artist,
-                'playlist' => $this->playlist,
-            ])
+            ->forExplorePage($this->search)
             ->when(! $this->isFiltered, fn ($query) => $query->limit($this->perPage))
             ->get();
     }
@@ -50,45 +37,22 @@ class Explorer extends Component
     #[Computed]
     public function isFiltered(): bool
     {
-        return filled($this->search) || filled($this->artist) || filled($this->playlist);
+        return filled($this->search);
     }
 
     public function loadMore()
     {
-        $this->perPage += 6;
-    }
-
-    public function toggleSidebar()
-    {
-        $this->isSideBarOpen = ! $this->isSideBarOpen;
+        $this->perPage += 12;
     }
 
     public function performSearch()
     {
-        $this->perPage = 6;
+        $this->perPage = 12;
     }
 
     public function resetSearch()
     {
         $this->search = null;
-        $this->artist = null;
-        $this->playlist = null;
-        $this->perPage = 6;
-    }
-
-    public function filterByArtist(string $artistId)
-    {
-        $this->artist = $artistId;
-        $this->playlist = null;
-        $this->search = null;
-        $this->perPage = 6;
-    }
-
-    public function filterByPlaylist(string $playlistId)
-    {
-        $this->playlist = $playlistId;
-        $this->artist = null;
-        $this->search = null;
-        $this->perPage = 6;
+        $this->perPage = 12;
     }
 }

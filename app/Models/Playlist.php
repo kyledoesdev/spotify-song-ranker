@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use App\Contracts\Rankable;
-use Illuminate\Database\Eloquent\Attributes\Scope;
-use Illuminate\Database\Eloquent\Builder;
+use App\QueryBuilders\PlaylistQueryBuilder;
+use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[UseEloquentBuilder(PlaylistQueryBuilder::class)]
 class Playlist extends Model implements Rankable
 {
     protected $fillable = [
@@ -60,36 +61,5 @@ class Playlist extends Model implements Rankable
     public function spotifyUrl(): string
     {
         return "https://open.spotify.com/playlist/{$this->playlist_id}";
-    }
-
-    #[Scope]
-    public function topPlaylists(Builder $query)
-    {
-        $query->newQuery()
-            ->selectRaw('
-                count(rankings.playlist_id) as playlist_rankings_count,
-                playlists.id,
-                playlists.playlist_id,
-                playlists.name,
-                playlists.cover,
-                playlists.creator_name
-            ')
-            ->join('rankings', function ($join) {
-                $join->on('rankings.playlist_id', '=', 'playlists.id')
-                    ->whereNull('rankings.deleted_at')
-                    ->where('rankings.is_ranked', true)
-                    ->where('rankings.is_public', true);
-            })
-            ->groupBy('rankings.playlist_id')
-            ->orderBy('playlist_rankings_count', 'desc')
-            ->orderBy('playlists.name', 'asc');
-    }
-
-    public static function rankedPlaylistCount(): int
-    {
-        return round(static::query()
-            ->whereHas('rankings', fn (Builder $query) => $query->completed()->public())
-            ->distinct('playlist_id')
-            ->count() / 25) * 25;
     }
 }

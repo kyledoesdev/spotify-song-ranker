@@ -2,8 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Artist;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<Artist>
+ */
 class ArtistFactory extends Factory
 {
     public function definition(): array
@@ -11,7 +15,7 @@ class ArtistFactory extends Factory
         return [
             'artist_id' => str()->random(16),
             'artist_name' => fake()->userName(),
-            'artist_img' => "https://www.gravatar.com/avatar/unknown?d=mp",
+            'artist_img' => 'https://www.gravatar.com/avatar/unknown?d=mp',
         ];
     }
 }

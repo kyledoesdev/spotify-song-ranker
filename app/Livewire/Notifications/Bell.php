@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Notifications;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Bell extends Component
@@ -10,14 +11,14 @@ class Bell extends Component
 
     public function mount(): void
     {
-        $this->unreadCount = auth()->user()->unreadNotifications()->count();
+        $this->unreadCount = Auth::user()->unreadNotifications()->count();
     }
 
     public function open(): void
     {
         if ($this->unreadCount > 0) {
-            auth()->user()->unreadNotifications->markAsRead();
-            
+            Auth::user()->unreadNotifications->markAsRead();
+
             $this->unreadCount = 0;
         }
     }
@@ -25,7 +26,7 @@ class Bell extends Component
     public function render()
     {
         return view('livewire.notifications.bell', [
-            'notifications' => auth()->user()
+            'notifications' => Auth::user()
                 ->notifications()
                 ->latest()
                 ->limit(20)

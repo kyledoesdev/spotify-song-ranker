@@ -3,6 +3,7 @@
 namespace App\Livewire\Notifications;
 
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -17,7 +18,7 @@ class Details extends Component
     {
         $this->notification = Notification::query()
             ->where('id', $notificationId)
-            ->where('notifiable_id', auth()->id())
+            ->where('notifiable_id', Auth::id())
             ->firstOrFail();
 
         $this->open = true;
