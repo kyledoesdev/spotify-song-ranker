@@ -20,8 +20,8 @@
         <div class="flex flex-1">
             <div class="min-w-0 pt-1 flex-1">
                 <h5 class="mx-2 mt-1 mb-0.5 text-xs sm:text-base break-words" title="{{ $song['name'] }}">
-                    @if (isset($song['artist_name']))
-                        <span class="font-bold">{{ $song['artist_name'] }}</span> -
+                    @if ($this->primaryArtistName())
+                        <span class="font-bold">{{ $this->primaryArtistName() }}</span> -
                     @endif
                     {{ $song['name'] }}
                 </h5>

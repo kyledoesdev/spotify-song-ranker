@@ -24,6 +24,7 @@ class SongListItem extends Component
      */
     public function primaryArtistName(): ?string
     {
-        return data_get($this->song, 'primary_artist.name');
+        return data_get($this->song, 'primary_artist.name')
+            ?? data_get($this->song, 'artist_name');
     }
 }
