@@ -88,33 +88,38 @@
                                         'scroller' => 'card-scroller-half',
                                     ])
                                 @else
-                                    <div class="flex items-center gap-3 mb-2">
-                                        <h5 class="md:text-3xl transition-all duration-300">
-                                            Featured On @if (! is_null($featuredTracks)) ({{ $featuredCount }}) @endif
-                                        </h5>
+                                    <div class="border border-gray-200 bg-white rounded-lg overflow-hidden">
+                                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
+                                            <h4 class="font-semibold text-gray-800">
+                                                Featured On
+                                                @if (! is_null($featuredTracks))
+                                                    <span class="font-normal text-sm text-gray-600">({{ $featuredCount }})</span>
+                                                @endif
+                                            </h4>
 
-                                        <x-toggle-switch
-                                            wire:model.live="includeFeaturedTracks"
-                                            x-data
-                                            x-on:change="window.showLoader()"
-                                            :disabled="! is_null($featuredTracks) && ! $this->hasFeaturedTracks()"
-                                        >
-                                            Include
-                                        </x-toggle-switch>
+                                            <x-toggle-switch
+                                                wire:model.live="includeFeaturedTracks"
+                                                x-data
+                                                x-on:change="window.showLoader()"
+                                                :disabled="! is_null($featuredTracks) && ! $this->hasFeaturedTracks()"
+                                            >
+                                                Include
+                                            </x-toggle-switch>
+                                        </div>
+
+                                        <p class="p-4 text-sm text-zinc-500">
+                                            @if (is_null($featuredTracks))
+                                                {{ $selectedArtist['name'] }} appears on other artists' releases.
+                                                Turn on "Include" to load the tracks they're featured on.
+                                            @elseif ($this->hasFeaturedTracks())
+                                                Not included in this ranking. Turn on "Include" to pick through
+                                                the {{ $featuredCount }} {{ Str::plural('track', $featuredCount) }}
+                                                {{ $selectedArtist['name'] }} guests on.
+                                            @else
+                                                No featured appearances found for {{ $selectedArtist['name'] }}.
+                                            @endif
+                                        </p>
                                     </div>
-
-                                    <p class="text-sm text-zinc-500 m-2">
-                                        @if (is_null($featuredTracks))
-                                            {{ $selectedArtist['name'] }} appears on other artists' releases.
-                                            Turn on "Include" to load the tracks they're featured on.
-                                        @elseif ($this->hasFeaturedTracks())
-                                            Not included in this ranking. Turn on "Include" to pick through
-                                            the {{ $featuredCount }} {{ Str::plural('track', $featuredCount) }}
-                                            {{ $selectedArtist['name'] }} guests on.
-                                        @else
-                                            No featured appearances found for {{ $selectedArtist['name'] }}.
-                                        @endif
-                                    </p>
                                 @endif
                             </div>
                         @endif
