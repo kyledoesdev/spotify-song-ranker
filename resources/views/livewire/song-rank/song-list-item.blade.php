@@ -20,8 +20,12 @@
         <div class="flex flex-1">
             <div class="min-w-0 pt-1 flex-1">
                 <h5 class="mx-2 mt-1 mb-0.5 text-xs sm:text-base break-words" title="{{ $song['name'] }}">
+                    @if ($this->primaryArtistName())
+                        <span class="font-bold">{{ $this->primaryArtistName() }}</span> -
+                    @endif
                     {{ $song['name'] }}
                 </h5>
+
                 <div class="flex items-center mx-2">
                     <x-spotify-logo :song="$song['id']" />
 
@@ -30,7 +34,7 @@
                         class="text-gray-500 hover:text-red-600 transition-all duration-200 p-1 text-sm ml-2 cursor-pointer transform hover:scale-110" 
                         x-on:click="
                             removing = true;
-                            $dispatch('song-removed', { uuid: uuid, type: '{{ $type->value }}' });
+                            $dispatch('track-removed', { uuid: uuid, type: '{{ $type->value }}' });
                         "
                         :disabled="removing"
                         x-bind:class="{ 'opacity-50 cursor-not-allowed': removing }"

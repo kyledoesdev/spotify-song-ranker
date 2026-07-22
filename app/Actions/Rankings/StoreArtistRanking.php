@@ -40,14 +40,44 @@ final class StoreArtistRanking
             /* create the relation to the ranking's sorted state */
             $ranking->sortingState()->create();
 
-            $songs = collect($attributes['tracks'])->map(function ($song) use ($ranking, $artist) {
+            $tracks = collect($attributes['tracks']);
+
+            /* "appears on" tracks belong to their primary artist, so those records need to exist.
+               They arrive without artwork; UpdateArtistImages backfills it. */
+            $primaryArtists = $tracks
+                ->filter(fn (array $song) => $song['featured_artist'] ?? false)
+                ->pluck('primary_artist')
+                ->unique('id')
+                ->values();
+
+            Artist::upsert(
+                $primaryArtists->map(fn (array $primary) => [
+                    'artist_id' => $primary['id'],
+                    'artist_name' => $primary['name'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ])->all(),
+                ['artist_id'],
+                ['artist_name', 'updated_at']
+            );
+
+            $primaryArtistKeys = Artist::query()
+                ->whereIn('artist_id', $primaryArtists->pluck('id'))
+                ->pluck('id', 'artist_id');
+
+            $songs = $tracks->map(function ($song) use ($ranking, $artist, $primaryArtistKeys) {
+                $isFeaturedTrack = $song['featured_artist'] ?? false;
+
                 return [
                     'ranking_id' => $ranking->getKey(),
-                    'artist_id' => $artist->getKey(),
+                    'artist_id' => $isFeaturedTrack
+                        ? $primaryArtistKeys->get($song['primary_artist']['id'])
+                        : $artist->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => $song['uuid'],
                     'title' => $song['name'] ?? 'Track deleted from spotify servers.',
                     'cover' => $song['cover'] ?? 'https://i.imgur.com/MBDmIUg.png',
+                    'featured_artist' => $isFeaturedTrack,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

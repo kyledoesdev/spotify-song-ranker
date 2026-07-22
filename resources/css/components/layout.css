@@ -28,6 +28,12 @@
         overflow-y: auto;
     }
 
+    /* For setups that stack two lists on top of each other */
+    .card-scroller-half {
+        max-height: 40vh;
+        overflow-y: auto;
+    }
+
     .comments-reaction-picker-reactions {
         grid-template-columns: repeat(4, 1fr);
     }

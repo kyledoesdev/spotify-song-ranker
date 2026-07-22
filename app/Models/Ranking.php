@@ -20,6 +20,8 @@ class Ranking extends Model
     use HasComments;
     use HasStatsAfterEvents;
 
+    public const MAX_SONGS = 500;
+
     protected $fillable = [
         'user_id',
         'artist_id',

@@ -27,6 +27,13 @@ class Song extends Model
         static::addGlobalScope('default_order', fn (Builder $query) => $query->orderBy('rank', 'asc'));
     }
 
+    protected function casts(): array
+    {
+        return [
+            'featured_artist' => 'boolean',
+        ];
+    }
+
     public function ranking(): BelongsTo
     {
         return $this->belongsTo(Ranking::class);

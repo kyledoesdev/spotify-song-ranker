@@ -55,13 +55,13 @@ Additional conventions:
 ### Action Pattern
 Business logic lives in `app/Actions/` rather than controllers or Livewire components. Actions are organized by domain:
 - `Actions/Rankings/` — Ranking creation and completion (`CompleteSongRankProcess`, `StoreArtistRanking`, etc.)
-- `Actions/Spotify/` — Spotify API interactions (`GetArtistSongs`, `GetPlaylistSongs`, `RefreshSpotifyToken`)
+- `Actions/Spotify/` — Spotify API interactions (`GetArtistSongs`, `GetArtistAppearsOnSongs`, `GetPlaylistTracks`, `RefreshToken`). `GetArtistAppearsOnSongs` is deliberately separate: featured tracks are expensive to fetch for prolific guests, so `count()` probes cheaply during artist selection and `handle()` only runs when the user toggles the featured list on
 - `Actions/Comments/` — Comment operations
 
 ### Livewire Components
 The primary UI layer. Each page is a Livewire component in `app/Livewire/`:
 - `SongRank/SongRankProcess` — Core ranking algorithm UI (pair comparisons)
-- `SongRank/SongRankSetup` — Ranking initialization (select artist/playlist/tracks)
+- `SongRank/SongRankSetup` — A shell that renders the setup component for the chosen `RankingType` (mapped in `SongRankSetup::setupComponent()`). Each of `SongRank/Setup/{Artist,Playlist,Show}Setup` owns its own search, track selection, and persistence; shared behaviour lives in `SongRank/Concerns/` traits (`HasTrackList`, `HasRankingForm`, `HasSetupFlashErrors`), and shared markup lives in `resources/views/livewire/song-rank/setup/partials/` Livewire partials
 - `Dashboard/Dashboard` — User's rankings overview
 - `Explorer` — Browse public rankings
 - `Ranking/Ranking` — View a completed ranking
@@ -73,6 +73,7 @@ The primary UI layer. Each page is a Livewire component in `app/Livewire/`:
 ### Key Models and Relationships
 - `User` → has many `Ranking`, has one `UserPreference`
 - `Ranking` → belongs to `User`, has one `Artist`/`Playlist`, has many `Song`, has one `RankingSortingState`
+- `Song` → `featured_artist` marks tracks the ranked artist only guests on; for those rows `artist_id` points at the track's *primary* artist, while every other row's `artist_id` is the artist the *ranking* belongs to
 - `RankingSortingState` — Persists merge-sort algorithm state so rankings can be resumed across sessions
 
 ### Global Helpers
