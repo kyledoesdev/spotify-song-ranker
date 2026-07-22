@@ -1,6 +1,9 @@
 <?php
 
 use App\Enums\RankingType;
+use App\Livewire\SongRank\Setup\ArtistSetup;
+use App\Livewire\SongRank\Setup\PlaylistSetup;
+use App\Livewire\SongRank\Setup\ShowSetup;
 use App\Livewire\SongRank\SongRankSetup;
 use App\Models\Artist;
 use App\Models\Playlist;
@@ -28,7 +31,7 @@ describe('creating rankings', function () {
         expect(Ranking::where('name', 'Local Natives List')->exists())->toBeFalse();
 
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
+            ->test(ArtistSetup::class)
             ->set('selectedArtist', [
                 'id' => 'test-artist-id',
                 'name' => 'Local Natives',
@@ -54,7 +57,6 @@ describe('creating rankings', function () {
                     'uuid' => str()->uuid()->toString(),
                 ],
             ]))
-            ->set('type', RankingType::ARTIST)
             ->set('form.name', 'Local Natives List')
             ->set('form.is_public', true)
             ->call('beginRanking')
@@ -75,7 +77,7 @@ describe('creating rankings', function () {
         expect(Ranking::where('name', 'Test Playlist List')->exists())->toBeFalse();
 
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
+            ->test(PlaylistSetup::class)
             ->set('selectedPlaylist', [
                 'id' => 'test-playlist-id',
                 'name' => 'Playlist Name',
@@ -116,7 +118,6 @@ describe('creating rankings', function () {
                     'is_podcast' => false,
                 ],
             ]))
-            ->set('type', RankingType::PLAYLIST)
             ->set('form.name', 'Test Playlist List')
             ->set('form.is_public', true)
             ->call('beginRanking')
@@ -142,7 +143,7 @@ describe('creating rankings', function () {
         expect(Ranking::where('name', 'Test Show List')->exists())->toBeFalse();
 
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
+            ->test(ShowSetup::class)
             ->set('selectedShow', [
                 'id' => 'test-show-id',
                 'name' => 'Test Show',
@@ -173,7 +174,6 @@ describe('creating rankings', function () {
                     'uuid' => str()->uuid()->toString(),
                 ],
             ]))
-            ->set('type', RankingType::SHOW)
             ->set('form.name', 'Test Show List')
             ->set('form.is_public', true)
             ->call('beginRanking')
@@ -194,56 +194,83 @@ describe('creating rankings', function () {
 describe('ranking setup searching', function () {
     test('cannot search for an artist with an empty search term', function () {
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
+            ->test(ArtistSetup::class)
             ->set('searchTerm', '')
-            ->call('searchArtist')
+            ->call('search')
             ->assertSet('searchedArtists', null)
             ->assertSet('selectedTracks', null);
     });
 
     test('cannot search for a playlist with an invalid URL', function () {
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
+            ->test(PlaylistSetup::class)
             ->set('searchTerm', 'abcdxyz')
-            ->call('searchPlaylist')
+            ->call('search')
             ->assertSet('selectedPlaylist', [])
             ->assertSet('selectedTracks', null);
     });
 
     test('can search for a playlist with a valid URL', function () {
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
-            ->set('type', RankingType::PLAYLIST)
+            ->test(PlaylistSetup::class)
             ->set('searchTerm', 'https://open.spotify.com/playlist/1l9ToABW4nh8EdGfq3Qvei')
-            ->call('searchPlaylist')
-            ->assertSet('type', RankingType::PLAYLIST);
+            ->call('search')
+            ->assertHasNoErrors();
     });
 
-    test('cannot change ranking type after selecting an artist', function () {
+    test('cannot search for a show with an invalid URL', function () {
+        Livewire::actingAs(User::factory()->createOne())
+            ->test(ShowSetup::class)
+            ->set('searchTerm', 'abcdxyz')
+            ->call('search')
+            ->assertSet('selectedShow', [])
+            ->assertSet('selectedTracks', null);
+    });
+});
+
+describe('ranking type selection', function () {
+    test('the setup shell renders the artist setup by default', function () {
         Livewire::actingAs(User::factory()->createOne())
             ->test(SongRankSetup::class)
+            ->assertSet('type', RankingType::ARTIST)
+            ->assertSeeLivewire(ArtistSetup::class);
+    });
+
+    test('switching ranking type swaps the rendered setup component', function () {
+        Livewire::actingAs(User::factory()->createOne())
+            ->test(SongRankSetup::class)
+            ->call('switchType', RankingType::PLAYLIST->value)
+            ->assertSet('type', RankingType::PLAYLIST)
+            ->assertSeeLivewire(PlaylistSetup::class)
+            ->call('switchType', RankingType::SHOW->value)
+            ->assertSet('type', RankingType::SHOW)
+            ->assertSeeLivewire(ShowSetup::class);
+    });
+
+    test('the type selector locks once a source has been selected', function () {
+        Livewire::actingAs(User::factory()->createOne())
+            ->test(ArtistSetup::class)
+            ->assertSeeHtml('switch-ranking-type')
             ->set('selectedArtist', [
                 'id' => 'test-artist-id',
                 'name' => 'Local Natives',
                 'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=testing',
             ])
-            ->set('selectedTracks', collect([
-                ['id' => 'track-1', 'name' => 'Track 1', 'cover' => 'cover', 'uuid' => str()->uuid()->toString()],
-                ['id' => 'track-2', 'name' => 'Track 2', 'cover' => 'cover', 'uuid' => str()->uuid()->toString()],
-            ]))
-            ->set('type', RankingType::PLAYLIST->value)
-            ->assertSet('type', RankingType::ARTIST)
-            ->assertNotSet('selectedArtist', null);
+            ->assertDontSeeHtml('switch-ranking-type');
     });
 
-    test('resets search results when changing type during artist search before selection', function () {
+    test('resetting the setup clears the selection and unlocks the type selector', function () {
         Livewire::actingAs(User::factory()->createOne())
-            ->test(SongRankSetup::class)
-            ->set('searchedArtists', collect([
-                ['id' => 'artist-1', 'name' => 'Artist 1', 'cover' => 'cover'],
-            ]))
-            ->set('type', RankingType::PLAYLIST->value)
-            ->assertSet('type', RankingType::PLAYLIST)
-            ->assertSet('searchedArtists', null);
+            ->test(ArtistSetup::class)
+            ->set('searchTerm', 'Local Natives')
+            ->set('selectedArtist', [
+                'id' => 'test-artist-id',
+                'name' => 'Local Natives',
+                'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=testing',
+            ])
+            ->call('resetSetup')
+            ->assertSet('selectedArtist', null)
+            ->assertSet('searchTerm', '')
+            ->assertSeeHtml('switch-ranking-type');
     });
 });
