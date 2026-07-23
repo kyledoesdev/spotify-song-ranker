@@ -36,10 +36,14 @@ final class GetArtistAppearsOnSongs
             ]);
 
             $totalAlbumCount = (int) $response->json('total');
-            $offsets = $totalAlbumCount > 50 ? range(50, $totalAlbumCount - 1, 50) : [];
             $albumItems = collect($response->json('items'));
+            $offsets = collect();
 
-            foreach (collect($offsets)->chunk(10) as $wave) {
+            for ($offset = 50; $offset < $totalAlbumCount; $offset += 50) {
+                $offsets->push($offset);
+            }
+
+            foreach ($offsets->chunk(10) as $wave) {
                 $albumItems = $albumItems->concat($this->fetchAlbumPages($user, $artistId, $wave));
             }
 
