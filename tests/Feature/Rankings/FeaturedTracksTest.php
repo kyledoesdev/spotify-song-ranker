@@ -175,6 +175,42 @@ describe('lazy loading featured tracks', function () {
         Http::assertNotSent(fn (Request $request) => str_contains($request->url(), 'hits-comp-id'));
     });
 
+    test('walks a partial second album page when the artist appears on more than fifty releases', function () {
+        Http::fake([
+            'https://accounts.spotify.com/*' => Http::response(['access_token' => 'fresh-token']),
+            'https://api.spotify.com/v1/artists/*' => fn (Request $request) => Http::response([
+                'total' => 59,
+                'items' => str_contains($request->url(), 'offset=50')
+                    ? [['id' => 'second-page-album-id', 'album_type' => 'single']]
+                    : [['id' => 'their-album-id', 'album_type' => 'single']],
+            ]),
+            'https://api.spotify.com/v1/albums*' => Http::response([
+                'albums' => [
+                    appearsOnAlbum('their-album-id', 'guest-verse-id', 'Guest Verse'),
+                    appearsOnAlbum('second-page-album-id', 'second-verse-id', 'Second Verse'),
+                ],
+            ]),
+        ]);
+
+        $component = Livewire::actingAs(User::factory()->createOne())
+            ->test(ArtistSetup::class)
+            ->set('selectedArtist', [
+                'id' => 'ranked-artist-id',
+                'name' => 'Ranked Artist',
+                'cover' => 'https://example.test/artist.png',
+            ])
+            ->set('selectedTracks', collect([
+                ownedTrack('own-one-id', 'Own One'),
+            ]))
+            ->set('appearsOnCount', 59)
+            ->set('includeFeaturedTracks', true);
+
+        expect($component->get('featuredTracks')->pluck('name')->sort()->values()->all())
+            ->toBe(['Guest Verse', 'Second Verse']);
+
+        Http::assertSent(fn (Request $request) => str_contains($request->url(), 'offset=50'));
+    });
+
     test('loads featured tracks past the ranking cap and flags the overage', function () {
         fakeAppearsOnApi();
 
@@ -270,6 +306,28 @@ function artistSetup(): Testable
         ]))
         ->set('form.name', 'Test List')
         ->set('form.is_public', true);
+}
+
+function appearsOnAlbum(string $albumId, string $trackId, string $trackName): array
+{
+    return [
+        'id' => $albumId,
+        'artists' => [['id' => 'other-artist-id', 'name' => 'Other Artist']],
+        'images' => [['url' => "https://example.test/{$albumId}.png"]],
+        'tracks' => [
+            'total' => 1,
+            'items' => [
+                [
+                    'id' => $trackId,
+                    'name' => $trackName,
+                    'artists' => [
+                        ['id' => 'other-artist-id', 'name' => 'Other Artist'],
+                        ['id' => 'ranked-artist-id', 'name' => 'Ranked Artist'],
+                    ],
+                ],
+            ],
+        ],
+    ];
 }
 
 function ownedTrack(string $id, string $name): array
