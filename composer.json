@@ -5,7 +5,7 @@
     "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.4||^8.5",
         "blaspsoft/blasp": "^4.0",
         "bugsnag/bugsnag-laravel": "^2.27",
         "doctrine/dbal": "^4.0",
@@ -16,7 +16,7 @@
         "laravel/nightwatch": "^1.7",
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^3.0",
-        "maatwebsite/excel": "^3.1",
+        "maatwebsite/excel": "4.x-dev",
         "marvinlabs/laravel-discord-logger": "^1.4",
         "socialiteproviders/spotify": "^4.1",
         "spatie/filament-simple-stats": "^1.1",
