@@ -1,6 +1,8 @@
 <?php
 
+use App\Actions\Comments\FilterCommentProfanityAction;
 use App\Models\User;
+use Spatie\Comments\Models\Comment;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
@@ -35,6 +37,26 @@ describe('ranking comments', function () {
     });
 });
 
+describe('comment profanity filtering', function () {
+    test('masks profanity in the comment text', function () {
+        $comment = profanityFilteredComment('this is a fucking test');
+
+        expect($comment->text)->toBe('this is a ******* test');
+    });
+
+    test('leaves clean text unchanged', function () {
+        $comment = profanityFilteredComment('this is a perfectly fine test');
+
+        expect($comment->text)->toBe('this is a perfectly fine test');
+    });
+
+    test('preserves the original text alongside the masked text', function () {
+        $comment = profanityFilteredComment('this is a fucking test');
+
+        expect($comment->original_text)->toBe('this is a fucking test');
+    });
+});
+
 describe('ranking comment replies', function () {
     test('allows replies when comment replies are enabled', function () {
         $ranking = publicCompletedRanking([
@@ -58,3 +80,13 @@ describe('ranking comment replies', function () {
             ->assertSee('&quot;showReplies&quot;:false', false);
     });
 });
+
+function profanityFilteredComment(string $text): Comment
+{
+    $comment = new Comment;
+    $comment->original_text = $text;
+
+    (new FilterCommentProfanityAction)->handle($comment);
+
+    return $comment;
+}
