@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Playlists;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Playlists\Pages\ManagePlaylists;
 use App\Models\Playlist;
 use BackedEnum;
@@ -21,6 +22,8 @@ use UnitEnum;
 
 class PlaylistResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Playlist::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::RectangleGroup;
@@ -28,11 +31,6 @@ class PlaylistResource extends Resource
     protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
 
     protected static ?string $recordTitleAttribute = 'name';
-
-    public static function form(Schema $schema): Schema
-    {
-        return $schema->components([]);
-    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -64,7 +62,9 @@ class PlaylistResource extends Resource
                             ->color('primary'),
                         TextEntry::make('creator_name')
                             ->label('Creator Name')
-                            ->url(fn (Playlist $playlist) => route('filament.admin.resources.users.view', ['record' => $playlist->user]))
+                            ->url(fn (Playlist $playlist): ?string => $playlist->user
+                                ? route('filament.admin.resources.users.view', ['record' => $playlist->user])
+                                : null)
                             ->color('primary')
                             ->icon(Heroicon::User),
                     ]),
@@ -123,10 +123,5 @@ class PlaylistResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(Playlist::count());
     }
 }

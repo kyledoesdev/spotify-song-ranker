@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Artists;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Artists\Pages\ListArtists;
 use App\Filament\Resources\Artists\Pages\ViewArtist;
 use App\Filament\Resources\Artists\RelationManagers\RankingsRelationManager;
@@ -17,20 +18,18 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class ArtistResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Artist::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMusicalNote;
 
     protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
-
-    public static function form(Schema $schema): Schema
-    {
-        return $schema->components([]);
-    }
 
     public static function table(Table $table): Table
     {
@@ -45,7 +44,7 @@ class ArtistResource extends Resource
                     ->sortable(),
                 TextColumn::make('rankings_count')
                     ->label('Rankings')
-                    ->counts(['rankings' => fn ($query) => $query->whereNull('playlist_id')])
+                    ->counts('rankings')
                     ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -61,7 +60,7 @@ class ArtistResource extends Resource
             ->toolbarActions([]);
     }
 
-    public static function infoList(Schema $schema): Schema
+    public static function infolist(Schema $schema): Schema
     {
         return $schema
             ->components([
@@ -77,10 +76,14 @@ class ArtistResource extends Resource
                         TextEntry::make('artist_id')
                             ->label('Spotify ID'),
                         TextEntry::make('rankings_count')
-                            ->label('Artist Rankings')
-                            ->state(fn (Artist $record) => $record->rankings()->whereNull('playlist_id')->count()),
+                            ->label('Artist Rankings'),
                     ]),
             ]);
+    }
+
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()->withCount('rankings');
     }
 
     public static function getRelations(): array
@@ -96,10 +99,5 @@ class ArtistResource extends Resource
             'index' => ListArtists::route('/'),
             'view' => ViewArtist::route('/{record}'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(static::getModel()::count());
     }
 }

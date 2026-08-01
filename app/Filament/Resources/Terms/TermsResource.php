@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Terms;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Terms\Pages\CreateTerms;
 use App\Filament\Resources\Terms\Pages\EditTerms;
 use App\Filament\Resources\Terms\Pages\ListTerms;
@@ -20,6 +21,8 @@ use UnitEnum;
 
 class TermsResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Terms::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Briefcase;
@@ -59,10 +62,5 @@ class TermsResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(static::getModel()::count());
     }
 }

@@ -8,9 +8,4 @@ use Filament\Resources\Pages\ManageRecords;
 class ManagePlaylists extends ManageRecords
 {
     protected static string $resource = PlaylistResource::class;
-
-    protected function getHeaderActions(): array
-    {
-        return [];
-    }
 }

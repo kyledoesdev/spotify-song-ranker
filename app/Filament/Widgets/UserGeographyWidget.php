@@ -16,6 +16,8 @@ class UserGeographyWidget extends ChartWidget
 
     protected static ?int $sort = 4;
 
+    protected ?string $pollingInterval = null;
+
     protected function getFilters(): ?array
     {
         return [
@@ -49,7 +51,8 @@ class UserGeographyWidget extends ChartWidget
 
     protected function getGroupedData(): Collection
     {
-        $packets = User::whereNotNull('user_packet')
+        $packets = User::query()
+            ->whereNotNull('user_packet')
             ->pluck('user_packet')
             ->map(fn ($packet) => (array) (is_string($packet) ? json_decode($packet) : $packet))
             ->filter();
@@ -70,7 +73,7 @@ class UserGeographyWidget extends ChartWidget
 
     protected function countryToContinent(?string $code): ?string
     {
-        if (!$code) {
+        if (! $code) {
             return null;
         }
 

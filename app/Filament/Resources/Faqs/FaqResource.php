@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Faqs;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Faqs\Pages\CreateFaq;
 use App\Filament\Resources\Faqs\Pages\EditFaq;
 use App\Filament\Resources\Faqs\Pages\ListFaqs;
@@ -19,6 +20,8 @@ use UnitEnum;
 
 class FaqResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Faq::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::QuestionMarkCircle;
@@ -52,10 +55,5 @@ class FaqResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(Faq::count());
     }
 }

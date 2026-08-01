@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets\Concerns;
+namespace App\Filament\Concerns;
 
 use App\Models\User;
 use Carbon\Carbon;
@@ -8,15 +8,17 @@ use Carbon\CarbonPeriod;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
+use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
+/** Shared date filtering for the dashboard trend widgets. */
 trait HasDateFilters
 {
-    private const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    use HasFiltersSchema;
 
-    private const DAY_LABELS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    private const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     private const QUICK_FILTERS = [
         'all' => 'All Time',
@@ -24,18 +26,29 @@ trait HasDateFilters
         'week' => 'This Week',
         'month' => 'This Month',
         'year' => 'This Year',
+        'custom' => 'Custom Range',
     ];
+
+    /** Deferring keeps the filter popover open: adjusting a filter costs no round trip. */
+    protected bool $hasDeferredFilters = true;
+
+    /** Polling re-renders the widget, which closes the filter popover mid-use. */
+    protected ?string $pollingInterval = null;
+
+    public function filtersSchema(Schema $schema): Schema
+    {
+        return $schema->components($this->getDateFiltersSchema());
+    }
 
     public function getTrendConfig(): array
     {
+        $filter = $this->filters['filter'] ?? 'all';
         $customStart = $this->filters['customStart'] ?? null;
         $customEnd = $this->filters['customEnd'] ?? null;
 
-        if ($customStart && $customEnd) {
+        if ($filter === 'custom' && filled($customStart) && filled($customEnd)) {
             return $this->buildCustomRangeConfig($customStart, $customEnd);
         }
-
-        $filter = $this->filters['filter'] ?? 'all';
 
         return match ($filter) {
             'day' => $this->buildDayConfig(),
@@ -53,19 +66,20 @@ trait HasDateFilters
                 ->label('Quick Filter')
                 ->options(self::QUICK_FILTERS)
                 ->default('all')
-                ->live()
-                ->afterStateUpdated(function (Set $set) {
-                    $this->filters['customStart'] = null;
-                    $this->filters['customEnd'] = null;
-                    $this->dispatch('$refresh');
-                }),
+                ->selectablePlaceholder(false),
             Grid::make(2)->schema([
                 DatePicker::make('customStart')
                     ->label('From')
-                    ->maxDate(now()),
+                    ->maxDate(now())
+                    ->visibleJs(<<<'JS'
+                        $get('filter') === 'custom'
+                        JS),
                 DatePicker::make('customEnd')
                     ->label('To')
-                    ->maxDate(now()),
+                    ->maxDate(now())
+                    ->visibleJs(<<<'JS'
+                        $get('filter') === 'custom'
+                        JS),
             ]),
         ];
     }
@@ -82,20 +96,19 @@ trait HasDateFilters
     private function buildWeekConfig(): array
     {
         $now = $this->userNow();
+        $start = $now->copy()->startOfWeek();
+        $end = $now->copy()->endOfWeek();
 
-        return $this->config($now->copy()->startOfWeek(), $now->copy()->endOfWeek(), 'perDay', self::DAY_LABELS);
+        return $this->config($start, $end, 'perDay', $this->dateRangeLabels($start, $end, 'D'));
     }
 
     private function buildMonthConfig(): array
     {
         $now = $this->userNow();
+        $start = $now->copy()->startOfMonth();
+        $end = $now->copy()->endOfMonth();
 
-        return $this->config(
-            $now->copy()->startOfMonth(),
-            $now->copy()->endOfMonth(),
-            'perDay',
-            $this->daysInMonthLabels($now->daysInMonth),
-        );
+        return $this->config($start, $end, 'perDay', $this->dateRangeLabels($start, $end, 'j'));
     }
 
     private function buildYearConfig(): array
@@ -108,11 +121,13 @@ trait HasDateFilters
     private function buildAllTimeConfig(): array
     {
         $tz = $this->userTimezone();
-        $start = User::query()->oldest()->first()?->created_at?->tz($tz)?->startOfMonth()
-            ?? now()->tz($tz)->startOfYear();
+        $oldest = User::query()->min('created_at');
+        $start = $oldest
+            ? Carbon::parse($oldest)->tz($tz)->startOfMonth()
+            : now()->tz($tz)->startOfYear();
         $end = now()->tz($tz)->endOfMonth();
 
-        if ($start->diffInMonths($end) > 24) {
+        if ($start->diffInMonths($end, absolute: true) > 24) {
             $yearStart = $start->copy()->startOfYear();
             $yearEnd = $end->copy()->endOfYear();
 
@@ -122,17 +137,26 @@ trait HasDateFilters
         return $this->config($start, $end, 'perMonth', $this->dateRangeLabels($start, $end, 'M Y', '1 month'));
     }
 
+    /** Avoids perWeek: PHP uses ISO weeks and MySQL uses %u, so labels desync from the data. */
     private function buildCustomRangeConfig(string $customStart, string $customEnd): array
     {
         $tz = $this->userTimezone();
         $start = Carbon::parse($customStart, $tz)->startOfDay();
         $end = Carbon::parse($customEnd, $tz)->endOfDay();
-        $days = $start->diffInDays($end);
+
+        if ($start->greaterThan($end)) {
+            [$start, $end] = [$end->copy()->startOfDay(), $start->copy()->endOfDay()];
+        }
+
+        if ($start->isSameDay($end)) {
+            return $this->config($start, $end, 'perHour', $this->hourLabels());
+        }
+
+        $days = $start->diffInDays($end, absolute: true);
 
         [$period, $labels] = match (true) {
-            $days <= 1 => ['perHour', $this->hourLabels()],
             $days <= 31 => ['perDay', $this->dateRangeLabels($start, $end, 'j')],
-            $days <= 365 => ['perWeek', $this->dateRangeLabels($start, $end, 'M j', '1 week')],
+            $days <= 365 => ['perDay', $this->dateRangeLabels($start, $end, 'M j')],
             default => ['perMonth', $this->dateRangeLabels($start, $end, 'M Y', '1 month')],
         };
 
@@ -167,13 +191,6 @@ trait HasDateFilters
     {
         return collect(range(0, 23))
             ->map(fn (int $hour) => Str::padLeft($hour, 2, '0').':00')
-            ->toArray();
-    }
-
-    private function daysInMonthLabels(int $daysInMonth): array
-    {
-        return collect(range(1, $daysInMonth))
-            ->map(fn (int $day) => (string) $day)
             ->toArray();
     }
 }

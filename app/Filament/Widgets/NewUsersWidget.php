@@ -2,29 +2,19 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Widgets\Concerns\HasDateFilters;
+use App\Filament\Concerns\HasDateFilters;
 use App\Models\User;
-use Filament\Schemas\Schema;
 use Filament\Widgets\ChartWidget;
-use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
 class NewUsersWidget extends ChartWidget
 {
     use HasDateFilters;
-    use HasFiltersSchema;
 
-    protected ?string $heading = 'New Users Widget';
+    protected ?string $heading = 'New Users';
 
     protected static ?int $sort = 2;
-
-    protected bool $hasDeferredFilters = true;
-
-    public function filtersSchema(Schema $schema): Schema
-    {
-        return $schema->components($this->getDateFiltersSchema());
-    }
 
     protected function getData(): array
     {
@@ -36,6 +26,7 @@ class NewUsersWidget extends ChartWidget
             ->count();
 
         $deletedUsers = Trend::query(User::onlyTrashed())
+            ->dateColumn('deleted_at')
             ->between(start: $trendConfig['start'], end: $trendConfig['end'])
             ->{$trendConfig['period']}()
             ->count();

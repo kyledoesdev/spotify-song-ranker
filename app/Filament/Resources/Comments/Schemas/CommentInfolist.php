@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\Comments\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
-use Filament\Infolists\Components\TextEntry;
+use App\Models\Comment;
 use Filament\Infolists\Components\KeyValueEntry;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
 class CommentInfolist
@@ -40,11 +41,15 @@ class CommentInfolist
                         TextEntry::make('commentator.name')
                             ->label('User')
                             ->icon(Heroicon::Link)
-                            ->url(fn ($record) => $record->commentator ? route('filament.admin.resources.users.edit', $record->commentator_id) : null),
+                            ->url(fn (Comment $record): ?string => $record->commentator
+                                ? route('filament.admin.resources.users.edit', $record->commentator_id)
+                                : null),
                         TextEntry::make('commentable.name')
                             ->label('Ranking')
                             ->icon(Heroicon::Link)
-                            ->url(fn ($record) => $record->commentable ? route('filament.admin.resources.rankings.edit', $record->commentator_id) : null),
+                            ->url(fn (Comment $record): ?string => $record->commentable
+                                ? route('filament.admin.resources.rankings.edit', $record->commentable_id)
+                                : null),
                     ]),
 
                 Section::make('Status & Timestamps')
@@ -54,8 +59,8 @@ class CommentInfolist
                             ->label('Approved')
                             ->dateTime()
                             ->placeholder('Not Approved')
-                            ->icon(fn ($state) => $state ? Heroicon::OutlinedCheckCircle : Heroicon::OutlinedXCircle)
-                            ->iconColor(fn ($state) => $state ? 'success' : 'danger'),
+                            ->icon(fn (mixed $state): Heroicon => $state ? Heroicon::OutlinedCheckCircle : Heroicon::OutlinedXCircle)
+                            ->iconColor(fn (mixed $state): string => $state ? 'success' : 'danger'),
                         TextEntry::make('created_at')
                             ->dateTime()
                             ->since(),

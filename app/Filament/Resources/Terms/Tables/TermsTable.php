@@ -20,18 +20,14 @@ class TermsTable
                 TextColumn::make('id')->label('ID'),
                 TextColumn::make('created_at')
                     ->label('Created')
-                    ->searchable()
                     ->sortable()
                     ->dateTime(),
                 TextColumn::make('updated_at')
                     ->label('Last Updated')
-                    ->searchable()
                     ->sortable()
                     ->dateTime(),
             ])
-            ->filters([
-
-            ])
+            ->filters([])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

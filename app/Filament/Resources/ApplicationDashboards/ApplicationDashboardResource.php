@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ApplicationDashboards;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\ApplicationDashboards\Pages\ManageApplicationDashboards;
 use App\Models\ApplicationDashboard;
 use BackedEnum;
@@ -18,6 +19,8 @@ use UnitEnum;
 
 class ApplicationDashboardResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = ApplicationDashboard::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRocketLaunch;
@@ -40,7 +43,8 @@ class ApplicationDashboardResource extends Resource
                     ->maxLength(255),
                 TextInput::make('slideshow_speed')
                     ->required()
-                    ->maxLength(255),
+                    ->numeric()
+                    ->minValue(1),
                 Textarea::make('seo_terms')
                     ->helperText('Comma-separated SEO keywords rendered in the meta keywords tag.')
                     ->columnSpanFull(),
@@ -91,10 +95,5 @@ class ApplicationDashboardResource extends Resource
         return [
             'index' => ManageApplicationDashboards::route('/'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(static::getModel()::count());
     }
 }

@@ -7,7 +7,7 @@ use Livewire\Livewire;
 
 describe('logins widget', function () {
     test('renders all stats', function () {
-        $user = User::factory()->createOne(['timezone' => 'UTC']);
+        $user = User::factory()->createOne();
 
         Livewire::actingAs($user)
             ->test(LoginsWidget::class)
@@ -19,7 +19,7 @@ describe('logins widget', function () {
     });
 
     test('counts total and deleted users', function () {
-        $actor = User::factory()->createOne(['timezone' => 'UTC']);
+        $actor = User::factory()->createOne();
         User::factory()->count(2)->create();
         User::factory()->count(3)->create()->each->delete();
 
@@ -30,7 +30,7 @@ describe('logins widget', function () {
     });
 
     test('reflects daily active users from login stats', function () {
-        $user = User::factory()->createOne(['timezone' => 'UTC']);
+        $user = User::factory()->createOne();
 
         LoginStat::increase(5);
 

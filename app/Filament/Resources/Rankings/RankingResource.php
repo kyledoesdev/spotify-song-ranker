@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Rankings;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Rankings\Pages\EditRanking;
 use App\Filament\Resources\Rankings\Pages\ListRankings;
 use App\Filament\Resources\Rankings\Pages\ViewRanking;
@@ -12,7 +13,7 @@ use App\Models\Ranking;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Infolists\Components\IconEntry;
@@ -21,11 +22,16 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
 class RankingResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Ranking::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::ListBullet;
@@ -38,20 +44,24 @@ class RankingResource extends Resource
             TextInput::make('name')
                 ->required()
                 ->maxLength(255),
-            DatePicker::make('completed_at')
-                ->label('Completed At'),
+            DateTimePicker::make('completed_at')
+                ->label('Completed At')
+                ->afterStateHydrated(function (DateTimePicker $component, ?Ranking $record): void {
+                    $component->state($record?->getAttributes()['completed_at'] ?? null);
+                }),
             Toggle::make('is_ranked')
-                ->label('Is Ranked')
-                ->required(),
+                ->label('Is Ranked'),
             Toggle::make('is_public')
-                ->label('Is Public')
-                ->required(),
+                ->label('Is Public'),
         ]);
     }
 
     public static function table(Table $table): Table
     {
         return RankingTable::configure($table)
+            ->filters([
+                TrashedFilter::make(),
+            ])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
@@ -59,7 +69,7 @@ class RankingResource extends Resource
             ->toolbarActions([]);
     }
 
-    public static function infoList(Schema $schema): Schema
+    public static function infolist(Schema $schema): Schema
     {
         return $schema
             ->components([
@@ -98,8 +108,7 @@ class RankingResource extends Resource
                         TextEntry::make('playlist.track_count')
                             ->label('Tracks in Playlist'),
                         TextEntry::make('songs_count')
-                            ->label('Tracks Ranked')
-                            ->state(fn (Ranking $ranking) => $ranking->songs()->count()),
+                            ->label('Tracks Ranked'),
                     ]),
 
                 Section::make('Show Details')
@@ -137,13 +146,18 @@ class RankingResource extends Resource
         ];
     }
 
-    public static function getNavigationBadge(): ?string
+    /** The table counts its own songs; RankingTable is shared with relation managers. */
+    public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return short_number(
-            Ranking::query()
-                ->where('is_ranked', true)
-                ->where('is_public', true)
-                ->count()
-        );
+        return parent::getRecordRouteBindingEloquentQuery()
+            ->withCount('songs')
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
+    protected static function navigationBadgeCount(): int
+    {
+        return Ranking::query()->public()->completed()->count();
     }
 }
