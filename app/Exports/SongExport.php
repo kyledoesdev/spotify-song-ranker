@@ -15,12 +15,12 @@ class SongExport implements FromCollection, WithHeadings, WithMapping, WithTitle
         private string $rankingName
     ) {}
 
-    public function collection()
+    public function collection(): Collection
     {
         return $this->songs;
     }
 
-    public function map($song): array
+    public function map(mixed $song): array
     {
         return [
             $song->artist ? $song->artist->artist_name : 'N/A',

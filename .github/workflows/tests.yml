@@ -17,9 +17,10 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.5
           tools: composer:v2
-          coverage: xdebug
+          coverage: none
+          ini-values: memory_limit=512M
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -52,8 +53,8 @@ jobs:
           mkdir -p database
           touch database/database.sqlite
 
-      - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
+      - name: Run Tests
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
-        run: php artisan test
+        run: php vendor/bin/pest --parallel
