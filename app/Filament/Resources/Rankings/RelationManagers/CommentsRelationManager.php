@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\Rankings\RelationManagers;
 
-use Filament\Tables\Table;
-use Filament\Actions\ViewAction;
+use App\Filament\Resources\Comments\CommentResource;
 use Filament\Actions\DeleteAction;
-use Filament\Tables\Columns\TextColumn;
-use App\Filament\Resources\Rankings\RankingResource;
+use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class CommentsRelationManager extends RelationManager
 {
@@ -15,7 +15,7 @@ class CommentsRelationManager extends RelationManager
 
     protected static ?string $title = 'Comments';
 
-    protected static ?string $relatedResource = RankingResource::class;
+    protected static ?string $relatedResource = CommentResource::class;
 
     public function table(Table $table): Table
     {
@@ -33,7 +33,7 @@ class CommentsRelationManager extends RelationManager
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
-            ->recordactions([
+            ->recordActions([
                 ViewAction::make(),
                 DeleteAction::make(),
             ]);

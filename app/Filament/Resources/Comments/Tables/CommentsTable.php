@@ -29,13 +29,13 @@ class CommentsTable
                     ->label('Created At')
                     ->dateTime(
                         format: 'M j, Y g:i A T',
-                        timezone: Auth::user()->timezone
+                        timezone: Auth::user()->timezone,
                     ),
                 TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->dateTime(
                         format: 'M j, Y g:i A T',
-                        timezone: Auth::user()->timezone
+                        timezone: Auth::user()->timezone,
                     ),
             ])
             ->filters([

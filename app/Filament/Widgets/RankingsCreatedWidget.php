@@ -2,29 +2,19 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Widgets\Concerns\HasDateFilters;
+use App\Filament\Concerns\HasDateFilters;
 use App\Models\Ranking;
-use Filament\Schemas\Schema;
 use Filament\Widgets\ChartWidget;
-use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
 
 class RankingsCreatedWidget extends ChartWidget
 {
     use HasDateFilters;
-    use HasFiltersSchema;
 
     protected ?string $heading = 'Rankings Stats';
 
     protected static ?int $sort = 3;
-
-    protected bool $hasDeferredFilters = true;
-
-    public function filtersSchema(Schema $schema): Schema
-    {
-        return $schema->components($this->getDateFiltersSchema());
-    }
 
     protected function getData(): array
     {
@@ -36,11 +26,13 @@ class RankingsCreatedWidget extends ChartWidget
             ->count();
 
         $deleted = Trend::query(Ranking::onlyTrashed())
+            ->dateColumn('deleted_at')
             ->between(start: $trendConfig['start'], end: $trendConfig['end'])
             ->{$trendConfig['period']}()
             ->count();
 
         $completed = Trend::query(Ranking::query()->whereNotNull('completed_at'))
+            ->dateColumn('completed_at')
             ->between(start: $trendConfig['start'], end: $trendConfig['end'])
             ->{$trendConfig['period']}()
             ->count();

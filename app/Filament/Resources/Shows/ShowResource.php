@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Shows;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Shows\Pages\ManageShows;
+use App\Filament\Resources\Shows\Pages\ViewShow;
 use App\Filament\Resources\Shows\RelationManagers\RankingsRelationManager;
 use App\Models\Show;
 use BackedEnum;
@@ -23,6 +25,8 @@ use UnitEnum;
 
 class ShowResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Show::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Microphone;
@@ -30,11 +34,6 @@ class ShowResource extends Resource
     protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
 
     protected static ?string $recordTitleAttribute = 'name';
-
-    public static function form(Schema $schema): Schema
-    {
-        return $schema->components([]);
-    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -115,6 +114,7 @@ class ShowResource extends Resource
     {
         return [
             'index' => ManageShows::route('/'),
+            'view' => ViewShow::route('/{record}'),
         ];
     }
 
@@ -124,10 +124,5 @@ class ShowResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(Show::count());
     }
 }

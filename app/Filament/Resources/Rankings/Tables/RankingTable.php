@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Rankings\Tables;
 
+use App\Models\Ranking;
 use Carbon\Carbon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -46,7 +47,6 @@ class RankingTable
             IconColumn::make('is_ranked')
                 ->label('Is Ranked')
                 ->boolean()
-                ->searchable()
                 ->sortable()
                 ->trueIcon('heroicon-o-check-badge')
                 ->falseIcon('heroicon-o-x-mark')
@@ -54,14 +54,12 @@ class RankingTable
             IconColumn::make('is_public')
                 ->label('Is Public')
                 ->boolean()
-                ->searchable()
                 ->sortable()
                 ->trueIcon('heroicon-o-check-badge')
                 ->falseIcon('heroicon-o-x-mark')
                 ->toggleable(isToggledHiddenByDefault: false),
             TextColumn::make('created_at')
                 ->label('Created')
-                ->searchable()
                 ->sortable()
                 ->dateTime()
                 ->toggleable(isToggledHiddenByDefault: false),
@@ -77,11 +75,10 @@ class RankingTable
     {
         return TextColumn::make('completed_at')
             ->label('Completed')
-            ->searchable()
             ->sortable()
             ->dateTime()
             ->toggleable(isToggledHiddenByDefault: false)
-            ->formatStateUsing(function ($state, $record) {
+            ->formatStateUsing(function (Ranking $record): string {
                 $timestamp = $record->getAttributes()['completed_at'];
 
                 if (is_null($timestamp)) {

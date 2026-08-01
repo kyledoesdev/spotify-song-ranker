@@ -4,6 +4,9 @@ namespace App\Filament\Widgets;
 
 use App\Models\User;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class UserPlatformWidget extends ChartWidget
 {
@@ -13,27 +16,29 @@ class UserPlatformWidget extends ChartWidget
 
     protected static ?int $sort = 5;
 
+    protected ?string $pollingInterval = null;
+
+    /** iOS reports no platform client hint, so those users are read off the user agent instead. */
     protected function getData(): array
     {
+        $iphones = User::query()
+            ->where('user_agent', 'like', '%iPhone%')
+            ->count();
+
         $platforms = User::query()
-            ->select('user_platform', 'user_agent')
             ->whereNotNull('user_platform')
-            ->whereNotNull('user_agent')
             ->where('user_platform', '!=', '')
-            ->get()
-            ->map(function (User $user) {
-                $platform = strtolower(trim($user->user_platform, " \t\n\r\0\x0B\""));
-
-                if (str_contains($user->user_agent ?? '', 'iPhone')) {
-                    return 'iPhone';
-                }
-
-                return $platform;
-            })
+            ->where(fn (Builder $query) => $query
+                ->whereNull('user_agent')
+                ->orWhere('user_agent', 'not like', '%iPhone%'))
+            ->pluck('user_platform')
+            ->map(fn (string $platform) => Str::of($platform)->trim('"')->lower()->toString())
+            ->filter()
             ->countBy()
+            ->when($iphones > 0, fn (Collection $platforms) => $platforms->put('iphone', $iphones))
             ->sortDesc();
 
-        $colors = $platforms->keys()->map(fn ($platform) => $this->getPlatformColor($platform))->values();
+        $colors = $platforms->keys()->map(fn (string $platform) => $this->getPlatformColor($platform))->values();
 
         return [
             'datasets' => [
@@ -43,7 +48,7 @@ class UserPlatformWidget extends ChartWidget
                     'backgroundColor' => $colors->toArray(),
                 ],
             ],
-            'labels' => $platforms->keys()->map(fn ($p) => $this->formatLabel($p))->toArray(),
+            'labels' => $platforms->keys()->map(fn (string $platform) => $this->formatLabel($platform))->toArray(),
         ];
     }
 

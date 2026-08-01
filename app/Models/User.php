@@ -61,6 +61,7 @@ class User extends Authenticatable implements CanComment, FilamentUser
     {
         return [
             'user_packet' => 'object',
+            'is_dev' => 'boolean',
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\LandingPageContents;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\LandingPageContents\Pages\EditLandingPageContent;
 use App\Filament\Resources\LandingPageContents\Pages\ListLandingPageContents;
 use App\Filament\Resources\LandingPageContents\Schemas\LandingPageContentForm;
@@ -18,6 +19,8 @@ use UnitEnum;
 
 class LandingPageContentResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = LandingPageContent::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::DocumentText;
@@ -50,10 +53,5 @@ class LandingPageContentResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(LandingPageContent::count());
     }
 }

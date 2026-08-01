@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Users\Pages\EditUser;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Filament\Resources\Users\Pages\ViewUser;
@@ -27,6 +28,8 @@ use UnitEnum;
 
 class UserResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = User::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUser;
@@ -39,13 +42,15 @@ class UserResource extends Resource
             ->components([
                 TextInput::make('spotify_id')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
                     ->email()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
                 TextInput::make('timezone')
                     ->maxLength(255),
             ]);
@@ -168,10 +173,5 @@ class UserResource extends Resource
             'view' => ViewUser::route('/{record}'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(static::getModel()::count());
     }
 }

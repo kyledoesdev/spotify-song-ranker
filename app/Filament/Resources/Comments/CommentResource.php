@@ -2,21 +2,26 @@
 
 namespace App\Filament\Resources\Comments;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Comments\Pages\EditComment;
 use App\Filament\Resources\Comments\Pages\ListComments;
 use App\Filament\Resources\Comments\Pages\ViewComment;
 use App\Filament\Resources\Comments\Schemas\CommentInfolist;
 use App\Filament\Resources\Comments\Tables\CommentsTable;
+use App\Models\Comment;
 use BackedEnum;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Spatie\Comments\Models\Comment;
 use UnitEnum;
 
 class CommentResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = Comment::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
@@ -24,6 +29,20 @@ class CommentResource extends Resource
     protected static string|UnitEnum|null $navigationGroup = 'Song Rank';
 
     protected static ?string $recordTitleAttribute = 'id';
+
+    /** Edit only. Comments are never created here: there is no create page or action. */
+    public static function form(Schema $schema): Schema
+    {
+        return $schema->components([
+            Textarea::make('original_text')
+                ->label('Comment')
+                ->required()
+                ->rows(5)
+                ->columnSpanFull(),
+            DateTimePicker::make('approved_at')
+                ->label('Approved At'),
+        ]);
+    }
 
     public static function infolist(Schema $schema): Schema
     {
@@ -49,10 +68,5 @@ class CommentResource extends Resource
             'view' => ViewComment::route('/{record}'),
             'edit' => EditComment::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(static::getModel()::count());
     }
 }

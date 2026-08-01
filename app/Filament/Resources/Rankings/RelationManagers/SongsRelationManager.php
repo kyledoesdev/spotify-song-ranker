@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Rankings\RelationManagers;
 
 use Filament\Actions\DeleteAction;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
@@ -13,11 +12,6 @@ use Filament\Tables\Table;
 class SongsRelationManager extends RelationManager
 {
     protected static string $relationship = 'songs';
-
-    public function form(Schema $schema): Schema
-    {
-        return $schema->components([]);
-    }
 
     public function table(Table $table): Table
     {

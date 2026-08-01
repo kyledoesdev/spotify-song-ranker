@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\EmailTemplates;
 
+use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\EmailTemplates\Pages\ManageEmailTemplates;
 use App\Jobs\SendEmailJob;
 use App\Models\EmailTemplate;
@@ -22,6 +23,8 @@ use UnitEnum;
 
 class EmailTemplateResource extends Resource
 {
+    use HasCachedNavigationBadge;
+
     protected static ?string $model = EmailTemplate::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPaperAirplane;
@@ -32,8 +35,12 @@ class EmailTemplateResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name'),
-                TextInput::make('subject'),
+                TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                TextInput::make('subject')
+                    ->required()
+                    ->maxLength(255),
                 RichEditor::make('content'),
             ])
             ->columns(1);
@@ -79,10 +86,5 @@ class EmailTemplateResource extends Resource
         return [
             'index' => ManageEmailTemplates::route('/'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return short_number(static::getModel()::count());
     }
 }

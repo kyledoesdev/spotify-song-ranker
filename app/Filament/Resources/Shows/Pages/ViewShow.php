@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\Shows\Pages;
 
 use App\Filament\Resources\Shows\ShowResource;
-use Filament\Resources\Pages\ManageRecords;
+use Filament\Resources\Pages\ViewRecord;
 
-class ManageShows extends ManageRecords
+class ViewShow extends ViewRecord
 {
     protected static string $resource = ShowResource::class;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
+use App\Actions\Rankings\DestroyRanking;
 use App\Filament\Resources\Rankings\RankingResource;
 use App\Filament\Resources\Rankings\Tables\RankingTable;
 use App\Models\Ranking;
@@ -13,6 +14,7 @@ use Filament\Actions\ViewAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Collection;
 
 class RankingsRelationManager extends RelationManager
 {
@@ -25,7 +27,7 @@ class RankingsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema->components(Ranking::getAdminForm());
+        return RankingResource::form($schema);
     }
 
     public function table(Table $table): Table
@@ -34,14 +36,18 @@ class RankingsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->recordActions([
                 ViewAction::make()
-                    ->url(fn ($record) => RankingResource::getUrl('view', ['record' => $record])),
+                    ->url(fn (Ranking $record): string => RankingResource::getUrl('view', ['record' => $record])),
                 EditAction::make()
-                    ->url(fn ($record) => RankingResource::getUrl('edit', ['record' => $record])),
-                DeleteAction::make(),
+                    ->url(fn (Ranking $record): string => RankingResource::getUrl('edit', ['record' => $record])),
+                DeleteAction::make()
+                    ->using(fn (Ranking $record) => app(DestroyRanking::class)->handle($record->user, $record)),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(function (Collection $records): void {
+                            $records->each(fn (Ranking $record) => app(DestroyRanking::class)->handle($record->user, $record));
+                        }),
                 ]),
             ]);
     }

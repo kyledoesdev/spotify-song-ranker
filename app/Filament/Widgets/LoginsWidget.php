@@ -8,12 +8,16 @@ use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
 use Kyledoesdev\Essentials\Stats\LoginStat;
+use Spatie\Stats\DataPoint;
+use Spatie\Stats\Models\StatsEvent;
 
 class LoginsWidget extends StatsOverviewWidget
 {
     protected static ?int $sort = 1;
 
     protected ?string $heading = 'User Stats';
+
+    protected ?string $pollingInterval = null;
 
     protected function getStats(): array
     {
@@ -50,13 +54,15 @@ class LoginsWidget extends StatsOverviewWidget
         ];
     }
 
+    /** Sums increments directly; StatsQuery buckets by week and costs several queries. */
     private function loginsBetween(Carbon $start, Carbon $end): int
     {
-        return LoginStat::query()
-            ->start($start)
-            ->end($end)
-            ->get()
-            ->sum('increments');
+        return (int) StatsEvent::query()
+            ->where('name', (new LoginStat)->getName())
+            ->where('type', DataPoint::TYPE_CHANGE)
+            ->where('value', '>', 0)
+            ->whereBetween('created_at', [$start, $end])
+            ->sum('value');
     }
 
     private function trendStat(string $label, int $current, int $previous, string $comparedTo): Stat

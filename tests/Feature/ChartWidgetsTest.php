@@ -8,7 +8,7 @@ use Livewire\Livewire;
 
 describe('trend chart widgets', function () {
     test('renders without error', function (string $widget) {
-        $user = User::factory()->createOne(['timezone' => 'UTC']);
+        $user = User::factory()->createOne();
 
         Livewire::actingAs($user)
             ->test($widget)
@@ -20,7 +20,7 @@ describe('trend chart widgets', function () {
     ]);
 
     test('renders with each quick filter applied', function (string $filter) {
-        $user = User::factory()->createOne(['timezone' => 'UTC']);
+        $user = User::factory()->createOne();
 
         Livewire::actingAs($user)
             ->test(NewUsersWidget::class)
@@ -29,13 +29,13 @@ describe('trend chart widgets', function () {
     })->with(['all', 'day', 'week', 'month', 'year']);
 
     test('builds a dataset for new and deleted users', function () {
-        $actor = User::factory()->createOne(['timezone' => 'UTC']);
+        $actor = User::factory()->createOne();
         User::factory()->count(2)->create();
         User::factory()->count(1)->create()->each->delete();
 
         Livewire::actingAs($actor)
             ->test(NewUsersWidget::class)
             ->assertOk()
-            ->assertSee('New Users Widget');
+            ->assertSee('New Users');
     });
 });
