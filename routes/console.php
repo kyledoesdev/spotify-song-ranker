@@ -3,15 +3,13 @@
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schedule;
 use Spatie\Health\Commands\ScheduleCheckHeartbeatCommand;
+use Spatie\Health\Models\HealthCheckResultHistoryItem;
 
 Schedule::command('artists:update-images')
     ->timezone('America/New_York')
     ->dailyAt('08:00') /* daily at 8am */
-    ->onSuccess(function () {
-        Log::channel('discord_other_updates')->info('Artist Images updated successfully.');
-    })
     ->onFailure(function () {
-        Log::channel('discord_other_updates')->info('Something went wrong updating artist images.');
+        Log::channel('discord_other_updates')->info('Something went wrong updating artist images. You may need to refresh SOP token.');
     });
 
 Schedule::command('daily-digest:send')
@@ -34,6 +32,6 @@ Schedule::command('newsletter:send')
 Schedule::command(ScheduleCheckHeartbeatCommand::class)->everyMinute();
 Schedule::command('model:prune', [
     '--model' => [
-        \Spatie\Health\Models\HealthCheckResultHistoryItem::class,
+        HealthCheckResultHistoryItem::class,
     ],
 ])->daily();
