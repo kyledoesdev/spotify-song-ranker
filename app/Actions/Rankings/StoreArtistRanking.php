@@ -6,6 +6,7 @@ use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -42,36 +43,15 @@ final class StoreArtistRanking
 
             $tracks = collect($attributes['tracks']);
 
-            /* "appears on" tracks belong to their primary artist, so those records need to exist.
-               They arrive without artwork; UpdateArtistImages backfills it. */
-            $primaryArtists = $tracks
-                ->filter(fn (array $song) => $song['featured_artist'] ?? false)
-                ->pluck('primary_artist')
-                ->unique('id')
-                ->values();
+            $artists = $this->resolveArtists($tracks);
 
-            Artist::upsert(
-                $primaryArtists->map(fn (array $primary) => [
-                    'artist_id' => $primary['id'],
-                    'artist_name' => $primary['name'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ])->all(),
-                ['artist_id'],
-                ['artist_name', 'updated_at']
-            );
-
-            $primaryArtistKeys = Artist::query()
-                ->whereIn('artist_id', $primaryArtists->pluck('id'))
-                ->pluck('id', 'artist_id');
-
-            $songs = $tracks->map(function ($song) use ($ranking, $artist, $primaryArtistKeys) {
+            $songs = $tracks->map(function ($song) use ($ranking, $artist, $artists) {
                 $isFeaturedTrack = $song['featured_artist'] ?? false;
 
                 return [
                     'ranking_id' => $ranking->getKey(),
                     'artist_id' => $isFeaturedTrack
-                        ? $primaryArtistKeys->get($song['primary_artist']['id'])
+                        ? $artists->get($song['primary_artist']['id'])
                         : $artist->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => $song['uuid'],
@@ -88,5 +68,43 @@ final class StoreArtistRanking
 
             return $ranking;
         });
+    }
+
+    private function resolveArtists(Collection $tracks): Collection
+    {
+        $primaryTrackArtists = $tracks
+            ->filter(fn (array $song) => $song['featured_artist'] ?? false)
+            ->pluck('primary_artist')
+            ->unique('id')
+            ->values();
+
+        if ($primaryTrackArtists->isEmpty()) {
+            return collect();
+        }
+
+        $keys = Artist::query()
+            ->whereIn('artist_id', $primaryTrackArtists->pluck('id'))
+            ->pluck('id', 'artist_id');
+
+        /* Insert the ones we've never seen, in a single query. Upserting the whole set instead
+           would burn an auto-increment id for every row that already existed. */
+        $newArtists = $primaryTrackArtists->reject(fn (array $primary) => $keys->has($primary['id']));
+
+        if ($newArtists->isEmpty()) {
+            return $keys;
+        }
+
+        Artist::insertOrIgnore($newArtists->map(fn (array $primary) => [
+            'artist_id' => $primary['id'],
+            'artist_name' => $primary['name'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ])->all());
+
+        return $keys->merge(
+            Artist::query()
+                ->whereIn('artist_id', $newArtists->pluck('id'))
+                ->pluck('id', 'artist_id')
+        );
     }
 }

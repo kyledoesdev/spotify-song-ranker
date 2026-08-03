@@ -18,6 +18,8 @@ class UpdateArtistImages extends Command
 
     protected $description = 'Update Artist Profile Images';
 
+    private int $updated = 0;
+
     public function handle()
     {
         $loggedIn = $this->login();
@@ -26,31 +28,46 @@ class UpdateArtistImages extends Command
             return Command::FAILURE;
         }
 
-        /* Loop through every artist in chunks of 50 and attempt to update their image. */
-        Artist::query()->chunk(50, function ($chunk) {
-            $ids = $chunk->pluck('artist_id')->implode(',');
+        Artist::query()
+            ->chunk(50, function ($chunk) {
+                $ids = $chunk->pluck('artist_id')->implode(',');
 
-            $response = Http::withToken(Auth::user()->external_token)
-                ->get("https://api.spotify.com/v1/artists?ids={$ids}");
+                $response = Http::withToken(Auth::user()->external_token)
+                    ->get("https://api.spotify.com/v1/artists?ids={$ids}");
 
-            $upserts = collect($response->json('artists'))
-                ->filter()
-                ->map(fn ($artist) => [
-                    'artist_id' => $artist['id'],
-                    'artist_name' => $artist['name'],
-                    'artist_img' => data_get($artist, 'images.0.url'),
-                ])
-                ->all();
+                $artists = collect($response->json('artists'))
+                    ->filter()
+                    ->keyBy('id');
 
-            if ($upserts) {
-                Artist::query()->upsert($upserts, ['artist_id'], ['artist_name', 'artist_img']);
-            }
-        });
+                $chunk->each(function (Artist $artist) use ($artists) {
+                    $data = $artists->get($artist->artist_id);
+
+                    if (! $data) {
+                        return;
+                    }
+
+                    $image = data_get($data, 'images.0.url');
+
+                    /* spotify hands back the same artwork on almost every run */
+                    if ($artist->artist_img === $image) {
+                        return;
+                    }
+
+                    $artist->update([
+                        'artist_name' => $data['name'],
+                        'artist_img' => $image,
+                    ]);
+
+                    $this->updated++;
+                });
+            });
 
         Auth::logout();
 
         Session::invalidate();
         Session::regenerateToken();
+
+        Log::channel('discord_other_updates')->info("Updated {$this->updated} artist images.");
 
         return Command::SUCCESS;
     }

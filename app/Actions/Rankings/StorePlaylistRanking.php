@@ -7,6 +7,7 @@ use App\Models\Playlist;
 use App\Models\Ranking;
 use App\Models\Song;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -43,30 +44,11 @@ final class StorePlaylistRanking
 
             $tracks = collect($attributes['tracks']);
 
-            // Upsert all unique artists in one query
-            $uniqueArtists = $tracks
-                ->unique('artist_id')
-                ->map(fn ($track) => [
-                    'artist_id' => $track['artist_id'],
-                    'artist_name' => $track['artist_name'],
-                    'is_podcast' => $track['is_podcast'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ])
-                ->values()
-                ->toArray();
-
-            Artist::upsert($uniqueArtists, ['artist_id'], ['artist_name', 'is_podcast', 'updated_at']);
-
-            // Fetch all artists we need in one query
-            $artists = Artist::query()
-                ->whereIn('artist_id', $tracks->pluck('artist_id')->unique())
-                ->get()
-                ->keyBy('artist_id');
+            $artists = $this->resolveArtists($tracks);
 
             // Map songs with artist IDs
             $songs = $tracks->map(fn ($track) => [
-                'artist_id' => $artists->get($track['artist_id'])?->getKey(),
+                'artist_id' => $artists->get($track['artist_id']),
                 'ranking_id' => $ranking->getKey(),
                 'spotify_song_id' => $track['id'],
                 'uuid' => $track['uuid'],
@@ -80,5 +62,36 @@ final class StorePlaylistRanking
 
             return $ranking;
         });
+    }
+
+    private function resolveArtists(Collection $tracks): Collection
+    {
+        $trackArtists = $tracks->unique('artist_id')->values();
+
+        $artists = Artist::query()
+            ->whereIn('artist_id', $trackArtists->pluck('artist_id'))
+            ->pluck('id', 'artist_id');
+
+        /* Insert the ones we've never seen, in a single query. Upserting the whole set instead
+           would burn an auto-increment id for every row that already existed. */
+        $newArtists = $trackArtists->reject(fn (array $track) => $artists->has($track['artist_id']));
+
+        if ($newArtists->isEmpty()) {
+            return $artists;
+        }
+
+        Artist::insertOrIgnore($newArtists->map(fn (array $track) => [
+            'artist_id' => $track['artist_id'],
+            'artist_name' => $track['artist_name'],
+            'is_podcast' => $track['is_podcast'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ])->all());
+
+        return $artists->merge(
+            Artist::query()
+                ->whereIn('artist_id', $newArtists->pluck('artist_id'))
+                ->pluck('id', 'artist_id')
+        );
     }
 }
