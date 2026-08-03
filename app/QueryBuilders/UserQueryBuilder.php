@@ -16,6 +16,14 @@ class UserQueryBuilder extends Builder
             ->limit($limit);
     }
 
+    public function wherePreviouslyDeleted(string $spotifyId): static
+    {
+        return $this->newQuery()
+            ->withTrashed()
+            ->where('spotify_id', $spotifyId)
+            ->whereNotNull('deleted_at');
+    }
+
     public function roundedUserCount(): int
     {
         return (int) (round($this->newQuery()->count() / 50) * 50);
