@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\UpdateUsernameInComments;
-use App\Models\User;
+use App\Services\SpotifyAuthenticationService;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Kyledoesdev\Essentials\Stats\LoginStat;
 use Laravel\Socialite\Facades\Socialite;
@@ -29,48 +27,16 @@ class SpotifyAuthController extends Controller
             return redirect(route('welcome'))->withErrors(['error' => 'There was an issue with your spotify authorization token. Please try logging in again.']);
         }
 
-        $deletedUser = User::query()
-            ->withTrashed()
-            ->where('spotify_id', $spotifyUser->id)
-            ->whereNotNull('deleted_at')
-            ->first();
+        $authService = new SpotifyAuthenticationService($spotifyUser);
 
-        if (! is_null($deletedUser)) {
-            Log::channel('discord_user_updates')->warning($spotifyUser->name.' is back from the dead!!!!');
-            $deletedUser->restore();
+        if ($authService->restoreUserIfAccountWasPreviouslyDeleted()) {
             session()->flash('success', "Welcome back {$spotifyUser->name}.. we've been expecting you.. To revive your rankings - reach out via the support bubble in the bottom right.");
-        }
-
-        // disabled because we aren't handling mentions currently.
-        /* if ($spotifyUser->name != $currentUser = User::firstWhere('spotify_id', $spotifyUser->id)?->name) {
-            UpdateUsernameInComments::dispatch($currentUser);
-        } */
-
-        $songrankUser = User::withTrashed()->updateOrCreate([
-            'spotify_id' => $spotifyUser->id,
-        ], [
-            'name' => $spotifyUser->name,
-            'avatar' => $spotifyUser->avatar ?? "https://api.dicebear.com/7.x/initials/svg?seed={$spotifyUser->name}",
-            'external_token' => $spotifyUser->token,
-            'external_refresh_token' => $spotifyUser->refreshToken,
-            'timezone' => timezone(),
-            'ip_address' => request()->ip() ?? '',
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-            'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
-            'user_packet' => zuck(),
-        ]);
-
-        $songrankUser->email ??= $spotifyUser->email ?? "{$spotifyUser->id}@songrank.dev";
-        $songrankUser->save();
-
-        if ($songrankUser->wasRecentlyCreated) {
-            $songrankUser->preferences()->create();
         }
 
         Session::regenerate();
 
-        Auth::login($songrankUser);
-        
+        Auth::login($authService->getSongRankUser());
+
         LoginStat::increase();
 
         return redirect(route('dashboard'));

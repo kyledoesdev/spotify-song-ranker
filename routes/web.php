@@ -14,6 +14,7 @@ use App\Livewire\Ranking\Ranking;
 use App\Livewire\Support;
 use App\Livewire\Terms;
 use App\Livewire\Welcome\Welcome;
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use Kyledoesdev\Essentials\Middleware\IsDeveloper;
 use Spatie\Health\Http\Controllers\HealthCheckResultsController;
@@ -34,7 +35,7 @@ Route::get('/login/spotify', [SpotifyAuthController::class, 'login'])->name('spo
 Route::get('/login/spotify/callback', [SpotifyAuthController::class, 'processLogin'])->name('spotify.process_login');
 Route::get('/logout', [SpotifyAuthController::class, 'logout'])->name('logout');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(Authenticate::class)->group(function () {
     Route::livewire('/dashboard', Dashboard::class)->name('dashboard');
 
     Route::livewire('/rank/{id}/edit', EditRanking::class)->name('rank.edit');

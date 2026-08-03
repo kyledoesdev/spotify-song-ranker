@@ -16,6 +16,22 @@ class UserQueryBuilder extends Builder
             ->limit($limit);
     }
 
+    public function wherePreviouslyDeleted(string $spotifyId): static
+    {
+        return $this->newQuery()
+            ->withTrashed()
+            ->where('spotify_id', $spotifyId)
+            ->whereNotNull('deleted_at');
+    }
+
+    public function whereEmailBelongsToAnotherUser(string $email, int $userId): static
+    {
+        return $this->newQuery()
+            ->withTrashed()
+            ->where('email', $email)
+            ->whereKeyNot($userId);
+    }
+
     public function roundedUserCount(): int
     {
         return (int) (round($this->newQuery()->count() / 50) * 50);
