@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56c51ba98a5c0a9779f051bc15a2672a",
+    "content-hash": "329cf3ffcd57c8b111f4a7b8f40b7b02",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2854,16 +2854,16 @@
         },
         {
             "name": "kyledoesdev/essentials",
-            "version": "v0.0.8",
+            "version": "v0.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kyledoesdev/essentials.git",
-                "reference": "40279f82e30cfa95c972f8aba805904fa255b114"
+                "reference": "34879ed7c77cbd8151440302cb443cf84e983d6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kyledoesdev/essentials/zipball/40279f82e30cfa95c972f8aba805904fa255b114",
-                "reference": "40279f82e30cfa95c972f8aba805904fa255b114",
+                "url": "https://api.github.com/repos/kyledoesdev/essentials/zipball/34879ed7c77cbd8151440302cb443cf84e983d6c",
+                "reference": "34879ed7c77cbd8151440302cb443cf84e983d6c",
                 "shasum": ""
             },
             "require": {
@@ -2922,9 +2922,9 @@
             ],
             "support": {
                 "issues": "https://github.com/kyledoesdev/essentials/issues",
-                "source": "https://github.com/kyledoesdev/essentials/tree/v0.0.8"
+                "source": "https://github.com/kyledoesdev/essentials/tree/v0.0.9"
             },
-            "time": "2026-07-15T14:24:29+00:00"
+            "time": "2026-08-01T22:14:13+00:00"
         },
         {
             "name": "laravel/framework",
