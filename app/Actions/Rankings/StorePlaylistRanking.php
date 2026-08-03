@@ -64,6 +64,12 @@ final class StorePlaylistRanking
         });
     }
 
+    /**
+     * Make sure every artist the playlist references has a record.
+     *
+     * @param  Collection<int, array{artist_id: string, artist_name: string, is_podcast: bool}>  $tracks
+     * @return Collection<string, int> spotify artist id => artists.id
+     */
     private function resolveArtists(Collection $tracks): Collection
     {
         $trackArtists = $tracks->unique('artist_id')->values();

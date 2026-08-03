@@ -16,21 +16,20 @@ final class StoreArtistRanking
     {
         return DB::transaction(function () use ($user, $attributes) {
             /* update or create the artist */
-            $artist = Artist::updateOrCreate([
+            $rankedArtist = Artist::updateOrCreate([
                 'artist_id' => data_get($attributes, 'artist.id'),
             ], [
                 'artist_name' => data_get($attributes, 'artist.name'),
                 'artist_img' => data_get($attributes, 'artist.cover'),
             ]);
 
-            /* update or create the artist */
             $name = $attributes['ranking_name'] === '' || is_null($attributes['ranking_name'])
-                ? $artist->artist_name.' List'
+                ? $rankedArtist->artist_name.' List'
                 : $attributes['ranking_name'];
 
             /* create a new ranking */
             $ranking = Ranking::create([
-                'artist_id' => $artist->getKey(),
+                'artist_id' => $rankedArtist->getKey(),
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,
@@ -43,16 +42,16 @@ final class StoreArtistRanking
 
             $tracks = collect($attributes['tracks']);
 
-            $artists = $this->resolveArtists($tracks);
+            $featuredArtists = $this->resolveFeaturedArtists($tracks);
 
-            $songs = $tracks->map(function ($song) use ($ranking, $artist, $artists) {
+            $songs = $tracks->map(function ($song) use ($ranking, $rankedArtist, $featuredArtists) {
                 $isFeaturedTrack = $song['featured_artist'] ?? false;
 
                 return [
                     'ranking_id' => $ranking->getKey(),
                     'artist_id' => $isFeaturedTrack
-                        ? $artists->get($song['primary_artist']['id'])
-                        : $artist->getKey(),
+                        ? $featuredArtists->get($song['primary_artist']['id'])
+                        : $rankedArtist->getKey(),
                     'spotify_song_id' => $song['id'],
                     'uuid' => $song['uuid'],
                     'title' => $song['name'] ?? 'Track deleted from spotify servers.',
@@ -70,11 +69,21 @@ final class StoreArtistRanking
         });
     }
 
-    private function resolveArtists(Collection $tracks): Collection
+    /**
+     * "appears on" tracks belong to their primary artist, so those records need to exist.
+     * They arrive without artwork; UpdateArtistImages backfills it.
+     *
+     * Covers the featured tracks only — songs the ranked artist owns are not in here.
+     *
+     * @param  Collection<int, array{featured_artist?: bool, primary_artist?: array{id: string, name: string}}>  $tracks
+     * @return Collection<string, int> spotify artist id => artists.id, empty when nothing is featured
+     */
+    private function resolveFeaturedArtists(Collection $tracks): Collection
     {
         $primaryTrackArtists = $tracks
             ->filter(fn (array $song) => $song['featured_artist'] ?? false)
             ->pluck('primary_artist')
+            ->filter()
             ->unique('id')
             ->values();
 
@@ -82,16 +91,16 @@ final class StoreArtistRanking
             return collect();
         }
 
-        $keys = Artist::query()
+        $artists = Artist::query()
             ->whereIn('artist_id', $primaryTrackArtists->pluck('id'))
             ->pluck('id', 'artist_id');
 
         /* Insert the ones we've never seen, in a single query. Upserting the whole set instead
            would burn an auto-increment id for every row that already existed. */
-        $newArtists = $primaryTrackArtists->reject(fn (array $primary) => $keys->has($primary['id']));
+        $newArtists = $primaryTrackArtists->reject(fn (array $primary) => $artists->has($primary['id']));
 
         if ($newArtists->isEmpty()) {
-            return $keys;
+            return $artists;
         }
 
         Artist::insertOrIgnore($newArtists->map(fn (array $primary) => [
@@ -101,7 +110,7 @@ final class StoreArtistRanking
             'updated_at' => now(),
         ])->all());
 
-        return $keys->merge(
+        return $artists->merge(
             Artist::query()
                 ->whereIn('artist_id', $newArtists->pluck('id'))
                 ->pluck('id', 'artist_id')

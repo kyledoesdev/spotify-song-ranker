@@ -136,6 +136,10 @@ describe('creating rankings', function () {
 
         expect($ranking)->not->toBeNull();
         expect($ranking->songs()->count())->toBe(3);
+
+        $localNatives = Artist::where('artist_id', 'local-natives-id')->firstOrFail();
+
+        expect($ranking->songs()->pluck('artist_id')->unique()->all())->toBe([$localNatives->getKey()]);
     });
 
     test('can create a ranking for a show', function () {
