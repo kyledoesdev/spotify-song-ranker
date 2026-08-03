@@ -14,8 +14,6 @@ class SpotifyAuthenticationService
 
     /**
      * Returns the SongRank user for the Spotify OAuth User returned via Socialite.
-     * 
-     * @return User
      */
     public function getSongRankUser(): User
     {
@@ -47,8 +45,6 @@ class SpotifyAuthenticationService
     /**
      * Determines if a Spotify OAuth User has a `deleted` Song Rank user record.
      * If so, restore the user and return true - otherwise return false.
-     * 
-     * @return bool
      */
     public function restoreUserIfAccountWasPreviouslyDeleted(): bool
     {
@@ -67,21 +63,17 @@ class SpotifyAuthenticationService
         return true;
     }
 
-    
     /**
      * Some Spotify OAuth users do not have an email address associated with their account.
      * Resolve the Song Rank user's email by checking that all Song Rank users, including trashed,
      * do not share the current Spotify User's email.
-     * 
-     * @return void
      */
     private function resolveEmail(User $songrankUser): void
     {
         $email = $this->getEmail();
 
-        $exists = User::withTrashed()
-            ->where('email', $email)
-            ->whereKeyNot($songrankUser->getKey())
+        $exists = User::query()
+            ->whereEmailBelongsToAnotherUser($email, $songrankUser->getKey())
             ->exists();
 
         if ($exists) {
@@ -95,9 +87,7 @@ class SpotifyAuthenticationService
     }
 
     /**
-     * Get the Spotify User's avatar.
-     * 
-     * @return string
+     * Get the Spotify User's avatar, falling back to a generated one.
      */
     private function getAvatar(): string
     {
@@ -105,9 +95,7 @@ class SpotifyAuthenticationService
     }
 
     /**
-     * Get the Spotify User's email address string.
-     * 
-     * @return string
+     * Get the Spotify User's email address, falling back to one derived from their spotify id.
      */
     private function getEmail(): string
     {
