@@ -15,10 +15,24 @@ songrank.dev — a Laravel 12 application that ranks songs via a merge-sort algo
 
 ### Testing
 - `php artisan test` — Run all Pest tests
-- `php artisan test --filter=RankingsTest` — Run a specific test file
+- `php artisan test --filter=RankingCreationTest` — Run a specific test file
 - `php artisan test --filter="test name here"` — Run a single test by name
+- `php artisan test --testsuite=Feature` / `--testsuite=Platform` — Run one suite
 - Tests use SQLite in-memory database (configured in `phpunit.xml`)
-- Only Feature tests are active; Unit test suite is commented out
+
+#### Test Suites and Directories
+Two top-level suites are registered in `phpunit.xml`, and both are bound to `Tests\TestCase` in `tests/Pest.php`:
+
+- **Feature** (`tests/Feature/`) — application behaviour; gets `RefreshDatabase`. Grouped by product area:
+    - `Account/` — signed-in user's own surfaces (profile, settings, notification bell)
+    - `Admin/` — Filament admin panel (widgets, resources)
+    - `Auth/` — Spotify OAuth login, callback, and logout
+    - `Discovery/` — public browse surfaces (explore, leaderboards)
+    - `Pages/` — simple content-driven pages (faq, support)
+    - `Rankings/` — the core ranking domain (setup, algorithm, comments, export, management)
+- **Platform** (`tests/Platform/`) — codebase-wide checks that aren't feature behaviour, e.g. Pest arch tests. No `RefreshDatabase`.
+
+Place new test files in the directory matching their product area; add a new subdirectory only when an area has no existing home.
 
 #### Test File Structure
 Every Pest test file follows this order, top to bottom:

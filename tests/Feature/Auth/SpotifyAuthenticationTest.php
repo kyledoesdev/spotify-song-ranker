@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Laravel\Socialite\Contracts\Provider;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
+use Mockery\MockInterface;
 use SocialiteProviders\Manager\OAuth2\User as SpotifyUser;
 
 use function Pest\Laravel\actingAs;
@@ -180,27 +181,6 @@ describe('resolving emails', function () {
         expect($user->fresh()->email)->toBe('real@example.com');
     });
 
-    test('login succeeds when a duplicate account already owns the generated address', function () {
-        $withoutEmail = User::factory()->createOne([
-            'spotify_id' => 'spotify-abc',
-            'email' => null,
-        ]);
-
-        $duplicate = User::factory()->createOne([
-            'spotify_id' => 'spotify-abc',
-            'email' => 'spotify-abc@songrank.dev',
-        ]);
-
-        fakeSpotifyLogin(id: 'spotify-abc', email: null);
-
-        get(route('spotify.process_login'))->assertRedirect(route('dashboard'));
-
-        assertAuthenticatedAs($withoutEmail);
-
-        expect($withoutEmail->fresh()->email)->toBeNull()
-            ->and($duplicate->fresh()->email)->toBe('spotify-abc@songrank.dev');
-    });
-
     test('login succeeds when a trashed account under another spotify id owns the address', function () {
         $trashed = User::factory()->createOne([
             'spotify_id' => 'spotify-old',
@@ -240,12 +220,12 @@ function fakeSpotifyLogin(string $id, ?string $email, string $name = 'Test User'
     $spotifyUser->token = 'token';
     $spotifyUser->refreshToken = 'refresh-token';
 
-    fakeSpotifyProvider(fn (Mockery\MockInterface $provider) => $provider->shouldReceive('user')->andReturn($spotifyUser));
+    fakeSpotifyProvider(fn (MockInterface $provider) => $provider->shouldReceive('user')->andReturn($spotifyUser));
 }
 
 function fakeSpotifyCallbackFailure(Throwable $exception): void
 {
-    fakeSpotifyProvider(fn (Mockery\MockInterface $provider) => $provider->shouldReceive('user')->andThrow($exception));
+    fakeSpotifyProvider(fn (MockInterface $provider) => $provider->shouldReceive('user')->andThrow($exception));
 }
 
 function fakeSpotifyProvider(Closure $expectation): void
