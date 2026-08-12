@@ -2,7 +2,11 @@
 
 namespace App\Filament\Resources\Comments\Schemas;
 
+use App\Filament\Resources\Comments\CommentResource;
+use App\Filament\Resources\Rankings\RankingResource;
+use App\Filament\Resources\Users\UserResource;
 use App\Models\Comment;
+use App\Models\Ranking;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
@@ -23,7 +27,11 @@ class CommentInfolist
                             ->badge(),
                         TextEntry::make('parent_id')
                             ->label('Parent Comment')
-                            ->placeholder('None (Top Level)'),
+                            ->placeholder('None (Top Level)')
+                            ->icon(fn (?int $state): ?Heroicon => $state ? Heroicon::Link : null)
+                            ->url(fn (Comment $record): ?string => $record->parent_id
+                                ? CommentResource::getUrl('view', ['record' => $record->parent_id])
+                                : null),
                         TextEntry::make('original_text')
                             ->columnSpanFull()
                             ->prose(),
@@ -40,16 +48,17 @@ class CommentInfolist
                     ->schema([
                         TextEntry::make('commentator.name')
                             ->label('User')
-                            ->icon(Heroicon::Link)
+                            ->placeholder('Deleted user')
+                            ->icon(fn (Comment $record): ?Heroicon => $record->commentator ? Heroicon::Link : null)
                             ->url(fn (Comment $record): ?string => $record->commentator
-                                ? route('filament.admin.resources.users.edit', $record->commentator_id)
+                                ? UserResource::getUrl('view', ['record' => $record->commentator])
                                 : null),
-                        TextEntry::make('commentable.name')
-                            ->label('Ranking')
-                            ->icon(Heroicon::Link)
-                            ->url(fn (Comment $record): ?string => $record->commentable
-                                ? route('filament.admin.resources.rankings.edit', $record->commentable_id)
-                                : null),
+                        TextEntry::make('commentable')
+                            ->label('Commented On')
+                            ->placeholder('Deleted')
+                            ->icon(fn (Comment $record): ?Heroicon => $record->commentable ? Heroicon::Link : null)
+                            ->state(fn (Comment $record): ?string => static::commentableLabel($record))
+                            ->url(fn (Comment $record): ?string => static::commentableUrl($record)),
                     ]),
 
                 Section::make('Status & Timestamps')
@@ -69,5 +78,24 @@ class CommentInfolist
                             ->since(),
                     ]),
             ]);
+    }
+
+    /** `commentable` is polymorphic: a comment hangs off a ranking, or off another comment when it is a reply. */
+    protected static function commentableLabel(Comment $record): ?string
+    {
+        return match (true) {
+            $record->commentable instanceof Ranking => $record->commentable->name,
+            $record->commentable instanceof Comment => "Comment #{$record->commentable->getKey()}",
+            default => null,
+        };
+    }
+
+    protected static function commentableUrl(Comment $record): ?string
+    {
+        return match (true) {
+            $record->commentable instanceof Ranking => RankingResource::getUrl('view', ['record' => $record->commentable]),
+            $record->commentable instanceof Comment => CommentResource::getUrl('view', ['record' => $record->commentable]),
+            default => null,
+        };
     }
 }

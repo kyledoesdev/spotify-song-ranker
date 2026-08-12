@@ -21,7 +21,8 @@ class CommentsTable
                     ->label('User Name')
                     ->icon(Heroicon::User),
                 TextColumn::make('commentable.name')
-                    ->label('Ranking'),
+                    ->label('Commented On')
+                    ->placeholder('Reply'),
                 TextColumn::make('text')
                     ->html()
                     ->label('Comment'),
