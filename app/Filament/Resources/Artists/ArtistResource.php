@@ -74,7 +74,11 @@ class ArtistResource extends Resource
                             ->label('Name')
                             ->icon(Heroicon::MusicalNote),
                         TextEntry::make('artist_id')
-                            ->label('Spotify ID'),
+                            ->label('Spotify ID')
+                            ->icon(Heroicon::Identification)
+                            ->url(fn (Artist $artist): string => $artist->spotifyUrl())
+                            ->openUrlInNewTab()
+                            ->color('primary'),
                         TextEntry::make('rankings_count')
                             ->label('Artist Rankings'),
                     ]),

@@ -17,22 +17,29 @@ songrank.dev — a Laravel 12 application that ranks songs via a merge-sort algo
 - `php artisan test` — Run all Pest tests
 - `php artisan test --filter=RankingCreationTest` — Run a specific test file
 - `php artisan test --filter="test name here"` — Run a single test by name
-- `php artisan test --testsuite=Feature` / `--testsuite=Platform` — Run one suite
+- `php artisan test --testsuite=Feature` / `--testsuite=Filament` / `--testsuite=Platform` — Run one suite
 - Tests use SQLite in-memory database (configured in `phpunit.xml`)
 
 #### Test Suites and Directories
-Two top-level suites are registered in `phpunit.xml`, and both are bound to `Tests\TestCase` in `tests/Pest.php`:
+Three top-level suites are registered in `phpunit.xml`, and all are bound to `Tests\TestCase` in `tests/Pest.php`:
 
 - **Feature** (`tests/Feature/`) — application behaviour; gets `RefreshDatabase`. Grouped by product area:
     - `Account/` — signed-in user's own surfaces (profile, settings, notification bell)
-    - `Admin/` — Filament admin panel (widgets, resources)
     - `Auth/` — Spotify OAuth login, callback, and logout
     - `Discovery/` — public browse surfaces (explore, leaderboards)
     - `Pages/` — simple content-driven pages (faq, support)
     - `Rankings/` — the core ranking domain (setup, algorithm, comments, export, management)
+- **Filament** (`tests/Filament/`) — the admin panel; gets `RefreshDatabase`. **Mirrors the `app/Filament/` directory structure**, so a test sits at the same path as the code it covers:
+    - `app/Filament/Resources/Rankings/…` → `tests/Filament/Resources/Rankings/…`
+    - `app/Filament/Widgets/…` → `tests/Filament/Widgets/…`
+    - Name files after the surface under test (`RankingTableFiltersTest`, `RankingInfolistTest`, `LoginsWidgetTest`), not after the resource as a whole — one resource has several surfaces (form, table, infolist, filters, relation managers)
 - **Platform** (`tests/Platform/`) — codebase-wide checks that aren't feature behaviour, e.g. Pest arch tests. No `RefreshDatabase`.
 
-Place new test files in the directory matching their product area; add a new subdirectory only when an area has no existing home.
+Anything under `app/Filament/` is tested in the **Filament** suite, not `Feature`. Everything else goes in the `Feature/` directory matching its product area; add a new subdirectory only when an area has no existing home.
+
+#### Testing the Admin Panel
+- The panel is gated by the `is_dev` flag, so act as an admin with the global `kyle()` helper from `tests/Pest.php` — the project's only admin persona
+- Filament pages and widgets are Livewire components — test them with `Livewire::actingAs($user)->test(ListRankings::class)`, passing `['record' => $model->getKey()]` for view/edit pages
 
 #### Test File Structure
 Every Pest test file follows this order, top to bottom:
@@ -44,7 +51,7 @@ Every Pest test file follows this order, top to bottom:
 Additional conventions:
 - Use `Pest\Laravel` functions (`get()`, `actingAs()`, `assertGuest()`, ...) instead of `$this->get()` etc. — Intelephense cannot resolve `$this` inside Pest closures
 - Avoid `$this->property` state in `beforeEach()` for the same reason; prefer helper functions
-- Cross-file helpers (e.g. `publicCompletedRanking()`) live in `tests/Pest.php`; helper function names are global, so they must be unique across the suite
+- Cross-file helpers (e.g. `publicCompletedRanking()`, `kyle()`) live in `tests/Pest.php`; helper function names are global, so they must be unique across the suite
 
 ### Code Formatting
 - `./vendor/bin/pint` — Run Laravel Pint (PHP code formatter, PSR-12 + Laravel conventions)

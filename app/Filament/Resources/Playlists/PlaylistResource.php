@@ -4,6 +4,9 @@ namespace App\Filament\Resources\Playlists;
 
 use App\Filament\Concerns\HasCachedNavigationBadge;
 use App\Filament\Resources\Playlists\Pages\ManagePlaylists;
+use App\Filament\Resources\Playlists\Pages\ViewPlaylist;
+use App\Filament\Resources\Playlists\RelationManagers\RankingsRelationManager;
+use App\Filament\Resources\Users\UserResource;
 use App\Models\Playlist;
 use BackedEnum;
 use Filament\Actions\ViewAction;
@@ -40,7 +43,10 @@ class PlaylistResource extends Resource
                     ->schema([
                         TextEntry::make('playlist_id')
                             ->label('Playlist ID')
-                            ->icon(Heroicon::RectangleGroup),
+                            ->icon(Heroicon::RectangleGroup)
+                            ->url(fn (Playlist $playlist): string => $playlist->spotifyUrl())
+                            ->openUrlInNewTab()
+                            ->color('primary'),
                         TextEntry::make('name')
                             ->label('Playlist Name')
                             ->icon(Heroicon::Pencil),
@@ -63,7 +69,7 @@ class PlaylistResource extends Resource
                         TextEntry::make('creator_name')
                             ->label('Creator Name')
                             ->url(fn (Playlist $playlist): ?string => $playlist->user
-                                ? route('filament.admin.resources.users.view', ['record' => $playlist->user])
+                                ? UserResource::getUrl('view', ['record' => $playlist->user])
                                 : null)
                             ->color('primary')
                             ->icon(Heroicon::User),
@@ -110,10 +116,18 @@ class PlaylistResource extends Resource
             ->toolbarActions([]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            RankingsRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ManagePlaylists::route('/'),
+            'view' => ViewPlaylist::route('/{record}'),
         ];
     }
 

@@ -44,7 +44,7 @@ class ShowResource extends Resource
                         TextEntry::make('show_id')
                             ->label('Show ID')
                             ->icon(Heroicon::Identification)
-                            ->url(fn (Show $show) => "https://open.spotify.com/show/{$show->show_id}")
+                            ->url(fn (Show $show): string => $show->spotifyUrl())
                             ->openUrlInNewTab()
                             ->color('primary'),
                         TextEntry::make('name')

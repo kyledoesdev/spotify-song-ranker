@@ -101,7 +101,7 @@ class UserResource extends Resource
             ->toolbarActions([]);
     }
 
-    public static function infoList(Schema $schema): Schema
+    public static function infolist(Schema $schema): Schema
     {
         return $schema
             ->components([

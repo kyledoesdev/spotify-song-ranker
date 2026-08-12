@@ -4,6 +4,7 @@ namespace App\Filament\Resources\LandingPageContents\Tables;
 
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
 class LandingPageContentTable
@@ -27,7 +28,9 @@ class LandingPageContentTable
                     ->dateTime(),
             ])
             ->defaultSort('name', 'asc')
-            ->filters([])
+            ->filters([
+                TrashedFilter::make(),
+            ])
             ->recordActions([
                 EditAction::make(),
             ]);

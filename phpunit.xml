@@ -8,6 +8,9 @@
         <testsuite name="Feature">
             <directory>tests/Feature</directory>
         </testsuite>
+        <testsuite name="Filament">
+            <directory>tests/Filament</directory>
+        </testsuite>
         <testsuite name="Platform">
             <directory>tests/Platform</directory>
         </testsuite>
