@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Ranking;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +18,7 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', 'Filament');
 
 pest()->extend(TestCase::class)
     ->in('Platform');
@@ -40,4 +41,12 @@ function publicCompletedRanking(array $attributes = []): Ranking
         'is_ranked' => true,
         'completed_at' => now(),
     ], $attributes));
+}
+
+function kyle(): User
+{
+    return User::factory()->createOne([
+        'name' => 'Kyle',
+        'is_dev' => true,
+    ]);
 }

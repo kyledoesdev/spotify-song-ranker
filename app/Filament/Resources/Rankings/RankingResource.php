@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Rankings;
 
+use App\Enums\RankingType;
 use App\Filament\Concerns\HasCachedNavigationBadge;
+use App\Filament\Resources\Rankings\Filters\InProcessFilter;
 use App\Filament\Resources\Rankings\Pages\EditRanking;
 use App\Filament\Resources\Rankings\Pages\ListRankings;
 use App\Filament\Resources\Rankings\Pages\ViewRanking;
@@ -60,6 +62,7 @@ class RankingResource extends Resource
     {
         return RankingTable::configure($table)
             ->filters([
+                InProcessFilter::make(),
                 TrashedFilter::make(),
             ])
             ->recordActions([
@@ -82,11 +85,14 @@ class RankingResource extends Resource
                         TextEntry::make('name')
                             ->url(fn (Ranking $ranking) => route('ranking', ['id' => $ranking->getKey()]))
                             ->icon(Heroicon::Link),
-                        TextEntry::make('artist.artist_name')
-                            ->icon(Heroicon::MusicalNote),
+                        TextEntry::make('type')
+                            ->label('Type')
+                            ->state(fn (Ranking $ranking): string => $ranking->type->label()),
                         TextEntry::make('completed_at')
                             ->icon(Heroicon::Clock)
                             ->label('Completed At'),
+                        TextEntry::make('songs_count')
+                            ->label('Tracks Ranked'),
                         IconEntry::make('is_ranked')
                             ->label('Is Ranked')
                             ->boolean(),
@@ -95,28 +101,30 @@ class RankingResource extends Resource
                             ->boolean(),
                     ]),
 
-                Section::make('Playlist Details')
+                Section::make('Artist Details')
+                    ->visible(fn (Ranking $record): bool => $record->type === RankingType::ARTIST)
                     ->schema([
-                        IconEntry::make('playlist_id')
-                            ->label('Has Playlist?')
-                            ->state(fn (Ranking $ranking) => ! is_null($ranking->playlist_id))
-                            ->boolean(),
+                        TextEntry::make('artist.artist_name')
+                            ->label('Artist Name')
+                            ->icon(Heroicon::MusicalNote),
+                        TextEntry::make('artist.artist_id')
+                            ->label('Spotify ID'),
+                    ]),
+
+                Section::make('Playlist Details')
+                    ->visible(fn (Ranking $record): bool => $record->type === RankingType::PLAYLIST)
+                    ->schema([
                         TextEntry::make('playlist.name')
                             ->label('Playlist Name'),
                         TextEntry::make('playlist.description')
                             ->label('Playlist Description'),
                         TextEntry::make('playlist.track_count')
                             ->label('Tracks in Playlist'),
-                        TextEntry::make('songs_count')
-                            ->label('Tracks Ranked'),
                     ]),
 
                 Section::make('Show Details')
+                    ->visible(fn (Ranking $record): bool => $record->type === RankingType::SHOW)
                     ->schema([
-                        IconEntry::make('show_id')
-                            ->label('Has Show?')
-                            ->state(fn (Ranking $ranking) => ! is_null($ranking->show_id))
-                            ->boolean(),
                         TextEntry::make('show.name')
                             ->label('Show Name'),
                         TextEntry::make('show.publisher')
@@ -158,6 +166,6 @@ class RankingResource extends Resource
 
     protected static function navigationBadgeCount(): int
     {
-        return Ranking::query()->public()->completed()->count();
+        return Ranking::query()->completed()->count();
     }
 }
