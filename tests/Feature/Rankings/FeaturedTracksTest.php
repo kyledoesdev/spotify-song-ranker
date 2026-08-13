@@ -114,7 +114,7 @@ describe('featured track storage', function () {
             ->call('beginRanking')
             ->assertHasNoErrors();
 
-        expect(Ranking::where('name', 'Test List')->firstOrFail()->artist->artist_id)->toBe('ranked-artist-id');
+        expect(Ranking::where('name', 'Test List')->firstOrFail()->source->artist_id)->toBe('ranked-artist-id');
     });
 });
 

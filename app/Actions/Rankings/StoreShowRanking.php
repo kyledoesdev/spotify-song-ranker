@@ -2,6 +2,7 @@
 
 namespace App\Actions\Rankings;
 
+use App\Enums\RankingType;
 use App\Models\Artist;
 use App\Models\Ranking;
 use App\Models\Show;
@@ -39,7 +40,8 @@ final class StoreShowRanking
                 : $attributes['ranking_name'];
 
             $ranking = Ranking::create([
-                'show_id' => $show->getKey(),
+                'type' => RankingType::SHOW->value,
+                'source_id' => $show->getKey(),
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,

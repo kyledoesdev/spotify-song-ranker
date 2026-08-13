@@ -15,7 +15,7 @@ describe('song export', function () {
     });
 
     test('uses the ranking name as the sheet title', function () {
-        $ranking = publicCompletedRanking(['name' => 'My Favourite Songs']);
+        $ranking = publicCompletedRanking(attributes: ['name' => 'My Favourite Songs']);
 
         expect(songExport($ranking)->title())->toBe('My Favourite Songs');
     });
@@ -71,8 +71,8 @@ describe('rankings export', function () {
     });
 
     test('renders a readable xlsx with a sheet per ranking', function () {
-        $first = publicCompletedRanking(['name' => 'First Ranking']);
-        $second = publicCompletedRanking(['name' => 'Second Ranking']);
+        $first = publicCompletedRanking(attributes: ['name' => 'First Ranking']);
+        $second = publicCompletedRanking(attributes: ['name' => 'Second Ranking']);
 
         $rankings = Ranking::query()
             ->with('songs.artist')

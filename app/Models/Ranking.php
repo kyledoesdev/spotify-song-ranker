@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Contracts\Rankable;
 use App\Enums\RankingType;
 use App\QueryBuilders\RankingQueryBuilder;
 use Carbon\Carbon;
@@ -10,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\Auth;
 use Kyledoesdev\Essentials\Concerns\HasStatsAfterEvents;
 use Spatie\Comments\Models\Concerns\HasComments;
@@ -24,9 +24,8 @@ class Ranking extends Model
 
     protected $fillable = [
         'user_id',
-        'artist_id',
-        'playlist_id',
-        'show_id',
+        'type',
+        'source_id',
         'name',
         'is_ranked',
         'is_public',
@@ -38,6 +37,7 @@ class Ranking extends Model
     protected function casts(): array
     {
         return [
+            'type' => RankingType::class,
             'is_ranked' => 'boolean',
             'is_public' => 'boolean',
             'has_podcast_episode' => 'boolean',
@@ -53,19 +53,9 @@ class Ranking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function artist(): BelongsTo
+    public function source(): MorphTo
     {
-        return $this->belongsTo(Artist::class);
-    }
-
-    public function playlist(): BelongsTo
-    {
-        return $this->belongsTo(Playlist::class);
-    }
-
-    public function show(): BelongsTo
-    {
-        return $this->belongsTo(Show::class);
+        return $this->morphTo('source', 'type', 'source_id');
     }
 
     public function songs(): HasMany
@@ -98,15 +88,6 @@ class Ranking extends Model
         return Carbon::parse($this->attributes['completed_at'])->inUserTimezone()->format('M d, Y g:i A T');
     }
 
-    public function getTypeAttribute(): RankingType
-    {
-        return match (true) {
-            ! is_null($this->show_id) => RankingType::SHOW,
-            ! is_null($this->playlist_id) => RankingType::PLAYLIST,
-            default => RankingType::ARTIST,
-        };
-    }
-
     public function isPlaylistType(): bool
     {
         return $this->type === RankingType::PLAYLIST;
@@ -115,15 +96,6 @@ class Ranking extends Model
     public function isShowType(): bool
     {
         return $this->type === RankingType::SHOW;
-    }
-
-    public function getSourceAttribute(): Rankable
-    {
-        return match ($this->type) {
-            RankingType::SHOW => $this->show,
-            RankingType::PLAYLIST => $this->playlist,
-            RankingType::ARTIST => $this->artist,
-        };
     }
 
     /* Helpers */

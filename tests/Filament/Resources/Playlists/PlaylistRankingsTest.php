@@ -9,10 +9,7 @@ describe('playlist rankings', function () {
     test('lists the rankings built from the playlist', function () {
         $playlist = Playlist::factory()->createOne();
 
-        $ranking = publicCompletedRanking([
-            'artist_id' => null,
-            'playlist_id' => $playlist->getKey(),
-        ]);
+        $ranking = publicCompletedRanking($playlist);
 
         $otherRanking = publicCompletedRanking();
 

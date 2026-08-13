@@ -2,6 +2,7 @@
 
 namespace App\QueryBuilders;
 
+use App\Enums\RankingType;
 use Illuminate\Database\Eloquent\Builder;
 
 class PlaylistQueryBuilder extends Builder
@@ -10,7 +11,7 @@ class PlaylistQueryBuilder extends Builder
     {
         return $this->newQuery()
             ->selectRaw('
-                count(rankings.playlist_id) as playlist_rankings_count,
+                count(rankings.source_id) as playlist_rankings_count,
                 playlists.id,
                 playlists.playlist_id,
                 playlists.name,
@@ -18,12 +19,13 @@ class PlaylistQueryBuilder extends Builder
                 playlists.creator_name
             ')
             ->join('rankings', function ($join) {
-                $join->on('rankings.playlist_id', '=', 'playlists.id')
+                $join->on('rankings.source_id', '=', 'playlists.id')
+                    ->where('rankings.type', RankingType::PLAYLIST->value)
                     ->whereNull('rankings.deleted_at')
                     ->where('rankings.is_ranked', true)
                     ->where('rankings.is_public', true);
             })
-            ->groupBy('rankings.playlist_id')
+            ->groupBy('rankings.source_id')
             ->orderBy('playlist_rankings_count', 'desc')
             ->orderBy('playlists.name', 'asc');
     }

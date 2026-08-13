@@ -104,34 +104,34 @@ class RankingResource extends Resource
                 Section::make('Artist Details')
                     ->visible(fn (Ranking $record): bool => $record->type === RankingType::ARTIST)
                     ->schema([
-                        TextEntry::make('artist.artist_name')
+                        TextEntry::make('source.artist_name')
                             ->label('Artist Name')
                             ->icon(Heroicon::MusicalNote),
-                        TextEntry::make('artist.artist_id')
+                        TextEntry::make('source.artist_id')
                             ->label('Spotify ID'),
                     ]),
 
                 Section::make('Playlist Details')
                     ->visible(fn (Ranking $record): bool => $record->type === RankingType::PLAYLIST)
                     ->schema([
-                        TextEntry::make('playlist.name')
+                        TextEntry::make('source.name')
                             ->label('Playlist Name'),
-                        TextEntry::make('playlist.description')
+                        TextEntry::make('source.description')
                             ->label('Playlist Description'),
-                        TextEntry::make('playlist.track_count')
+                        TextEntry::make('source.track_count')
                             ->label('Tracks in Playlist'),
                     ]),
 
                 Section::make('Show Details')
                     ->visible(fn (Ranking $record): bool => $record->type === RankingType::SHOW)
                     ->schema([
-                        TextEntry::make('show.name')
+                        TextEntry::make('source.name')
                             ->label('Show Name'),
-                        TextEntry::make('show.publisher')
+                        TextEntry::make('source.publisher')
                             ->label('Publisher'),
-                        TextEntry::make('show.description')
+                        TextEntry::make('source.description')
                             ->label('Description'),
-                        TextEntry::make('show.episode_count')
+                        TextEntry::make('source.episode_count')
                             ->label('Total Episodes'),
                     ]),
             ]);

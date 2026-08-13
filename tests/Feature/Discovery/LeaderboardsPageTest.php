@@ -34,8 +34,7 @@ describe('page access', function () {
         $artist = Artist::factory()->create(['artist_name' => 'Page Artist']);
         $user = User::factory()->createOne(['name' => 'Page Creator']);
 
-        publicCompletedRanking([
-            'artist_id' => $artist->getKey(),
+        publicCompletedRanking($artist, [
             'user_id' => $user->getKey(),
             'name' => 'Page Ranking',
         ]);
@@ -59,9 +58,9 @@ describe('top ranked artists', function () {
         $first = Artist::factory()->create(['artist_name' => 'First Artist']);
         $second = Artist::factory()->create(['artist_name' => 'Second Artist']);
 
-        publicCompletedRanking(['artist_id' => $first->getKey()]);
-        publicCompletedRanking(['artist_id' => $first->getKey()]);
-        publicCompletedRanking(['artist_id' => $second->getKey()]);
+        publicCompletedRanking($first);
+        publicCompletedRanking($first);
+        publicCompletedRanking($second);
 
         Livewire::test(Leaderboards::class)
             ->assertViewHas('topArtists', fn ($entries) => $entries->pluck('name')->all() === ['First Artist', 'Second Artist']
@@ -72,15 +71,13 @@ describe('top ranked artists', function () {
         $private = Artist::factory()->create(['artist_name' => 'Private Artist']);
         $unfinished = Artist::factory()->create(['artist_name' => 'Unfinished Artist']);
 
-        Ranking::factory()->create([
-            'artist_id' => $private->getKey(),
+        Ranking::factory()->artist($private)->create([
             'is_public' => false,
             'is_ranked' => true,
             'completed_at' => now(),
         ]);
 
-        Ranking::factory()->create([
-            'artist_id' => $unfinished->getKey(),
+        Ranking::factory()->artist($unfinished)->create([
             'is_public' => true,
             'is_ranked' => false,
             'completed_at' => null,
@@ -97,9 +94,9 @@ describe('top creators', function () {
         $casual = User::factory()->createOne(['name' => 'Casual Creator']);
         $private = User::factory()->createOne(['name' => 'Private Creator']);
 
-        publicCompletedRanking(['user_id' => $prolific->getKey()]);
-        publicCompletedRanking(['user_id' => $prolific->getKey()]);
-        publicCompletedRanking(['user_id' => $casual->getKey()]);
+        publicCompletedRanking(attributes: ['user_id' => $prolific->getKey()]);
+        publicCompletedRanking(attributes: ['user_id' => $prolific->getKey()]);
+        publicCompletedRanking(attributes: ['user_id' => $casual->getKey()]);
 
         Ranking::factory()->create([
             'user_id' => $private->getKey(),
@@ -116,7 +113,7 @@ describe('top creators', function () {
         foreach (range('a', 'k') as $letter) {
             $user = User::factory()->createOne(['name' => "creator-{$letter}"]);
 
-            publicCompletedRanking(['user_id' => $user->getKey()]);
+            publicCompletedRanking(attributes: ['user_id' => $user->getKey()]);
         }
 
         Livewire::test(Leaderboards::class)
@@ -130,16 +127,12 @@ describe('rankings with most songs', function () {
     test('rankings are ordered by song count and credit their creator', function () {
         $creator = User::factory()->createOne(['name' => 'List Maker']);
 
-        $bigger = publicCompletedRanking([
+        $bigger = publicCompletedRanking(attributes: [
             'user_id' => $creator->getKey(),
             'name' => 'Bigger Ranking',
         ]);
 
-        publicCompletedRanking([
-            'artist_id' => null,
-            'playlist_id' => Playlist::factory(),
-            'name' => 'Smaller Ranking',
-        ]);
+        publicCompletedRanking(Playlist::factory()->createOne(), ['name' => 'Smaller Ranking']);
 
         foreach (range(11, 15) as $rank) {
             Song::factory()->create([
@@ -156,22 +149,11 @@ describe('rankings with most songs', function () {
     });
 
     test('show rankings are included', function () {
-        $show = Show::create([
-            'show_id' => str()->random(16),
-            'publisher' => 'Podcast Publisher',
-            'name' => 'A Podcast Show',
-            'description' => 'A show about things.',
-            'cover' => 'https://example.com/cover.jpg',
-            'episode_count' => 100,
-        ]);
+        $show = Show::factory()->createOne(['name' => 'A Podcast Show']);
 
-        publicCompletedRanking([
-            'artist_id' => null,
-            'show_id' => $show->getKey(),
-            'name' => 'Show Ranking',
-        ]);
+        publicCompletedRanking($show, ['name' => 'Show Ranking']);
 
-        publicCompletedRanking(['name' => 'Music Ranking']);
+        publicCompletedRanking(attributes: ['name' => 'Music Ranking']);
 
         Livewire::test(Leaderboards::class)
             ->assertViewHas('biggestRankings', fn ($entries) => $entries->pluck('name')->all() === ['Music Ranking', 'Show Ranking']);
@@ -180,8 +162,8 @@ describe('rankings with most songs', function () {
     test('rankings with more than 500 songs are excluded', function () {
         $artist = Artist::factory()->create();
 
-        $within = publicCompletedRanking(['name' => 'Within Limit Ranking']);
-        $beyond = publicCompletedRanking(['name' => 'Beyond Limit Ranking']);
+        $within = publicCompletedRanking(attributes: ['name' => 'Within Limit Ranking']);
+        $beyond = publicCompletedRanking(attributes: ['name' => 'Beyond Limit Ranking']);
 
         Song::factory()->count(490)->create([
             'ranking_id' => $within->getKey(),

@@ -9,7 +9,7 @@ describe('profile page', function () {
     test('shows the users completed public rankings', function () {
         $user = User::factory()->createOne();
 
-        $ranking = publicCompletedRanking(['user_id' => $user->getKey()]);
+        $ranking = publicCompletedRanking(attributes: ['user_id' => $user->getKey()]);
 
         actingAs($user)
             ->get(route('profile', ['id' => $user->spotify_id]))

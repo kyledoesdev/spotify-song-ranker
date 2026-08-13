@@ -2,6 +2,7 @@
 
 namespace App\Actions\Rankings;
 
+use App\Enums\RankingType;
 use App\Models\Artist;
 use App\Models\Playlist;
 use App\Models\Ranking;
@@ -32,7 +33,8 @@ final class StorePlaylistRanking
                 : $attributes['ranking_name'];
 
             $ranking = Ranking::create([
-                'playlist_id' => $playlist->getKey(),
+                'type' => RankingType::PLAYLIST->value,
+                'source_id' => $playlist->getKey(),
                 'user_id' => $user->getKey(),
                 'name' => Str::limit($name, 30),
                 'is_public' => $attributes['is_public'] ?? false,

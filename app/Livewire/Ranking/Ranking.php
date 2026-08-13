@@ -14,7 +14,7 @@ class Ranking extends Component
     public function mount($id)
     {
         $this->ranking = RankingModel::query()
-            ->with(['user', 'songs', 'artist', 'sortingState'])
+            ->with(['user', 'songs', 'source', 'sortingState'])
             ->find($id);
 
         if (is_null($this->ranking)) {

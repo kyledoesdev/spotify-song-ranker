@@ -1,5 +1,6 @@
 <?php
 
+use App\Contracts\Rankable;
 use App\Models\Ranking;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,9 +35,19 @@ pest()->extend(TestCase::class)
 |
 */
 
-function publicCompletedRanking(array $attributes = []): Ranking
+/**
+ * Pass a $source (Artist, Playlist or Show) to control what the ranking is of;
+ * it defaults to a fresh artist via the factory.
+ */
+function publicCompletedRanking(?Rankable $source = null, array $attributes = []): Ranking
 {
-    return Ranking::factory()->create(array_merge([
+    $factory = Ranking::factory();
+
+    if ($source) {
+        $factory = $factory->for($source, 'source');
+    }
+
+    return $factory->create(array_merge([
         'is_public' => true,
         'is_ranked' => true,
         'completed_at' => now(),

@@ -50,7 +50,7 @@ describe('creator banner on the show page', function () {
         $owner = User::factory()->createOne(['name' => 'Ranking Creator']);
         $visitor = User::factory()->createOne();
 
-        $ranking = publicCompletedRanking(['user_id' => $owner->getKey()]);
+        $ranking = publicCompletedRanking(attributes: ['user_id' => $owner->getKey()]);
 
         actingAs($visitor)
             ->get(route('ranking', ['id' => $ranking->getKey()]))
@@ -62,7 +62,7 @@ describe('creator banner on the show page', function () {
     test('is shown to guests viewing the ranking', function () {
         $owner = User::factory()->createOne(['name' => 'Ranking Creator']);
 
-        $ranking = publicCompletedRanking(['user_id' => $owner->getKey()]);
+        $ranking = publicCompletedRanking(attributes: ['user_id' => $owner->getKey()]);
 
         get(route('ranking', ['id' => $ranking->getKey()]))
             ->assertOk()
@@ -73,7 +73,7 @@ describe('creator banner on the show page', function () {
     test('is hidden from the ranking creator', function () {
         $owner = User::factory()->createOne();
 
-        $ranking = publicCompletedRanking(['user_id' => $owner->getKey()]);
+        $ranking = publicCompletedRanking(attributes: ['user_id' => $owner->getKey()]);
 
         actingAs($owner)
             ->get(route('ranking', ['id' => $ranking->getKey()]))

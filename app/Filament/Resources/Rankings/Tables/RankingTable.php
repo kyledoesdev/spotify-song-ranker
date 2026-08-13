@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Rankings\Tables;
 
 use App\Models\Ranking;
+use App\QueryBuilders\RankingQueryBuilder;
 use Carbon\Carbon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -34,15 +35,16 @@ class RankingTable
             TextColumn::make('name')
                 ->searchable()
                 ->sortable(),
-            TextColumn::make('artist.artist_name')
-                ->label('Artist')
-                ->searchable()
-                ->sortable()
+            TextColumn::make('type')
+                ->label('Type')
+                ->badge()
+                ->state(fn (Ranking $record): string => $record->type->label())
+                ->color(fn (Ranking $record): string => $record->type->filamentColor())
                 ->toggleable(isToggledHiddenByDefault: false),
-            TextColumn::make('playlist.name')
-                ->label('Playlist')
-                ->searchable()
-                ->sortable()
+            TextColumn::make('source')
+                ->label('Source')
+                ->state(fn (Ranking $record): ?string => $record->source?->name())
+                ->searchable(query: fn (RankingQueryBuilder $query, string $search) => $query->whereSourceNameLike($search))
                 ->toggleable(isToggledHiddenByDefault: false),
             IconColumn::make('is_ranked')
                 ->label('Is Ranked')
