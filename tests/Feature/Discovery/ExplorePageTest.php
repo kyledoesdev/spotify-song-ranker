@@ -103,15 +103,9 @@ describe('searching', function () {
         $match = Artist::factory()->create(['artist_name' => 'Matching Artist']);
         $other = Artist::factory()->create(['artist_name' => 'Other Artist']);
 
-        $matchingRanking = publicCompletedRanking([
-            'artist_id' => $match->getKey(),
-            'name' => 'Matching Ranking',
-        ]);
+        $matchingRanking = publicCompletedRanking($match, ['name' => 'Matching Ranking']);
 
-        $otherRanking = publicCompletedRanking([
-            'artist_id' => $other->getKey(),
-            'name' => 'Other Ranking',
-        ]);
+        $otherRanking = publicCompletedRanking($other, ['name' => 'Other Ranking']);
 
         Livewire::test(Explorer::class)
             ->set('search', 'Matching Artist')
@@ -123,13 +117,9 @@ describe('searching', function () {
     test('can search rankings by playlist name', function () {
         $playlist = Playlist::factory()->create(['name' => 'Chill Vibes Playlist']);
 
-        $matchingRanking = publicCompletedRanking([
-            'artist_id' => null,
-            'playlist_id' => $playlist->getKey(),
-            'name' => 'Matching Playlist Ranking',
-        ]);
+        $matchingRanking = publicCompletedRanking($playlist, ['name' => 'Matching Playlist Ranking']);
 
-        $otherRanking = publicCompletedRanking(['name' => 'Other Ranking']);
+        $otherRanking = publicCompletedRanking(attributes: ['name' => 'Other Ranking']);
 
         Livewire::test(Explorer::class)
             ->set('search', 'Chill Vibes')
@@ -139,22 +129,11 @@ describe('searching', function () {
     });
 
     test('can search rankings by show name', function () {
-        $show = Show::create([
-            'show_id' => str()->random(16),
-            'publisher' => 'Podcast Publisher',
-            'name' => 'True Crime Weekly',
-            'description' => 'A weekly true crime show.',
-            'cover' => 'https://example.com/cover.jpg',
-            'episode_count' => 100,
-        ]);
+        $show = Show::factory()->createOne(['name' => 'True Crime Weekly']);
 
-        $matchingRanking = publicCompletedRanking([
-            'artist_id' => null,
-            'show_id' => $show->getKey(),
-            'name' => 'Matching Show Ranking',
-        ]);
+        $matchingRanking = publicCompletedRanking($show, ['name' => 'Matching Show Ranking']);
 
-        $otherRanking = publicCompletedRanking(['name' => 'Other Ranking']);
+        $otherRanking = publicCompletedRanking(attributes: ['name' => 'Other Ranking']);
 
         Livewire::test(Explorer::class)
             ->set('search', 'True Crime Weekly')

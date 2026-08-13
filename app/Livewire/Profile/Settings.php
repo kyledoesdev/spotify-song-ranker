@@ -60,7 +60,7 @@ class Settings extends Component
     {
         $rankings = Ranking::query()
             ->where('user_id', Auth::id())
-            ->with('songs', 'artist')
+            ->with('songs', 'source')
             ->get();
 
         $user = Auth::user();

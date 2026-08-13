@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\RankingType;
 use App\Livewire\SongRank\SongRankProcess;
 use App\Models\Artist;
 use App\Models\Ranking;
@@ -168,7 +169,8 @@ function algorithmRanking(User $user, string $name, array $expectedSongTitles): 
 
     $ranking = Ranking::create([
         'user_id' => $user->getKey(),
-        'artist_id' => $artist->getKey(),
+        'type' => RankingType::ARTIST->value,
+        'source_id' => $artist->getKey(),
         'name' => $name,
         'is_ranked' => false,
         'is_public' => true,

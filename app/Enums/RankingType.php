@@ -35,6 +35,15 @@ enum RankingType: string
         };
     }
 
+    public function filamentColor(): string
+    {
+        return match ($this) {
+            self::ARTIST => 'primary',
+            self::PLAYLIST => 'success',
+            self::SHOW => 'info',
+        };
+    }
+
     public function itemLabel(): string
     {
         return match ($this) {

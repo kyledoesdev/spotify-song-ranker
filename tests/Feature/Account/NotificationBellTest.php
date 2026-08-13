@@ -115,7 +115,7 @@ describe('comment notification dispatch', function () {
 
 function commentableRanking(): Ranking
 {
-    return publicCompletedRanking(['comments_enabled' => true]);
+    return publicCompletedRanking(attributes: ['comments_enabled' => true]);
 }
 
 function createComment(User $commenter, Ranking $ranking, string $text = 'Great ranking!'): Comment

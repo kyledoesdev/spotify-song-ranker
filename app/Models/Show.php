@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Contracts\Rankable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Show extends Model implements Rankable
 {
@@ -25,9 +25,9 @@ class Show extends Model implements Rankable
         ];
     }
 
-    public function rankings(): HasMany
+    public function rankings(): MorphMany
     {
-        return $this->hasMany(Ranking::class);
+        return $this->morphMany(Ranking::class, 'source', 'type', 'source_id');
     }
 
     public function getDescriptionAttribute($value): ?string

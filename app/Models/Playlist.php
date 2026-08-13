@@ -6,7 +6,7 @@ use App\Contracts\Rankable;
 use App\QueryBuilders\PlaylistQueryBuilder;
 use Illuminate\Database\Eloquent\Attributes\UseEloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 #[UseEloquentBuilder(PlaylistQueryBuilder::class)]
 class Playlist extends Model implements Rankable
@@ -28,9 +28,9 @@ class Playlist extends Model implements Rankable
         ];
     }
 
-    public function rankings(): HasMany
+    public function rankings(): MorphMany
     {
-        return $this->hasMany(Ranking::class);
+        return $this->morphMany(Ranking::class, 'source', 'type', 'source_id');
     }
 
     public function user(): BelongsTo

@@ -23,7 +23,7 @@ class DeleteUserJob implements ShouldQueue
         /* Get the user's rankings. */
         $rankings = $this->user
             ->rankings()
-            ->with('songs', 'artist')
+            ->with('songs', 'source')
             ->get();
 
         /* Send the user their data. */

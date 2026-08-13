@@ -33,7 +33,10 @@ trait HasDateFilters
     protected bool $hasDeferredFilters = true;
 
     /** Polling re-renders the widget, which closes the filter popover mid-use. */
-    protected ?string $pollingInterval = null;
+    protected function getPollingInterval(): ?string
+    {
+        return null;
+    }
 
     public function filtersSchema(Schema $schema): Schema
     {

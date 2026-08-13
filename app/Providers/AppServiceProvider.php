@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
+use App\Enums\RankingType;
+use App\Models\Artist;
+use App\Models\Playlist;
+use App\Models\Show;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Spotify\Provider;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
@@ -53,6 +57,12 @@ class AppServiceProvider extends ServiceProvider
             UsedDiskSpaceCheck::new()
                 ->warnWhenUsedSpaceIsAbovePercentage(90)
                 ->failWhenUsedSpaceIsAbovePercentage(95),
+        ]);
+
+        Relation::morphMap([
+            RankingType::ARTIST->value => Artist::class,
+            RankingType::PLAYLIST->value => Playlist::class,
+            RankingType::SHOW->value => Show::class,
         ]);
     }
 }

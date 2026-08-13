@@ -14,7 +14,7 @@ class InProcessRankings extends Component
             'rankings' => Ranking::query()
                 ->where('user_id', Auth::id())
                 ->where('is_ranked', false)
-                ->with(['artist', 'user'])
+                ->with(['source', 'user'])
                 ->with('songs', fn ($q) => $q->where('rank', 1))
                 ->withCount('songs')
                 ->get(),

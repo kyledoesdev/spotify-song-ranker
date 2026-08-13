@@ -19,14 +19,7 @@ describe('spotify links', function () {
     });
 
     test('links a show back to spotify', function () {
-        $show = Show::create([
-            'show_id' => str()->random(16),
-            'publisher' => 'Podcast Publisher',
-            'name' => 'True Crime Weekly',
-            'description' => 'A weekly true crime show.',
-            'cover' => 'https://example.com/cover.jpg',
-            'episode_count' => 100,
-        ]);
+        $show = Show::factory()->createOne();
 
         Livewire::actingAs(kyle())
             ->test(ViewShow::class, ['record' => $show->getKey()])

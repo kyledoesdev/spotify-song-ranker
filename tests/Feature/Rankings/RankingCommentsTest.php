@@ -11,7 +11,7 @@ describe('ranking comments', function () {
     test('displays comments component when comments are enabled', function () {
         $user = User::factory()->createOne();
 
-        $ranking = publicCompletedRanking([
+        $ranking = publicCompletedRanking(attributes: [
             'user_id' => $user->getKey(),
             'comments_enabled' => true,
         ]);
@@ -25,7 +25,7 @@ describe('ranking comments', function () {
     test('hides comments component when comments are disabled', function () {
         $user = User::factory()->createOne();
 
-        $ranking = publicCompletedRanking([
+        $ranking = publicCompletedRanking(attributes: [
             'user_id' => $user->getKey(),
             'comments_enabled' => false,
         ]);
@@ -59,7 +59,7 @@ describe('comment profanity filtering', function () {
 
 describe('ranking comment replies', function () {
     test('allows replies when comment replies are enabled', function () {
-        $ranking = publicCompletedRanking([
+        $ranking = publicCompletedRanking(attributes: [
             'comments_enabled' => true,
             'comments_replies_enabled' => true,
         ]);
@@ -70,7 +70,7 @@ describe('ranking comment replies', function () {
     });
 
     test('disables replies when comment replies are disabled', function () {
-        $ranking = publicCompletedRanking([
+        $ranking = publicCompletedRanking(attributes: [
             'comments_enabled' => true,
             'comments_replies_enabled' => false,
         ]);

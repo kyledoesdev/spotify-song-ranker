@@ -70,6 +70,10 @@ describe('creating rankings', function () {
 
         expect($ranking)->not->toBeNull();
         expect($ranking->songs()->count())->toBe(3);
+
+        expect($ranking->type)->toBe(RankingType::ARTIST);
+        expect($ranking->source)->toBeInstanceOf(Artist::class);
+        expect($ranking->source->is($artist))->toBeTrue();
     });
 
     test('can create a ranking for a playlist', function () {
@@ -140,6 +144,10 @@ describe('creating rankings', function () {
         $localNatives = Artist::where('artist_id', 'local-natives-id')->firstOrFail();
 
         expect($ranking->songs()->pluck('artist_id')->unique()->all())->toBe([$localNatives->getKey()]);
+
+        expect($ranking->type)->toBe(RankingType::PLAYLIST);
+        expect($ranking->source)->toBeInstanceOf(Playlist::class);
+        expect($ranking->source->is($playlist))->toBeTrue();
     });
 
     test('can create a ranking for a show', function () {
@@ -192,6 +200,23 @@ describe('creating rankings', function () {
 
         expect($ranking)->not->toBeNull();
         expect($ranking->songs()->count())->toBe(3);
+
+        expect($ranking->type)->toBe(RankingType::SHOW);
+        expect($ranking->source)->toBeInstanceOf(Show::class);
+        expect($ranking->source->is($show))->toBeTrue();
+    });
+
+    test('the type column stores the ranking type enum value', function () {
+        expect(Ranking::factory()->createOne()->getAttributes()['type'])->toBe('artist');
+        expect(Ranking::factory()->playlist()->createOne()->getAttributes()['type'])->toBe('playlist');
+        expect(Ranking::factory()->show()->createOne()->getAttributes()['type'])->toBe('show');
+    });
+
+    test('a ranking whose source no longer exists still resolves its type', function () {
+        $ranking = Ranking::factory()->createOne(['source_id' => null]);
+
+        expect($ranking->type)->toBe(RankingType::ARTIST);
+        expect($ranking->source)->toBeNull();
     });
 });
 
