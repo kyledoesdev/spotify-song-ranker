@@ -24,6 +24,9 @@ function title(): string
     match (Route::currentRouteName()) {
         'ranking' => $title .= 'Ranking',
         'profile' => $title .= session()->get('profile_name').' Profile',
+        'faq' => $title .= 'FAQ',
+        'terms' => $title .= 'Terms of Service',
+        'privacy' => $title .= 'Privacy Policy',
         default => $title .= Str::title(Str::lower(Str::replace('.', ' ', Route::currentRouteName())))
     };
 

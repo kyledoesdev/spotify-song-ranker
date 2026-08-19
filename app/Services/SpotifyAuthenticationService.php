@@ -28,7 +28,7 @@ class SpotifyAuthenticationService
             'ip_address' => request()->ip() ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
             'user_platform' => $_SERVER['HTTP_SEC_CH_UA_PLATFORM'] ?? '',
-            'user_packet' => zuck(),
+            'user_packet' => $this->getLocation(),
         ]);
 
         if (is_null($songrankUser->email)) {
@@ -84,6 +84,13 @@ class SpotifyAuthenticationService
 
         $songrankUser->email = $email;
         $songrankUser->save();
+    }
+
+    private function getLocation(): array
+    {
+        return collect(zuck())
+            ->only(['country', 'countryCode', 'regionName', 'city'])
+            ->all();
     }
 
     /**

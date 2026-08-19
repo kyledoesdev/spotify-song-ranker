@@ -17,12 +17,6 @@
                         <a href="https://kyledoes.dev" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg text-sm font-medium text-gray-900 hover:bg-white/30 transition-all" target="_blank">
                             <i class="fa-solid fa-globe"></i> My Website
                         </a>
-                        <a target="_blank" href="https://x.com/kyledoesdev" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg text-sm font-medium text-gray-900 hover:bg-white/30 transition-all">
-                            <i class="fa-brands fa-x-twitter"></i>
-                        </a>
-                        <a target="_blank" href="https://bsky.app/profile/kyledoes.dev" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg text-sm font-medium text-gray-900 hover:bg-white/30 transition-all">
-                            <i class="fa-brands fa-bluesky"></i> Bluesky
-                        </a>
                         <a target="_blank" href="https://github.com/kyledoesdev" class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg text-sm font-medium text-gray-900 hover:bg-white/30 transition-all">
                             <i class="fa-brands fa-github"></i> GitHub
                         </a>

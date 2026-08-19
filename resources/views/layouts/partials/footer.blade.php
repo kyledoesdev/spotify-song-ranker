@@ -20,7 +20,7 @@
                     <a href="{{ route('about') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition-colors">About</a>
                     <a href="{{ route('faq') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition-colors">FAQ</a>
                     <a href="{{ route('terms') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition-colors">Terms</a>
-                    <a href="{{ route('support') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition-colors">Support</a>
+                    <a href="{{ route('privacy') }}" class="text-xs md:text-sm text-gray-400 hover:text-white transition-colors">Privacy</a>
                 </div>
             </div>
 

@@ -19,6 +19,6 @@ Song Rank is a free web application that lets users authenticate with Spotify, s
 - Website: https://songrank.dev (also https://song-rank.com)
 - About: https://songrank.dev/about
 - FAQ: https://songrank.dev/faq
-- Support: https://songrank.dev/support
 - Terms: https://songrank.dev/terms
+- Privacy: https://songrank.dev/privacy
 - Explorer: https://songrank.dev/explore

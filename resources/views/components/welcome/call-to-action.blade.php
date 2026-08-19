@@ -20,5 +20,14 @@
                 Browse Rankings
             </a>
         </div>
+
+        @guest
+            <p class="mt-6 mx-auto max-w-xs text-center text-[0.6875rem] leading-relaxed text-gray-800/60">
+                You sign in with Spotify. By continuing you agree to our
+                <a href="{{ route('terms') }}" class="underline underline-offset-2 hover:text-gray-900 transition-colors">Terms of Service</a>
+                and
+                <a href="{{ route('privacy') }}" class="underline underline-offset-2 hover:text-gray-900 transition-colors">Privacy Policy</a>.
+            </p>
+        @endguest
     </div>
 </section>

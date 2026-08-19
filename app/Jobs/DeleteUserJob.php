@@ -39,6 +39,15 @@ class DeleteUserJob implements ShouldQueue
             });
         }
 
+        $this->user->update([
+            'external_token' => null,
+            'external_refresh_token' => null,
+            'ip_address' => null,
+            'user_agent' => null,
+            'user_platform' => null,
+            'user_packet' => null,
+        ]);
+
         $this->user->delete();
     }
 }

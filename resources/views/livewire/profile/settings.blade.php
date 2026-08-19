@@ -94,14 +94,19 @@
                                 <i class="fa fa-exclamation-triangle text-red-500 mr-2"></i>
                                 <span class="text-sm font-medium text-red-800">Danger Zone</span>
                             </div>
-                            <p class="text-xs text-red-600">This action cannot be undone. Your account and all rankings will be deleted.</p>
+                            <p class="text-xs text-red-600">
+                                Your rankings will be removed from the site and your Spotify tokens and technical
+                                data erased. We keep your account record so your rankings can be restored if you
+                                sign back in &mdash; see our
+                                <a href="{{ route('privacy') }}" class="underline hover:text-red-800">Privacy Policy</a>.
+                            </p>
                         </div>
                         
                         <button
                             class="btn-danger w-full text-sm py-4 px-6 flex items-center justify-center space-x-2"
                             onclick="window.confirm({
                                 title: 'Delete your account?',
-                                message: 'Are you sure you want to delete your account? By deleting your account, we will email you one last email with your ranking records & then delete them & your account. Are you sure you want to go?',
+                                message: 'We will email you one last export of your rankings, then remove them from the site along with your account. Your Spotify tokens and the technical data we hold about you are erased permanently. Are you sure you want to go?',
                                 confirmText: 'It\'s time for me to go.',
                                 entityId: {{ auth()->id() }},
                                 componentId: '{{ $this->getId() }}',
