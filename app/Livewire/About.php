@@ -3,14 +3,21 @@
 namespace App\Livewire;
 
 use App\Models\ApplicationDashboard;
+use App\Models\LandingPageContent;
+use Illuminate\View\View;
 use Livewire\Component;
 
 class About extends Component
 {
-    public function render()
+    public function render(): View
     {
         return view('livewire.about', [
-            'aboutPage' => ApplicationDashboard::first()->about_page,
+            'aboutPage' => ApplicationDashboard::first()?->about_page,
+            'content' => cache()->remember(
+                'landing-page-contents',
+                now()->addDay(),
+                fn () => LandingPageContent::all()
+            ),
         ]);
     }
 }

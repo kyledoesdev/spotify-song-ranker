@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Resources\Terms\Pages;
+namespace App\Filament\Resources\LegalDocuments\Pages;
 
-use App\Filament\Resources\Terms\TermsResource;
+use App\Filament\Resources\LegalDocuments\LegalDocumentResource;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditTerms extends EditRecord
+class EditLegalDocument extends EditRecord
 {
-    protected static string $resource = TermsResource::class;
+    protected static string $resource = LegalDocumentResource::class;
 
     protected function getHeaderActions(): array
     {

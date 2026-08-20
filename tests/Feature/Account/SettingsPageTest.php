@@ -82,6 +82,50 @@ describe('account deletion', function () {
         expect(Ranking::whereIn('id', $rankingIds)->count())->toBe(0);
     });
 
+    test('account deletion erases spotify tokens and technical data', function () {
+        Notification::fake();
+
+        $user = User::factory()->createOne([
+            'external_token' => 'access-token',
+            'external_refresh_token' => 'refresh-token',
+            'ip_address' => '203.0.113.10',
+            'user_agent' => 'Mozilla/5.0',
+            'user_platform' => 'Windows',
+            'user_packet' => ['city' => 'Philadelphia', 'zip' => '00000'],
+        ]);
+
+        DeleteUserJob::dispatchSync($user);
+
+        $deleted = User::withTrashed()->find($user->getKey());
+
+        expect($deleted->external_token)->toBeNull()
+            ->and($deleted->external_refresh_token)->toBeNull()
+            ->and($deleted->ip_address)->toBeNull()
+            ->and($deleted->user_agent)->toBeNull()
+            ->and($deleted->user_platform)->toBeNull()
+            ->and($deleted->user_packet)->toBeNull();
+    });
+
+    test('account deletion keeps the identity needed to restore a returning user', function () {
+        Notification::fake();
+
+        $user = User::factory()->createOne([
+            'spotify_id' => 'spotify-abc',
+            'name' => 'Returning User',
+            'email' => 'returning@example.com',
+        ]);
+
+        DeleteUserJob::dispatchSync($user);
+
+        $deleted = User::withTrashed()->find($user->getKey());
+
+        expect($deleted)->not->toBeNull()
+            ->and($deleted->trashed())->toBeTrue()
+            ->and($deleted->spotify_id)->toBe('spotify-abc')
+            ->and($deleted->name)->toBe('Returning User')
+            ->and($deleted->email)->toBe('returning@example.com');
+    });
+
     test('user cannot delete another users account', function () {
         $user = User::factory()->createOne();
         $otherUser = User::factory()->createOne();
