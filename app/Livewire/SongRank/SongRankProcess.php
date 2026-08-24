@@ -12,6 +12,8 @@ use Livewire\Component;
 
 class SongRankProcess extends Component
 {
+    private const MAX_UNDO_HISTORY = 10;
+
     public Ranking $ranking;
 
     public RankingSortingState $sortingState;
@@ -23,6 +25,8 @@ class SongRankProcess extends Component
     public bool $showEmbeds = true;
 
     public bool $isProcessing = false;
+
+    public bool $canUndo = false;
 
     public int $progressPercentage = 0;
 
@@ -44,6 +48,7 @@ class SongRankProcess extends Component
             $this->startNewSorting();
         }
 
+        $this->canUndo = filled($this->sortingState->sorting_state['decision_history'] ?? []);
         $this->updateProgressBar();
         $this->continueSort();
     }
@@ -70,6 +75,7 @@ class SongRankProcess extends Component
                 ],
                 'current_merge' => null,
                 'completed_segments' => [],
+                'decision_history' => [],
             ],
             'aprox_comparisons' => $songsCount > 1 ? intval($songsCount * log($songsCount, 2)) : 0,
             'completed_comparisons' => 0,
@@ -222,6 +228,16 @@ class SongRankProcess extends Component
                 return;
             }
 
+            $decisionHistory = $state['decision_history'] ?? [];
+            $decisionHistory[] = collect($state)
+                ->except('decision_history')
+                ->put('completed_comparisons', $this->sortingState->completed_comparisons)
+                ->all();
+
+            if (count($decisionHistory) > self::MAX_UNDO_HISTORY) {
+                array_shift($decisionHistory);
+            }
+
             $chosenFromLeft = $songId === $this->currentSong1['id'];
 
             $merge['result_ids'][] = $chosenFromLeft
@@ -229,17 +245,54 @@ class SongRankProcess extends Component
                 : array_shift($merge['right_ids']);
 
             $state['current_merge'] = $merge;
+            $state['decision_history'] = $decisionHistory;
 
             DB::transaction(function () use ($state) {
                 $this->sortingState->increment('completed_comparisons');
                 $this->sortingState->update(['sorting_state' => $state]);
             });
 
+            $this->canUndo = true;
             $this->updateProgressBar();
             $this->processMerge();
 
         } catch (Exception $e) {
             Log::channel('discord_other_updates')->error('Error in chooseSong', ['error' => $e->getMessage()]);
+        } finally {
+            $this->isProcessing = false;
+        }
+    }
+
+    public function undoLastChoice(): void
+    {
+        $state = $this->sortingState->sorting_state;
+        $decisionHistory = $state['decision_history'] ?? [];
+
+        if ($this->isProcessing || empty($decisionHistory)) {
+            return;
+        }
+
+        $this->isProcessing = true;
+
+        try {
+            $snapshot = array_pop($decisionHistory);
+            $completedComparisons = $snapshot['completed_comparisons'];
+            unset($snapshot['completed_comparisons']);
+
+            $snapshot['decision_history'] = $decisionHistory;
+
+            DB::transaction(function () use ($snapshot, $completedComparisons) {
+                $this->sortingState->update([
+                    'sorting_state' => $snapshot,
+                    'completed_comparisons' => $completedComparisons,
+                ]);
+            });
+
+            $this->canUndo = filled($decisionHistory);
+            $this->updateProgressBar();
+            $this->processMerge();
+        } catch (Exception $e) {
+            Log::channel('discord_other_updates')->error('Error in undoLastChoice', ['error' => $e->getMessage()]);
         } finally {
             $this->isProcessing = false;
         }

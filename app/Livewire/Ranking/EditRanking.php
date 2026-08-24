@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Ranking;
 
+use App\Actions\Rankings\UpdateRanking;
 use App\Livewire\Forms\RankingForm;
 use App\Models\Ranking;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class EditRanking extends Component
@@ -18,18 +18,10 @@ class EditRanking extends Component
     {
         $this->ranking = Ranking::query()
             ->with('songs')
-            ->find($id);
+            ->findOrFail($id);
 
-        if (is_null($this->ranking)) {
-            $email = Auth::check() ? Auth::user()->email : request()->ip();
-
-            Log::channel('discord_other_updates')->info("Ranking not found: Id Given: {$id} :: User Email: {$email}");
-
+        if (! $this->ranking->canBeSeen()) {
             abort(404);
-        }
-
-        if ($this->ranking->user_id != Auth::id()) {
-            abort(403, 'You are not allowed to edit this ranking.');
         }
 
         $this->form->fill([
@@ -45,18 +37,11 @@ class EditRanking extends Component
         return view('livewire.ranking.edit-ranking');
     }
 
-    public function update()
+    public function update(): void
     {
         $this->form->validate();
 
-        $this->ranking->update([
-            'name' => $this->form->name,
-            'is_public' => $this->form->is_public === '1' || $this->form->is_public === true,
-            'comments_enabled' => $this->form->comments_enabled === '1' || $this->form->comments_enabled === true,
-            'comments_replies_enabled' => $this->form->comments_replies_enabled === '1' || $this->form->comments_replies_enabled === true,
-        ]);
-
-        cache()->forget('explore:total-rankings');
+        (new UpdateRanking)->handle(Auth::user(), $this->ranking, $this->form);
 
         $this->js("window.flash({
             title: 'Ranking Updated!',

@@ -22,7 +22,6 @@ class ApplicationDashboardFactory extends Factory
             'version' => '2.0',
             'slideshow_speed' => 3,
             'seo_terms' => 'song, ranking, spotify',
-            'popup_chance' => 8,
         ];
     }
 }

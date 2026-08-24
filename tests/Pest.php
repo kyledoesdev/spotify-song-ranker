@@ -1,9 +1,13 @@
 <?php
 
 use App\Contracts\Rankable;
+use App\Enums\RankingType;
+use App\Models\Artist;
 use App\Models\Ranking;
+use App\Models\Song;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Features\SupportTesting\Testable;
 use Tests\TestCase;
 
 /*
@@ -35,10 +39,6 @@ pest()->extend(TestCase::class)
 |
 */
 
-/**
- * Pass a $source (Artist, Playlist or Show) to control what the ranking is of;
- * it defaults to a fresh artist via the factory.
- */
 function publicCompletedRanking(?Rankable $source = null, array $attributes = []): Ranking
 {
     $factory = Ranking::factory();
@@ -60,4 +60,63 @@ function kyle(): User
         'name' => 'Kyle',
         'is_dev' => true,
     ]);
+}
+
+function expectedSongTitles(int $count): array
+{
+    return collect(range(1, $count))
+        ->mapWithKeys(fn (int $i) => [$i => "Should be number {$i}"])
+        ->all();
+}
+
+function algorithmRanking(User $user, string $name, array $expectedSongTitles): Ranking
+{
+    $artist = Artist::factory()->create([
+        'artist_name' => 'Test Artist',
+        'is_podcast' => false,
+    ]);
+
+    $ranking = Ranking::create([
+        'user_id' => $user->getKey(),
+        'type' => RankingType::ARTIST->value,
+        'source_id' => $artist->getKey(),
+        'name' => $name,
+        'is_ranked' => false,
+        'is_public' => true,
+    ]);
+
+    foreach ($expectedSongTitles as $title) {
+        Song::factory()->create([
+            'ranking_id' => $ranking->getKey(),
+            'artist_id' => $artist->getKey(),
+            'title' => $title,
+            'rank' => 0,
+        ]);
+    }
+
+    return $ranking;
+}
+
+function simulateRankingComparisons(Testable $component, int $maxComparisons): void
+{
+    for ($i = 0; $i < $maxComparisons; $i++) {
+        $leftSong = $component->get('currentSong1');
+        $rightSong = $component->get('currentSong2');
+
+        if (empty($leftSong['title']) || empty($rightSong['title'])) {
+            break;
+        }
+
+        preg_match('/(\d+)/', $leftSong['title'], $leftMatches);
+        preg_match('/(\d+)/', $rightSong['title'], $rightMatches);
+
+        $leftSongRank = (int) $leftMatches[1];
+        $rightSongRank = (int) $rightMatches[1];
+
+        $winningSongId = $leftSongRank < $rightSongRank
+            ? $leftSong['id']
+            : $rightSong['id'];
+
+        $component->call('chooseSong', $winningSongId);
+    }
 }

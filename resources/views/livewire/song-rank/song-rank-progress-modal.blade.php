@@ -1,7 +1,7 @@
 <div x-data="{ showModal: false, activeTab: 'order' }">
     <button 
         type="button"
-        class="btn-primary"
+        class="btn-secondary"
         @click="showModal = true; $wire.refreshData()"
     >
         <i class="fa-solid fa-list-check mr-1"></i>

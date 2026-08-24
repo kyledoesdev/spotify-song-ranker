@@ -130,20 +130,36 @@
                 </span>
                 
                 <div class="flex flex-wrap items-center gap-3 order-1 sm:order-1">
+                    <button
+                        class="btn-primary"
+                        wire:click="undoLastChoice"
+                        wire:loading.attr="disabled"
+                        wire:target="undoLastChoice, chooseSong"
+                        @disabled(! $canUndo)
+                    >
+                        <span wire:loading.remove wire:target="undoLastChoice">
+                            <i class="fa-solid fa-rotate-left mr-1"></i>
+                            Undo
+                        </span>
+                        <span wire:loading wire:target="undoLastChoice" class="inline-flex items-center gap-2">
+                            <i class="fa-solid fa-spinner fa-spin"></i>
+                        </span>
+                    </button>
+
                     <livewire:song-rank.song-rank-progress-modal
                         :ranking="$ranking"
-                        :songs="$ranking->songs" 
+                        :songs="$ranking->songs"
                         :sorting-state="$sortingState"
                     />
                     
                     @unless ($ranking->isShowType())
-                        <label class="flex items-center cursor-pointer select-none bg-gray-100 hover:bg-gray-200 transition-colors rounded-md px-3 py-1.5">
+                        <label class="flex items-center cursor-pointer select-none bg-helper hover:bg-blue-400 transition-colors rounded-md px-3 py-1.5">
                             <input
                                 type="checkbox"
                                 wire:model.live="showEmbeds"
-                                class="w-4 h-4 text-blue-600 bg-white border-gray-300 rounded-sm focus:ring-blue-500"
+                                class="w-4 h-4 text-blue-300 bg-white border-helper rounded-sm focus:ring-blue-400"
                             >
-                            <span class="ml-2 text-sm text-gray-700 whitespace-nowrap">Spotify Players</span>
+                            <span class="ml-2 text-sm text-zinc-800 whitespace-nowrap">Spotify Players</span>
                         </label>
                     @endunless
                 </div>

@@ -1,13 +1,9 @@
 <?php
 
-use App\Enums\RankingType;
 use App\Livewire\SongRank\SongRankProcess;
 use App\Models\Artist;
-use App\Models\Ranking;
 use App\Models\RankingSortingState;
-use App\Models\Song;
 use App\Models\User;
-use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -142,76 +138,3 @@ describe('ranking algorithm', function () {
         }
     });
 });
-
-/**
- * Build the expected rank => title map for an algorithm test.
- *
- * @return array<int, string>
- */
-function expectedSongTitles(int $count): array
-{
-    return collect(range(1, $count))
-        ->mapWithKeys(fn (int $i) => [$i => "Should be number {$i}"])
-        ->all();
-}
-
-/**
- * Create an unranked artist ranking with one song per expected title.
- *
- * @param  array<int, string>  $expectedSongTitles
- */
-function algorithmRanking(User $user, string $name, array $expectedSongTitles): Ranking
-{
-    $artist = Artist::factory()->create([
-        'artist_name' => 'Test Artist',
-        'is_podcast' => false,
-    ]);
-
-    $ranking = Ranking::create([
-        'user_id' => $user->getKey(),
-        'type' => RankingType::ARTIST->value,
-        'source_id' => $artist->getKey(),
-        'name' => $name,
-        'is_ranked' => false,
-        'is_public' => true,
-    ]);
-
-    foreach ($expectedSongTitles as $title) {
-        Song::factory()->create([
-            'ranking_id' => $ranking->getKey(),
-            'artist_id' => $artist->getKey(),
-            'title' => $title,
-            'rank' => 0,
-        ]);
-    }
-
-    return $ranking;
-}
-
-/**
- * Simulate user selections during the ranking process.
- * Always picks the song with the lower number (higher rank).
- */
-function simulateRankingComparisons(Testable $component, int $maxComparisons): void
-{
-    for ($i = 0; $i < $maxComparisons; $i++) {
-        $leftSong = $component->get('currentSong1');
-        $rightSong = $component->get('currentSong2');
-
-        if (empty($leftSong['title']) || empty($rightSong['title'])) {
-            break;
-        }
-
-        preg_match('/(\d+)/', $leftSong['title'], $leftMatches);
-        preg_match('/(\d+)/', $rightSong['title'], $rightMatches);
-
-        $leftSongRank = (int) $leftMatches[1];
-        $rightSongRank = (int) $rightMatches[1];
-
-        $winningSongId = $leftSongRank < $rightSongRank
-            ? $leftSong['id']
-            : $rightSong['id'];
-
-        $component->call('chooseSong', $winningSongId);
-    }
-}
