@@ -13,6 +13,5 @@ class ApplicationDashboard extends Model
         'version',
         'slideshow_speed',
         'seo_terms',
-        'popup_chance',
     ];
 }

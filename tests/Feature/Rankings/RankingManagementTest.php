@@ -31,7 +31,7 @@ describe('editing rankings', function () {
 
         actingAs(User::factory()->createOne())
             ->get(route('rank.edit', ['id' => $ranking->getKey()]))
-            ->assertForbidden();
+            ->assertNotFound();
     });
 
     test('owner can update name and visibility', function () {
@@ -62,7 +62,7 @@ describe('editing rankings', function () {
 
         Livewire::actingAs($user)
             ->test(EditRanking::class, ['id' => $ranking->getKey()])
-            ->assertForbidden();
+            ->assertNotFound();
     });
 });
 

@@ -109,17 +109,6 @@ class Ranking extends Model
         return $this->is_public && $this->is_ranked;
     }
 
-    public function shouldShowSupportPopup(): bool
-    {
-        $completedAt = $this->attributes['completed_at'];
-
-        $justCompleted = $completedAt && Carbon::parse($completedAt)->isAfter(now()->subMinutes(10));
-
-        $popupChance = ApplicationDashboard::first()?->popup_chance ?? 8;
-
-        return $justCompleted || (Auth::check() && rand(1, $popupChance) === 1);
-    }
-
     /* contracts */
 
     public function commentableName(): string

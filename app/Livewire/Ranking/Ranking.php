@@ -3,8 +3,6 @@
 namespace App\Livewire\Ranking;
 
 use App\Models\Ranking as RankingModel;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Ranking extends Component
@@ -15,15 +13,7 @@ class Ranking extends Component
     {
         $this->ranking = RankingModel::query()
             ->with(['user', 'songs', 'source', 'sortingState'])
-            ->find($id);
-
-        if (is_null($this->ranking)) {
-            $email = Auth::check() ? Auth::user()->email : request()->ip();
-
-            Log::channel('discord_other_updates')->info("Ranking not found: Id Given: {$id} :: User Email: {$email}");
-
-            abort(404);
-        }
+            ->findOrFail($id);
 
         if (! $this->ranking->canBeSeen()) {
             abort(404);

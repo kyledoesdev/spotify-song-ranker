@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Laravel\Socialite\SocialiteServiceProvider;
+use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use SocialiteProviders\Manager\ServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -34,5 +35,15 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule) {})
-    ->withExceptions(function (Exceptions $exceptions) {})
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->report(function (TypeError $e) {
+            if (str_contains($e->getMessage(), 'Filament\Notifications\Collection')) {
+                return false;
+            }
+        });
+
+        $exceptions->dontReport([
+            CannotUpdateLockedPropertyException::class,
+        ]);
+    })
     ->create();
