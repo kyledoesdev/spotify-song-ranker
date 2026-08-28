@@ -20,7 +20,7 @@
                     <div class="md:col-span-1" x-auto-animate>
                         @include('livewire.song-rank.setup.partials.ranking-form', [
                             'namePlaceholder' => $selectedPlaylist['name'] . ' List',
-                            'tracksToRankCount' => $this->tracksToRank()->count(),
+                            'tracksToRankCount' => $this->rankableTracks()->count(),
                             'itemLabel' => $this->rankingType()->itemLabel(),
                         ])
                     </div>

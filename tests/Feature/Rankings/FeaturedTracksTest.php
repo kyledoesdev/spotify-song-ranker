@@ -13,6 +13,7 @@ use Livewire\Livewire;
 describe('the featured tracks toggle', function () {
     test('is off by default so featured tracks stay out of the ranking', function () {
         artistSetup()
+            ->set('includeFeaturedTracks', false)
             ->call('beginRanking')
             ->assertHasNoErrors();
 
@@ -25,7 +26,6 @@ describe('the featured tracks toggle', function () {
 
     test('pulls featured tracks into the ranking once switched on', function () {
         artistSetup()
-            ->set('includeFeaturedTracks', true)
             ->call('beginRanking')
             ->assertHasNoErrors();
 
@@ -49,7 +49,7 @@ describe('the featured tracks toggle', function () {
     });
 
     test('removing a featured track keeps it out even when the toggle is on', function () {
-        $component = artistSetup()->set('includeFeaturedTracks', true);
+        $component = artistSetup();
 
         $featuredUuid = $component->get('featuredTracks')->first()['uuid'];
 
@@ -66,7 +66,6 @@ describe('the featured tracks toggle', function () {
 
     test('the quick filters reach into the featured list too', function () {
         $component = artistSetup()
-            ->set('includeFeaturedTracks', true)
             ->call('removeTracksMatching', 'guest');
 
         expect($component->get('removedTrackUuids'))->toHaveCount(1);
@@ -82,7 +81,6 @@ describe('featured track storage', function () {
         expect(Artist::where('artist_id', 'other-artist-id')->exists())->toBeFalse();
 
         artistSetup()
-            ->set('includeFeaturedTracks', true)
             ->call('beginRanking')
             ->assertHasNoErrors();
 
@@ -97,7 +95,6 @@ describe('featured track storage', function () {
 
     test('keeps owned tracks pointed at the ranked artist', function () {
         artistSetup()
-            ->set('includeFeaturedTracks', true)
             ->call('beginRanking')
             ->assertHasNoErrors();
 
@@ -110,7 +107,6 @@ describe('featured track storage', function () {
 
     test('leaves the ranking pointed at the ranked artist, not the primary artist', function () {
         artistSetup()
-            ->set('includeFeaturedTracks', true)
             ->call('beginRanking')
             ->assertHasNoErrors();
 
@@ -135,7 +131,7 @@ describe('lazy loading featured tracks', function () {
             ]))
             ->set('appearsOnCount', 1);
 
-        expect($component->get('featuredTracks'))->toBeNull();
+        expect($component->get('featuredTracks')->isEmpty())->toBeTrue();
 
         $component->set('includeFeaturedTracks', true);
 
@@ -260,6 +256,8 @@ function fakeAppearsOnApi(): void
             'albums' => [
                 [
                     'id' => 'their-album-id',
+                    'name' => 'Their Album',
+                    'album_type' => 'single',
                     'artists' => [['id' => 'other-artist-id', 'name' => 'Other Artist']],
                     'images' => [['url' => 'https://example.test/their-album.png']],
                     'tracks' => [
@@ -300,10 +298,14 @@ function artistSetup(): Testable
                 'name' => 'Guest Verse',
                 'uuid' => str()->uuid()->toString(),
                 'cover' => 'https://example.test/their-album.png',
+                'album_name' => 'Their Album',
+                'album_id' => 'their-album-id',
+                'album_type' => 'single',
                 'featured_artist' => true,
                 'primary_artist' => ['id' => 'other-artist-id', 'name' => 'Other Artist'],
             ],
         ]))
+        ->set('includeFeaturedTracks', true)
         ->set('form.name', 'Test List')
         ->set('form.is_public', true);
 }
@@ -312,6 +314,8 @@ function appearsOnAlbum(string $albumId, string $trackId, string $trackName): ar
 {
     return [
         'id' => $albumId,
+        'name' => 'Their Album',
+        'album_type' => 'single',
         'artists' => [['id' => 'other-artist-id', 'name' => 'Other Artist']],
         'images' => [['url' => "https://example.test/{$albumId}.png"]],
         'tracks' => [
@@ -330,13 +334,16 @@ function appearsOnAlbum(string $albumId, string $trackId, string $trackName): ar
     ];
 }
 
-function ownedTrack(string $id, string $name): array
+function ownedTrack(string $id, string $name, string $albumId = 'own-album-id', string $albumName = 'Own Album'): array
 {
     return [
         'id' => $id,
         'name' => $name,
         'uuid' => str()->uuid()->toString(),
         'cover' => 'https://example.test/own-album.png',
+        'album_name' => $albumName,
+        'album_id' => $albumId,
+        'album_type' => 'album',
         'featured_artist' => false,
     ];
 }

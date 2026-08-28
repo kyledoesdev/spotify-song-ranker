@@ -23,8 +23,6 @@ class ArtistSetup extends Component
 
     public ?Collection $searchedArtists = null;
 
-    public ?Collection $featuredTracks = null;
-
     public string $searchTerm = '';
 
     public string $randomArtist = '';
@@ -99,56 +97,72 @@ class ArtistSetup extends Component
      */
     public function updatedIncludeFeaturedTracks(bool $value): void
     {
-        if ($value && is_null($this->featuredTracks)) {
+        if ($value && ! $this->hasFeaturedTracks()) {
             $this->featuredTracks = (new GetArtistAppearsOnSongs)->handle(
                 Auth::user(),
                 data_get($this->selectedArtist, 'id', ''),
                 collect($this->selectedTracks),
-            );
+            ) ?? collect();
 
-            if (is_null($this->featuredTracks)) {
+            if (! $this->hasFeaturedTracks()) {
                 $this->includeFeaturedTracks = false;
                 $this->featuredTracksUnavailable(data_get($this->selectedArtist, 'name', 'this artist'));
             }
         }
 
+        if (! $value) {
+            $this->featuredTracks = collect();
+        }
+
         $this->js('window.hideLoader()');
     }
 
-    // -- Track lists --
+    // -- Album filtering --
 
-    /**
-     * Featured tracks only join the ranking while the toggle is on, so nothing leaks in when it is off.
-     */
-    public function tracksToRank(): Collection
+    public function albums(): Collection
     {
-        return $this->withoutRemovedTracks($this->selectedTracks)
-            ->concat($this->featuredTracksToRank())
+        return collect($this->selectedTracks)
+            ->groupBy('album_id')
+            ->map(function (Collection $tracks) {
+                $first = $tracks->first();
+                $trackUuids = $tracks->pluck('uuid');
+                $removedCount = $trackUuids->intersect($this->removedTrackUuids)->count();
+
+                return [
+                    'id' => $first['album_id'],
+                    'name' => $first['album_name'],
+                    'type' => $first['album_type'],
+                    'cover' => $first['cover'],
+                    'track_count' => $tracks->count(),
+                    'selected_count' => $tracks->count() - $removedCount,
+                    'all_selected' => $removedCount === 0,
+                    'none_selected' => $removedCount === $tracks->count(),
+                ];
+            })
+            ->sortBy([['type', 'asc'], ['name', 'asc']])
             ->values();
     }
 
-    public function featuredTracksToRank(): Collection
+    public function toggleAlbum(string $albumId): void
     {
-        if (! $this->includeFeaturedTracks) {
-            return collect();
+        $trackUuids = collect($this->selectedTracks)
+            ->where('album_id', $albumId)
+            ->pluck('uuid');
+
+        $allRemoved = $trackUuids->intersect($this->removedTrackUuids)->count() === $trackUuids->count();
+
+        if ($allRemoved) {
+            $this->removedTrackUuids = $this->removedTrackUuids->diff($trackUuids)->values();
+            $this->dispatch('tracks-batch-restored', uuids: $trackUuids->values()->all());
+        } else {
+            $toRemove = $trackUuids->diff($this->removedTrackUuids)->values();
+            $this->removedTrackUuids = $this->removedTrackUuids->merge($toRemove)->values();
+            $this->dispatch('tracks-batch-removed', uuids: $toRemove->all());
         }
-
-        return $this->withoutRemovedTracks($this->featuredTracks);
-    }
-
-    public function hasFeaturedTracks(): bool
-    {
-        return collect($this->featuredTracks)->isNotEmpty();
-    }
-
-    protected function allTracks(): Collection
-    {
-        return collect($this->selectedTracks)->concat($this->featuredTracks ?? []);
     }
 
     protected function resetFeaturedTracks(): void
     {
-        $this->featuredTracks = null;
         $this->includeFeaturedTracks = false;
         $this->appearsOnCount = 0;
     }

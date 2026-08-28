@@ -11,7 +11,7 @@ trait HasRankingForm
 
     public function confirmBeginRanking(): void
     {
-        $songCount = $this->tracksToRank()->count();
+        $songCount = $this->rankableTracks()->count();
 
         if ($songCount > Ranking::MAX_SONGS) {
             $this->tooManyTracks($songCount, Ranking::MAX_SONGS);
@@ -54,7 +54,7 @@ trait HasRankingForm
             'is_public' => (bool) $this->form->is_public,
             'comments_enabled' => (bool) $this->form->comments_enabled,
             'comments_replies_enabled' => (bool) $this->form->comments_replies_enabled,
-            'tracks' => $this->tracksToRank(),
+            'tracks' => $this->rankableTracks(),
         ];
     }
 

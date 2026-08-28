@@ -51,33 +51,6 @@
         </select>
     </div>
 
-    <div class="mt-6 mb-4">
-        <h5 class="md:text-2xl mb-2 transition-all duration-300">Filters</h5>
-        <div class="flex flex-wrap gap-2" x-auto-animate>
-            <button
-                type="button"
-                class="btn-primary px-2 py-1 text-sm transform transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-md"
-                wire:click="removeTracksMatching('remix')"
-            >
-                Remove Remixes
-            </button>
-            <button
-                type="button"
-                class="btn-secondary px-2 py-1 text-sm transform transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-md"
-                wire:click="removeTracksMatching('live from')"
-            >
-                Remove "Live From" Tracks
-            </button>
-            <button
-                type="button"
-                class="btn-helper px-2 py-1 text-sm transform transition-all duration-300 hover:scale-105 active:scale-95 hover:shadow-md"
-                wire:click="removeTracksMatching('instrumental')"
-            >
-                Remove "Instrumental" Tracks
-            </button>
-        </div>
-    </div>
-
     <p @class([
         'text-sm mb-2',
         'text-red-600 font-semibold' => $tracksToRankCount > Ranking::MAX_SONGS,
@@ -96,4 +69,5 @@
     >
         <h5 class="text-lg md:text-2xl uppercase cursor-pointer">Begin Ranking</h5>
     </button>
+
 </div>

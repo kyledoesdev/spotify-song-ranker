@@ -8,54 +8,79 @@ use Livewire\Attributes\On;
 
 trait HasTrackList
 {
-    public ?Collection $selectedTracks = null;
+    public Collection $selectedTracks;
 
-    public array $removedTrackUuids = [];
+    public Collection $featuredTracks;
 
-    /**
-     * The tracks the ranking will actually hold once removals are taken out.
-     */
-    public function tracksToRank(): Collection
+    public Collection $removedTrackUuids;
+
+    public function initializeHasTrackList(): void
     {
-        return $this->withoutRemovedTracks($this->selectedTracks);
+        $this->selectedTracks ??= collect();
+        $this->featuredTracks ??= collect();
+        $this->removedTrackUuids ??= collect();
     }
+
+    // -- Querying tracks --
+
+    protected function allTracks(): Collection
+    {
+        return collect($this->selectedTracks)->concat($this->featuredTracks);
+    }
+
+    public function rankableTracks(): Collection
+    {
+        return $this->allTracks()
+            ->reject(fn (array $track) => $this->removedTrackUuids->contains($track['uuid']))
+            ->values();
+    }
+
+    public function hasFeaturedTracks(): bool
+    {
+        return $this->featuredTracks->isNotEmpty();
+    }
+
+    public function removedTracks(): Collection
+    {
+        return $this->allTracks()
+            ->filter(fn (array $track) => $this->removedTrackUuids->contains($track['uuid']))
+            ->values();
+    }
+
+    // -- Removing tracks --
 
     #[On('track-removed')]
     public function removeTrack(string $uuid): void
     {
-        $this->removedTrackUuids[] = $uuid;
+        $this->removedTrackUuids->push($uuid);
     }
 
     public function removeTracksMatching(string $term): void
     {
         $uuids = $this->allTracks()
             ->filter(fn (array $track) => Str::contains($track['name'], $term, ignoreCase: true))
-            ->pluck('uuid')
-            ->toArray();
+            ->pluck('uuid');
 
-        $this->removedTrackUuids = array_merge($this->removedTrackUuids, $uuids);
+        $this->removedTrackUuids = $this->removedTrackUuids->merge($uuids)->values();
 
-        $this->dispatch('tracks-batch-removed', uuids: $uuids);
+        $this->dispatch('tracks-batch-removed', uuids: $uuids->values()->all());
     }
 
-    /**
-     * Every track this component renders, across all of its lists.
-     */
-    protected function allTracks(): Collection
+    // -- Restoring tracks --
+
+    public function restoreTrack(string $uuid): void
     {
-        return collect($this->selectedTracks);
+        $this->removedTrackUuids = $this->removedTrackUuids->reject(fn (string $id) => $id === $uuid)->values();
+
+        $this->dispatch('tracks-batch-restored', uuids: [$uuid]);
     }
 
-    protected function withoutRemovedTracks(?Collection $tracks): Collection
-    {
-        return collect($tracks)
-            ->reject(fn (array $track) => in_array($track['uuid'], $this->removedTrackUuids))
-            ->values();
-    }
+    // -- Resetting --
 
     protected function resetTrackList(): void
     {
-        $this->selectedTracks = null;
-        $this->removedTrackUuids = [];
+        $this->selectedTracks = collect();
+        $this->featuredTracks = collect();
+        $this->removedTrackUuids = collect();
     }
 }
