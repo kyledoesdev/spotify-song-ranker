@@ -1,11 +1,12 @@
 {{-- Livewire partial: expects $tracks, $type, and $keyPrefix; the rest are optional. --}}
 
 @php
-    $removed ??= [];
+    $removed ??= collect();
     $title ??= null;
     $toggle ??= null;
     $searchPlaceholder ??= 'Search tracks...';
     $scroller ??= 'card-scroller';
+    $albums ??= null;
 
     $tracks = collect($tracks);
 
@@ -20,7 +21,7 @@
 <div
     x-data="{
         query: '',
-        removed: @js(array_values($removed)),
+        removed: @js($removed->values()),
         items: @js($items),
         matches(uuid, name) {
             if (this.removed.includes(uuid)) {
@@ -45,6 +46,12 @@
             removed.push($event.detail.uuid);
         }
     "
+    @tracks-batch-restored.window="
+        $event.detail.uuids.forEach(uuid => {
+            const idx = removed.indexOf(uuid);
+            if (idx !== -1) removed.splice(idx, 1);
+        });
+    "
     class="border border-gray-200 bg-white rounded-lg overflow-hidden"
 >
     <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
@@ -67,14 +74,36 @@
             </div>
         @endif
 
-        <div class="relative w-full sm:w-56">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
-            <input
-                type="search"
-                x-model="query"
-                placeholder="{{ $searchPlaceholder }}"
-                class="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-400"
-            />
+        <div class="flex items-center gap-2">
+            <div class="relative w-full sm:w-56">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm"></i>
+                <input
+                    type="search"
+                    x-model="query"
+                    placeholder="{{ $searchPlaceholder }}"
+                    class="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-200 rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-400"
+                />
+            </div>
+
+            <button
+                type="button"
+                class="btn-primary p-2 text-sm"
+                @click="$dispatch('open-album-modal')"
+                title="Filters"
+            >
+                <i class="fa-solid fa-sliders"></i>
+            </button>
+
+            @if (count($this->removedTrackUuids) > 0)
+                <button
+                    type="button"
+                    class="btn-secondary p-2 text-sm cursor-pointer"
+                    @click="$dispatch('open-removed-tracks-modal')"
+                    title="Removed tracks"
+                >
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            @endif
         </div>
     </div>
 
@@ -107,4 +136,12 @@
             No {{ $type->itemLabel() }} match your search.
         </p>
     </div>
+
+    @include('livewire.song-rank.setup.partials.album-filters', ['albums' => $albums])
+
+    @if (count($this->removedTrackUuids) > 0)
+        @include('livewire.song-rank.setup.partials.removed-tracks', [
+            'removedTracks' => $this->removedTracks(),
+        ])
+    @endif
 </div>

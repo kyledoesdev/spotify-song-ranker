@@ -4,6 +4,11 @@
         uuid: '{{ $song['uuid'] }}'
     }"
     x-show="!removing"
+    @tracks-batch-restored.window="
+        if ($event.detail.uuids.includes(uuid)) {
+            removing = false;
+        }
+    "
     x-transition:leave="transition ease-in duration-300"
     x-transition:leave-start="opacity-100 transform scale-100"
     x-transition:leave-end="opacity-0 transform scale-95 translate-x-[-20px]"

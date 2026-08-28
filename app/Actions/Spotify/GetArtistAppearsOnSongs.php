@@ -74,6 +74,9 @@ final class GetArtistAppearsOnSongs
                             'name' => (string) $track['name'],
                             'uuid' => (string) Str::uuid(),
                             'cover' => data_get($album, 'images.0.url'),
+                            'album_name' => (string) $album['name'],
+                            'album_id' => $album['id'],
+                            'album_type' => $album['album_type'],
                             'featured_artist' => true,
                             'primary_artist' => [
                                 'id' => $primaryArtist['id'],

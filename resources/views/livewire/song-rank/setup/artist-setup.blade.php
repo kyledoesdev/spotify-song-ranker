@@ -53,7 +53,7 @@
                     <div class="md:col-span-1" x-auto-animate>
                         @include('livewire.song-rank.setup.partials.ranking-form', [
                             'namePlaceholder' => $selectedArtist['name'] . ' List',
-                            'tracksToRankCount' => $this->tracksToRank()->count(),
+                            'tracksToRankCount' => $this->rankableTracks()->count(),
                             'itemLabel' => $this->rankingType()->itemLabel(),
                         ])
                     </div>
@@ -66,15 +66,10 @@
                             'title' => ucfirst($this->rankingType()->itemLabel()),
                             'keyPrefix' => 'track',
                             'scroller' => 'card-scroller-half',
+                            'albums' => $this->albums(),
                         ])
 
                         @if ($appearsOnCount > 0)
-                            @php
-                                $featuredCount = collect($featuredTracks)
-                                    ->reject(fn ($song) => in_array($song['uuid'], $removedTrackUuids))
-                                    ->count();
-                            @endphp
-
                             <div x-auto-animate>
                                 @if ($includeFeaturedTracks && $this->hasFeaturedTracks())
                                     @include('livewire.song-rank.setup.partials.track-list', [
@@ -90,34 +85,20 @@
                                 @else
                                     <div class="border border-gray-200 bg-white rounded-lg overflow-hidden">
                                         <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center gap-3">
-                                            <h4 class="font-semibold text-gray-800">
-                                                Featured On
-                                                @if (! is_null($featuredTracks))
-                                                    <span class="font-normal text-sm text-gray-600">({{ $featuredCount }})</span>
-                                                @endif
-                                            </h4>
+                                            <h4 class="font-semibold text-gray-800">Featured On</h4>
 
                                             <x-toggle-switch
                                                 wire:model.live="includeFeaturedTracks"
                                                 x-data
                                                 x-on:change="window.showLoader()"
-                                                :disabled="! is_null($featuredTracks) && ! $this->hasFeaturedTracks()"
                                             >
                                                 Include
                                             </x-toggle-switch>
                                         </div>
 
                                         <p class="p-4 text-sm text-zinc-500">
-                                            @if (is_null($featuredTracks))
-                                                {{ $selectedArtist['name'] }} appears on other artists' releases.
-                                                Turn on "Include" to load the tracks they're featured on.
-                                            @elseif ($this->hasFeaturedTracks())
-                                                Not included in this ranking. Turn on "Include" to pick through
-                                                the {{ $featuredCount }} {{ Str::plural('track', $featuredCount) }}
-                                                {{ $selectedArtist['name'] }} guests on.
-                                            @else
-                                                No featured appearances found for {{ $selectedArtist['name'] }}.
-                                            @endif
+                                            {{ $selectedArtist['name'] }} appears on other artists' releases.
+                                            Turn on "Include" to load the tracks they're featured on.
                                         </p>
                                     </div>
                                 @endif

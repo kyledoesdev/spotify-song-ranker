@@ -43,18 +43,27 @@ describe('creating rankings', function () {
                     'name' => 'Ceilings',
                     'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=ceilings',
                     'uuid' => str()->uuid()->toString(),
+                    'album_name' => 'Hummingbird',
+                    'album_id' => 'hummingbird-id',
+                    'album_type' => 'album',
                 ],
                 [
                     'id' => 'sun-hands-id',
                     'name' => 'Sun Hands',
                     'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=sun_hands',
                     'uuid' => str()->uuid()->toString(),
+                    'album_name' => 'Gorilla Manor',
+                    'album_id' => 'gorilla-manor-id',
+                    'album_type' => 'album',
                 ],
                 [
                     'id' => 'featherweight-id',
                     'name' => 'Featherweight',
                     'cover' => 'https://api.dicebear.com/7.x/initials/svg?seed=featherweight',
                     'uuid' => str()->uuid()->toString(),
+                    'album_name' => 'Time will wait for no one',
+                    'album_id' => 'time-will-wait-for-no-one-id',
+                    'album_type' => 'album',
                 ],
             ]))
             ->set('form.name', 'Local Natives List')
@@ -227,7 +236,7 @@ describe('ranking setup searching', function () {
             ->set('searchTerm', '')
             ->call('search')
             ->assertSet('searchedArtists', null)
-            ->assertSet('selectedTracks', null);
+            ->assertSet('selectedTracks', fn ($tracks) => $tracks->isEmpty());
     });
 
     test('cannot search for a playlist with an invalid URL', function () {
@@ -236,7 +245,7 @@ describe('ranking setup searching', function () {
             ->set('searchTerm', 'abcdxyz')
             ->call('search')
             ->assertSet('selectedPlaylist', [])
-            ->assertSet('selectedTracks', null);
+            ->assertSet('selectedTracks', fn ($tracks) => $tracks->isEmpty());
     });
 
     test('can search for a playlist with a valid URL', function () {
@@ -253,7 +262,7 @@ describe('ranking setup searching', function () {
             ->set('searchTerm', 'abcdxyz')
             ->call('search')
             ->assertSet('selectedShow', [])
-            ->assertSet('selectedTracks', null);
+            ->assertSet('selectedTracks', fn ($tracks) => $tracks->isEmpty());
     });
 });
 

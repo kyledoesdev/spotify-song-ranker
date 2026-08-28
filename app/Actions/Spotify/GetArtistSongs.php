@@ -64,7 +64,10 @@ final class GetArtistSongs
                                 'id' => $song['id'],
                                 'name' => (string) $song['name'],
                                 'uuid' => (string) Str::uuid(),
-                                'cover' => data_get($album, 'images.0.url'), 
+                                'cover' => data_get($album, 'images.0.url'),
+                                'album_name' => (string) $album['name'],
+                                'album_id' => $album['id'],
+                                'album_type' => $album['album_type'],
                             ]);
                         });
                     });
