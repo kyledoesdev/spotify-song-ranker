@@ -85,16 +85,14 @@
                 />
             </div>
 
-            @if ($albums)
-                <button
-                    type="button"
-                    class="btn-primary p-2 text-sm"
-                    @click="$dispatch('open-album-modal')"
-                    title="Filters"
-                >
-                    <i class="fa-solid fa-sliders"></i>
-                </button>
-            @endif
+            <button
+                type="button"
+                class="btn-primary p-2 text-sm"
+                @click="$dispatch('open-album-modal')"
+                title="Filters"
+            >
+                <i class="fa-solid fa-sliders"></i>
+            </button>
 
             @if (count($this->removedTrackUuids) > 0)
                 <button
@@ -139,9 +137,7 @@
         </p>
     </div>
 
-    @if ($albums)
-        @include('livewire.song-rank.setup.partials.album-filters', ['albums' => $albums])
-    @endif
+    @include('livewire.song-rank.setup.partials.album-filters', ['albums' => $albums])
 
     @if (count($this->removedTrackUuids) > 0)
         @include('livewire.song-rank.setup.partials.removed-tracks', [

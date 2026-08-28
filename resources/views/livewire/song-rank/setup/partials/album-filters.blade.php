@@ -1,7 +1,12 @@
-{{-- Livewire partial: expects $albums (Collection from ArtistSetup::albums()). --}}
+{{-- Livewire partial: expects $albums (nullable Collection from ArtistSetup::albums()). --}}
+
+@php
+    $albums = $albums ? collect($albums) : collect();
+    $hasAlbums = $albums->isNotEmpty();
+@endphp
 
 <div
-    x-data="{ showAlbumModal: false, activeTab: 'album' }"
+    x-data="{ showAlbumModal: false, activeTab: '{{ $hasAlbums ? 'album' : 'custom' }}' }"
     @open-album-modal.window="showAlbumModal = true"
 >
     <template x-teleport="body">
@@ -44,75 +49,79 @@
                         </button>
                     </div>
 
-                    <div class="border-b border-gray-200">
-                        <nav class="flex -mb-px">
-                            <button
-                                type="button"
-                                @click="activeTab = 'album'"
-                                :class="activeTab === 'album'
-                                    ? 'border-purple-500 text-purple-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                class="px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
-                            >
-                                <i class="fa-solid fa-compact-disc mr-2"></i>
-                                Albums
-                            </button>
-                            <button
-                                type="button"
-                                @click="activeTab = 'single'"
-                                :class="activeTab === 'single'
-                                    ? 'border-purple-500 text-purple-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                class="px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
-                            >
-                                <i class="fa-solid fa-music mr-2"></i>
-                                Singles
-                            </button>
-                            <button
-                                type="button"
-                                @click="activeTab = 'custom'"
-                                :class="activeTab === 'custom'
-                                    ? 'border-purple-500 text-purple-600'
-                                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
-                                class="px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
-                            >
-                                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
-                                Quick Filters
-                            </button>
-                        </nav>
-                    </div>
+                    @if ($hasAlbums)
+                        <div class="border-b border-gray-200">
+                            <nav class="flex -mb-px">
+                                <button
+                                    type="button"
+                                    @click="activeTab = 'album'"
+                                    :class="activeTab === 'album'
+                                        ? 'border-purple-500 text-purple-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    class="px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
+                                >
+                                    <i class="fa-solid fa-compact-disc mr-2"></i>
+                                    Albums
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="activeTab = 'single'"
+                                    :class="activeTab === 'single'
+                                        ? 'border-purple-500 text-purple-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    class="px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
+                                >
+                                    <i class="fa-solid fa-music mr-2"></i>
+                                    Singles
+                                </button>
+                                <button
+                                    type="button"
+                                    @click="activeTab = 'custom'"
+                                    :class="activeTab === 'custom'
+                                        ? 'border-purple-500 text-purple-600'
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                                    class="px-6 py-3 text-sm font-medium border-b-2 transition-colors cursor-pointer"
+                                >
+                                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
+                                    Quick Filters
+                                </button>
+                            </nav>
+                        </div>
+                    @endif
 
                     <div class="overflow-y-auto p-4" style="max-height: calc(70vh - 120px);">
-                        {{-- Albums / Singles tabs --}}
-                        <div x-show="activeTab !== 'custom'" class="space-y-2">
-                            @foreach ($albums as $album)
-                                <div
-                                    x-show="activeTab === '{{ $album['type'] }}'"
-                                    wire:key="album-modal-{{ $album['id'] }}"
-                                    class="flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-50 transition-colors duration-150"
-                                >
-                                    <img
-                                        src="{{ $album['cover'] }}"
-                                        alt="{{ $album['name'] }}"
-                                        class="w-12 h-12 rounded-lg shrink-0"
-                                    />
-                                    <div class="min-w-0 flex-1">
-                                        <p class="text-sm font-medium text-gray-800 truncate" title="{{ $album['name'] }}">
-                                            {{ $album['name'] }}
-                                        </p>
-                                        <p class="text-xs text-zinc-400">
-                                            {{ $album['selected_count'] }}/{{ $album['track_count'] }} tracks
-                                        </p>
+                        @if ($hasAlbums)
+                            {{-- Albums / Singles tabs --}}
+                            <div x-show="activeTab !== 'custom'" class="space-y-2">
+                                @foreach ($albums as $album)
+                                    <div
+                                        x-show="activeTab === '{{ $album['type'] }}'"
+                                        wire:key="album-modal-{{ $album['id'] }}"
+                                        class="flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-50 transition-colors duration-150"
+                                    >
+                                        <img
+                                            src="{{ $album['cover'] }}"
+                                            alt="{{ $album['name'] }}"
+                                            class="w-12 h-12 rounded-lg shrink-0"
+                                        />
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-sm font-medium text-gray-800 truncate" title="{{ $album['name'] }}">
+                                                {{ $album['name'] }}
+                                            </p>
+                                            <p class="text-xs text-zinc-400">
+                                                {{ $album['selected_count'] }}/{{ $album['track_count'] }} tracks
+                                            </p>
+                                        </div>
+                                        <input
+                                            type="checkbox"
+                                            @checked(! $album['none_selected'])
+                                            wire:click="toggleAlbum('{{ $album['id'] }}')"
+                                            class="rounded text-purple-500 focus:ring-purple-400 cursor-pointer shrink-0"
+                                        />
                                     </div>
-                                    <input
-                                        type="checkbox"
-                                        @checked(! $album['none_selected'])
-                                        wire:click="toggleAlbum('{{ $album['id'] }}')"
-                                        class="rounded text-purple-500 focus:ring-purple-400 cursor-pointer shrink-0"
-                                    />
-                                </div>
-                            @endforeach
-                        </div>
+                                @endforeach
+                            </div>
+                        @endif
 
                         {{-- Custom Filters tab --}}
                         <div x-show="activeTab === 'custom'" x-cloak class="space-y-3">
